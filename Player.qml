@@ -61,11 +61,11 @@ Image {
         }
 
         function faster(){
-            setSpeed(150)
+            setSpeed(180)
         }
 
         function slower(){
-            setSpeed(400)
+            setSpeed(500)
         }
     }
 

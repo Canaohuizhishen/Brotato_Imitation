@@ -22,7 +22,7 @@ Item {
                 var margin = 50
                 fork.x = Math.random() * (monsters.parent.width - margin*2)+margin;
                 fork.y = Math.random() * (monsters.parent.height - margin*2)+margin;
-                fork.z = 0
+                fork.rotation = Math.random() * 360
             }
             timer.start()
         }

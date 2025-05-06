@@ -11,7 +11,7 @@ Rectangle {
     property int curWaveNumber: 1
     property int totalWaveNumber: 20
     property bool isWaveOver: false
-    property int stoneNum: 150
+    property int stoneNum: 100
 
     Component.onCompleted: {
         var stones = []; // 用于存储已生成的石头信息（x, y, width, height）
@@ -20,8 +20,8 @@ Rectangle {
         for (var i = 0; i < gameArea.stoneNum; i++) {
             var stoneCreated = false;
             while (!stoneCreated) {
-                var stoneWidth = 30;
-                var stoneHeight = 30;
+                var stoneWidth = 40;
+                var stoneHeight = 40;
                 var x = Math.random() * (gameArea.width - stoneWidth * 2) + stoneWidth;
                 var y = Math.random() * (gameArea.height - stoneHeight * 2) + stoneHeight;
 

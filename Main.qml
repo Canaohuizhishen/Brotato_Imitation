@@ -8,7 +8,8 @@ ApplicationWindow {
     visible: true
     width: 1000
     height: width/16*10
-    title: "怪追人"
+    title: "土豆兄弟(Brotato)(仿)"
+    color: "black"
 
     GameArea {
         id: gameArea
