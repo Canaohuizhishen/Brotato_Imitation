@@ -77,17 +77,17 @@ Image {
         player.source="/images/全能者朝右.png"
     }
 
-    Timer {
-        interval: 100; running: true; repeat: true
-        onTriggered: {
-            console.log(player.wPressed)
-            console.log(player.aPressed)
-            console.log(player.sPressed)
-            console.log(player.dPressed)
-            console.log(player.state)
-            console.log("Current speed:", squashSequence.duration)
-        }
-    }
+    // Timer {
+    //     interval: 100; running: true; repeat: true
+    //     onTriggered: {
+    //         console.log(player.wPressed)
+    //         console.log(player.aPressed)
+    //         console.log(player.sPressed)
+    //         console.log(player.dPressed)
+    //         console.log(player.state)
+    //         console.log("Current speed:", squashSequence.duration)
+    //     }
+    // }
 
     states: [
         State {

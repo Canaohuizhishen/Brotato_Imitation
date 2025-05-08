@@ -75,13 +75,13 @@ Item {
             for (var i = 0; i < monsters.children.length; i++) {
                 var child = monsters.children[i];
                 if (child.objectName === "Monster") {
-                    var dx = monsters.target.x - child.x;
-                    var dy = monsters.target.y - child.y;
+                    var dx = (monsters.target.x + monsters.target.width/2) - (child.x + child.width/2);
+                    var dy = (monsters.target.y + monsters.target.height/2) - (child.y + child.height/2);
                     var distance = Math.sqrt(dx * dx + dy * dy);
 
                     if (distance < monsters.stepSize) {
-                        child.x = monsters.target.x;
-                        child.y = monsters.target.y;
+                        child.x = monsters.target.x + monsters.target.width/2 - child.width/2;
+                        child.y = monsters.target.y + monsters.target.height/2 - child.height/2;
                     } else {
                         var stepX = (dx / distance) * monsters.stepSize;
                         var stepY = (dy / distance) * monsters.stepSize;

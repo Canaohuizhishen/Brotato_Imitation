@@ -11,41 +11,24 @@ ApplicationWindow {
     title: "土豆兄弟(Brotato)(仿)"
     color: "black"
 
+    Component.onCompleted: {
+        //background.x=window.width-background.width
+    }
+
     GameArea {
         id: gameArea
-        x: Math.min(Math.max(gameArea.width/2-player.x+(window.width-gameArea.width)/2,window.width*19/20-gameArea.width),window.width*1/20)
-        y: Math.min(Math.max(gameArea.height/2-player.y+(window.height-gameArea.height)/2,window.height*19/20-gameArea.height),window.height*1/20)
-
-        Player {
-            id: player
-            x: gameArea.width/2
-            y: gameArea.height/2
-
-        }
-
-        Monsters {
-            id: monsters
-            target: player
-        }
-
-        Component.onCompleted: {
-            //gameArea.x=window.width-gameArea.width
-        }
-
-        Timer {
-            interval: gameArea.interval; running: true; repeat: true
-            onTriggered: {
-
-            }
-        }
+        target: window
+        visible: true
     }
 
     HealthBar {
+        id: healthBar
         maxHp: playerData.maxHp
         hp: playerData.hp
     }
 
     ExperienceBar {
+        id: experienceBar
         level: playerData.maxHp
         maxXp: playerData.maxHp
         xp: playerData.hp
@@ -61,14 +44,11 @@ ApplicationWindow {
         states: [
             State {
                 name: "waveOver"; when: (waveCountdown.remainingTime==0)
-                PropertyChanges { target: gameArea; isWaveOver: true }
-                PropertyChanges { target: monsters; active: false }
-                PropertyChanges { target: player; active: false }
+                PropertyChanges { target: gameArea; isWaveOver: true; active: false }
             },
             State {
                 name: "waveRunning"; when: (!gameArea.isWaveOver)
-                PropertyChanges { target: monsters; active: true }
-                PropertyChanges { target: player; active: true }
+                PropertyChanges { target: gameArea; active: true }
             }
         ]
     }

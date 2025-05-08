@@ -4,8 +4,8 @@ import Brotato
 Image {
     id: monsterImage
     source: "/images/小怪1朝左.png"
-    width: 50
-    height: 50
+    width: 52
+    height: 52
     z: 2
     objectName: "Monster"
     property double maxHp: monsterData.maxHp

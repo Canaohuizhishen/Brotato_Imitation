@@ -28,6 +28,7 @@ qt_add_qml_module(appBrotato
     QML_FILES Monsters.qml
     QML_FILES Fork.qml
     RESOURCES images.qrc
+    QML_FILES Background.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)
