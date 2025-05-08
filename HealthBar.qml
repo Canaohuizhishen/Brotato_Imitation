@@ -22,7 +22,6 @@ Item {
         border.color: "black"
         border.width: 3
 
-
         Rectangle {
             id: hp
             width: maxHp.width*healthBar.hp/healthBar.maxHp-maxHp.border.width*2-0.7
