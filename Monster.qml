@@ -4,10 +4,13 @@ import Brotato
 Image {
     id: monsterImage
     source: "/images/小怪1朝左.png"
-    width: 52
-    height: 52
-    z: 2
     objectName: "Monster"
+    property double scaleFactor: 1.0
+    property double lastScaleFactor: 1.0
+    width: 52*scaleFactor
+    height: 52*scaleFactor
+    z: 2
+
     property double maxHp: monsterData.maxHp
     property double hp: monsterData.hp
     property double damage: monsterData.damage
@@ -17,6 +20,12 @@ Image {
         maxHp: 5
         hp: 5
         damage: 1
+    }
+
+    onScaleFactorChanged: {
+        monsterImage.x = monsterImage.x*scaleFactor/lastScaleFactor;
+        monsterImage.y = monsterImage.y*scaleFactor/lastScaleFactor;
+        lastScaleFactor=scaleFactor
     }
 
     transform: Scale {

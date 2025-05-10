@@ -4,37 +4,44 @@ Item {
     id: monsters
     anchors.fill: parent
     z: 2
-    property double v: 0.05
-    property double stepSize: v*interval
     property Player target: null
-    property int interval: 5
     property bool active: true
+    property double scaleFactor: 1.0
+    property int interval: 5
+    property double v: 0.05*scaleFactor
+    property double stepSize: v*interval
 
-    property double nextSpawnMonsterCount: 5
+    property double nextspawnMonstersCount: 5
     property double monsterSpawnRateIncrease: 0.05
 
-    // 怪物生成器
-    function spawnMonsters(n) {
+    Component.onCompleted: {
+        spawnForks(1)
+    }
+
+    function spawnForks(n) {
         var forkComponent = Qt.createComponent("Fork.qml");
         if (forkComponent.status === Component.Ready) {
             for(var i=0;i<n;i++){
                 var fork = forkComponent.createObject(monsters.parent);
+                fork.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
                 var margin = 50
                 fork.x = Math.random() * (monsters.parent.width - margin*2)+margin;
                 fork.y = Math.random() * (monsters.parent.height - margin*2)+margin;
                 fork.rotation = Math.random() * 360
             }
-            timer.start()
+            sleepTimer.start()
         }
     }
 
-    function spawnMonster() {
+    function spawnMonsters() {
+
         var monsterComponent = Qt.createComponent("Monster.qml");
         if (monsterComponent.status === Component.Ready) {
             for (var i = 0; i < monsters.parent.children.length; i++) {
                 var child = monsters.parent.children[i];
                 if (child.objectName === "Fork") {
                     var monster = monsterComponent.createObject(monsters);
+                    monster.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
                     monster.x = child.x;
                     monster.y = child.y;
                     monster.z = 2
@@ -45,12 +52,12 @@ Item {
     }
 
     Timer {
-        id: timer
+        id: sleepTimer
         interval: 700
         running: false
         repeat: false
         onTriggered: {
-            monsters.spawnMonster()
+            monsters.spawnMonsters()
         }
         function start(){
             running=true
@@ -61,10 +68,10 @@ Item {
         id: createMonsterTimer
         interval: 2000; running: monsters.active; repeat: true
         onTriggered: {
-            var n=Math.floor(Math.random()*(monsters.nextSpawnMonsterCount-3)+3)
+            var n=Math.floor(Math.random()*(monsters.nextspawnMonstersCount-3)+3)
             //console.log(n)
-            monsters.spawnMonsters(n)
-            monsters.nextSpawnMonsterCount=monsters.nextSpawnMonsterCount*(1+monsters.monsterSpawnRateIncrease)
+            monsters.spawnForks(n)
+            monsters.nextspawnMonstersCount=monsters.nextspawnMonstersCount*(1+monsters.monsterSpawnRateIncrease)
         }
     }
 
@@ -74,7 +81,7 @@ Item {
         onTriggered: {
             for (var i = 0; i < monsters.children.length; i++) {
                 var child = monsters.children[i];
-                if (child.objectName === "Monster") {
+                if (child.objectName === "Monster") {//console.log("1")
                     var dx = (monsters.target.x + monsters.target.width/2) - (child.x + child.width/2);
                     var dy = (monsters.target.y + monsters.target.height/2) - (child.y + child.height/2);
                     var distance = Math.sqrt(dx * dx + dy * dy);
