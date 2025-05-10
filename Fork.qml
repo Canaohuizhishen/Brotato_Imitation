@@ -3,10 +3,18 @@ import QtQuick.Shapes 1.15
 
 Item {
     id: root
-    width: 70
-    height: 70
     objectName: "Fork"
+    property double scaleFactor: 1.0
+    property double lastScaleFactor: 1.0
+    width: 70*scaleFactor
+    height: 70*scaleFactor
     z: 0
+
+    onScaleFactorChanged: {
+        root.x = root.x*scaleFactor/lastScaleFactor;
+        root.y = root.y*scaleFactor/lastScaleFactor;
+        lastScaleFactor=scaleFactor
+    }
 
     Image {
         id: fork

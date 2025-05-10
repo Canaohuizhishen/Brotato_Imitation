@@ -10,6 +10,14 @@ ApplicationWindow {
     height: width/16*10
     title: "土豆兄弟(Brotato)(仿)"
     color: "black"
+    property double scaleFactor: 1.0
+
+    onWidthChanged: updateScale()
+    onHeightChanged: updateScale()
+
+    function updateScale() {
+        scaleFactor = Math.min(width / 1000, height / (1000/16*10))
+    }
 
     Component.onCompleted: {
         //background.x=window.width-background.width
@@ -19,6 +27,7 @@ ApplicationWindow {
         id: gameArea
         target: window
         visible: true
+        scaleFactor: window.scaleFactor
     }
 
     HealthBar {

@@ -4,18 +4,24 @@ import Brotato
 Image {
     id: player
     source: "/images/全能者朝左.png"
+    property var ground: parent
+    property bool active: true
+    property double scaleFactor: 1.0
+    property double lastScaleFactor: 1.0
+    property int interval: 5/scaleFactor
+    property double v: 0.4*scaleFactor*scaleFactor
+    property double stepSize: v*interval
+    property double diagonalStepSize: stepSize*0.7
+    x: ground.width/2
+    y: ground.height/2
+    width: 50*scaleFactor
+    height: 50*scaleFactor
+    focus: true
+    z: 1
+
     property double maxHp: playerData.maxHp
     property double hp: playerData.hp
     property double damage: playerData.damage
-    property double v: 0.4
-    property double stepSize: v*interval
-    property double diagonalStepSize: stepSize*0.7
-    property bool active: true
-    property int interval: 5
-    width: 50
-    height: 50
-    focus: true
-    z: 1
 
     property bool wPressed: false
     property bool sPressed: false
@@ -27,6 +33,12 @@ Image {
         maxHp: 5
         hp: 5
         damage: 5
+    }
+
+    onScaleFactorChanged: {
+        x=x*scaleFactor/lastScaleFactor
+        y=y*scaleFactor/lastScaleFactor
+        lastScaleFactor=scaleFactor
     }
 
     transform: Scale {
@@ -91,9 +103,15 @@ Image {
 
     states: [
         State {
-            name: "stationary"; when: (!player.wPressed && !player.sPressed && !player.aPressed && !player.dPressed)
+            name: "stationary"; when: ((!player.wPressed && !player.sPressed && !player.aPressed && !player.dPressed)||!player.active)
             StateChangeScript {
                 script: {//console.log("1")
+                    if(!player.active){
+                        player.wPressed==false
+                        player.sPressed==false
+                        player.aPressed==false
+                        player.dPressed==false
+                    }
                     squashSequence.slower()
                 }
             }

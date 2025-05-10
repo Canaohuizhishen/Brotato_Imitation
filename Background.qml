@@ -2,24 +2,30 @@ import QtQuick 2.15
 
 Rectangle {
     id: background
-    property var target: parent
-    width: target.width
-    height: target.height
+    anchors.fill: parent
     color: "#796461"
     focus: false
+    property double scaleFactor: 1.0
     property int stoneNum: 100
-    property int stoneWidth: 40
-    property int stoneHeight: 40
+    property int stoneWidth: 40*scaleFactor
+    property int stoneHeight: 40*scaleFactor
 
     Component.onCompleted: {
         stoneNum=width*height/stoneWidth/stoneHeight*0.12
         createStones()
     }
 
-    onWidthChanged: {
-        stoneNum=width*height/stoneWidth/stoneHeight*0.12
-        deleteStones()
-        createStones()
+    function createJaggedEdges(){
+        var edgeWidth=100
+        var edgeHeight=20
+        var widthEdgeNum=background.width/edgeWidth
+        var heightEdgeNum=background.height/edgeHeight
+
+        for(var i=0;i<widthEdgeNum;i++){
+
+        }
+
+
     }
 
     function createStones(){
@@ -55,11 +61,11 @@ Rectangle {
                                     `import QtQuick 2.15;
                                     Image {
                                     source: "/images/石头4.png";
-                                    width: ${stoneWidth};
-                                    height: ${stoneHeight};
+                                    width: ${stoneWidth}*parent.scaleFactor;
+                                    height: ${stoneHeight}*parent.scaleFactor;
                                     objectName: "stone"
-                                    x: ${x};
-                                    y: ${y};
+                                    x: ${x}*parent.scaleFactor;
+                                    y: ${y}*parent.scaleFactor;
                                     z: 0;
                                     }`,
                                     background,
@@ -70,11 +76,11 @@ Rectangle {
                                     `import QtQuick 2.15;
                                     Image {
                                     source: "/images/石头3.png";
-                                    width: ${stoneWidth};
-                                    height: ${stoneHeight};
+                                    width: ${stoneWidth}*parent.scaleFactor;
+                                    height: ${stoneHeight}*parent.scaleFactor;
                                     objectName: "stone"
-                                    x: ${x};
-                                    y: ${y};
+                                    x: ${x}*parent.scaleFactor;
+                                    y: ${y}*parent.scaleFactor;
                                     z: 0;
                                     }`,
                                     background,
@@ -85,11 +91,11 @@ Rectangle {
                                     `import QtQuick 2.15;
                                     Image {
                                     source: "/images/石头2.png";
-                                    width: ${stoneWidth};
-                                    height: ${stoneHeight};
+                                    width: ${stoneWidth}*parent.scaleFactor;
+                                    height: ${stoneHeight}*parent.scaleFactor;
                                     objectName: "stone"
-                                    x: ${x};
-                                    y: ${y};
+                                    x: ${x}*parent.scaleFactor;
+                                    y: ${y}*parent.scaleFactor;
                                     z: 0;
                                     }`,
                                     background,
@@ -100,11 +106,11 @@ Rectangle {
                                     `import QtQuick 2.15;
                                     Image {
                                     source: "/images/石头1.png";
-                                    width: ${stoneWidth};
-                                    height: ${stoneHeight};
+                                    width: ${stoneWidth}*parent.scaleFactor;
+                                    height: ${stoneHeight}*parent.scaleFactor;
                                     objectName: "stone"
-                                    x: ${x};
-                                    y: ${y};
+                                    x: ${x}*parent.scaleFactor;
+                                    y: ${y}*parent.scaleFactor;
                                     z: 0;
                                     }`,
                                     background,
@@ -126,14 +132,10 @@ Rectangle {
     }
 
     function distributeStones(num) {
-        // 生成三个随机分割点，范围在 [1, num-1] 之间
-        var split1 = Math.floor(Math.random() * (num - 1)) + 1;
-        var split2 = Math.floor(Math.random() * (num - 1)) + 1;
-        var split3 = Math.floor(Math.random() * (num - 1)) + 1;
+        var split1 = num/4;
+        var split2 = num/2;
+        var split3 = num*3/4;
 
-        // 对分割点进行排序
-        var splits = [split1, split2, split3].sort((a, b) => a - b);
-
-        return { sp1: splits[0], sp2: splits[1], sp3: splits[2] };
+        return { sp1: split1, sp2: split2, sp3: split3 };
     }
 }
