@@ -98,6 +98,8 @@ Image {
     //         console.log(player.dPressed)
     //         console.log(player.state)
     //         console.log("Current speed:", squashSequence.duration)
+    //         console.log("x: ", player.x)
+    //         console.log("y: ", player.y)
     //     }
     // }
 
@@ -208,7 +210,7 @@ Image {
         id: pressW
         interval: player.interval; running: false; repeat: true
         onTriggered: {
-            if (player.y > 0)player.y -= player.stepSize;
+            if (player.y > -player.height*2/5)player.y -= player.stepSize;
         }
     }
 
@@ -224,7 +226,7 @@ Image {
         id: pressA
         interval: player.interval; running: false; repeat: true
         onTriggered: {
-            if (player.x > 0)player.x -= player.stepSize;
+            if (player.x > -player.width/7)player.x -= player.stepSize;
         }
     }
 
@@ -232,7 +234,7 @@ Image {
         id: pressD
         interval: player.interval; running: false; repeat: true
         onTriggered: {
-            if (player.x < player.parent.width - player.width)player.x += player.stepSize;
+            if (player.x < player.parent.width - player.width+player.width/7)player.x += player.stepSize;
         }
     }
 
@@ -240,8 +242,8 @@ Image {
         id: pressWA
         interval: player.interval; running: false; repeat: true
         onTriggered: {
-            if (player.y > 0)player.y -= player.diagonalStepSize;
-            if (player.x > 0)player.x -= player.diagonalStepSize;
+            if (player.y > -player.height*2/5)player.y -= player.diagonalStepSize;
+            if (player.x > -player.width/7)player.x -= player.diagonalStepSize;
         }
     }
 
@@ -250,7 +252,7 @@ Image {
         interval: player.interval; running: false; repeat: true
         onTriggered: {
             if (player.y < player.parent.height - player.height)player.y += player.diagonalStepSize;
-            if (player.x > 0)player.x -= player.diagonalStepSize;
+            if (player.x > -player.width/7)player.x -= player.diagonalStepSize;
         }
     }
 
@@ -258,8 +260,8 @@ Image {
         id: pressWD
         interval: player.interval; running: false; repeat: true
         onTriggered: {
-            if (player.y > 0)player.y -= player.diagonalStepSize;
-            if (player.x < player.parent.width - player.width)player.x += player.diagonalStepSize;
+            if (player.y > -player.height*2/5)player.y -= player.diagonalStepSize;
+            if (player.x < player.parent.width - player.width+player.width/7)player.x += player.diagonalStepSize;
         }
     }
 
@@ -268,7 +270,7 @@ Image {
         interval: player.interval; running: false; repeat: true
         onTriggered: {
             if (player.y < player.parent.height - player.height)player.y += player.diagonalStepSize;
-            if (player.x < player.parent.width - player.width)player.x += player.diagonalStepSize;
+            if (player.x < player.parent.width - player.width+player.width/7)player.x += player.diagonalStepSize;
         }
     }
 

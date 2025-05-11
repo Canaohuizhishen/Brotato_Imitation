@@ -2,7 +2,8 @@ import QtQuick 2.15
 
 Rectangle {
     id: background
-    anchors.fill: parent
+    width: parent.width
+    height: parent.height
     color: "#796461"
     focus: false
     property double scaleFactor: 1.0
@@ -13,19 +14,76 @@ Rectangle {
     Component.onCompleted: {
         stoneNum=width*height/stoneWidth/stoneHeight*0.12
         createStones()
+        createJaggedEdges()
     }
 
     function createJaggedEdges(){
-        var edgeWidth=100
+        var edgeWidth=300
         var edgeHeight=20
-        var widthEdgeNum=background.width/edgeWidth
-        var heightEdgeNum=background.height/edgeHeight
 
-        for(var i=0;i<widthEdgeNum;i++){
-
+        for(var i=0;i<background.width;i+=edgeWidth){
+            var edgeUp = Qt.createQmlObject(
+                        `import QtQuick 2.15;
+                        Image {
+                        source: "/images/锯齿边缘.png";
+                        width: ${edgeWidth}*parent.scaleFactor;
+                        height: ${edgeHeight}*parent.scaleFactor;
+                        objectName: "edge"
+                        x: ${i}*parent.scaleFactor;
+                        y: 0;
+                        z: 2;
+                        }`,
+                        background,
+                        "dynamicImage" + i
+                        );
+            var edgeDown = Qt.createQmlObject(
+                        `import QtQuick 2.15;
+                        Image {
+                        source: "/images/锯齿边缘.png";
+                        width: ${edgeWidth}*parent.scaleFactor;
+                        height: ${edgeHeight}*parent.scaleFactor;
+                        objectName: "edge"
+                        x: ${i}*parent.scaleFactor;
+                        y: parent.height-height;
+                        z: 2;
+                        rotation: 180
+                        }`,
+                        background,
+                        "dynamicImage" + i
+                        );
         }
-
-
+        for(var i=0;i<background.height;i+=edgeWidth){
+            var edgeLeft = Qt.createQmlObject(
+                        `import QtQuick 2.15;
+                        Image {
+                        source: "/images/锯齿边缘.png";
+                        width: ${edgeWidth}*parent.scaleFactor;
+                        height: ${edgeHeight}*parent.scaleFactor;
+                        objectName: "edge"
+                        x: -140*parent.scaleFactor;
+                        y: ${i+135}*parent.scaleFactor;
+                        z: 2;
+                        rotation: -90
+                        }`,
+                        background,
+                        "dynamicImage" + i
+                        );
+            var edgeRight = Qt.createQmlObject(
+                        `import QtQuick 2.15;
+                        Image {
+                        source: "/images/锯齿边缘.png";
+                        width: ${edgeWidth}*parent.scaleFactor;
+                        height: ${edgeHeight}*parent.scaleFactor;
+                        objectName: "edge"
+                        x: parent.width-width+140*parent.scaleFactor;
+                        y: ${i+135}*parent.scaleFactor;
+                        z: 2;
+                        rotation: 90
+                        }`,
+                        background,
+                        "dynamicImage" + i
+                        );
+        }
     }
 
     function createStones(){
