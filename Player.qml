@@ -12,8 +12,6 @@ Image {
     property double v: 0.4*scaleFactor*scaleFactor
     property double stepSize: v*interval
     property double diagonalStepSize: stepSize*0.7
-    x: ground.width/2
-    y: ground.height/2
     width: 50*scaleFactor
     height: 50*scaleFactor
     focus: true
@@ -33,6 +31,11 @@ Image {
         maxHp: 5
         hp: 5
         damage: 5
+    }
+
+    Component.onCompleted: {
+        x=ground.width/2
+        y=ground.height/2
     }
 
     onScaleFactorChanged: {
@@ -98,8 +101,11 @@ Image {
     //         console.log(player.dPressed)
     //         console.log(player.state)
     //         console.log("Current speed:", squashSequence.duration)
+    //         console.log("v: ", player.v)
     //         console.log("x: ", player.x)
     //         console.log("y: ", player.y)
+    //         console.log("focus: ", player.focus)
+    //         console.log("active: ", player.active)
     //     }
     // }
 

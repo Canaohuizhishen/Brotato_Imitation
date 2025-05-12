@@ -15,7 +15,7 @@ Item {
     property double monsterSpawnRateIncrease: 0.05
 
     Component.onCompleted: {
-        spawnForks(1)
+        //spawnForks(1)
     }
 
     function spawnForks(n) {
