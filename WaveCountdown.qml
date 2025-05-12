@@ -4,6 +4,7 @@ Item {
     id: waveCountdown
     property int remainingTime: 60
     property int size: 28
+    property bool running: false
     width: parent.width
     height: 15
     z: 10
@@ -13,7 +14,7 @@ Item {
 
     Timer {
         id: timer
-        interval: 1000; running: true; repeat: true
+        interval: 1000; running: waveCountdown.running; repeat: true
         onTriggered: {
             if (waveCountdown.remainingTime>0) {
                 waveCountdown.remainingTime--;

@@ -20,24 +20,44 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        //background.x=window.width-background.width
     }
 
     GameArea {
         id: gameArea
         target: window
+        visible: false
+        scaleFactor: window.scaleFactor
+        active: false
+    }
+
+    StartInterface{
+        id: startInterface
         visible: true
         scaleFactor: window.scaleFactor
+        z:100
+
+        start.onClicked:{
+            startInterface.visible=false
+            gameArea.visible=true
+            gameArea.active=true
+            gameArea.player.focus=true
+        }
+
+        exit.onClicked:{
+            Qt.quit()
+        }
     }
 
     HealthBar {
         id: healthBar
+        visible: gameArea.visible
         maxHp: playerData.maxHp
         hp: playerData.hp
     }
 
     ExperienceBar {
         id: experienceBar
+        visible: gameArea.visible
         level: playerData.maxHp
         maxXp: playerData.maxHp
         xp: playerData.hp
@@ -45,19 +65,18 @@ ApplicationWindow {
 
     WaveNumberText {
         id: waveNumberText
+        visible: gameArea.visible
         text: gameArea.curWaveNumber
     }
 
     WaveCountdown{
         id: waveCountdown
+        visible: gameArea.visible
+        running: gameArea.active
         states: [
             State {
                 name: "waveOver"; when: (waveCountdown.remainingTime==0)
                 PropertyChanges { target: gameArea; isWaveOver: true; active: false }
-            },
-            State {
-                name: "waveRunning"; when: (!gameArea.isWaveOver)
-                PropertyChanges { target: gameArea; active: true }
             }
         ]
     }

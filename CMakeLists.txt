@@ -29,6 +29,7 @@ qt_add_qml_module(appBrotato
     QML_FILES Fork.qml
     RESOURCES images.qrc
     QML_FILES Background.qml
+    QML_FILES StartInterface.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)
