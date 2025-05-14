@@ -30,6 +30,18 @@ qt_add_qml_module(appBrotato
     RESOURCES images.qrc
     QML_FILES Background.qml
     QML_FILES StartInterface.qml
+    QML_FILES RoleSelectionInterface.qml
+    QML_FILES RoleCard.qml
+    QML_FILES RecardCard.qml
+    QML_FILES GameWindow.qml
+    QML_FILES LockCard.qml
+    QML_FILES RoleCustomizationCore.qml
+    QML_FILES
+    QML_FILES WeaponSelectionInterface.qml
+    QML_FILES WeaponCard.qml
+    QML_FILES WeaponCustomizationCore.qml
+    QML_FILES DifficultySelectionInterface.qml
+    QML_FILES DifficultyCard.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

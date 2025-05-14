@@ -6,6 +6,7 @@ Item{
     height: width
     property var target: parent
     property Player player: player
+    property Monsters monsters : monsters
     x: Math.min(Math.max(gameArea.width/2-player.x+(target.width-gameArea.width)/2,target.width*28/30-gameArea.width),target.width*1/15)
     y: Math.min(Math.max(gameArea.height/2-player.y+(target.height-gameArea.height)/2,target.height*18/20-gameArea.height),target.height*1/10)
     focus: false

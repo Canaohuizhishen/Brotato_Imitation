@@ -11,10 +11,10 @@ Item{
     anchors.centerIn: parent
     z: 100
 
-    property Button resume: resume
-    property Button start: start
-    property Button setting: setting
-    property Button exit: exit
+    property Button resumeButton: resume
+    property Button startButton: start
+    property Button settingButton: setting
+    property Button exitButton: exit
 
     Image {
         id: startImage
@@ -39,7 +39,7 @@ Item{
         }
         contentItem: Text {
             text: resume.text
-            font.pixelSize: 23
+            font.pixelSize: 23*startInterface.scaleFactor
             color: resume.pressed || resume.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -61,7 +61,7 @@ Item{
         }
         contentItem: Text {
             text: start.text
-            font.pixelSize: 23
+            font.pixelSize: 23*startInterface.scaleFactor
             color: start.pressed || start.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -83,7 +83,7 @@ Item{
         }
         contentItem: Text {
             text: setting.text
-            font.pixelSize: 23
+            font.pixelSize: 23*startInterface.scaleFactor
             color: setting.pressed || setting.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -105,7 +105,7 @@ Item{
         }
         contentItem: Text {
             text: exit.text
-            font.pixelSize: 23
+            font.pixelSize: 23*startInterface.scaleFactor
             color: exit.pressed || exit.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
