@@ -4,6 +4,7 @@ Item {
     id: monsters
     anchors.fill: parent
     z: 2
+    property string difficulty
     property Player target: null
     property bool active: true
     property double scaleFactor: 1.0

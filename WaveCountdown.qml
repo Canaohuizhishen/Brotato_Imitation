@@ -2,15 +2,16 @@ import QtQuick 2.15
 
 Item {
     id: waveCountdown
+    property double scaleFactor: 1.0
     property int remainingTime: 60
-    property int size: 28
     property bool running: false
+    property int size: 28*waveCountdown.scaleFactor
     width: parent.width
-    height: 15
+    height: 15*waveCountdown.scaleFactor
     z: 10
 
     anchors.top: parent.top
-    anchors.topMargin: 50
+    anchors.topMargin: 50*waveCountdown.scaleFactor
 
     Timer {
         id: timer

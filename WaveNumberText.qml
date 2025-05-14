@@ -2,14 +2,15 @@ import QtQuick 2.15
 
 Item {
     id: waveNumberText
+    property double scaleFactor: 1.0
     property int text: 0
-    property int size: 24
+    property int size: 24*waveNumberText.scaleFactor
     width: parent.width
-    height: 15
+    height: 15*waveNumberText.scaleFactor
     z:10
 
     anchors.top: parent.top
-    anchors.topMargin: 15
+    anchors.topMargin: 15*waveNumberText.scaleFactor
 
     Text {
         id: text

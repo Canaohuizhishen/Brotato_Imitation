@@ -3,13 +3,15 @@ import Brotato
 
 Image {
     id: player
-    source: "/images/全能者朝左.png"
+    property string roleName
+    source: roleName == "" ? "" : "/images/"+ roleName +"朝左.png"
+    property string weaponName
     property var ground: parent
     property bool active: true
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
-    property int interval: 5/scaleFactor
-    property double v: 0.4*scaleFactor*scaleFactor
+    property int interval: 5
+    property double v: 0.4*scaleFactor
     property double stepSize: v*interval
     property double diagonalStepSize: stepSize*0.7
     width: 50*scaleFactor
@@ -51,45 +53,68 @@ Image {
         xScale: 1.0; yScale: 1.0
     }
 
-    SequentialAnimation {
-        id: squashSequence
-        loops: Animation.Infinite
-        running: true
-        property double duration: 300
+    Item{
+        id: playerAnimation
 
-        // 阶段一：同时扁平 X 并拉长 Y
-        ParallelAnimation {
-            NumberAnimation { target: squashScale; property: "xScale"; to: 1.1; duration: squashSequence.duration; easing.type: Easing.InOutQuad }
-            NumberAnimation { target: squashScale; property: "yScale"; to: 0.9; duration: squashSequence.duration; easing.type: Easing.InOutQuad }
-        }
-        // 阶段二：同时恢复 X、Y
-        ParallelAnimation {
-            NumberAnimation { target: squashScale; property: "xScale"; to: 0.95; duration: squashSequence.duration; easing.type: Easing.InOutQuad }
-            NumberAnimation { target: squashScale; property: "yScale"; to: 1.05; duration: squashSequence.duration; easing.type: Easing.InOutQuad }
-        }
-
-        function setSpeed(newDuration) {
-            if (duration === newDuration) return
-            pause()
-            duration = newDuration
-            resume()
+        Component.onCompleted: {
+            squashSequence_fast.start()
+            squashSequence_fast.pause()
         }
 
         function faster(){
-            setSpeed(180)
+            squashSequence_slow.pause()
+            squashSequence_fast.resume()
         }
 
         function slower(){
-            setSpeed(500)
+            squashSequence_slow.resume()
+            squashSequence_fast.pause()
+
+        }
+
+        SequentialAnimation {
+            id: squashSequence_slow
+            loops: Animation.Infinite
+            running: true
+            property double duration: 500
+
+            // 阶段一：同时扁平 X 并拉长 Y
+            ParallelAnimation {
+                NumberAnimation { target: squashScale; property: "xScale"; to: 1.1; duration: squashSequence_slow.duration; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: squashScale; property: "yScale"; to: 0.9; duration: squashSequence_slow.duration; easing.type: Easing.InOutQuad }
+            }
+            // 阶段二：同时恢复 X、Y
+            ParallelAnimation {
+                NumberAnimation { target: squashScale; property: "xScale"; to: 0.95; duration: squashSequence_slow.duration; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: squashScale; property: "yScale"; to: 1.05; duration: squashSequence_slow.duration; easing.type: Easing.InOutQuad }
+            }
+        }
+
+        SequentialAnimation {
+            id: squashSequence_fast
+            loops: Animation.Infinite
+            running: true
+            property double duration: 180
+
+            // 阶段一：同时扁平 X 并拉长 Y
+            ParallelAnimation {
+                NumberAnimation { target: squashScale; property: "xScale"; to: 1.1; duration: squashSequence_fast.duration; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: squashScale; property: "yScale"; to: 0.9; duration: squashSequence_fast.duration; easing.type: Easing.InOutQuad }
+            }
+            // 阶段二：同时恢复 X、Y
+            ParallelAnimation {
+                NumberAnimation { target: squashScale; property: "xScale"; to: 0.95; duration: squashSequence_fast.duration; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: squashScale; property: "yScale"; to: 1.05; duration: squashSequence_fast.duration; easing.type: Easing.InOutQuad }
+            }
         }
     }
 
     function faceLeft(){
-        player.source="/images/全能者朝左.png"
+        player.source="/images/"+ roleName +"朝左.png"
     }
 
     function faceRight(){
-        player.source="/images/全能者朝右.png"
+        player.source="/images/"+ roleName +"朝右.png"
     }
 
     // Timer {
@@ -100,7 +125,7 @@ Image {
     //         console.log(player.sPressed)
     //         console.log(player.dPressed)
     //         console.log(player.state)
-    //         console.log("Current speed:", squashSequence.duration)
+    //         console.log("Current speed:", playerAnimation.duration)
     //         console.log("v: ", player.v)
     //         console.log("x: ", player.x)
     //         console.log("y: ", player.y)
@@ -120,7 +145,7 @@ Image {
                         player.aPressed==false
                         player.dPressed==false
                     }
-                    squashSequence.slower()
+                    playerAnimation.slower()
                 }
             }
         },
@@ -129,7 +154,7 @@ Image {
             PropertyChanges { target: pressW; running: true }
             StateChangeScript {
                 script: {
-                    squashSequence.faster()
+                    playerAnimation.faster()
                 }
             }
         },
@@ -138,7 +163,7 @@ Image {
             PropertyChanges { target: pressS; running: true }
             StateChangeScript {
                 script: {
-                    squashSequence.faster()
+                    playerAnimation.faster()
                 }
             }
         },
@@ -148,7 +173,7 @@ Image {
             StateChangeScript {
                 script: {
                     player.faceLeft()
-                    squashSequence.faster()
+                    playerAnimation.faster()
                 }
             }
         },
@@ -158,7 +183,7 @@ Image {
             StateChangeScript {
                 script: {
                     player.faceRight()
-                    squashSequence.faster()
+                    playerAnimation.faster()
                 }
             }
         },
@@ -170,7 +195,7 @@ Image {
             StateChangeScript {
                 script: {
                     player.faceLeft();
-                    squashSequence.faster()
+                    playerAnimation.faster()
                 }
             }
         },
@@ -182,7 +207,7 @@ Image {
             StateChangeScript {
                 script: {
                     player.faceLeft();
-                    squashSequence.faster()
+                    playerAnimation.faster()
                 }
             }
         },
@@ -194,7 +219,7 @@ Image {
             StateChangeScript {
                 script: {
                     player.faceRight()
-                    squashSequence.faster()
+                    playerAnimation.faster()
                 }
             }
         },
@@ -206,7 +231,7 @@ Image {
             StateChangeScript {
                 script: {
                     player.faceRight();
-                    squashSequence.faster()
+                    playerAnimation.faster()
                 }
             }
         }
@@ -283,14 +308,14 @@ Image {
     Keys.onPressed: function(event) {
         //console.log("Key pressed: " + event.key)  // 调试输出
         if(player.active){
-            if (event.key === Qt.Key_W) {
+            if (event.key === Qt.Key_W || event.key === Qt.Key_Up) {
                 player.wPressed=true;
-            }else if (event.key === Qt.Key_S) {
+            }else if (event.key === Qt.Key_S || event.key === Qt.Key_Down) {
                 player.sPressed=true;
-            }else if (event.key === Qt.Key_A) {
+            }else if (event.key === Qt.Key_A || event.key === Qt.Key_Left) {
                 player.aPressed=true;
                 player.faceLeft()
-            }else if (event.key === Qt.Key_D) {
+            }else if (event.key === Qt.Key_D || event.key === Qt.Key_Right) {
                 player.dPressed=true;
                 player.faceRight()
             }
@@ -299,17 +324,16 @@ Image {
 
     Keys.onReleased: function(event) {
         //console.log("Key released: " + event.key)  // 调试输出
-        if (event.key === Qt.Key_W) {
+        if (event.key === Qt.Key_W || event.key === Qt.Key_Up) {
             player.wPressed=false;
             pressW.running=false;
-        }else if (event.key === Qt.Key_S) {
+        }else if (event.key === Qt.Key_S || event.key === Qt.Key_Down) {
             player.sPressed=false;
             pressS.running=false;
-        }else
-        if (event.key === Qt.Key_A) {
+        }else if (event.key === Qt.Key_A || event.key === Qt.Key_Left) {
             player.aPressed=false;
             pressA.running=false;
-        }else if (event.key === Qt.Key_D) {
+        }else if (event.key === Qt.Key_D || event.key === Qt.Key_Right) {
             player.dPressed=false;
             pressD.running=false;
         }
