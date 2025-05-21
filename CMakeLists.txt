@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # Globally preventing the fallback behaviour
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
-qt_standard_project_setup(REQUIRES 6.5)
+qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(appBrotato)
 
@@ -17,31 +17,18 @@ qt_add_qml_module(appBrotato
         Main.qml
     SOURCES main.cpp
     SOURCES monsterData.h monsterData.cpp
-    SOURCES playerData.h playerData.cpp
-    QML_FILES Monster.qml
-    QML_FILES GameArea.qml
-    QML_FILES Player.qml
-    QML_FILES HealthBar.qml
-    QML_FILES WaveNumberText.qml
-    QML_FILES ExperienceBar.qml
-    QML_FILES WaveCountdown.qml
-    QML_FILES Monsters.qml
-    QML_FILES Fork.qml
     RESOURCES images.qrc
-    QML_FILES Background.qml
-    QML_FILES StartInterface.qml
-    QML_FILES RoleSelectionInterface.qml
-    QML_FILES RoleCard.qml
-    QML_FILES RecardCard.qml
-    QML_FILES GameWindow.qml
-    QML_FILES LockCard.qml
-    QML_FILES RoleCustomizationCore.qml
-    QML_FILES
-    QML_FILES WeaponSelectionInterface.qml
-    QML_FILES WeaponCard.qml
-    QML_FILES WeaponCustomizationCore.qml
-    QML_FILES DifficultySelectionInterface.qml
-    QML_FILES DifficultyCard.qml
+    QML_FILES tool.js
+    RESOURCES singleton.qrc
+    QML_FILES components/ExperienceBar.qml
+    QML_FILES components/DifficultyCard.qml components/Fork.qml components/HealthBar.qml components/LockCard.qml components/RecardCard.qml components/RoleCard.qml components/WaveCountdown.qml components/WaveNumberText.qml components/WeaponCard.qml
+    QML_FILES weapons/SMG.qml
+    QML_FILES weapons/Weapons.qml
+    QML_FILES monsters/Monsters.qml monsters/Monster.qml
+    QML_FILES page/Background.qml page/DifficultySelectionInterface.qml page/GameArea.qml page/GameWindow.qml page/RoleSelectionInterface.qml page/StartInterface.qml page/WeaponSelectionInterface.qml
+    QML_FILES monsters/Player.qml
+    QML_FILES data/WeaponCustomizationCore.qml data/RoleCustomizationCore.qml
+    QML_FILES page/StoreInterface.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

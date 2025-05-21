@@ -1,10 +1,12 @@
 import QtQuick 2.15
+import QtQuick.Shapes 1.15
+import singleton.PlayerData
 import Brotato
+import "../data"
 
-Image {
+Item {
     id: player
     property string roleName
-    source: roleName == "" ? "" : "/images/"+ roleName +"朝左.png"
     property string weaponName
     property var ground: parent
     property bool active: true
@@ -18,22 +20,13 @@ Image {
     height: 50*scaleFactor
     focus: true
     z: 1
-
-    property double maxHp: playerData.maxHp
-    property double hp: playerData.hp
-    property double damage: playerData.damage
+    signal faceLefted()
+    signal faceRighted()
 
     property bool wPressed: false
     property bool sPressed: false
     property bool aPressed: false
     property bool dPressed: false
-
-    PlayerData {
-        id: playerData
-        maxHp: 5
-        hp: 5
-        damage: 5
-    }
 
     Component.onCompleted: {
         x=ground.width/2
@@ -46,11 +39,71 @@ Image {
         lastScaleFactor=scaleFactor
     }
 
-    transform: Scale {
-        id: squashScale
-        origin.x: player.width/2
-        origin.y: player.height
-        xScale: 1.0; yScale: 1.0
+    onRoleNameChanged: {
+        PlayerData.init()
+        core.getRole(roleName).setInitRoleAttributes()
+    }
+
+    function faceLeft(){
+        playerIcon.source="/images/"+ roleName +"朝左.png"
+        faceLefted()
+    }
+
+    function faceRight(){
+        playerIcon.source="/images/"+ roleName +"朝右.png"
+        faceRighted()
+    }
+
+    // Timer {
+    //     interval: 100; running: true; repeat: true
+    //     onTriggered: {
+    //         console.log(player.wPressed)
+    //         console.log(player.aPressed)
+    //         console.log(player.sPressed)
+    //         console.log(player.dPressed)
+    //         console.log(player.state)
+    //         console.log("Current speed:", playerAnimation.duration)
+    //         console.log("v: ", player.v)
+    //         console.log("x: ", player.x)
+    //         console.log("y: ", player.y)
+    //         console.log("focus: ", player.focus)
+    //         console.log("active: ", player.active)
+    //     }
+    // }
+
+    RoleCustomizationCore{
+        id: core
+    }
+
+    Image{
+        id: playerIcon
+        source: player.roleName == "" ? "" : "/images/"+ player.roleName +"朝右.png"
+        anchors.fill: parent
+        z: 1
+
+        transform: Scale {
+            id: squashScale
+            origin.x: playerIcon.width/2
+            origin.y: playerIcon.height
+            xScale: 1.0; yScale: 1.0
+        }
+    }
+
+    Canvas {
+        id: shadow
+        width: player.width/1.1
+        height: player.height/4
+        anchors.bottom: player.bottom
+        anchors.bottomMargin: -5
+        anchors.horizontalCenter: player.horizontalCenter
+
+        onPaint: {
+            var ctx = getContext("2d");
+            ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+            ctx.beginPath();
+            ctx.ellipse(0, 0, width, height);
+            ctx.fill();
+        }
     }
 
     Item{
@@ -109,34 +162,9 @@ Image {
         }
     }
 
-    function faceLeft(){
-        player.source="/images/"+ roleName +"朝左.png"
-    }
-
-    function faceRight(){
-        player.source="/images/"+ roleName +"朝右.png"
-    }
-
-    // Timer {
-    //     interval: 100; running: true; repeat: true
-    //     onTriggered: {
-    //         console.log(player.wPressed)
-    //         console.log(player.aPressed)
-    //         console.log(player.sPressed)
-    //         console.log(player.dPressed)
-    //         console.log(player.state)
-    //         console.log("Current speed:", playerAnimation.duration)
-    //         console.log("v: ", player.v)
-    //         console.log("x: ", player.x)
-    //         console.log("y: ", player.y)
-    //         console.log("focus: ", player.focus)
-    //         console.log("active: ", player.active)
-    //     }
-    // }
-
     states: [
         State {
-            name: "stationary"; when: ((!player.wPressed && !player.sPressed && !player.aPressed && !player.dPressed)||!player.active)
+            name: "stationary"; when: ((!player.wPressed && !player.sPressed && !player.aPressed && !player.dPressed)||(!player.active)||(player.wPressed && player.sPressed && !player.aPressed && !player.dPressed)||(player.aPressed && player.dPressed && !player.wPressed && !player.sPressed))
             StateChangeScript {
                 script: {//console.log("1")
                     if(!player.active){
@@ -150,7 +178,7 @@ Image {
             }
         },
         State {
-            name: "up"; when: (player.wPressed==true && player.sPressed!=true && ((player.aPressed!=true && player.dPressed!=true)||(player.aPressed==true && player.dPressed==true)))
+            name: "up"; when: (player.wPressed && !player.sPressed && ((!player.aPressed && !player.dPressed)||(player.aPressed && player.dPressed)))
             PropertyChanges { target: pressW; running: true }
             StateChangeScript {
                 script: {
@@ -159,7 +187,7 @@ Image {
             }
         },
         State {
-            name: "down"; when: (player.sPressed==true && player.wPressed!=true && ((player.aPressed!=true && player.dPressed!=true)||(player.aPressed==true && player.dPressed==true)))
+            name: "down"; when: (player.sPressed && !player.wPressed && ((!player.aPressed && !player.dPressed)||(player.aPressed && player.dPressed)))
             PropertyChanges { target: pressS; running: true }
             StateChangeScript {
                 script: {
@@ -168,7 +196,7 @@ Image {
             }
         },
         State {
-            name: "left"; when: (player.aPressed==true && player.dPressed!=true && ((player.wPressed!=true && player.sPressed!=true)||(player.wPressed==true && player.sPressed==true)))
+            name: "left"; when: (player.aPressed && !player.dPressed && ((!player.wPressed && !player.sPressed)||(player.wPressed && player.sPressed)))
             PropertyChanges { target: pressA; running: true }
             StateChangeScript {
                 script: {
@@ -178,7 +206,7 @@ Image {
             }
         },
         State {
-            name: "right"; when: (player.dPressed==true && player.aPressed!=true && ((player.wPressed!=true && player.sPressed!=true)||(player.wPressed==true && player.sPressed==true)))
+            name: "right"; when: (player.dPressed && !player.aPressed && ((!player.wPressed && !player.sPressed)||(player.wPressed && player.sPressed)))
             PropertyChanges { target: pressD; running: true }
             StateChangeScript {
                 script: {
@@ -188,7 +216,7 @@ Image {
             }
         },
         State {
-            name: "upLeft"; when: (player.wPressed==true && player.aPressed==true && player.sPressed!=true && player.dPressed!=true)
+            name: "upLeft"; when: (player.wPressed && player.aPressed && !player.sPressed && !player.dPressed)
             PropertyChanges { target: pressW; running: false }
             PropertyChanges { target: pressA; running: false }
             PropertyChanges { target: pressWA; running: true }
@@ -200,7 +228,7 @@ Image {
             }
         },
         State {
-            name: "downLeft"; when: (player.sPressed==true && player.aPressed==true && player.wPressed!=true && player.dPressed!=true)
+            name: "downLeft"; when: (player.sPressed && player.aPressed && !player.wPressed && !player.dPressed)
             PropertyChanges { target: pressS; running: false }
             PropertyChanges { target: pressA; running: false }
             PropertyChanges { target: pressSA; running: true }
@@ -212,7 +240,7 @@ Image {
             }
         },
         State {
-            name: "upRight"; when: (player.wPressed==true && player.dPressed==true && player.sPressed!=true && player.aPressed!=true)
+            name: "upRight"; when: (player.wPressed && player.dPressed && !player.sPressed && !player.aPressed)
             PropertyChanges { target: pressW; running: false }
             PropertyChanges { target: pressD; running: false }
             PropertyChanges { target: pressWD; running: true }
@@ -224,7 +252,7 @@ Image {
             }
         },
         State {
-            name: "downRight"; when: (player.sPressed==true && player.dPressed==true && player.wPressed!=true && player.aPressed!=true)
+            name: "downRight"; when: (player.sPressed && player.dPressed && !player.wPressed && !player.aPressed)
             PropertyChanges { target: pressS; running: false }
             PropertyChanges { target: pressD; running: false }
             PropertyChanges { target: pressSD; running: true }

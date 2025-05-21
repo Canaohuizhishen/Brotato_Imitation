@@ -1,6 +1,7 @@
+pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Layouts
+import "../components"
 
 Item {
     id: roleSelectionInterface
@@ -24,6 +25,11 @@ Item {
         id: background
         anchors.fill: parent
         color: "#353535"
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "#555555" }
+            GradientStop { position: 0.5; color: "#353535" }
+            GradientStop { position: 1.0; color: "#2a2a2a" }
+        }
     }
 
     Text {
@@ -151,6 +157,7 @@ Item {
         }
 
         Repeater {
+            id: locks
             model: 42
             objectName: "locks"
             delegate: Button {
@@ -165,6 +172,7 @@ Item {
                 Image {
                     width: parent.width*0.64
                     height: width*1.305
+                    //import "./components"
                     source: parent.pressed || parent.hovered || roleGrid.selectedObjectName == parent.objectName ? "/images/锁.png" : "/images/锁2.png"
                     anchors.centerIn: parent
                 }

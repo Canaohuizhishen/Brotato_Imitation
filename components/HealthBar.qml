@@ -7,7 +7,7 @@ Item {
     property double scaleFactor: 1.0
     property double maxHp: 0
     property double hp: 0
-    property color backgroundColor: "gray"
+    property color backgroundColor: "#454545"
     property color fillColor: "red"
     anchors.top: parent.top
     anchors.left: parent.left
