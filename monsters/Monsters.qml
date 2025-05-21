@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import "../tool.js" as Tool
 
 Item {
     id: monsters
@@ -12,6 +13,7 @@ Item {
     property double v: 0.05*scaleFactor
     property double stepSize: v*interval
 
+    property int maxNum: 100
     property double nextspawnMonstersCount: 5
     property double monsterSpawnRateIncrease: 0.05
 
@@ -19,8 +21,46 @@ Item {
         //spawnForks(1)
     }
 
+    function getCollidingChild(target){
+        for (var i = 0; i < monsters.children.length; i++) {
+            var child = monsters.children[i];
+            if (child.objectName === "Monster") {
+                if(child.isDead==true)continue
+                if(Math.abs(target.x-child.x)<(target.width+child.width)/2 && Math.abs(target.y-child.y)<(target.height+child.height)/2){
+                    return child
+                }
+            }
+        }
+        return null
+    }
+
+    function getClosestMonster(x,y,range){
+        if(monsters.children.length==0)return null
+        var m=null
+        for (var i = 0; i < monsters.children.length; i++) {
+            var child = monsters.children[i];
+            if (child.objectName === "Monster") {
+                if(child.isDead==true)continue
+                if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(x,y))<range){
+                    if(m==null)m=child
+                    else if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(x,y)) < Tool.getDistance(Qt.point(m.x,m.y),Qt.point(x,y)))m=child
+                }
+            }
+        }
+        return m
+    }
+
+    function killAll(){
+        for (var i = 0; i < monsters.children.length; i++) {
+            var child = monsters.children[i];
+            if (child.objectName === "Monster") {
+                child.kill()
+            }
+        }
+    }
+
     function spawnForks(n) {
-        var forkComponent = Qt.createComponent("Fork.qml");
+        var forkComponent = Qt.createComponent("../components/Fork.qml");
         if (forkComponent.status === Component.Ready) {
             for(var i=0;i<n;i++){
                 var fork = forkComponent.createObject(monsters.parent);
@@ -31,11 +71,10 @@ Item {
                 fork.rotation = Math.random() * 360
             }
             sleepTimer.start()
-        }
+        }else console.log("Monsters.qml: 找不到文件: Fork.qml")
     }
 
     function spawnMonsters() {
-
         var monsterComponent = Qt.createComponent("Monster.qml");
         if (monsterComponent.status === Component.Ready) {
             for (var i = 0; i < monsters.parent.children.length; i++) {
@@ -69,10 +108,13 @@ Item {
         id: createMonsterTimer
         interval: 2000; running: monsters.active; repeat: true
         onTriggered: {
-            var n=Math.floor(Math.random()*(monsters.nextspawnMonstersCount-3)+3)
-            //console.log(n)
-            monsters.spawnForks(n)
-            monsters.nextspawnMonstersCount=monsters.nextspawnMonstersCount*(1+monsters.monsterSpawnRateIncrease)
+            if(monsters.children.length<monsters.maxNum){
+                var n=Math.floor(Math.random()*(monsters.nextspawnMonstersCount-3)+3)
+                //console.log(n)
+                monsters.spawnForks(n)
+                monsters.nextspawnMonstersCount=monsters.nextspawnMonstersCount*(1+monsters.monsterSpawnRateIncrease)
+            }else monsters.nextspawnMonstersCount/=2
+            //console.log(monsters.children.length,monsters.nextspawnMonstersCount)
         }
     }
 
@@ -83,6 +125,8 @@ Item {
             for (var i = 0; i < monsters.children.length; i++) {
                 var child = monsters.children[i];
                 if (child.objectName === "Monster") {//console.log("1")
+                    if(child.isDead==true)continue
+                    if(!child.active)continue
                     var dx = (monsters.target.x + monsters.target.width/2) - (child.x + child.width/2);
                     var dy = (monsters.target.y + monsters.target.height/2) - (child.y + child.height/2);
                     var distance = Math.sqrt(dx * dx + dy * dy);

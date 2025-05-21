@@ -8,7 +8,7 @@ Item {
     property double maxXp: 100
     property double xp: 0
     property int level: 0
-    property color backgroundColor: "gray"
+    property color backgroundColor: "#454545"
     property color fillColor: "green"
     anchors.top: parent.top
     anchors.left: parent.left

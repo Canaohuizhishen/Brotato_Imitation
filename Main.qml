@@ -11,6 +11,9 @@ ApplicationWindow {
     title: "土豆兄弟(Brotato)(仿)"
     color: "black"
 
+    Component.onCompleted:{
+    }
+
     GameWindow{
         id: gameWindow
         width: window.width/window.height > 1.7777 ? gameWindow.height*1.7777 : window.width

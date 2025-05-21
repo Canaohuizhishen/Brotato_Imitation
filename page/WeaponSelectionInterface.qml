@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
+import "../components"
 
 Item {
     id: weaponSelectionInterface
@@ -25,6 +26,11 @@ Item {
         id: background
         anchors.fill: parent
         color: "#353535"
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: "#555555" }
+            GradientStop { position: 0.5; color: "#353535" }
+            GradientStop { position: 1.0; color: "#2a2a2a" }
+        }
     }
 
     Text {
