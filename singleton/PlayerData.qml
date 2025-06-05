@@ -4,7 +4,7 @@ import QtQuick 2.15
 QtObject {
     id: root
     property int curLevel: 0
-    property int maxXp: 100+Math.pow(curLevel+1,2)*100
+    property int maxXp: curLevel<5 ? 5+10*curLevel : 50+Math.pow(curLevel,2)
     property int curXp: 0
     property int maxHp: 10
     property int curHp: 10
@@ -23,6 +23,17 @@ QtObject {
     property int speed: 0
     property int luck: 0
     property int harvesting: 0
+
+    property int pickupRange: 150
+    property int materialsNumber: 0
+    property int remainingMaterialsNumber: 0
+
+    onCurXpChanged: {
+        if(curXp>=maxXp){
+            curXp-=maxXp
+            curLevel++
+        }
+    }
 
     function init(){
         curLevel = 0

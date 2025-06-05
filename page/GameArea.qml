@@ -1,4 +1,6 @@
 import QtQuick 2.15
+import singleton.PlayerData
+import "../components"
 import "../monsters"
 import "../weapons"
 
@@ -14,27 +16,23 @@ Item{
     focus: false
     property bool active: false
     property double scaleFactor: 1.0
-    property double lastScaleFactor: 1.0
 
     property int interval: 1
     property int curWaveNumber: 1
     property int totalWaveNumber: 20
     property bool isWaveOver: false
 
-    onScaleFactorChanged: {
-        for(var i=0;i<gameArea.children.length;i++){
-            var child=gameArea.children[i]
-            if(child.objectName=="子弹"){
-                child.x=child.x*scaleFactor/lastScaleFactor
-                child.y=child.y*scaleFactor/lastScaleFactor
-            }
-        }
-        lastScaleFactor=scaleFactor
+    property var bullets: bullets
+    property var materials: materials
+
+    Component.onCompleted: {
     }
 
     onIsWaveOverChanged: {
-        if(isWaveOver)monsters.killAll()
-        else {
+        if(isWaveOver){
+            monsters.disappear()
+        }else {
+            PlayerData.curHp=PlayerData.maxHp
             player.focus=true
             player.x=gameArea.width/2
             player.y=gameArea.height/2
@@ -63,6 +61,7 @@ Item{
         scaleFactor: gameArea.scaleFactor
         owner: player
         target: monsters
+        bulletsParent: bullets
     }
 
     Monsters {
@@ -70,25 +69,21 @@ Item{
         target: player
         active: gameArea.active
         scaleFactor: gameArea.scaleFactor
+        materialsParent: materials
+        waveNumber: gameArea.curWaveNumber
     }
 
-    Timer {
-        id: collidingTimer
-        interval: 50
-        running: gameArea.active
-        repeat: true
-        onTriggered: {
-            for(var i=0;i<gameArea.children.length;i++){
-                var child=gameArea.children[i]
-                if(child.objectName=="子弹"){
-                    var monster=monsters.getCollidingChild(child)
-                    if(monster!=null){
-                        monster.onHit(child)
-                        child.destroy()
-                    }
-                }
-            }
+    Bullets{
+        id: bullets
+        target: monsters
+        active: gameArea.active
+        scaleFactor: gameArea.scaleFactor
+    }
 
-        }
+    Materials{
+        id: materials
+        target: player
+        active: gameArea.active
+        scaleFactor: gameArea.scaleFactor
     }
 }

@@ -8,7 +8,7 @@ Item {
     property double maxHp: 0
     property double hp: 0
     property color backgroundColor: "#454545"
-    property color fillColor: "red"
+    property color fillColor: Qt.rgba(0.7,0,0,1)
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.topMargin: 15*healthBar.scaleFactor

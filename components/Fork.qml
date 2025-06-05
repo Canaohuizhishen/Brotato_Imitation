@@ -4,6 +4,7 @@ import QtQuick.Shapes 1.15
 Item {
     id: root
     objectName: "Fork"
+    property string targetMonsterName
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
     width: 70*scaleFactor

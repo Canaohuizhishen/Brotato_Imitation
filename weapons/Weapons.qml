@@ -6,6 +6,7 @@ Item{
     id: weapons
     property Player owner
     property Monsters target
+    property var bulletsParent: parent
     property double scaleFactor: 1.0
     anchors.centerIn: owner
     anchors.horizontalCenterOffset: 10
@@ -15,7 +16,7 @@ Item{
     property bool isFaceRight: true
 
     Rectangle{
-        //visible: false
+        visible: false
         anchors.fill: weapons
         color: "black"
         opacity: 0.5
@@ -34,8 +35,12 @@ Item{
     property int weaponsNum: 0
 
     Component.onCompleted: {
-        for(var i=0;i<6;i++)addWeapon("冲锋枪")
+        for(var i=0;i<1;i++)addWeapon("冲锋枪")
         //addWeapon("冲锋枪")
+    }
+
+    onScaleFactorChanged: {
+        relocation()
     }
 
     function faceLeft(){
@@ -70,8 +75,10 @@ Item{
         var weapon = weaponCore.getWeapon(weaponName)
         var component = Qt.createComponent(weapon.source);
         if (component.status === Component.Ready) {
+            var weapon = component.createObject(weapons);
+            weapon.bulletsParent=weapons.bulletsParent
+            weapon.scaleFactor=Qt.binding(function() { return weapons.scaleFactor; })
             weaponsNum++
-            var object = component.createObject(weapons,{"scaleFactor": Qt.binding(function() { return weapons.scaleFactor; })});
             relocation()
         } else {
             console.log("Error loading component:", component.errorString());
@@ -131,16 +138,13 @@ Item{
         for(var i=0;i<weapons.children.length;i++){
             var child=weapons.children[i]
             if(child.objectName!=""){
-                var weapon = weaponCore.getWeapon(child.objectName)
+                var weapon = weaponCore.getWeapon(child.weaponName)
                 child.x=(weapons.getPosition(weaponsNum,n).x-weapon.iconWidthOffset)*scaleFactor
                 child.y=(weapons.getPosition(weaponsNum,n).y-weapon.iconHeightOffset)*scaleFactor
+                child.originPos=Qt.point(child.x,child.y)
                 n++
             }
         }
-    }
-
-    onScaleFactorChanged: {
-        relocation()
     }
 
     WeaponCustomizationCore{
@@ -156,7 +160,7 @@ Item{
             for(var i=0;i<weapons.children.length;i++){
                 var child=weapons.children[i]
                 if(child.objectName!=""){
-                    var weapon=weaponCore.getWeapon(child.objectName)
+                    var weapon=weaponCore.getWeapon(child.weaponName)
                     var monster=weapons.target.getClosestMonster(child.x+weapons.x,child.y+weapons.y,weapon.range*weapons.scaleFactor)
                     if(monster==null){
                         child.targetPoint=null

@@ -113,8 +113,10 @@ Item {
         scaleFactor: gameWindow.scaleFactor
         active: false
         curWaveNumber: waveCountdown.waveNumber
-        onActiveChanged: {
-            if(active){
+
+        onIsWaveOverChanged: {
+            if(isWaveOver){
+                materials.allToBag(gameWindow.mapToItem(gameArea,52.5,117.5))
             }
         }
     }
@@ -145,6 +147,20 @@ Item {
         level: PlayerData.curLevel
         maxXp: PlayerData.maxXp
         xp: PlayerData.curXp
+    }
+
+    MaterialsBar{
+        id: materialsBar
+        visible: gameArea.visible
+        scaleFactor: gameWindow.scaleFactor
+        number: PlayerData.materialsNumber
+    }
+
+    BagBar{
+        id: bagBar
+        visible: gameArea.visible
+        scaleFactor: gameWindow.scaleFactor
+        number: PlayerData.remainingMaterialsNumber
     }
 
     WaveNumberText {

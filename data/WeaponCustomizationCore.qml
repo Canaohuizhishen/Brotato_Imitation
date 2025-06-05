@@ -3,6 +3,7 @@ import singleton.PlayerData
 
 Item {
     id: core
+    property var smg: submachineGun
 
     function getWeapon(weaponName){
         for(var i=0;i<core.children.length;i++){
@@ -20,6 +21,7 @@ Item {
         property int range: 400+PlayerData.range
 
         readonly property string source: "SMG.qml"
+        readonly property double aspectRatio: 0.683
         readonly property double iconWidthOffset: 9
         readonly property double iconHeightOffset: 16
         readonly property string type: "枪械"
