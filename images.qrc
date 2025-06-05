@@ -1,44 +1,58 @@
 <RCC>
     <qresource prefix="/">
+        <file>images/材料1.png</file>
+        <file>images/外星人宝宝朝左.png</file>
+        <file>images/外星人宝宝遮罩朝右.png</file>
         <file>images/全能者头像2.png</file>
         <file>images/开始界面.png</file>
         <file>images/锁2.png</file>
         <file>images/冲锋枪图标2.png</file>
+        <file>images/材料6.png</file>
         <file>images/异变体头像2.png</file>
+        <file>images/追逐者遮罩朝右.png</file>
         <file>images/石头3.png</file>
         <file>images/纪录.png</file>
         <file>images/魔杖暗.png</file>
-        <file>images/小怪1遮罩朝左.png</file>
         <file>images/魔杖光.png</file>
         <file>images/全能者朝左.png</file>
         <file>images/问号.png</file>
         <file>images/异变体头像3.png</file>
+        <file>images/材料5.png</file>
         <file>images/问号2.png</file>
         <file>images/03.png</file>
+        <file>images/材料2.png</file>
         <file>images/石头4.png</file>
+        <file>images/追逐者朝右.png</file>
         <file>images/全能者头像.png</file>
         <file>images/异变体朝右.png</file>
+        <file>images/材料7.png</file>
         <file>images/0.png</file>
         <file>images/锯齿边缘.png</file>
-        <file>images/小怪1朝右.png</file>
         <file>images/叉叉.png</file>
+        <file>images/外星人宝宝朝右.png</file>
         <file>images/冲锋枪朝左.png</file>
         <file>images/开始界面2.png</file>
         <file>images/冲锋枪朝右.png</file>
+        <file>images/追逐者朝左.png</file>
         <file>images/红子弹.png</file>
+        <file>images/材料8.png</file>
+        <file>images/材料4.png</file>
         <file>images/全能者朝右.png</file>
+        <file>images/材料3.png</file>
         <file>images/开始界面3.png</file>
         <file>images/黄子弹.png</file>
         <file>images/异变体朝左.png</file>
         <file>images/02.png</file>
-        <file>images/小怪1朝左.png</file>
+        <file>images/袋子图标.png</file>
+        <file>images/材料图标.png</file>
         <file>images/冲锋枪图标.png</file>
         <file>images/锁3.png</file>
         <file>images/异变体头像.png</file>
         <file>images/全能者头像3.png</file>
         <file>images/石头1.png</file>
+        <file>images/追逐者遮罩朝左.png</file>
+        <file>images/外星人宝宝遮罩朝左.png</file>
         <file>images/石头2.png</file>
-        <file>images/小怪1遮罩朝右.png</file>
         <file>images/锁.png</file>
         <file>images/魔杖图标.png</file>
         <file>images/手枪朝右.png</file>

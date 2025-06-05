@@ -1,24 +1,23 @@
 import QtQuick 2.15
+import "../data"
 import "../tool.js" as Tool
 
 Item {
     id: monsters
     anchors.fill: parent
-    z: 2
+    objectName: "Monsters"
+    z: 3
     property string difficulty
     property Player target: null
+    property var materialsParent: parent
     property bool active: true
     property double scaleFactor: 1.0
-    property int interval: 5
-    property double v: 0.05*scaleFactor
-    property double stepSize: v*interval
 
+    property int waveNumber: 0
     property int maxNum: 100
-    property double nextspawnMonstersCount: 5
-    property double monsterSpawnRateIncrease: 0.05
 
     Component.onCompleted: {
-        //spawnForks(1)
+        //monsters.spawnMonsters(1,"追逐者")
     }
 
     function getCollidingChild(target){
@@ -50,16 +49,16 @@ Item {
         return m
     }
 
-    function killAll(){
+    function disappear(){
         for (var i = 0; i < monsters.children.length; i++) {
             var child = monsters.children[i];
             if (child.objectName === "Monster") {
-                child.kill()
+                child.disappear()
             }
         }
     }
 
-    function spawnForks(n) {
+    function spawnMonsters(n,monsterName) {
         var forkComponent = Qt.createComponent("../components/Fork.qml");
         if (forkComponent.status === Component.Ready) {
             for(var i=0;i<n;i++){
@@ -69,26 +68,48 @@ Item {
                 fork.x = Math.random() * (monsters.parent.width - margin*2)+margin;
                 fork.y = Math.random() * (monsters.parent.height - margin*2)+margin;
                 fork.rotation = Math.random() * 360
+                fork.targetMonsterName=monsterName
             }
             sleepTimer.start()
-        }else console.log("Monsters.qml: 找不到文件: Fork.qml")
+        }else console.error("Error loading component:", forkComponent.errorString())
     }
 
-    function spawnMonsters() {
-        var monsterComponent = Qt.createComponent("Monster.qml");
-        if (monsterComponent.status === Component.Ready) {
+    function forksToMonsters() {
             for (var i = 0; i < monsters.parent.children.length; i++) {
                 var child = monsters.parent.children[i];
                 if (child.objectName === "Fork") {
-                    var monster = monsterComponent.createObject(monsters);
-                    monster.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-                    monster.x = child.x;
-                    monster.y = child.y;
-                    monster.z = 2
-                    child.destroy();
+                    var source=monsterCore.getMonster(child.targetMonsterName).source
+                    var monsterComponent = Qt.createComponent(source);
+                    if (monsterComponent.status === Component.Ready) {
+                        var monster = monsterComponent.createObject(monsters);
+                        monster.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+                        monster.x = child.x;
+                        monster.y = child.y;
+                        monster.z = 2
+                        monster.owner=monsters
+                        monster.target=monsters.target
+                        monster.waveNumber=monsters.waveNumber
+                        child.destroy();
+                    }else console.error("Error loading component:", monsterComponent.errorString())
                 }
             }
-        }
+    }
+
+    function dropMaterial(monster){
+        var materialComponent=Qt.createComponent("../components/Material.qml")
+        if (materialComponent.status === Component.Ready){
+            for(var i=0;i<monster.monsterData.materialDrops;i++){
+                var material=materialComponent.createObject(materialsParent)
+                material.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+                material.x=monster.x+monster.width/2-material.width/2
+                material.y=monster.y+monster.height-material.height
+            }
+        }else console.log("Error loading component:", materialComponent.errorString());
+    }
+
+    MonsterCustomizationCore{
+        id: monsterCore
+        waveNumber: monsters.waveNumber
     }
 
     Timer {
@@ -97,7 +118,7 @@ Item {
         running: false
         repeat: false
         onTriggered: {
-            monsters.spawnMonsters()
+            monsters.forksToMonsters()
         }
         function start(){
             running=true
@@ -106,63 +127,21 @@ Item {
 
     Timer {
         id: createMonsterTimer
-        interval: 2000; running: monsters.active; repeat: true
+        interval: 3000; running: monsters.active; repeat: true
         onTriggered: {
             if(monsters.children.length<monsters.maxNum){
-                var n=Math.floor(Math.random()*(monsters.nextspawnMonstersCount-3)+3)
-                //console.log(n)
-                monsters.spawnForks(n)
-                monsters.nextspawnMonstersCount=monsters.nextspawnMonstersCount*(1+monsters.monsterSpawnRateIncrease)
-            }else monsters.nextspawnMonstersCount/=2
-            //console.log(monsters.children.length,monsters.nextspawnMonstersCount)
-        }
-    }
-
-    Timer {
-        id: monsterMoveTimer
-        interval: monsters.interval; running: monsters.active; repeat: true
-        onTriggered: {
-            for (var i = 0; i < monsters.children.length; i++) {
-                var child = monsters.children[i];
-                if (child.objectName === "Monster") {//console.log("1")
-                    if(child.isDead==true)continue
-                    if(!child.active)continue
-                    var dx = (monsters.target.x + monsters.target.width/2) - (child.x + child.width/2);
-                    var dy = (monsters.target.y + monsters.target.height/2) - (child.y + child.height/2);
-                    var distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < monsters.stepSize) {
-                        child.x = monsters.target.x + monsters.target.width/2 - child.width/2;
-                        child.y = monsters.target.y + monsters.target.height/2 - child.height/2;
-                    } else {
-                        var stepX = (dx / distance) * monsters.stepSize;
-                        var stepY = (dy / distance) * monsters.stepSize;
-                        child.x += stepX;
-                        child.y += stepY;
-                    }
-
-                    if(dx<0)child.faceLeft()
-                    else child.faceRight()
+                //console.log(monsterCore.children.length)
+                for(var i=0;i<monsterCore.children.length;i++){
+                    var monsterData=monsterCore.children[i]
+                    var n=Math.floor(monsterData.initCount*monsterData.countRation)
+                    if(n==0)continue
+                    //console.log(n,monsterData.initCount,monsterData.countRation)
+                    monsterData.countRation*=1+monsterData.countIcreaseRation
+                    monsters.spawnMonsters(n,monsterData.objectName)
                 }
+                //monsters.spawnMonsters(n,"外星人宝宝")
+                //monsters.spawnMonsters(n,"追逐者")
             }
         }
     }
-
-    // 碰撞检测
-    function checkCollisions() {
-        for (var i = 0; i < monsters.children.length; i++) {
-            var child = monsters.children[i];
-            if (child.objectName === "Monster") {console.log("2")  // 调试输出
-                if (target.x < child.x + child.width &&
-                    target.x + target.width > child.x &&
-                    target.y < child.y + child.height &&
-                    target.y + target.height > child.y) {
-                    monsters.gameOver = true;
-                    monsterMoveTimer.stop();
-                    gameOverText.visible = true;
-                }
-            }
-        }
-    }
-
 }

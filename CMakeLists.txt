@@ -29,6 +29,15 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Player.qml
     QML_FILES data/WeaponCustomizationCore.qml data/RoleCustomizationCore.qml
     QML_FILES page/StoreInterface.qml
+    QML_FILES components/Material.qml
+    QML_FILES components/Bullets.qml
+    QML_FILES components/Materials.qml
+    QML_FILES components/MaterialsBar.qml
+    QML_FILES components/BagBar.qml
+    QML_FILES monsters/BabyAlien.qml
+    QML_FILES data/MonsterCustomizationCore.qml
+    QML_FILES monsters/Chaser.qml
+    QML_FILES weapons/Weapon.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

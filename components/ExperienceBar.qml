@@ -9,7 +9,7 @@ Item {
     property double xp: 0
     property int level: 0
     property color backgroundColor: "#454545"
-    property color fillColor: "green"
+    property color fillColor: Qt.rgba(0,0.7,0,1)
     anchors.top: parent.top
     anchors.left: parent.left
     anchors.topMargin: 45*experienceBar.scaleFactor

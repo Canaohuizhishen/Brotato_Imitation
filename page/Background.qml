@@ -12,7 +12,7 @@ Rectangle {
     property int stoneHeight: 40*scaleFactor
 
     Component.onCompleted: {
-        stoneNum=width*height/stoneWidth/stoneHeight*0.12
+        stoneNum=width*height/stoneWidth/stoneHeight*0.1
         createStones()
         createJaggedEdges()
     }
@@ -21,7 +21,7 @@ Rectangle {
         var edgeWidth=300
         var edgeHeight=20
 
-        for(var i=0;i<background.width;i+=edgeWidth){
+        for(var i=0;i<background.width/scaleFactor;i+=edgeWidth){
             var edgeUp = Qt.createQmlObject(
                         `import QtQuick 2.15;
                         Image {
@@ -52,7 +52,7 @@ Rectangle {
                         "dynamicImage" + i
                         );
         }
-        for(var i=0;i<background.height;i+=edgeWidth){
+        for(var i=0;i<background.height/scaleFactor;i+=edgeWidth){
             var edgeLeft = Qt.createQmlObject(
                         `import QtQuick 2.15;
                         Image {
@@ -95,8 +95,8 @@ Rectangle {
             while (!stoneCreated) {
                 var stoneWidth = background.stoneWidth;
                 var stoneHeight = background.stoneHeight;
-                var x = Math.random() * (background.width - stoneWidth * 2) + stoneWidth;
-                var y = Math.random() * (background.height - stoneHeight * 2) + stoneHeight;
+                var x = Math.random() * (background.width/scaleFactor - stoneWidth * 2) + stoneWidth;
+                var y = Math.random() * (background.height/scaleFactor - stoneHeight * 2) + stoneHeight;
 
                 // 检查新位置是否与已存在的石头重叠
                 var overlaps = false;
@@ -186,6 +186,13 @@ Rectangle {
         for(var i=0;i<background.children.length;i++){
             var child=background.children[i]
             if(child.objectName=="stone")child.destroy()
+        }
+    }
+
+    function deleteJaggedEdges(){
+        for(var i=0;i<background.children.length;i++){
+            var child=background.children[i]
+            if(child.objectName=="edge")child.destroy()
         }
     }
 

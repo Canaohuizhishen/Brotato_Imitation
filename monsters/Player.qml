@@ -6,27 +6,29 @@ import "../data"
 
 Item {
     id: player
+    width: 46*scaleFactor
+    height: width
+    focus: true
+    z: 1
     property string roleName
     property string weaponName
     property var ground: parent
     property bool active: true
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
+
     property int interval: 5
-    property double v: 0.4*scaleFactor
-    property double stepSize: v*interval
+    property double v: 500*scaleFactor
+    property double stepSize: v*interval/1200
     property double diagonalStepSize: stepSize*0.7
-    width: 50*scaleFactor
-    height: 50*scaleFactor
-    focus: true
-    z: 1
-    signal faceLefted()
-    signal faceRighted()
 
     property bool wPressed: false
     property bool sPressed: false
     property bool aPressed: false
     property bool dPressed: false
+
+    signal faceLefted()
+    signal faceRighted()
 
     Component.onCompleted: {
         x=ground.width/2
@@ -41,7 +43,9 @@ Item {
 
     onRoleNameChanged: {
         PlayerData.init()
-        core.getRole(roleName).setInitRoleAttributes()
+        var roleData=core.getRole(roleName)
+        roleData.setInitRoleAttributes()
+        height=Qt.binding(function (){return width*roleData.aspectRatio})
     }
 
     function faceLeft(){
@@ -52,6 +56,11 @@ Item {
     function faceRight(){
         playerIcon.source="/images/"+ roleName +"朝右.png"
         faceRighted()
+    }
+
+    function getMaterial(material){
+        PlayerData.materialsNumber+=material.value
+        PlayerData.curXp+=material.value
     }
 
     // Timer {
@@ -129,17 +138,15 @@ Item {
             id: squashSequence_slow
             loops: Animation.Infinite
             running: true
-            property double duration: 500
+            property double duration: 1050
 
-            // 阶段一：同时扁平 X 并拉长 Y
             ParallelAnimation {
-                NumberAnimation { target: squashScale; property: "xScale"; to: 1.1; duration: squashSequence_slow.duration; easing.type: Easing.InOutQuad }
-                NumberAnimation { target: squashScale; property: "yScale"; to: 0.9; duration: squashSequence_slow.duration; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: squashScale; property: "xScale"; to: 1.15; duration: squashSequence_slow.duration*3/7; easing.type: Easing.Linear }
+                NumberAnimation { target: squashScale; property: "yScale"; to: 0.85; duration: squashSequence_slow.duration*3/7; easing.type: Easing.Linear }
             }
-            // 阶段二：同时恢复 X、Y
             ParallelAnimation {
-                NumberAnimation { target: squashScale; property: "xScale"; to: 0.95; duration: squashSequence_slow.duration; easing.type: Easing.InOutQuad }
-                NumberAnimation { target: squashScale; property: "yScale"; to: 1.05; duration: squashSequence_slow.duration; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: squashScale; property: "xScale"; to: 1; duration: squashSequence_slow.duration*4/7; easing.type: Easing.OutQuad }
+                NumberAnimation { target: squashScale; property: "yScale"; to: 1; duration: squashSequence_slow.duration*4/7; easing.type: Easing.OutQuad }
             }
         }
 
@@ -147,17 +154,15 @@ Item {
             id: squashSequence_fast
             loops: Animation.Infinite
             running: true
-            property double duration: 180
+            property double duration: 350
 
-            // 阶段一：同时扁平 X 并拉长 Y
             ParallelAnimation {
-                NumberAnimation { target: squashScale; property: "xScale"; to: 1.1; duration: squashSequence_fast.duration; easing.type: Easing.InOutQuad }
-                NumberAnimation { target: squashScale; property: "yScale"; to: 0.9; duration: squashSequence_fast.duration; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: squashScale; property: "xScale"; to: 0.95; duration: squashSequence_fast.duration*3/7; easing.type: Easing.OutQuad }
+                NumberAnimation { target: squashScale; property: "yScale"; to: 1.05; duration: squashSequence_fast.duration*3/7; easing.type: Easing.OutQuad }
             }
-            // 阶段二：同时恢复 X、Y
             ParallelAnimation {
-                NumberAnimation { target: squashScale; property: "xScale"; to: 0.95; duration: squashSequence_fast.duration; easing.type: Easing.InOutQuad }
-                NumberAnimation { target: squashScale; property: "yScale"; to: 1.05; duration: squashSequence_fast.duration; easing.type: Easing.InOutQuad }
+                NumberAnimation { target: squashScale; property: "xScale"; to: 1.2; duration: squashSequence_fast.duration*4/7; easing.type: Easing.Linear }
+                NumberAnimation { target: squashScale; property: "yScale"; to: 0.8; duration: squashSequence_fast.duration*4/7; easing.type: Easing.Linear }
             }
         }
     }

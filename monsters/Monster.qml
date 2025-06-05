@@ -1,41 +1,62 @@
 import QtQuick 2.15
 import Brotato
+import singleton.PlayerData
 
 Image {
-    id: monsterImage
-    source: "/images/小怪1朝右.png"
+    id: monster
+    property Player target: null
+    source: "/images/"+monster.monsterName+"朝右.png"
     objectName: "Monster"
+    property string monsterName
+    property var owner: parent
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
-    width: 52*scaleFactor
-    height: 52*scaleFactor
+    property int imageWidth
+    property int imageHeight
+    width: imageWidth*scaleFactor
+    height: imageHeight*scaleFactor
     z: 2
     property bool active: true
     property bool isDead: false
+    property bool isHited: false
     property bool isFaceRight: true
-    property var data: monsterData
+
+    property int waveNumber: 0
+    property alias monsterData: monsterData
+    property var core: monsterCore.getMonster(monsterName)
+
+    property double v: core.initVelocity*scaleFactor
+    property int interval: 5
+    property double stepSize: v*interval/1200
 
     Item {
         id: monsterData
-        property int maxHp: 10
+        property int maxHp: monster.core.initHp+monster.core.hpBonus*(monster.waveNumber-1)
         property int hp: maxHp
-        property int damage: 1
+        property int damage: monster.core.initDamage+monster.core.damageBonus*(monster.waveNumber-1)
+        property int materialDrops: monster.core.materialDrops
+        property double consumableDropRate: monster.core.consumableDropRate
+        property double chestDropRate: monster.core.chestDropRate
         onHpChanged: {
-            if(hp<=0)monsterImage.kill()
+            if(hp<=0)monster.kill()
         }
     }
 
     onScaleFactorChanged: {
-        monsterImage.x = monsterImage.x*scaleFactor/lastScaleFactor;
-        monsterImage.y = monsterImage.y*scaleFactor/lastScaleFactor;
+        monster.x = monster.x*scaleFactor/lastScaleFactor;
+        monster.y = monster.y*scaleFactor/lastScaleFactor;
         lastScaleFactor=scaleFactor
     }
 
     transform: Scale {
         id: squashScale
-        origin.x: monsterImage.width/2
-        origin.y: monsterImage.height
+        origin.x: monster.width/2
+        origin.y: monster.height
         xScale: 1.0; yScale: 1.0
+    }
+
+    MonsterCustomizationCore{
+        id: monsterCore
     }
 
     SequentialAnimation {
@@ -50,8 +71,32 @@ Image {
         }
         // 阶段二：同时恢复 X、Y
         ParallelAnimation {
-            NumberAnimation { target: squashScale; property: "xScale"; to: 0.95; duration: 1000; easing.type: Easing.InOutQuad }
-            NumberAnimation { target: squashScale; property: "yScale"; to: 1.05; duration: 1000; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: squashScale; property: "xScale"; to: 1; duration: 1000; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: squashScale; property: "yScale"; to: 1; duration: 1000; easing.type: Easing.InOutQuad }
+        }
+    }
+
+    Timer {
+        id: moveTimer
+        interval: monster.interval; running: monster.active; repeat: true
+        onTriggered: {
+                    if(monster.isDead==true)return
+                    if(!monster.active)return
+                    var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
+                    var dy = (monster.target.y + monster.target.height/2) - (monster.y + monster.height/2);
+                    var distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < monster.target.width/2) {//已碰撞
+                        monster.hit()
+                    } else {
+                        var stepX = (dx / distance) * monster.stepSize;
+                        var stepY = (dy / distance) * monster.stepSize;
+                        monster.x += stepX;
+                        monster.y += stepY;
+                    }
+
+                    if(dx<0)monster.faceLeft()
+                    else monster.faceRight()
         }
     }
 
@@ -63,23 +108,32 @@ Image {
         property double angle: 0
 
         PropertyAnimation {
-            target: monsterImage
+            target: monster
             property: "x"
-            to:  monsterImage.x+Math.cos(deadAnimation.angle* (Math.PI/180))*monsterImage.width*2.5
+            to:  monster.x+Math.cos(deadAnimation.angle* (Math.PI/180))*monster.width*2.5
             duration: 350*deadAnimation.multiplier
             easing.type: Easing.OutQuart
         }
 
         PropertyAnimation {
-            target: monsterImage
+            target: monster
             property: "y"
-            to: monsterImage.y+Math.sin(deadAnimation.angle* (Math.PI/180))*monsterImage.width*2.5
+            to: monster.y+Math.sin(deadAnimation.angle* (Math.PI/180))*monster.width*2.5
             duration: 350  // 动画持续时间
             easing.type: Easing.Linear  // 缓动效果
         }
 
+        onStarted: {
+            disappearAnimation.start()
+        }
+    }
+
+    ParallelAnimation{
+        id: disappearAnimation
+        loops: 1
+        running: false
         PropertyAnimation {
-            target: monsterImage
+            target: monster
             property: "rotation"
             from: 0
             to: -360
@@ -88,7 +142,7 @@ Image {
         }
 
         PropertyAnimation {
-            target: monsterImage
+            target: monster
             property: "scale"
             from: 1
             to: 0
@@ -96,7 +150,7 @@ Image {
             easing.type: Easing.Linear
         }
         onStopped:{
-            monsterImage.destroy()
+            monster.destroy()
         }
     }
 
@@ -106,40 +160,39 @@ Image {
         running: false
         repeat: false
         onTriggered: {
-            monsterImage.active=true
-        }
-        function start(){
-            running=true
+            monster.active=true
         }
     }
 
-    // Timer {
-    //     id: killTimer
-    //     interval: 500
-    //     running: false
-    //     repeat: false
-    //     onTriggered: {
-    //         monsterImage.destroy()
-    //     }
-    //     function start(){
-    //         running=true
-    //     }
-    // }
+    Timer {
+        id: hitingTimer
+        interval: 250
+        running: false
+        repeat: false
+        onTriggered: {
+            monster.isHited=false
+        }
+    }
 
     function faceLeft(){
-        monsterImage.source="/images/小怪1朝左.png"
+        monster.source="/images/"+monster.monsterName+"朝左.png"
         isFaceRight=false
     }
 
     function faceRight(){
-        monsterImage.source="/images/小怪1朝右.png"
+        monster.source="/images/"+monster.monsterName+"朝右.png"
         isFaceRight=true
     }
 
+    function disappear(){
+        monster.isDead=true
+        disappearAnimation.start()
+    }
+
     function kill(){
-        monsterImage.isDead=true
+        monster.isDead=true
+        monster.owner.dropMaterial(monster)
         deadAnimation.start()
-        //killTimer.start()
     }
 
     function stunned(time){
@@ -148,26 +201,33 @@ Image {
         stunnedTimer.start()
     }
 
+    function hit(){
+        if(isHited)return
+        else isHited=true
+        PlayerData.curHp-=monster.monsterData.damage
+        hitingTimer.start()
+    }
+
     function onHit(bullet) {
         //设置攻击角度
-        deadAnimation.angle=monsterImage.isFaceRight ? bullet.rotation+180 : bullet.rotation
+        deadAnimation.angle=monster.isFaceRight ? bullet.rotation+180 : bullet.rotation
 
         //僵直
-        stunned(100)
+        //stunned(100)
 
         // 白色遮罩动画
-        makeMask(monsterImage)
+        makeMask(monster)
 
         // 飙血动画
         for (var i = 0; i < 5; i++) {
             var radius = (Math.random() * 10 + 4)*scaleFactor; // 随机半径
-            var dx = Math.random() * monsterImage.width*2;
-            var dy = Math.random() * monsterImage.width/2-monsterImage.width/4;
-            makeBlood(monsterImage.x+monsterImage.width/2,monsterImage.y+monsterImage.height/2,dx,dy, radius,gameArea);
+            var dx = Math.random() * monster.width*2;
+            var dy = Math.random() * monster.width/2-monster.width/4;
+            makeBlood(monster.x+monster.width/2,monster.y+monster.height/2,dx,dy, radius,gameArea);
         }
 
         //掉血
-        data.hp-=bullet.damage
+        monsterData.hp-=bullet.damage
     }
 
     function makeMask(parent){
@@ -176,7 +236,7 @@ Image {
                     Image {
                         id: whiteOverlay
                         anchors.fill: parent
-                        source: parent.isFaceRight ? "/images/小怪1遮罩朝右.png" : "/images/小怪1遮罩朝左.png"
+                        source: parent.isFaceRight ? "/images/"+monster.monsterName+"遮罩朝右.png" : "/images/"+monster.monsterName+"遮罩朝左.png"
                         z: 100
                         Component.onCompleted: {
                         }
@@ -205,8 +265,8 @@ Image {
                         id: bloodSplatter
                         width: ${width}
                         height: width * 1.1
-                        x: ${x}
-                        y: ${y}
+                        x: ${x}-width/2
+                        y: ${y}-height/2
                         color: 'black'
                         visible: true
                         radius: width / 2
