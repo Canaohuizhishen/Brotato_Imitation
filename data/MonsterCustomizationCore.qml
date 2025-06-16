@@ -42,7 +42,7 @@ Item {
 
     Item{
         id: babyAlien
-        objectName: "外星人宝宝"
+        objectName: "babyAlien"
         readonly property string source: "BabyAlien.qml"
         readonly property int initHp: 3
         readonly property int hpBonus: 2
@@ -66,7 +66,7 @@ Item {
 
     Item{
         id: chaser
-        objectName: "追逐者"
+        objectName: "chaser"
         readonly property string source: "Chaser.qml"
         readonly property int initHp: 1
         readonly property int hpBonus: 1

@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import "../data"
 
 Rectangle {
     id: roleCard
@@ -26,13 +27,13 @@ Rectangle {
         Image {
             width: parent.width*(roleCard.roleName=="" ? 0 : core.getRole(roleCard.roleName).scalingFactor*roleCard.scaleFactor)
             height: width*(roleCard.roleName=="" ? 0 : core.getRole(roleCard.roleName).aspectRatio)
-            source: roleCard.roleName == "" ? "" : "/images/"+roleCard.roleName+"头像3.png"
+            source: roleCard.roleName == "" ? "" : "/images/"+roleCard.roleName+"_avatar3.png"
             anchors.centerIn: parent
         }
     }
 
     Text{
-        text: roleCard.roleName
+        text: roleCard.roleName == "" ? "" : core.getRole(roleCard.roleName).roleName
         color: "white"
         font.pixelSize: 18*roleCard.scaleFactor
         anchors.left: parent.left

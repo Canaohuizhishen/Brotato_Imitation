@@ -25,15 +25,15 @@ Rectangle {
         radius: 4
 
         Image {
-            width: parent.width*0.8
+            width: parent.width*0.9
             height: width
-            source: weaponCard.weaponName == "" ? "" : "/images/"+weaponCard.weaponName+"图标3.png"
+            source: weaponCard.weaponName == "" ? "" : "/images/"+weaponCard.weaponName+"_icon.png"
             anchors.centerIn: parent
         }
     }
 
     Text{
-        text: weaponCard.weaponName
+        text: weaponCard.weaponName == "" ? "" : core.getWeapon(weaponCard.weaponName).weaponName
         color: "white"
         font.pixelSize: 18*weaponCard.scaleFactor
         anchors.left: parent.left

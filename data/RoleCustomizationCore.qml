@@ -13,7 +13,8 @@ Item {
 
     Item{
         id: wellRounded
-        objectName: "全能者"
+        objectName: "wellRounded"
+        property string roleName: "全能者"
         readonly property double scalingFactor: 0.75
         readonly property double aspectRatio: 1.167
         readonly property string talentText: `
@@ -31,7 +32,8 @@ Item {
 
     Item{
         id: mutant
-        objectName: "异变体"
+        objectName: "mutant"
+        property string roleName: "异变体"
         readonly property double scalingFactor: 0.8
         readonly property double aspectRatio: 1.12
         readonly property string talentText: `

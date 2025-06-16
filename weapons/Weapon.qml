@@ -4,7 +4,7 @@ import "../data"
 
 Image {
     id: weapon
-    source: "/images/"+weapon.weaponName+"朝右.png"
+    source: "/images/"+weapon.weaponName+"_faceRight.png"
     objectName: "Weapon"
     property string weaponName
     property double scaleFactor: 1
@@ -26,13 +26,13 @@ Image {
 
     function faceLeft(){
         if(!isFaceRight)return
-        weapon.source="/images/"+weapon.weaponName+"朝左.png"
+        weapon.source="/images/"+weapon.weaponName+"_faceLeft.png"
         isFaceRight=false
     }
 
     function faceRight(){
         if(isFaceRight)return
-        weapon.source="/images/"+weapon.weaponName+"朝右.png"
+        weapon.source="/images/"+weapon.weaponName+"_faceRight.png"
         isFaceRight=true
     }
 

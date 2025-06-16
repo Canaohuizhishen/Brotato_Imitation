@@ -82,7 +82,7 @@ Item {
             Image {
                 width: parent.width*0.64
                 height: width*1.3513
-                source: randomSelect.pressed || randomSelect.hovered || weaponRow.selectedObjectName == randomSelect.objectName ? "/images/问号.png" :"/images/问号2.png"
+                source: randomSelect.pressed || randomSelect.hovered || weaponRow.selectedObjectName == randomSelect.objectName ? "/images/question_mark.png" :"/images/question_mark2.png"
                 anchors.centerIn: parent
             }
 
@@ -97,7 +97,7 @@ Item {
 
         Button {
             id: wellRounded
-            objectName: "冲锋枪"
+            objectName: "smg"
             Layout.preferredWidth: weaponRow.cellWidth
             Layout.preferredHeight: weaponRow.cellHeight
             background: Rectangle {
@@ -106,9 +106,9 @@ Item {
             }
 
             Image {
-                width: parent.width*0.8
+                width: parent.width
                 height: width
-                source: wellRounded.pressed || wellRounded.hovered || weaponRow.selectedObjectName == wellRounded.objectName ? "/images/冲锋枪图标.png":"/images/冲锋枪图标2.png"
+                source: "/images/smg_icon.png"
                 anchors.centerIn: parent
             }
 

@@ -21,7 +21,7 @@ Item {
         gameArea.visible=true
         gameArea.active=true
         gameArea.player.focus=true
-        gameArea.player.roleName="全能者"
+        gameArea.player.roleName="wellRounded"
     }
 
     // Timer {
@@ -31,80 +31,80 @@ Item {
     //     }
     // }
 
-    // StartInterface{
-    //     id: startInterface
-    //     visible: true
-    //     scaleFactor: gameWindow.scaleFactor
-    //     z:100
+    StartInterface{
+        id: startInterface
+        visible: true
+        scaleFactor: gameWindow.scaleFactor
+        z:100
 
-    //     startButton.onClicked:{
-    //         startInterface.visible=false
-    //         roleSelectionInterface.visible=true
-    //     }
+        startButton.onClicked:{
+            startInterface.visible=false
+            roleSelectionInterface.visible=true
+        }
 
-    //     exitButton.onClicked:{
-    //         Qt.quit()
-    //     }
-    // }
+        exitButton.onClicked:{
+            Qt.quit()
+        }
+    }
 
-    // RoleSelectionInterface{
-    //     id: roleSelectionInterface
-    //     visible: false
-    //     scaleFactor: gameWindow.scaleFactor
+    RoleSelectionInterface{
+        id: roleSelectionInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
 
-    //     onSelected:{
-    //         roleSelectionInterface.visible=false
-    //         weaponSelectionInterface.visible=true
-    //         weaponSelectionInterface.selectedRoleName=selectedRoleName
+        onSelected:{
+            roleSelectionInterface.visible=false
+            weaponSelectionInterface.visible=true
+            weaponSelectionInterface.selectedRoleName=selectedRoleName
 
-    //     }
+        }
 
-    //     backButton.onClicked: {
-    //         init()
-    //         roleSelectionInterface.visible=false
-    //         startInterface.visible=true
-    //     }
-    // }
+        backButton.onClicked: {
+            init()
+            roleSelectionInterface.visible=false
+            startInterface.visible=true
+        }
+    }
 
-    // WeaponSelectionInterface{
-    //     id: weaponSelectionInterface
-    //     visible: false
-    //     scaleFactor: gameWindow.scaleFactor
+    WeaponSelectionInterface{
+        id: weaponSelectionInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
 
-    //     onSelected:{
-    //         weaponSelectionInterface.visible=false
-    //         difficultySelectionInterface.visible=true
-    //         difficultySelectionInterface.selectedRoleName=selectedRoleName
-    //         difficultySelectionInterface.selectedWeaponName=selectedWeaponName
-    //     }
+        onSelected:{
+            weaponSelectionInterface.visible=false
+            difficultySelectionInterface.visible=true
+            difficultySelectionInterface.selectedRoleName=selectedRoleName
+            difficultySelectionInterface.selectedWeaponName=selectedWeaponName
+        }
 
-    //     backButton.onClicked: {
-    //         init()
-    //         weaponSelectionInterface.visible=false
-    //         roleSelectionInterface.visible=true
-    //     }
-    // }
+        backButton.onClicked: {
+            init()
+            weaponSelectionInterface.visible=false
+            roleSelectionInterface.visible=true
+        }
+    }
 
-    // DifficultySelectionInterface{
-    //     id: difficultySelectionInterface
-    //     visible: false
-    //     scaleFactor: gameWindow.scaleFactor
+    DifficultySelectionInterface{
+        id: difficultySelectionInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
 
-    //     onSelected:{
-    //         difficultySelectionInterface.visible=false
-    //         gameArea.visible=true
-    //         gameArea.active=true
-    //         gameArea.player.focus=true
-    //         gameArea.player.roleName=selectedRoleName
-    //         gameArea.monsters.difficulty=selectedDifficulty
-    //     }
+        onSelected:{
+            difficultySelectionInterface.visible=false
+            gameArea.visible=true
+            gameArea.active=true
+            gameArea.player.focus=true
+            gameArea.player.roleName=selectedRoleName
+            gameArea.monsters.difficulty=selectedDifficulty
+        }
 
-    //     backButton.onClicked: {
-    //         init()
-    //         difficultySelectionInterface.visible=false
-    //         weaponSelectionInterface.visible=true
-    //     }
-    // }
+        backButton.onClicked: {
+            init()
+            difficultySelectionInterface.visible=false
+            weaponSelectionInterface.visible=true
+        }
+    }
 
     GameArea {
         id: gameArea
@@ -120,6 +120,10 @@ Item {
             }
         }
     }
+
+    // UpgradeInterface{
+    //     id: upgradeInterface
+    // }
 
     StoreInterface{
         id: storeInterface
@@ -179,13 +183,15 @@ Item {
         states: [
             State {
                 name: "waveOver"; when: (waveCountdown.isWaveOver)
-                PropertyChanges { target: gameArea; isWaveOver: true; active: false}
-                PropertyChanges { target: delaytimer; running: true}
+                PropertyChanges { gameArea.isWaveOver: true; gameArea.active: false}
+                PropertyChanges { delaytimer.running: true}
+                PropertyChanges { upgradeNotificationBar.isCombatting: false}
             },
             State {
                 name: "waveRunning"; when: (!waveCountdown.isWaveOver)
-                PropertyChanges { target: gameArea; isWaveOver: false; active: true}
-                PropertyChanges { target: storeInterface; visible: false}
+                PropertyChanges { gameArea.isWaveOver: false; gameArea.active: true}
+                PropertyChanges { storeInterface.visible: false}
+                PropertyChanges { upgradeNotificationBar.isCombatting: true}
             }
         ]
 
@@ -197,5 +203,10 @@ Item {
                 gameArea.visible=false
             }
         }
+    }
+
+    UpgradeNotificationBar{
+        id: upgradeNotificationBar
+        scaleFactor: gameWindow.scaleFactor
     }
 }

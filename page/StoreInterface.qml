@@ -20,6 +20,8 @@ Item {
         }
     }
 
+
+
     Button{
         id: go
         text: "开始"

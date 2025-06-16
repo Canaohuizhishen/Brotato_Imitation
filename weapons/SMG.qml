@@ -2,7 +2,7 @@ import QtQuick 2.15
 
 Weapon {
     id: smg
-    weaponName: "冲锋枪"
+    weaponName: "smg"
 
     function fire(){
         if(isFaceRight){

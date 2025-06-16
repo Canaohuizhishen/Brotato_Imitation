@@ -14,7 +14,7 @@ Item {
 
     Image {
         id: image
-        source: "/images/袋子图标.png"
+        source: "/images/bag_icon.png"
         width: height
         height: bagBar.height
         anchors.left: bagBar.left

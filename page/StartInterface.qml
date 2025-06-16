@@ -17,7 +17,7 @@ Item{
 
     Image {
         id: startImage
-        source: "/images/开始界面3.png"
+        source: "/images/startInterface3.png"
         width: parent.width
         height: parent.height
     }

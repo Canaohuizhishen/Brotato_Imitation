@@ -20,7 +20,7 @@ Item {
         var array=materialImageAspectRatioArray
         root.rotation=Math.random()*360
         var index=Math.floor(Math.random()*array.length)
-        material.source="/images/材料"+(index+1)+".png"
+        material.source="/images/material"+(index+1)+".png"
         var k=1/array[index]
         material.width=Qt.binding(function(){return root.width*k/Math.sqrt(k*k+1)})
         material.height=Qt.binding(function(){return material.width/k})
