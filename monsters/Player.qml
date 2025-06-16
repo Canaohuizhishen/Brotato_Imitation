@@ -49,12 +49,12 @@ Item {
     }
 
     function faceLeft(){
-        playerIcon.source="/images/"+ roleName +"朝左.png"
+        playerIcon.source="/images/"+ roleName +"_faceLeft.png"
         faceLefted()
     }
 
     function faceRight(){
-        playerIcon.source="/images/"+ roleName +"朝右.png"
+        playerIcon.source="/images/"+ roleName +"_faceRight.png"
         faceRighted()
     }
 
@@ -86,7 +86,7 @@ Item {
 
     Image{
         id: playerIcon
-        source: player.roleName == "" ? "" : "/images/"+ player.roleName +"朝右.png"
+        source: player.roleName == "" ? "" : "/images/"+ player.roleName +"_faceRight.png"
         anchors.fill: parent
         z: 1
 

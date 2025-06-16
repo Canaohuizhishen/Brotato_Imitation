@@ -14,7 +14,7 @@ Item {
 
     Image {
         id: image
-        source: "/images/材料图标.png"
+        source: "/images/material_icon.png"
         width: height
         height: materialBar.height
         anchors.left: materialBar.left

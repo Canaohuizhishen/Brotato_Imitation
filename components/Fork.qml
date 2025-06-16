@@ -22,7 +22,7 @@ Item {
         anchors.centerIn: parent
         width: root.width
         height: root.height
-        source: "/images/叉叉.png"
+        source: "/images/red_fork.png"
     }
 
     SequentialAnimation on opacity {

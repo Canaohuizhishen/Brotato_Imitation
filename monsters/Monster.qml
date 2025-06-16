@@ -5,7 +5,7 @@ import singleton.PlayerData
 Image {
     id: monster
     property Player target: null
-    source: "/images/"+monster.monsterName+"朝右.png"
+    source: "/images/"+monster.monsterName+"_faceRight.png"
     objectName: "Monster"
     property string monsterName
     property var owner: parent
@@ -175,12 +175,12 @@ Image {
     }
 
     function faceLeft(){
-        monster.source="/images/"+monster.monsterName+"朝左.png"
+        monster.source="/images/"+monster.monsterName+"_faceLeft.png"
         isFaceRight=false
     }
 
     function faceRight(){
-        monster.source="/images/"+monster.monsterName+"朝右.png"
+        monster.source="/images/"+monster.monsterName+"_faceRight.png"
         isFaceRight=true
     }
 
@@ -236,7 +236,7 @@ Image {
                     Image {
                         id: whiteOverlay
                         anchors.fill: parent
-                        source: parent.isFaceRight ? "/images/"+monster.monsterName+"遮罩朝右.png" : "/images/"+monster.monsterName+"遮罩朝左.png"
+                        source: parent.isFaceRight ? "/images/"+monster.monsterName+"_mask_faceRight.png" : "/images/"+monster.monsterName+"_mask_faceLeft.png"
                         z: 100
                         Component.onCompleted: {
                         }

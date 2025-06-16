@@ -38,6 +38,11 @@ qt_add_qml_module(appBrotato
     QML_FILES data/MonsterCustomizationCore.qml
     QML_FILES monsters/Chaser.qml
     QML_FILES weapons/Weapon.qml
+    QML_FILES data/PropCustomizationCore.qml
+    QML_FILES components/GoodsCard.qml
+    QML_FILES components/UpgradeNotificationBar.qml
+    QML_FILES page/UpgradeInterface.qml
+    QML_FILES components/UpgradeOption.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

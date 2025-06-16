@@ -15,7 +15,7 @@ Rectangle {
     radius: 4
 
     Image {
-        source: "/images/纪录.png"
+        source: "/images/recording.png"
         width: 50*recardCard.scaleFactor
         height: width
         anchors.horizontalCenter: parent.horizontalCenter

@@ -35,7 +35,7 @@ Item{
     property int weaponsNum: 0
 
     Component.onCompleted: {
-        for(var i=0;i<1;i++)addWeapon("冲锋枪")
+        for(var i=0;i<1;i++)addWeapon("smg")
         //addWeapon("冲锋枪")
     }
 
