@@ -17,7 +17,7 @@ Item {
     property int maxNum: 100
 
     Component.onCompleted: {
-        //monsters.spawnMonsters(1,"追逐者")
+        //monsters.spawnMonsters(10,"charger")
     }
 
     function getCollidingChild(target){
