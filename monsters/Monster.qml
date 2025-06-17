@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import Brotato
 import singleton.PlayerData
+import "../data"
 
 Image {
     id: monster
