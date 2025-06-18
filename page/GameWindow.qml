@@ -121,9 +121,12 @@ Item {
         }
     }
 
-    // UpgradeInterface{
-    //     id: upgradeInterface
-    // }
+    UpgradeInterface{
+        id: upgradeInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
+        upgradeNotificationBar: upgradeNotificationBar
+    }
 
     StoreInterface{
         id: storeInterface
@@ -131,7 +134,6 @@ Item {
         scaleFactor: gameWindow.scaleFactor
         goButton.onClicked:{
             visible=false
-            gameArea.visible=true
             gameArea.active=true
         }
     }
@@ -199,8 +201,12 @@ Item {
             id: delaytimer
             interval: 2000; running: false; repeat: false
             onTriggered: {
-                storeInterface.visible=true
-                gameArea.visible=false
+                if(upgradeNotificationBar.number){
+                    upgradeInterface.visible=true
+                    waveCountdown.visible=false
+                }else{
+                    storeInterface.visible=true
+                }
             }
         }
     }
@@ -209,5 +215,12 @@ Item {
         id: upgradeNotificationBar
         visible: gameArea.visible
         scaleFactor: gameWindow.scaleFactor
+        onNumberChanged: {
+            if(number==0){
+                upgradeInterface.visible=false
+                waveCountdown.visible=true
+                storeInterface.visible=true
+            }
+        }
     }
 }
