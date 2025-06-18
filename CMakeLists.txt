@@ -46,6 +46,7 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Charger.qml
     QML_FILES data/UpgradeOptionCustomizationCore.qml
     QML_FILES components/Attribute.qml
+    QML_FILES components/AttributePanel.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

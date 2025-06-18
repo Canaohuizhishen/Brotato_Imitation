@@ -17,7 +17,7 @@ Item {
     property int maxNum: 100
 
     Component.onCompleted: {
-        //monsters.spawnMonsters(10,"charger")
+        //monsters.spawnMonsters(10,"babyAlien")
     }
 
     function getCollidingChild(target){
@@ -62,11 +62,17 @@ Item {
         var forkComponent = Qt.createComponent("../components/Fork.qml");
         if (forkComponent.status === Component.Ready) {
             for(var i=0;i<n;i++){
+                var margin = 50
+                var x=Math.random() * (monsters.parent.width - margin*2)+margin;
+                var y=Math.random() * (monsters.parent.height - margin*2)+margin;
+                if(Tool.getDistance(Qt.point(target.x,target.y),Qt.point(x,y))<300){//离玩家太近时重新定位
+                    i--
+                    continue
+                }
                 var fork = forkComponent.createObject(monsters.parent);
                 fork.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-                var margin = 50
-                fork.x = Math.random() * (monsters.parent.width - margin*2)+margin;
-                fork.y = Math.random() * (monsters.parent.height - margin*2)+margin;
+                fork.x = x
+                fork.y = y
                 fork.rotation = Math.random() * 360
                 fork.targetMonsterName=monsterName
             }
@@ -139,8 +145,6 @@ Item {
                     monsterData.countRation*=1+monsterData.countIcreaseRation
                     monsters.spawnMonsters(n,monsterData.objectName)
                 }
-                //monsters.spawnMonsters(n,"外星人宝宝")
-                //monsters.spawnMonsters(n,"追逐者")
             }
         }
     }
