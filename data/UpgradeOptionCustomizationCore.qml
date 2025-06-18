@@ -47,7 +47,7 @@ Item {
 
             //查重
             var isSame=false
-            for(var i=0,n=0;i<array.length;i++){
+            for(var i=0;i<array.length;i++){
                 if(array[i]==index){
                     isSame=true
                     break
@@ -59,7 +59,7 @@ Item {
                 array.push(index)
                 core.children[index].grade=grade
                 result.push(core.children[index])
-            }
+            }else i--
         }
 
         return result
@@ -83,6 +83,217 @@ Item {
         `
         function choose(){
             PlayerData.speed+=value
+        }
+    }
+
+    Item{
+        id: chest
+        objectName: "chest"
+        property int grade: 1
+        property int value: 1*Math.pow(2,grade-1)
+        property string optionName: "胸"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>护甲</font><br>
+        `
+        function choose(){
+             PlayerData.armor+=value
+        }
+    }
+    Item{
+        id: skull
+        objectName: "skull"
+        property int grade: 1
+        property int value: 2*Math.pow(2,grade-1)
+        property string optionName: "头骨"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>工程学</font><br>
+        `
+        function choose(){
+            PlayerData.engineering+=value
+        }
+    }
+    Item{
+        id: lung
+        objectName: "lung"
+        property int grade: 1
+        property int value: 2*Math.pow(2,grade-1)
+        property string optionName: "肺"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>生命恢复</font><br>
+        `
+        function choose(){
+            PlayerData.hpRegeneration+=value
+        }
+    }
+    Item{
+        id: finger
+        objectName: "finger"
+        property int grade: 1
+        property int value: 3*Math.pow(2,grade-1)
+        property string optionName: "手指"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>暴击率</font><br>
+        `
+        function choose(){
+        PlayerData.critChance+=value
+        }
+    }
+    Item{
+        id: back
+        objectName: "back"
+        property int grade: 1
+        property int value: 3*Math.pow(2,grade-1)
+        property string optionName: "背"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>闪避</font><br>
+        `
+        function choose(){
+        PlayerData.dodge+=value
+        }
+    }
+    Item{
+        id: teeth
+        objectName: "teeth"
+        property int grade: 1
+        property int value: 1*Math.pow(2,grade-1)
+        property string optionName: "牙齿"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>生命窃取</font><br>
+        `
+        function choose(){
+        PlayerData.lifeSteal+=value
+        }
+    }
+    Item{
+        id: heart
+        objectName: "heart"
+        property int grade: 1
+        property int value: 3*Math.pow(2,grade-1)
+        property string optionName: "心脏"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>最大生命值</font><br>
+        `
+        function choose(){
+        PlayerData.maxHp+=value
+        }
+    }
+    Item{
+        id: brain
+        objectName: "brain"
+        property int grade: 1
+        property int value: 1*Math.pow(2,grade-1)
+        property string optionName: "脑"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>元素伤害</font><br>
+        `
+        function choose(){
+        PlayerData.elementalDamage+=value
+        }
+    }
+    Item{
+        id: reflexes
+        objectName: "reflexes"
+        property int grade: 1
+        property int value: 5*Math.pow(2,grade-1)
+        property string optionName: "反应能力"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>攻击速度</font><br>
+        `
+        function choose(){
+        PlayerData.attackSpeed+=value
+        }
+    }
+    Item{
+        id: nose
+        objectName: "nose"
+        property int grade: 1
+        property int value: 5*Math.pow(2,grade-1)
+        property string optionName: "鼻"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>幸运</font><br>
+        `
+        function choose(){
+        PlayerData.luck+=value
+        }
+    }
+    Item{
+        id: hand
+        objectName: "hand"
+        property int grade: 1
+        property int value: 5*Math.pow(2,grade-1)
+        property string optionName: "手"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>收获</font><br>
+        `
+        function choose(){
+        PlayerData.harvesting+=value
+        }
+    }
+    Item{
+        id: shoulder
+        objectName: "shoulder"
+        property int grade: 1
+        property int value: 1*Math.pow(2,grade-1)
+        property string optionName: "肩"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>远程伤害</font><br>
+        `
+        function choose(){
+        PlayerData.rangedDamage+=value
+        }
+    }
+    Item{
+        id: foream
+        objectName: "foream"
+        property int grade: 1
+        property int value: 2*Math.pow(2,grade-1)
+        property string optionName: "前臂"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>近战伤害</font><br>
+        `
+        function choose(){
+        PlayerData.meleeDamage+=value
+        }
+    }
+    Item{
+        id: triceps
+        objectName: "triceps"
+        property int grade: 1
+        property int value: 5*Math.pow(2,grade-1)
+        property string optionName: "三头肌"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>伤害</font><br>
+        `
+        function choose(){
+        PlayerData.damage+=value
+        }
+    }
+    Item{
+        id: eyes
+        objectName: "eyes"
+        property int grade: 1
+        property int value: 15*Math.pow(2,grade-1)
+        property string optionName: "眼睛"
+        readonly property string type: "升级"
+        readonly property string talentText: `
+        <font color='lime'>+`+value+`</font><font color='white'>范围</font><br>
+        `
+        function choose(){
+        PlayerData.range+=value
         }
     }
 }

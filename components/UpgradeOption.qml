@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import "../data"
 
 Rectangle {
     id: root
@@ -10,11 +11,16 @@ Rectangle {
 
     // 可配置属性
     property string iconSource: ""
+    property string optionName
+    property int grade:1
     property string title: ""
     property string subtitle: "升级"
-    property string valueText: ""
-    property string description: ""
+    property string talentText: ""
     property color valueColor: "#00FF00"
+
+    UpgradeOptionCustomizationCore{
+        id:core
+    }
 
     Column {
         anchors.fill: parent
@@ -48,25 +54,19 @@ Rectangle {
         }
 
         // 数值和描述行
-        Row {
+        TextEdit {
+            text: root.talentText
+            font.pixelSize: height
+            height:14
+            readOnly: true
+            textFormat: TextEdit.RichText
             anchors.left: parent.left
-            spacing: 2
-            Text {
-                text: root.valueText
-                color: root.valueColor
-                font.pixelSize: 14
-            }
-            Text {
-                text: root.description
-                color: "white"
-                font.pixelSize: 14
-            }
         }
+
 
         // 选择按钮
         Button {
             text: "选择"
-            font.pixelSize: 25
             height: 30
             anchors.left: parent.left
             anchors.right: parent.right
@@ -76,12 +76,13 @@ Rectangle {
                 radius: 5
             }
 
-            // Text {
-            //     text: parent.text
-            //     color: "white"
-            //     font.pixelSize: 25
-            //     anchors.centerIn: parent
-            // }
+            contentItem: Text {
+                text: parent.text
+                color: "white"
+                font.pixelSize: 26
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
 
             hoverEnabled: true
             onHoveredChanged: {
@@ -89,7 +90,7 @@ Rectangle {
                 contentItem.color = hovered ? "black" : "white"
             }
             onClicked: {
-                console.log("选择了:", root.title)
+                core.getUpgradeOption(root.grade,optionName).choose()
             }
         }
     }

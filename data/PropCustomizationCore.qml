@@ -93,38 +93,926 @@ Item {
     }
 
     Item{
-        id: flag
-        objectName: "flag"
-        property string propName: "旗帜"
-        readonly property int grade: 2
-        readonly property int basePrice: 55
-        readonly property string type: "道具"
-        readonly property string talentText: `
-        <font color='green'>+20</font><font color='white'>射程</font><br>
-        <font color='green'>+10</font><font color='white'>攻击速度</font><br>
-        <font color='red'>-2</font><font color='white'>生命窃取</font><br>
-        `
-        function apply(){
-            PlayerData.range+=20
-            PlayerData.attackSpeed+=10
-            PlayerData.lifeSteal-=2
+            //蝙蝠 1
+            id: bat
+            objectName: "bat"
+            readonly property int grade: 1
+            readonly property int basePrice: 20
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+2</font><font color='white'>生命窃取</font><br>
+            <font color='red'>-2</font><font color='white'>收获</font><br>
+            `
+            function apply(){
+                PlayerData.lifeSteal+=2
+                PlayerData.harvesting-=2
+            }
         }
-    }
+        Item{
+            //刺猬 2
+            id:hedgehog
+            objectName: "hedgehog"
+            readonly property int grade: 1
+            readonly property int basePrice: 30
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+2</font><font color='white'>近战伤害</font><br>
+            <font color='green'>+1</font><font color='white'>远程伤害</font><br>
+            <font color='red'>-1</font><font color='white'>生命恢复</font><br>
+            `
+            function apply(){
+                PlayerData.meleeDamage+=2
+                PlayerData.rangedDamage+=1
+                PlayerData.hpRegeneration-=1
+            }
+        }
+        Item{
+            //头盔 3
+            id:helmet
+            objectName: "helmet"
+            readonly property int grade: 1
+            readonly property int basePrice: 25
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+1</font><font color='white'>护甲</font><br>
+            <font color='red'>-2</font><font color='white'>速度</font><br>
+            `
+            function apply(){
+                PlayerData.armor+=1
+                PlayerData.speed-=2
+            }
+        }
+        Item{
+            //橡皮狂暴战士 4
+            id: rubber_berserker
+            objectName: "rubber_berserker"
+            readonly property int grade: 1
+            readonly property int basePrice: 25
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+5</font><font color='white'> 攻击速度</font><br>
+            <font color='green'>+15</font><font color='white'>射程</font><br>
+            <font color='red'>-1</font><font color='white'>护甲</font><br>
+            `
+            function apply(){
+                PlayerData.lifeSteal+=2
+                PlayerData.attackSpeed-=2
+            }
+        }
+        Item{
+            //颅脑损伤 5
+            id: brain_injury
+            objectName: "brain_injury"
+            readonly property int grade: 1
+            readonly property int basePrice: 25
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+6</font><font color='white'>伤害</font><br>
+            <font color='red'>-8</font><font color='white'>射程</font><br>
+            `
+            function apply(){
+                PlayerData.damage+=6
+                PlayerData.attackSpeed-=8
+            }
+        }
+        Item{
+            //咖啡 6
+            id: coffee
+            objectName: "coffee"
+            readonly property int grade: 1
+            readonly property int basePrice: 15
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+10</font><font color='white'>攻速</font><br>
+            <font color='red'>-2</font><font color='white'>伤害</font><br>
+            `
+            function apply(){
+                PlayerData.attackSpeed+=10
+                PlayerData.damage-=2
+            }
+        }
+        Item{
+            //爪子树 7
+            id:claw_tree
+            objectName: "claw_tree"
+            readonly property int grade: 1
+            readonly property int basePrice: 20
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+1</font><font color='white'>近战伤害</font><br>
+            <font color='green'>+3</font><font color='white'>暴击率</font><br>
+            <font color='red'>-1</font><font color='white'>最大生命值</font><br>
+            `
+            function apply(){
+                PlayerData.meleeDamage+=1
+                PlayerData.critChance+=3
+                PlayerData.maxHp-=1
+            }
+        }
 
-    Item{
-        id: bat
-        objectName: "bat"
-        property string propName: "蝙蝠"
-        readonly property int grade: 1
-        readonly property int basePrice: 20
-        readonly property string type: "道具"
-        readonly property string talentText: `
-        <font color='green'>+2</font><font color='white'>生命窃取</font><br>
-        <font color='red'>-2</font><font color='white'>收获</font><br>
-        `
-        function apply(){
-            PlayerData.lifeSteal+=2
-            PlayerData.attackSpeed-=2
+        Item{
+            //沸水 8
+            id: boiling_water
+            objectName: "boiling_water"
+            readonly property int grade: 1
+            readonly property int basePrice: 30
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+2</font><font color='white'>元素伤害</font><br>
+            <font color='red'>-1</font><font color='white'>最大生命值</font><br>
+            `
+            function apply(){
+                PlayerData.elementalDamag+=2
+                PlayerData.maxHp-=1
+            }
+        }
+
+        Item{
+            //书 9
+            id: book
+            objectName: "book"
+            readonly property int grade: 1
+            readonly property int basePrice: 8
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+1</font><font color='white'>工程</font><br>
+            `
+            function apply(){
+                PlayerData.engineering+=1
+            }
+        }
+        Item{
+            //破口 10
+            id: break_through
+            objectName: "break_through"
+            readonly property int grade: 1
+            readonly property int basePrice: 25
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+5</font><font color='white'>最大生命值</font><br>
+            <font color='red'>-1</font><font color='white'>生命恢复</font><br>
+            `
+            function apply(){
+                PlayerData.maxHp+=5
+                PlayerData.hpRegeneration-=1
+            }
+        }
+        Item{
+            //蝴蝶 11
+            id: butterfly
+            objectName: "butterfly"
+            readonly property int grade: 1
+            readonly property int basePrice: 30
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+2</font><font color='white'>生命偷取</font><br>
+            <font color='red'>-1</font><font color='white'>元素伤害</font><br>
+            `
+            function apply(){
+                PlayerData.lifeSteal+=2
+                PlayerData.elementalDamage-=1
+            }
+        }
+        Item{
+            //有缺陷的类固醇 12
+            id: defective_steroids
+            objectName: "defective_steroids"
+            readonly property int grade: 1
+            readonly property int basePrice: 20
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+2</font><font color='white'>近战伤害</font><br>
+            <font color='green'>+2</font><font color='white'>最大生命值</font><br>
+            <font color='red'>-3</font><font color='white'>攻击速度</font><br>
+            `
+            function apply(){
+                PlayerData.meleeDamage+=2
+                PlayerData.maxHp+=2
+                PlayerData.attackSpeed-=3
+            }
+        }
+        Item{
+            //牛皮胶布 13
+            id: duct_tape
+            objectName: "duct_tape"
+            readonly property int grade: 1
+            readonly property int basePrice: 25
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+1</font><font color='white'>护甲</font><br>
+            <font color='green'>+1</font><font color='white'>工程</font><br>
+            <font color='red'>-2</font><font color='white'>最大生命</font><br>
+            `
+            function apply(){
+                PlayerData.armor+=1
+                PlayerData.engineering+=1
+                PlayerData.maxHp-=2
+            }
+        }
+
+
+        Item{
+            //蛋糕 14
+            id: cake
+            objectName: "cake"
+            readonly property int grade: 1
+            readonly property int basePrice: 15
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+3</font><font color='white'>最大生命</font><br>
+            <font color='red'>-1</font><font color='white'>伤害</font><br>
+            `
+            function apply(){
+                PlayerData.maxHp+=3
+                PlayerData.damage-=1
+            }
+        }
+        Item{
+            //眼镜 15
+            id: glasses
+            objectName: "glasses"
+            readonly property int grade: 1
+            readonly property int basePrice: 25
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+20</font><font color='white'>射程</font><br>
+            `
+            function apply(){
+                PlayerData.range+=20
+            }
+        }
+        Item{
+            //山羊头骨 16
+            id: goat_skull
+            objectName: "goat_skull"
+            readonly property int grade: 1
+            readonly property int basePrice: 25
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+3</font><font color='white'>近战伤害</font><br>
+            <font color='red'>-2</font><font color='white'>暴击率</font><br>
+            `
+            function apply(){
+                PlayerData.meleeDamage+=3
+                PlayerData.critChance-=2
+            }
+        }
+
+        Item{
+            //小圆帽 17
+            id: yarmulke
+            objectName: "yarmulke"
+            readonly property int grade: 1
+            readonly property int basePrice: 20
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+4</font><font color='white'>速度</font><br>
+            <font color='red'>-6</font><font color='white'>射程</font><br>
+            `
+            function apply(){
+                PlayerData.speed+=4
+                PlayerData.range-=6
+            }
+        }
+
+        Item{
+            //注射 18
+            id: injection
+            objectName: "injection"
+            readonly property int grade: 1
+            readonly property int basePrice: 20
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+7</font><font color='white'>伤害</font><br>
+            <font color='red'>-2</font><font color='white'>最大生命</font><br>
+            `
+            function apply(){
+                PlayerData.damage+=7
+                PlayerData.maxHp-=2
+            }
+        }
+
+        Item{
+            //精神错乱 19
+            id: insane
+            objectName: "insane"
+            readonly property int grade: 1
+            readonly property int basePrice: 20
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+6</font><font color='white'>暴击率</font><br>
+            <font color='red'>-3</font><font color='white'>伤害</font><br>
+            `
+            function apply(){
+                PlayerData.critChance+=6
+                PlayerData.damage-=3
+            }
+        }
+        Item{
+            //镜头 20
+            id: lens
+            objectName: "lens"
+            readonly property int grade: 1
+            readonly property int basePrice: 20
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+1</font><font color='white'>远程伤害</font><br>
+            <font color='red'>-5</font><font color='white'>射程</font><br>
+            `
+            function apply(){
+                PlayerData.rangedDamage+=1
+                PlayerData.range-=5
+            }
+        }
+        Item{
+            //迷失之鸭 21
+            id: lost_duck
+            objectName: "lost_duck"
+            readonly property int grade: 1
+            readonly property int basePrice: 25
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+10</font><font color='white'>运气</font><br>
+            <font color='red'>-1</font><font color='white'>元素伤害</font><br>
+            `
+            function apply(){
+                PlayerData.luck+=10
+                PlayerData.elementalDamage-=1
+            }
+        }
+        Item{
+            //螺旋桨帽子 22
+            id: propeller_hat
+            objectName: "propeller_hat"
+            readonly property int grade: 1
+            readonly property int basePrice: 28
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+10</font><font color='white'>运气</font><br>
+            <font color='red'>-2</font><font color='white'>伤害</font><br>
+            `
+            function apply(){
+                PlayerData.luck+=10
+                PlayerData.Damage-=2
+            }
+        }
+        Item{
+            //恐怖洋葱 23
+            id: terrifying_onion
+            objectName: "terrifying_onion"
+            readonly property int grade: 1
+            readonly property int basePrice: 15
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+4</font><font color='white'>速度</font><br>
+            <font color='red'>-6</font><font color='white'>运气</font><br>
+            `
+            function apply(){
+                PlayerData.speed+=4
+                PlayerData.luck-=6
+            }
+        }
+        Item{
+            //有毒的烂泥 23
+            id: toxic_sludge
+            objectName: "toxic_sludge"
+            readonly property int grade: 1
+            readonly property int basePrice: 20
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+2</font><font color='white'>元素伤害</font><br>
+            <font color='red'>-2</font><font color='white'>闪避</font><br>
+            `
+            function apply(){
+                PlayerData.elementalDamage+=2
+                PlayerData.dodge-=2
+            }
+        }
+        Item{
+            //煤炭 24
+            id: coal
+            objectName: "coal"
+            readonly property int grade: 1
+            readonly property int basePrice: 20
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+1</font><font color='white'>元素伤害</font><br>
+            <font color='green'>+2</font><font color='white'>近战伤害</font><br>
+            <font color='red'>-2</font><font color='white'>收获</font><br>
+            `
+            function apply(){
+                PlayerData.elementalDamage+=1
+                PlayerData.meleeDamage+=2
+                PlayerData.harvesting-=2
+            }
+        }
+        Item{
+            //肥料 25
+            id: fertilizer
+            objectName: "fertilizer"
+            readonly property int grade: 1
+            readonly property int basePrice: 15
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+8</font><font color='white'>收获</font><br>
+            <font color='red'>-1</font><font color='white'>近战伤害</font><br>
+            `
+            function apply(){
+                PlayerData.harvesting+=8
+                PlayerData.meleeDamage-=2
+            }
+        }
+
+
+
+        Item{
+            //酸液 1
+            id: acid_liquor
+            objectName: "acid_liquor"
+            readonly property int grade: 2
+            readonly property int basePrice: 65
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+8</font><font color='white'>最大生命值</font><br>
+            <font color='red'>-4</font><font color='white'>闪避</font><br>
+            `
+            function apply(){
+                PlayerData.maxHp+=8
+                PlayerData.dodge-=4
+            }
+        }
+        Item{
+            //能量手镯 2
+            id: energy_bracelet
+            objectName: "energy_bracelet"
+            readonly property int grade: 2
+            readonly property int basePrice: 55
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+4</font><font color='white'>暴击率</font><br>
+            <font color='green'>+2</font><font color='white'>元素伤害</font><br>
+            <font color='red'>-2</font><font color='white'>远程伤害</font><br>
+            `
+            function apply(){
+                PlayerData.critChance+=4
+                PlayerData.elementalDamage+=2
+                PlayerData.rangedDamage-=2
+            }
+        }
+
+        Item{
+            //齿轮 3
+            id: gear
+            objectName: "gear"
+            readonly property int grade: 2
+            readonly property int basePrice: 35
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+4</font><font color='white'>工程</font><br>
+            <font color='red'>-4</font><font color='white'>伤害</font><br>
+            `
+            function apply(){
+                PlayerData.engineering+=8
+                PlayerData.damage-=4
+            }
+        }
+        Item{
+            //独眼虫 4
+            id: cyclops_beetle
+            objectName: "cyclops_beetle"
+            readonly property int grade: 2
+            readonly property int basePrice: 45
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+12</font><font color='white'>伤害</font><br>
+            <font color='red'>-12</font><font color='white'>射程</font><br>
+            `
+            function apply(){
+                PlayerData.damage+=12
+                PlayerData.range-=12
+            }
+        }
+        Item{
+            //燃料箱 5
+            id: fuel_tank
+            objectName: "fuel_tank"
+            readonly property int grade: 2
+            readonly property int basePrice: 45
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+4</font><font color='white'>元素伤害</font><br>
+            <font color='red'>-1</font><font color='white'>近战伤害</font><br>
+            <font color='red'>-1</font><font color='white'>远程伤害</font><br>
+            `
+            function apply(){
+                PlayerData.elementalDamage+=4
+                PlayerData.meleeDamage-=1
+                PlayerData.rangedDamage-=1
+            }
+        }
+        Item{
+            //筹码 6
+            id: chip
+            objectName: "chip"
+            readonly property int grade: 2
+            readonly property int basePrice: 60
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+8</font><font color='white'>闪避</font><br>
+            <font color='red'>-1</font><font color='white'>护甲</font><br>
+            `
+            function apply(){
+                PlayerData.dodge+=8
+                PlayerData.armor-=1
+            }
+        }
+
+        Item{
+            //营火 7
+            id: campfire
+            objectName: "campfire"
+            readonly property int grade: 2
+            readonly property int basePrice: 40
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+2</font><font color='white'>元素伤害</font><br>
+            <font color='green'>+2</font><font color='white'>生命恢复</font><br>
+            <font color='red'>-2</font><font color='white'>速度</font><br>
+            `
+            function apply(){
+                PlayerData.elementalDamage+=2
+                PlayerData.hpRegeneration+=2
+                PlayerData.speed-=2
+            }
+        }
+
+        Item{
+            //黑带 8
+            id: black_belt
+            objectName: "black_belt"
+            readonly property int grade: 2
+            readonly property int basePrice: 50
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+25</font><font color='white'>经验获取</font><br>
+            <font color='green'>+3</font><font color='white'>近战伤害</font><br>
+            <font color='red'>-8</font><font color='white'>运气</font><br>
+            `
+            function apply(){
+                //差次要属性经验获取
+                PlayerData.meleeDamage+=3
+                PlayerData.luck-=8
+            }
+        }
+
+        Item{
+            //眼罩 9
+            id: patch
+            objectName: "patch"
+            readonly property int grade: 2
+            readonly property int basePrice: 45
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+5</font><font color='white'>暴击率</font><br>
+            <font color='green'>+5</font><font color='white'>闪避</font><br>
+            <font color='red'>-15</font><font color='white'>射程</font><br>
+            `
+            function apply(){
+                PlayerData.critChance+=5
+                PlayerData.dodge+=5
+                PlayerData.range-=15
+            }
+        }
+
+        Item{
+            //旗帜 10
+            id: flag
+            objectName: "flag"
+            readonly property int grade: 2
+            readonly property int basePrice: 55
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+20</font><font color='white'>射程</font><br>
+            <font color='green'>+10</font><font color='white'>攻击速度</font><br>
+            <font color='red'>-2</font><font color='white'>生命窃取</font><br>
+            `
+            function apply(){
+                PlayerData.range+=20
+                PlayerData.attackSpeed+=10
+                PlayerData.lifeSteal-=2
+            }
+        }
+
+        Item{
+            //皮制背心 11
+            id: leather_vest
+            objectName: "leather_vest"
+            readonly property int grade: 2
+            readonly property int basePrice: 45
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+2</font><font color='white'>护甲</font><br>
+            <font color='green'>+6</font><font color='white'>闪避</font><br>
+            <font color='red'>-3</font><font color='white'>最大生命</font><br>
+            `
+            function apply(){
+                PlayerData.armor+=2
+                PlayerData.dodge+=6
+                PlayerData.maxHp-=3
+            }
+        }
+        Item{
+            //小肌肉男 12
+            id: small_muscle_man
+            objectName: "small_muscle_man"
+            readonly property int grade: 2
+            readonly property int basePrice: 50
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+3</font><font color='white'>近战伤害</font><br>
+            <font color='green'>+5</font><font color='white'>最大生命</font><br>
+            <font color='red'>-15</font><font color='white'>射程</font><br>
+            `
+            function apply(){
+                PlayerData.meleeDamage+=3
+                PlayerData.maxHp+=5
+                PlayerData.range-=15
+            }
+        }
+        Item{
+            //精通 13
+            id: master
+            objectName: "master"
+            readonly property int grade: 2
+            readonly property int basePrice: 55
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+6</font><font color='white'>近战伤害</font><br>
+            <font color='red'>-3</font><font color='white'>远程伤害</font><br>
+            `
+            function apply(){
+                PlayerData.meleeDamage+=6
+                PlayerData.rangedDamage-=3
+            }
+        }
+        Item{
+            //奖牌 14
+            id: medal
+            objectName: "medal"
+            readonly property int grade: 2
+            readonly property int basePrice: 55
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+3</font><font color='white'>伤害</font><br>
+            <font color='green'>+3</font><font color='white'>速度</font><br>
+            <font color='green'>+1</font><font color='white'>护甲</font><br>
+            <font color='green'>+3</font><font color='white'>最大生命</font><br>
+            <font color='red'>-4</font><font color='white'>暴击率</font><br>
+            `
+            function apply(){
+                PlayerData.damage+=3
+                PlayerData.speed+=3
+                PlayerData.armor+=1
+                PlayerData.maxHp+=3
+                PlayerData.critChance-=4
+            }
+        }
+
+
+        Item{
+            //外星人宝宝 1
+            id: alien_baby
+            objectName: "alien_baby"
+            readonly property int grade: 3
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+15</font><font color='white'>最大生命值</font><br>
+            <font color='green'>+8</font><font color='white'>敌人移动速度</font><br>
+            `
+            function apply(){
+                PlayerData.maxHp+=15
+                //差敌人移动速度
+            }
+        }
+        Item{
+            //外星人魔法 2
+            id: alien_magic
+            objectName: "alien_magic"
+            readonly property int grade: 3
+            readonly property int basePrice: 85
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+8</font><font color='white'>最大生命值</font><br>
+            <font color='green'>+3</font><font color='white'>生命恢复</font><br>
+            <font color='red'>-8</font><font color='white'>运气</font><br>
+            `
+            function apply(){
+                PlayerData.maxHp+=8
+                PlayerData.hpRegeneration+=3
+                PlayerData.luck-=8
+            }
+        }
+        Item{
+            //四叶草 3
+            id: clover
+            objectName: "clover"
+            readonly property int grade: 3
+            readonly property int basePrice: 65
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+20</font><font color='white'>运气</font><br>
+            <font color='green'>+6</font><font color='white'>闪避</font><br>
+            <font color='red'>-2</font><font color='white'>生命偷取</font><br>
+            `
+            function apply(){
+                PlayerData.luck+=20
+                PlayerData.dodge+=6
+                PlayerData.lifeSteal-=2
+            }
+        }
+        Item{
+            //合金 4
+            id: alloy
+            objectName: "alloy"
+            readonly property int grade: 3
+            readonly property int basePrice: 80
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+3</font><font color='white'>近战伤害</font><br>
+            <font color='green'>+3</font><font color='white'>远程伤害</font><br>
+            <font color='green'>+3</font><font color='white'>元素伤害</font><br>
+            <font color='green'>+3</font><font color='white'>工程</font><br>
+            <font color='green'>+5</font><font color='white'>暴击率</font><br>
+            <font color='red'>-6</font><font color='white'>闪避</font><br>
+            `
+            function apply(){
+                PlayerData.meleeDamage+=3
+                PlayerData.rangedDamage+=3
+                PlayerData.elementalDamage+=3
+                PlayerData.engineering+=3
+                PlayerData.critChance+=5
+                PlayerData.dodge-=6
+            }
+        }
+        Item{
+            //有毒补药 5
+            id: toxic_tonics
+            objectName: "toxic_tonics"
+            readonly property int grade: 3
+            readonly property int basePrice: 80
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+10</font><font color='white'>攻速</font><br>
+            <font color='green'>+5</font><font color='white'>暴击率</font><br>
+            <font color='green'>+15</font><font color='white'>射程</font><br>
+            <font color='red'>-2</font><font color='white'>生命恢复</font><br>
+            `
+            function apply(){
+                PlayerData.attackSpeed+=10
+                PlayerData.critChance+=5
+                PlayerData.range+=15
+                PlayerData.hpRegeneration-=2
+            }
+        }
+        Item{
+            //Shmoop  6
+            id: shmoop
+            objectName: "shmoop"
+            readonly property int grade: 3
+            readonly property int basePrice: 60
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+6</font><font color='white'>最大生命</font><br>
+            <font color='green'>+2</font><font color='white'>生命恢复</font><br>
+            <font color='red'>-2</font><font color='white'>近战伤害</font><br>
+            <font color='red'>-1</font><font color='white'>远程伤害</font><br>
+            `
+            function apply(){
+                PlayerData.maxHp+=6
+                PlayerData.hpRegeneration+=2
+                PlayerData.meleeDamage-=2
+                PlayerData.rangedDamage-=1
+            }
+        }
+
+        Item{
+            //工具箱  7
+            id: toolbox
+            objectName: "toolbox"
+            readonly property int grade: 3
+            readonly property int basePrice: 55
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+6</font><font color='white'>工程</font><br>
+            <font color='red'>-8</font><font color='white'>攻击速度</font><br>
+            `
+            function apply(){
+                PlayerData.engineering+=6
+                PlayerData.attackSpeed-=8
+            }
+        }
+        Item{
+            //守卫头盔  8
+            id: guard_helmet
+            objectName: "guard_helmet"
+            readonly property int grade: 3
+            readonly property int basePrice: 80
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+3</font><font color='white'>护甲</font><br>
+            <font color='green'>+5</font><font color='white'>最大生命</font><br>
+            <font color='red'>-5</font><font color='white'>速度</font><br>
+            `
+            function apply(){
+                PlayerData.armor+=3
+                PlayerData.maxHp+=5
+                PlayerData.speed-=5
+            }
+        }
+        Item{
+            //玻璃大炮  9
+            id: glass_cannon
+            objectName: "glass_cannon"
+            readonly property int grade: 3
+            readonly property int basePrice: 75
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+25</font><font color='white'>伤害</font><br>
+            <font color='red'>-3</font><font color='white'>护甲</font><br>
+            `
+            function apply(){
+                PlayerData.damage+=3
+                PlayerData.armor-=5
+            }
+        }
+
+
+        Item{
+            //斗篷 1
+            id: cloak
+            objectName: "cloak"
+            readonly property int grade: 4
+            readonly property int basePrice: 110
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+5</font><font color='white'>生命偷取</font><br>
+            <font color='green'>+20</font><font color='white'>闪避</font><br>
+            <font color='red'>-2</font><font color='white'>近战伤害</font><br>
+            <font color='red'>-2</font><font color='white'>远程伤害</font><br>
+            <font color='red'>-2</font><font color='white'>元素伤害</font><br>
+            `
+            function apply(){
+                PlayerData.lifeSteal+=5
+                PlayerData.dodge+=20
+                PlayerData.meleeDamage-=2
+                PlayerData.rangedDamage-=2
+                PlayerData.elementalDamage-=2
+            }
+        }
+        Item{
+            //外骨骼 2
+            id: exoskeleton
+            objectName: "exoskeleton"
+            readonly property int grade: 4
+            readonly property int basePrice: 90
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+5</font><font color='white'>护甲</font><br>
+            <font color='green'>+5</font><font color='white'>暴击率</font><br>
+            <font color='green'>+5</font><font color='white'>工程</font><br>
+            <font color='green'>+5</font><font color='white'>闪避</font><br>
+            <font color='red'>-2</font><font color='white'>生命恢复</font><br>
+            <font color='red'>-2</font><font color='white'>生命偷取</font><br>
+            `
+            function apply(){
+                PlayerData.armor+=5
+                PlayerData.critChance+=5
+                PlayerData.engineering+=5
+                PlayerData.dodge+=5
+                PlayerData.hpRegeneration-=2
+                PlayerData.lifeSteal-=2
+            }
+        }
+        Item{
+            //重子弹 3
+            id: heavy_bullets
+            objectName: "heavy_bullets"
+            readonly property int grade: 4
+            readonly property int basePrice: 100
+            readonly property string type: "道具"
+            readonly property string talentText: `
+            <font color='green'>+5</font><font color='white'>远程伤害</font><br>
+            <font color='green'>+10</font><font color='white'>伤害</font><br>
+            <font color='green'>+10</font><font color='white'>射程</font><br>
+            <font color='red'>-5</font><font color='white'>攻击速度</font><br>
+            <font color='red'>-5</font><font color='white'>暴击率</font><br>
+            `
+            function apply(){
+                PlayerData.rangedDamage+=5
+                PlayerData.damage+=10
+                PlayerData.range+=10
+                PlayerData.attackSpeed-=5
+                PlayerData.critChance-=5
+            }
         }
     }
-}

@@ -121,9 +121,9 @@ Item {
         }
     }
 
-    // UpgradeInterface{
-    //     id: upgradeInterface
-    // }
+    UpgradeInterface{
+        id: upgradeInterface
+    }
 
     StoreInterface{
         id: storeInterface
