@@ -12,6 +12,7 @@ Item {
     anchors.topMargin: 20*scaleFactor
     anchors.right: parent.right
     anchors.rightMargin: 20*scaleFactor
+    property alias number: repeater.model
     property bool isCombatting: true
 
     Component.onCompleted: {
@@ -37,10 +38,10 @@ Item {
     }
 
     function addOne(){
-        repeater.model++
+        number++
     }
 
     function reduceOne(){
-        repeater.model--
+        number--
     }
 }

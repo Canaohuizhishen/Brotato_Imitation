@@ -2,8 +2,8 @@ import QtQuick 2.15
 
 Item {
     id: healthBar
-    width: 180*healthBar.scaleFactor
-    height: 25*healthBar.scaleFactor
+    width: 215*healthBar.scaleFactor
+    height: 30*healthBar.scaleFactor
     property double scaleFactor: 1.0
     property double maxHp: 0
     property double hp: 0
@@ -11,8 +11,8 @@ Item {
     property color fillColor: Qt.rgba(0.7,0,0,1)
     anchors.top: parent.top
     anchors.left: parent.left
-    anchors.topMargin: 15*healthBar.scaleFactor
-    anchors.leftMargin: 40*healthBar.scaleFactor
+    anchors.topMargin: 20*healthBar.scaleFactor
+    anchors.leftMargin: 15*healthBar.scaleFactor
     z: 10
 
     Rectangle {
@@ -21,17 +21,17 @@ Item {
         height: healthBar.height
         color: healthBar.backgroundColor
         border.color: "black"
-        border.width: 3*healthBar.scaleFactor
+        border.width: 4*healthBar.scaleFactor
+        radius: 3
 
         Rectangle {
             id: hp
-            width: maxHp.width*healthBar.hp/healthBar.maxHp-maxHp.border.width*2-0.7*healthBar.scaleFactor
+            width: maxHp.width*healthBar.hp/healthBar.maxHp-maxHp.border.width*2
             height: maxHp.height-maxHp.border.width*2-1*healthBar.scaleFactor
             color: healthBar.fillColor
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.margins: maxHp.border.width+0.5*healthBar.scaleFactor
-
+            anchors.verticalCenter: maxHp.verticalCenter
+            anchors.left: maxHp.left
+            anchors.leftMargin: maxHp.border.width
         }
 
         Text {
