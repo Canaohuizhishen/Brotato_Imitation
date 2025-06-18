@@ -66,5 +66,17 @@
         <file>images/stone1.png</file>
         <file>images/upgrade_icon.png</file>
         <file>images/smg_faceRight.png</file>
+        <file>images/heart.png</file>
+        <file>images/foream.png</file>
+        <file>images/triceps.png</file>
+        <file>images/finger.png</file>
+        <file>images/eyes.png</file>
+        <file>images/hand.png</file>
+        <file>images/skull.png</file>
+        <file>images/back.png</file>
+        <file>images/lung.png</file>
+        <file>images/nose.png</file>
+        <file>images/shoulder.png</file>
+        <file>images/reflexes.png</file>
     </qresource>
 </RCC>
