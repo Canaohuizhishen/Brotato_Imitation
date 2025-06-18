@@ -8,13 +8,11 @@ Item {
     property int totalTime: Math.min(15+waveNumber*5,60)
     property int remainingTime: totalTime
     property bool running: false
-    property int size: 28*waveCountdown.scaleFactor
     width: parent.width
-    height: 15*waveCountdown.scaleFactor
+    height: 35*waveCountdown.scaleFactor
     z: 10
-
     anchors.top: parent.top
-    anchors.topMargin: 50*waveCountdown.scaleFactor
+    anchors.topMargin: 55*waveCountdown.scaleFactor
 
     onRemainingTimeChanged: {
         if(remainingTime==0){
@@ -46,7 +44,7 @@ Item {
         id: text
         text: waveCountdown.remainingTime
         color: "black"
-        font.pixelSize: waveCountdown.size
+        font.pixelSize: waveCountdown.height
         style: Text.Outline
         styleColor: "black"
         anchors.centerIn: parent
@@ -55,7 +53,7 @@ Item {
     Text {
         text: text.text
         color: waveCountdown.remainingTime<=5 ? "red" : "white"
-        font.pixelSize: waveCountdown.size
+        font.pixelSize: text.font.pixelSize
         anchors.centerIn: text.anchors.centerIn
     }
 }
