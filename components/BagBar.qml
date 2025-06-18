@@ -2,14 +2,14 @@ import QtQuick 2.15
 
 Item {
     id: bagBar
-    width: 180*bagBar.scaleFactor
-    height: 25*bagBar.scaleFactor
+    width: 215*bagBar.scaleFactor
+    height: 32*bagBar.scaleFactor
     property double scaleFactor: 1.0
     property double number: 0
     anchors.top: parent.top
     anchors.left: parent.left
-    anchors.topMargin: 105*bagBar.scaleFactor
-    anchors.leftMargin: 40*bagBar.scaleFactor
+    anchors.topMargin: 135*bagBar.scaleFactor
+    anchors.leftMargin: 15*bagBar.scaleFactor
     z: 10
 
     Image {
@@ -26,7 +26,7 @@ Item {
         id: numberText
         text: bagBar.number
         color: "black"
-        font.pixelSize: bagBar.scaleFactor*25
+        font.pixelSize: bagBar.height
         style: Text.Outline
         styleColor: "black"
         anchors.left: parent.left

@@ -121,9 +121,9 @@ Item {
         }
     }
 
-    UpgradeInterface{
-        id: upgradeInterface
-    }
+    // UpgradeInterface{
+    //     id: upgradeInterface
+    // }
 
     StoreInterface{
         id: storeInterface
@@ -207,6 +207,7 @@ Item {
 
     UpgradeNotificationBar{
         id: upgradeNotificationBar
+        visible: gameArea.visible
         scaleFactor: gameWindow.scaleFactor
     }
 }
