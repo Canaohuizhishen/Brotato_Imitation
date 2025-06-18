@@ -15,9 +15,6 @@ Item {
     property alias number: repeater.model
     property bool isCombatting: true
 
-    Component.onCompleted: {
-    }
-
     onCurLevelChanged: {
         addOne()
     }
