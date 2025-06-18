@@ -207,6 +207,7 @@ Item {
 
     UpgradeNotificationBar{
         id: upgradeNotificationBar
+        visible: gameArea.visible
         scaleFactor: gameWindow.scaleFactor
     }
 }
