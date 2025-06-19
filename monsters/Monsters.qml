@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import "../data"
+import "../components"
 import "../tool.js" as Tool
 
 Item {
@@ -17,9 +18,10 @@ Item {
     property int maxNum: 100
 
     Component.onCompleted: {
-        //monsters.spawnMonsters(10,"babyAlien")
+        //monsters.spawnMonsters(100,"sprayer")
     }
 
+    //返回当前被target击中的怪物
     function getCollidingChild(target){
         for (var i = 0; i < monsters.children.length; i++) {
             var child = monsters.children[i];
@@ -56,6 +58,7 @@ Item {
                 child.disappear()
             }
         }
+        bullets.clear()
     }
 
     function spawnMonsters(n,monsterName) {
@@ -95,6 +98,7 @@ Item {
                         monster.owner=monsters
                         monster.target=monsters.target
                         monster.waveNumber=monsters.waveNumber
+                        monster.bulletsParent=bullets
                         child.destroy();
                     }else console.error("Error loading component:", monsterComponent.errorString())
                 }
@@ -116,6 +120,14 @@ Item {
     MonsterCustomizationCore{
         id: monsterCore
         waveNumber: monsters.waveNumber
+    }
+
+    Bullets{
+        id: bullets
+        target: monsters.target
+        active: true
+        scaleFactor: monsters.scaleFactor
+        z: 3
     }
 
     Timer {

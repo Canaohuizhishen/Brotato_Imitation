@@ -10,6 +10,7 @@ Item {
     height: width
     focus: true
     z: 1
+    objectName: "Player"
     property string roleName
     property string weaponName
     property var ground: parent
@@ -61,6 +62,10 @@ Item {
     function getMaterial(material){
         PlayerData.materialsNumber+=material.value
         PlayerData.curXp+=material.value
+    }
+
+    function onHit(bullet){
+        PlayerData.curHp-=bullet.damage
     }
 
     // Timer {

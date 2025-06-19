@@ -6,6 +6,7 @@ import "../data"
 Image {
     id: monster
     property Player target: null
+    property var bulletsParent
     source: "/images/"+monster.monsterName+"_faceRight.png"
     objectName: "Monster"
     property string monsterName
@@ -21,6 +22,7 @@ Image {
     property bool isDead: false
     property bool isHited: false
     property bool isFaceRight: true
+    property bool moveDirectionConverse: false
 
     property int waveNumber: 0
     property alias monsterData: monsterData
@@ -82,7 +84,6 @@ Image {
         interval: monster.interval; running: monster.active; repeat: true
         onTriggered: {
                     if(monster.isDead==true)return
-                    if(!monster.active)return
                     var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
                     var dy = (monster.target.y + monster.target.height/2) - (monster.y + monster.height/2);
                     var distance = Math.sqrt(dx * dx + dy * dy);
@@ -92,12 +93,30 @@ Image {
                     } else {
                         var stepX = (dx / distance) * monster.stepSize;
                         var stepY = (dy / distance) * monster.stepSize;
-                        monster.x += stepX;
-                        monster.y += stepY;
-                    }
+                        if(monster.moveDirectionConverse){
+                            if(monster.x>0 && monster.x<monster.parent.width-monster.width)monster.x -= stepX;
+                            if(monster.y>0 && monster.y<monster.parent.height-monster.height)monster.y -= stepY;
+                        }else {
+                            monster.x += stepX;
+                            monster.y += stepY;
+                        }
 
-                    if(dx<0)monster.faceLeft()
-                    else monster.faceRight()
+                    }
+        }
+    }
+
+    Timer {
+        id: checkFaceDirectionTimer
+        interval: 100; running: true; repeat: true
+        onTriggered: {
+                    var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
+                    if(dx<0){
+                        if(monster.moveDirectionConverse)monster.faceRight()
+                        else monster.faceLeft()
+                    }else {
+                        if(monster.moveDirectionConverse)monster.faceLeft()
+                        else monster.faceRight()
+                    }
         }
     }
 
@@ -183,6 +202,10 @@ Image {
     function faceRight(){
         monster.source="/images/"+monster.monsterName+"_faceRight.png"
         isFaceRight=true
+    }
+
+    function isInEdge(){
+        return monster.x<1 || monster.y<1 || monster.x>monster.parent.width-monster.width-1 || monster.y>monster.parent.height-monster.height-1
     }
 
     function disappear(){
