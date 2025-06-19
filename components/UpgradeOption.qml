@@ -19,13 +19,73 @@ Rectangle {
     property string subtitle: "升级"
     property string talentText: ""
     property color valueColor: "#00FF00"
+property double k: 1.1
+    function lightenColor(hexColor, factor) {
+        // 解析十六进制颜色
+        const r = parseInt(hexColor.substr(1, 2), 16);
+        const g = parseInt(hexColor.substr(3, 2), 16);
+        const b = parseInt(hexColor.substr(5, 2), 16);
 
-    function getOptionColor(grade){
+        // 调整 RGB 值
+        const lighten = (c) => Math.min(255, Math.floor(c * factor));
+
+        const rLightened = lighten(r);
+        const gLightened = lighten(g);
+        const bLightened = lighten(b);
+
+        // 转换回十六进制
+        const toHex = (c) => c.toString(16).padStart(2, '0');
+
+        return `#${toHex(rLightened)}${toHex(gLightened)}${toHex(bLightened)}`;
+    }
+
+    // 修改原有函数以使用 lightenColor 函数
+    function getOptionColor(grade, factor = 1.2) {
+        const colors = {
+            1: "#000000",
+            2: "#52ADE8",
+            3: "#974FDD",
+            4: "#E73535"
+        };
+        return lightenColor(colors[grade] || "#000000", k);
+    }
+
+    function getButtonColor(grade, factor = 1.2) {
+        const colors = {
+            1: "#191919",
+            2: "#27363D",
+            3: "#272231",
+            4: "#392121"
+        };
+        return lightenColor(colors[grade] || "#000000", k);
+    }
+
+    function getBackgroundColor(grade, factor = 1.2) {
+        const colors = {
+            1: "#000000",
+            2: "#0F2028",
+            3: "#100A18",
+            4: "#240909"
+        };
+        return lightenColor(colors[grade] || "#000000", k);
+    }
+
+    function getImageBackgroundColor(grade, factor = 1.2) {
+        const colors = {
+            1: "#323232",
+            2: "#3E4C52",
+            3: "#3F3A48",
+            4: "#4F3939"
+        };
+        return lightenColor(colors[grade] || "#000000", k);
+    }
+
+    function numberToText(grade){
         switch(grade){
-        case 1: return "#000000"
-        case 2: return "#1E90FF"
-        case 3: return "#4B0082"
-        case 4: return "#FF0000"
+        case 1: return ""
+        case 2: return "II"
+        case 3: return "III"
+        case 4: return "IV"
         default: console.log("不正确的等级: ",grade)
         }
     }
@@ -38,34 +98,43 @@ Rectangle {
         id: background
         width: root.width-6
         height: root.height-6
-        color: "black"
+        color: root.getBackgroundColor(root.grade)
         radius: 5*root.scaleFactor
-        opacity: 0.7
+        opacity:1
         anchors.centerIn: root
     }
 
 
     Column {
         anchors.fill: parent
-        anchors.margins: 10*root.scaleFactor
-        spacing: 18*root.scaleFactor
+        anchors.margins: 15*root.scaleFactor
+        spacing: 15*root.scaleFactor
 
         // 图标和标题行
         Row {
             spacing: 10*root.scaleFactor
             anchors.left: parent.left
 
-            Image {
-                source: root.iconSource
-                width: 70*root.scaleFactor
-                height: 70*root.scaleFactor
-                fillMode: Image.PreserveAspectFit
+            Rectangle {
+                id: imageContainer
+                width: 70 * root.scaleFactor
+                height: 70 * root.scaleFactor
+                radius: 5
+                color: root.getImageBackgroundColor(root.grade)  // 背景颜色
+
+                Image {
+                    anchors.centerIn: parent
+                    source: root.iconSource
+                    width: 70 * root.scaleFactor
+                    height: 70 * root.scaleFactor
+                    fillMode: Image.PreserveAspectFit
+                }
             }
 
             Column {
                 Text {
-                    text: root.title
-                    color: "white"
+                    text: root.title+" "+root.numberToText(root.grade)
+                    color:root.color=="#000000" ? "white" : root.color
                     font.pixelSize: 24*root.scaleFactor
                 }
                 Text {
@@ -79,7 +148,7 @@ Rectangle {
         // 数值和描述行
         TextEdit {
             text: root.talentText
-            height:14*root.scaleFactor
+            height:15*root.scaleFactor
             font.pixelSize: height
             readOnly: true
             textFormat: TextEdit.RichText
@@ -95,8 +164,8 @@ Rectangle {
             anchors.right: parent.right
             background: Rectangle {
                 id: buttonBg
-                color: "#404040"
-                radius: 5*root.scaleFactor
+                color: root.getButtonColor(root.grade)
+                radius: 7*root.scaleFactor
             }
 
             contentItem: Text {
@@ -109,8 +178,8 @@ Rectangle {
 
             hoverEnabled: true
             onHoveredChanged: {
-                buttonBg.color = hovered ? "white" : "#404040"
-                contentItem.color = hovered ? "black" : "white"
+                buttonBg.color = hovered ? "white" :root.getButtonColor(root.grade)
+                contentItem.color = hovered ? "root.getButtonColor(root.grade)" : "white"
             }
             onClicked: {
                 core.getUpgradeOption(root.grade,root.optionName).choose()

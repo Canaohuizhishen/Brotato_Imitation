@@ -96,6 +96,7 @@ Item {
             //蝙蝠 1
             id: bat
             objectName: "bat"
+            readonly property string propName: "蝙蝠"
             readonly property int grade: 1
             readonly property int basePrice: 20
             readonly property string type: "道具"
@@ -112,6 +113,7 @@ Item {
             //刺猬 2
             id:hedgehog
             objectName: "hedgehog"
+            readonly property string propName: "刺猬"
             readonly property int grade: 1
             readonly property int basePrice: 30
             readonly property string type: "道具"
@@ -130,6 +132,7 @@ Item {
             //头盔 3
             id:helmet
             objectName: "helmet"
+            readonly property string propName: "头盔"
             readonly property int grade: 1
             readonly property int basePrice: 25
             readonly property string type: "道具"
@@ -146,6 +149,7 @@ Item {
             //橡皮狂暴战士 4
             id: rubber_berserker
             objectName: "rubber_berserker"
+            readonly property string propName: "橡皮狂暴战士"
             readonly property int grade: 1
             readonly property int basePrice: 25
             readonly property string type: "道具"
@@ -163,6 +167,7 @@ Item {
             //颅脑损伤 5
             id: brain_injury
             objectName: "brain_injury"
+            readonly property string propName: "颅脑损伤"
             readonly property int grade: 1
             readonly property int basePrice: 25
             readonly property string type: "道具"
@@ -179,6 +184,7 @@ Item {
             //咖啡 6
             id: coffee
             objectName: "coffee"
+            readonly property string propName: "咖啡"
             readonly property int grade: 1
             readonly property int basePrice: 15
             readonly property string type: "道具"
@@ -195,6 +201,7 @@ Item {
             //爪子树 7
             id:claw_tree
             objectName: "claw_tree"
+            readonly property string propName: "爪子树"
             readonly property int grade: 1
             readonly property int basePrice: 20
             readonly property string type: "道具"
@@ -214,6 +221,7 @@ Item {
             //沸水 8
             id: boiling_water
             objectName: "boiling_water"
+            readonly property string propName: "沸水"
             readonly property int grade: 1
             readonly property int basePrice: 30
             readonly property string type: "道具"
@@ -231,6 +239,7 @@ Item {
             //书 9
             id: book
             objectName: "book"
+            readonly property string propName: "书"
             readonly property int grade: 1
             readonly property int basePrice: 8
             readonly property string type: "道具"
@@ -245,6 +254,7 @@ Item {
             //破口 10
             id: break_through
             objectName: "break_through"
+            readonly property string propName: "破口"
             readonly property int grade: 1
             readonly property int basePrice: 25
             readonly property string type: "道具"
@@ -261,6 +271,7 @@ Item {
             //蝴蝶 11
             id: butterfly
             objectName: "butterfly"
+            readonly property string propName: "蝴蝶"
             readonly property int grade: 1
             readonly property int basePrice: 30
             readonly property string type: "道具"
@@ -278,6 +289,7 @@ Item {
             id: defective_steroids
             objectName: "defective_steroids"
             readonly property int grade: 1
+
             readonly property int basePrice: 20
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -295,6 +307,7 @@ Item {
             //牛皮胶布 13
             id: duct_tape
             objectName: "duct_tape"
+            readonly property string propName: "牛皮胶布"
             readonly property int grade: 1
             readonly property int basePrice: 25
             readonly property string type: "道具"
@@ -315,6 +328,7 @@ Item {
             //蛋糕 14
             id: cake
             objectName: "cake"
+            readonly property string propName: "蛋糕"
             readonly property int grade: 1
             readonly property int basePrice: 15
             readonly property string type: "道具"
@@ -331,6 +345,7 @@ Item {
             //眼镜 15
             id: glasses
             objectName: "glasses"
+            readonly property string propName: "眼镜"
             readonly property int grade: 1
             readonly property int basePrice: 25
             readonly property string type: "道具"
@@ -345,6 +360,7 @@ Item {
             //山羊头骨 16
             id: goat_skull
             objectName: "goat_skull"
+            readonly property string propName: "山羊头骨"
             readonly property int grade: 1
             readonly property int basePrice: 25
             readonly property string type: "道具"
@@ -363,6 +379,7 @@ Item {
             id: yarmulke
             objectName: "yarmulke"
             readonly property int grade: 1
+            readonly property string propName: "小圆帽"
             readonly property int basePrice: 20
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -380,6 +397,7 @@ Item {
             id: injection
             objectName: "injection"
             readonly property int grade: 1
+            readonly property string propName: "注射"
             readonly property int basePrice: 20
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -396,6 +414,7 @@ Item {
             //精神错乱 19
             id: insane
             objectName: "insane"
+            readonly property string propName: "精神错乱"
             readonly property int grade: 1
             readonly property int basePrice: 20
             readonly property string type: "道具"
@@ -412,6 +431,7 @@ Item {
             //镜头 20
             id: lens
             objectName: "lens"
+            readonly property string propName: "镜头"
             readonly property int grade: 1
             readonly property int basePrice: 20
             readonly property string type: "道具"
@@ -429,6 +449,7 @@ Item {
             id: lost_duck
             objectName: "lost_duck"
             readonly property int grade: 1
+            readonly property string propName: "迷失之鸭"
             readonly property int basePrice: 25
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -445,6 +466,7 @@ Item {
             id: propeller_hat
             objectName: "propeller_hat"
             readonly property int grade: 1
+            readonly property string propName: "螺旋桨帽子"
             readonly property int basePrice: 28
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -461,6 +483,7 @@ Item {
             id: terrifying_onion
             objectName: "terrifying_onion"
             readonly property int grade: 1
+            readonly property string propName: "恐怖洋葱"
             readonly property int basePrice: 15
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -476,6 +499,7 @@ Item {
             //有毒的烂泥 23
             id: toxic_sludge
             objectName: "toxic_sludge"
+            readonly property string propName: "有毒的烂泥"
             readonly property int grade: 1
             readonly property int basePrice: 20
             readonly property string type: "道具"
@@ -493,6 +517,7 @@ Item {
             id: coal
             objectName: "coal"
             readonly property int grade: 1
+            readonly property string propName: "煤炭"
             readonly property int basePrice: 20
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -511,6 +536,7 @@ Item {
             id: fertilizer
             objectName: "fertilizer"
             readonly property int grade: 1
+            readonly property string propName: "肥料"
             readonly property int basePrice: 15
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -530,6 +556,7 @@ Item {
             id: acid_liquor
             objectName: "acid_liquor"
             readonly property int grade: 2
+            readonly property string propName: "酸液"
             readonly property int basePrice: 65
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -546,6 +573,7 @@ Item {
             id: energy_bracelet
             objectName: "energy_bracelet"
             readonly property int grade: 2
+            readonly property string propName: "能量手镯"
             readonly property int basePrice: 55
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -565,6 +593,7 @@ Item {
             id: gear
             objectName: "gear"
             readonly property int grade: 2
+            readonly property string propName: "齿轮"
             readonly property int basePrice: 35
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -581,6 +610,7 @@ Item {
             id: cyclops_beetle
             objectName: "cyclops_beetle"
             readonly property int grade: 2
+            readonly property string propName: "独眼虫"
             readonly property int basePrice: 45
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -597,6 +627,7 @@ Item {
             id: fuel_tank
             objectName: "fuel_tank"
             readonly property int grade: 2
+            readonly property string propName: "燃料箱"
             readonly property int basePrice: 45
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -615,6 +646,7 @@ Item {
             id: chip
             objectName: "chip"
             readonly property int grade: 2
+            readonly property string propName: "筹码"
             readonly property int basePrice: 60
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -632,6 +664,7 @@ Item {
             id: campfire
             objectName: "campfire"
             readonly property int grade: 2
+            readonly property string propName: "营火"
             readonly property int basePrice: 40
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -651,6 +684,7 @@ Item {
             id: black_belt
             objectName: "black_belt"
             readonly property int grade: 2
+            readonly property string propName: "黑带"
             readonly property int basePrice: 50
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -670,6 +704,7 @@ Item {
             id: patch
             objectName: "patch"
             readonly property int grade: 2
+            readonly property string propName: "眼罩"
             readonly property int basePrice: 45
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -690,6 +725,7 @@ Item {
             objectName: "flag"
             readonly property int grade: 2
             readonly property int basePrice: 55
+            readonly property string propName: "旗帜"
             readonly property string type: "道具"
             readonly property string talentText: `
             <font color='green'>+20</font><font color='white'>射程</font><br>
@@ -708,6 +744,7 @@ Item {
             id: leather_vest
             objectName: "leather_vest"
             readonly property int grade: 2
+            readonly property string propName: "皮制背心"
             readonly property int basePrice: 45
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -726,6 +763,7 @@ Item {
             id: small_muscle_man
             objectName: "small_muscle_man"
             readonly property int grade: 2
+            readonly property string propName: "小肌肉男"
             readonly property int basePrice: 50
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -744,6 +782,7 @@ Item {
             id: master
             objectName: "master"
             readonly property int grade: 2
+            readonly property string propName: "精通"
             readonly property int basePrice: 55
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -760,6 +799,7 @@ Item {
             id: medal
             objectName: "medal"
             readonly property int grade: 2
+            readonly property string propName: "奖牌"
             readonly property int basePrice: 55
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -784,6 +824,7 @@ Item {
             id: alien_baby
             objectName: "alien_baby"
             readonly property int grade: 3
+            readonly property string propName: "外星人宝宝"
             readonly property string type: "道具"
             readonly property string talentText: `
             <font color='green'>+15</font><font color='white'>最大生命值</font><br>
@@ -799,6 +840,7 @@ Item {
             id: alien_magic
             objectName: "alien_magic"
             readonly property int grade: 3
+            readonly property string propName: "外星人魔法"
             readonly property int basePrice: 85
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -817,6 +859,7 @@ Item {
             id: clover
             objectName: "clover"
             readonly property int grade: 3
+            readonly property string propName: "四叶草"
             readonly property int basePrice: 65
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -835,6 +878,7 @@ Item {
             id: alloy
             objectName: "alloy"
             readonly property int grade: 3
+            readonly property string propName: "合金"
             readonly property int basePrice: 80
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -859,6 +903,7 @@ Item {
             id: toxic_tonics
             objectName: "toxic_tonics"
             readonly property int grade: 3
+            readonly property string propName: "有毒补药"
             readonly property int basePrice: 80
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -879,6 +924,7 @@ Item {
             id: shmoop
             objectName: "shmoop"
             readonly property int grade: 3
+            readonly property string propName: "Shmoop"
             readonly property int basePrice: 60
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -900,6 +946,7 @@ Item {
             id: toolbox
             objectName: "toolbox"
             readonly property int grade: 3
+            readonly property string propName: "工具箱"
             readonly property int basePrice: 55
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -916,6 +963,7 @@ Item {
             id: guard_helmet
             objectName: "guard_helmet"
             readonly property int grade: 3
+            readonly property string propName: "守卫头盔"
             readonly property int basePrice: 80
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -934,6 +982,7 @@ Item {
             id: glass_cannon
             objectName: "glass_cannon"
             readonly property int grade: 3
+            readonly property string propName: "玻璃大炮"
             readonly property int basePrice: 75
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -952,6 +1001,7 @@ Item {
             id: cloak
             objectName: "cloak"
             readonly property int grade: 4
+            readonly property string propName: "斗篷"
             readonly property int basePrice: 110
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -974,6 +1024,7 @@ Item {
             id: exoskeleton
             objectName: "exoskeleton"
             readonly property int grade: 4
+            readonly property string propName: "外骨骼"
             readonly property int basePrice: 90
             readonly property string type: "道具"
             readonly property string talentText: `
@@ -998,6 +1049,7 @@ Item {
             id: heavy_bullets
             objectName: "heavy_bullets"
             readonly property int grade: 4
+            readonly property string propName: "重子弹"
             readonly property int basePrice: 100
             readonly property string type: "道具"
             readonly property string talentText: `

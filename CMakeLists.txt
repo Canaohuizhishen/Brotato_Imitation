@@ -47,6 +47,11 @@ qt_add_qml_module(appBrotato
     QML_FILES data/UpgradeOptionCustomizationCore.qml
     QML_FILES components/Attribute.qml
     QML_FILES components/AttributePanel.qml
+    QML_FILES
+    QML_FILES components/SetButton.qml
+    QML_FILES
+    QML_FILES
+    QML_FILES page/Pause.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

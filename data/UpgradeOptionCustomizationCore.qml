@@ -31,16 +31,19 @@ Item {
             //获得随机等级
             random=Math.random()*(grade_one_option_spawn_probability+grade_two_option_spawn_probability+grade_three_option_spawn_probability+grade_four_option_spawn_probability)
             probability=grade_four_option_spawn_probability
-            grade
             if(random<probability){
                 grade=4
+            }else{
                 probability+=grade_three_option_spawn_probability
-            }else if(random<probability){
-                grade=3
-                probability+=grade_two_option_spawn_probability
-            }else if(random<probability){
-                grade=2
-            }else grade=1
+                if(random<probability){
+                    grade=3
+                }else{
+                    probability+=grade_two_option_spawn_probability
+                    if(random<probability){
+                    grade=2
+                    }else grade=1
+                }
+            }
 
             //获得随机索引
             index=Math.floor(Math.random()*optionNumber)
@@ -75,7 +78,7 @@ Item {
         id: leg
         objectName: "leg"
         property int grade: 1
-        property int value: 3*Math.pow(2,grade-1)
+        property int value: 3*grade
         property string optionName: "腿"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -90,7 +93,7 @@ Item {
         id: chest
         objectName: "chest"
         property int grade: 1
-        property int value: 1*Math.pow(2,grade-1)
+        property int value: 1*grade
         property string optionName: "胸"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -104,7 +107,7 @@ Item {
         id: skull
         objectName: "skull"
         property int grade: 1
-        property int value: 2*Math.pow(2,grade-1)
+        property int value: 2*grade
         property string optionName: "头骨"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -118,7 +121,7 @@ Item {
         id: lung
         objectName: "lung"
         property int grade: 1
-        property int value: 2*Math.pow(2,grade-1)
+        property int value: 2*grade
         property string optionName: "肺"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -132,7 +135,7 @@ Item {
         id: finger
         objectName: "finger"
         property int grade: 1
-        property int value: 3*Math.pow(2,grade-1)
+        property int value: 3*grade
         property string optionName: "手指"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -146,7 +149,7 @@ Item {
         id: back
         objectName: "back"
         property int grade: 1
-        property int value: 3*Math.pow(2,grade-1)
+        property int value: 3*grade
         property string optionName: "背"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -160,7 +163,7 @@ Item {
         id: teeth
         objectName: "teeth"
         property int grade: 1
-        property int value: 1*Math.pow(2,grade-1)
+        property int value: 1*grade
         property string optionName: "牙齿"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -174,7 +177,7 @@ Item {
         id: heart
         objectName: "heart"
         property int grade: 1
-        property int value: 3*Math.pow(2,grade-1)
+        property int value: 3*grade
         property string optionName: "心脏"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -188,7 +191,7 @@ Item {
         id: brain
         objectName: "brain"
         property int grade: 1
-        property int value: 1*Math.pow(2,grade-1)
+        property int value: 1*grade
         property string optionName: "脑"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -202,7 +205,7 @@ Item {
         id: reflexes
         objectName: "reflexes"
         property int grade: 1
-        property int value: 5*Math.pow(2,grade-1)
+        property int value: 5*grade
         property string optionName: "反应能力"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -216,7 +219,7 @@ Item {
         id: nose
         objectName: "nose"
         property int grade: 1
-        property int value: 5*Math.pow(2,grade-1)
+        property int value: 5*grade
         property string optionName: "鼻"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -230,7 +233,7 @@ Item {
         id: hand
         objectName: "hand"
         property int grade: 1
-        property int value: 5*Math.pow(2,grade-1)
+        property int value: 5*grade
         property string optionName: "手"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -244,7 +247,7 @@ Item {
         id: shoulder
         objectName: "shoulder"
         property int grade: 1
-        property int value: 1*Math.pow(2,grade-1)
+        property int value: 1*grade
         property string optionName: "肩"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -258,7 +261,7 @@ Item {
         id: foream
         objectName: "foream"
         property int grade: 1
-        property int value: 2*Math.pow(2,grade-1)
+        property int value: 2*grade
         property string optionName: "前臂"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -272,7 +275,7 @@ Item {
         id: triceps
         objectName: "triceps"
         property int grade: 1
-        property int value: 5*Math.pow(2,grade-1)
+        property int value: 5*grade
         property string optionName: "三头肌"
         readonly property string type: "升级"
         readonly property string talentText: `
@@ -286,7 +289,7 @@ Item {
         id: eyes
         objectName: "eyes"
         property int grade: 1
-        property int value: 15*Math.pow(2,grade-1)
+        property int value: 15*grade
         property string optionName: "眼睛"
         readonly property string type: "升级"
         readonly property string talentText: `

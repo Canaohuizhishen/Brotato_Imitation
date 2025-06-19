@@ -58,6 +58,7 @@ Rectangle {
 
         delegate:UpgradeOption {
             required property string name
+            required property string level
             required property string upgradeOptionName
             required property string description
 
@@ -66,6 +67,7 @@ Rectangle {
             iconSource: "/images/"+name+".png"
             title: upgradeOptionName
             talentText: description
+            grade:level
             chooseButton.onClicked: {
                 root.upgradeNotificationBar.number--
                 root.init()
@@ -75,7 +77,7 @@ Rectangle {
         function addOptions(){
             var array=core.getOptionRandomly(4)
             for(var i=0;i<array.length;i++){
-                model.append({ "name": array[i].objectName, "upgradeOptionName":array[i].optionName , "description": array[i].talentText })
+                model.append({ "level":array[i].grade,"name": array[i].objectName, "upgradeOptionName":array[i].optionName , "description": array[i].talentText })
             }
         }
 
