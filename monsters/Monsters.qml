@@ -18,7 +18,8 @@ Item {
     property int maxNum: 100
 
     Component.onCompleted: {
-        //monsters.spawnMonsters(100,"sprayer")
+        //monsters.spawnMonsters(1,"pursuer")
+        //monsters.spawnMonsters(1,"charger")
     }
 
     //返回当前被target击中的怪物
@@ -111,8 +112,13 @@ Item {
             for(var i=0;i<monster.monsterData.materialDrops;i++){
                 var material=materialComponent.createObject(materialsParent)
                 material.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-                material.x=monster.x+monster.width/2-material.width/2
-                material.y=monster.y+monster.height-material.height
+                if(i==0){
+                    material.x=monster.x+monster.width/2-material.width/2
+                    material.y=monster.y+monster.height-material.height
+                }else{
+                    material.x=monster.x+monster.width/2-material.width/2+(Math.random()-0.5)*monster.width*2
+                    material.y=monster.y+monster.height-material.height+(Math.random()-0.5)*monster.width*2
+                }
             }
         }else console.log("Error loading component:", materialComponent.errorString());
     }

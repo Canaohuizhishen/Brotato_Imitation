@@ -4,7 +4,7 @@ Item {
     id: root
     property double scaleFactor: 1.0
     width: 240*scaleFactor
-    height: 12*scaleFactor
+    height: 16*scaleFactor
 
     // 可配置属性
     property string iconSource: ""
@@ -12,7 +12,7 @@ Item {
     property int attributeValue:0
     property color attributeColor: "white"
     property color valueColor: "white"
-    property int fontSize: 16*scaleFactor
+    property int fontSize: height
 
     function getValueColor(val) {
         var num = parseFloat(val);
@@ -35,7 +35,7 @@ Item {
         color: root.getValueColor(root.attributeValue)
         font.pixelSize: root.fontSize
         anchors.left: parent.left
-        anchors.leftMargin: 30*root.scaleFactor
+        anchors.leftMargin: root.iconSource=="" ? 0 : 30*root.scaleFactor
         anchors.verticalCenter: parent.verticalCenter
     }
 

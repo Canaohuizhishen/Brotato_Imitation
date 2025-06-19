@@ -23,14 +23,15 @@ Image {
     property bool isHited: false
     property bool isFaceRight: true
     property bool moveDirectionConverse: false
+    property bool faceTarget: true
 
     property int waveNumber: 0
     property alias monsterData: monsterData
     property var core: monsterCore.getMonster(monsterName)
 
-    property double v: core.initVelocity*scaleFactor
+    property double v: core.initVelocity
     property int interval: 5
-    property double stepSize: v*interval/1200
+    property double stepSize: v*interval/1200*scaleFactor
 
     Item {
         id: monsterData
@@ -107,16 +108,16 @@ Image {
 
     Timer {
         id: checkFaceDirectionTimer
-        interval: 100; running: true; repeat: true
+        interval: 100; running: monster.faceTarget; repeat: true
         onTriggered: {
-                    var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
-                    if(dx<0){
-                        if(monster.moveDirectionConverse)monster.faceRight()
-                        else monster.faceLeft()
-                    }else {
-                        if(monster.moveDirectionConverse)monster.faceLeft()
-                        else monster.faceRight()
-                    }
+            var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
+            if(dx<0){
+                if(monster.moveDirectionConverse)monster.faceRight()
+                else monster.faceLeft()
+            }else {
+                if(monster.moveDirectionConverse)monster.faceLeft()
+                else monster.faceRight()
+            }
         }
     }
 

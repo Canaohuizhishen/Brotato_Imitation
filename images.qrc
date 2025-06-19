@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>images/recording.png</file>
+        <file>images/attribute-range.png</file>
         <file>images/triceps.png</file>
         <file>images/smg_faceLeft.png</file>
         <file>images/babyAlien_faceRight.png</file>
@@ -8,6 +9,7 @@
         <file>images/edge.png</file>
         <file>images/wellRounded_avatar2.png</file>
         <file>images/material3.png</file>
+        <file>images/attribute-critChance.png</file>
         <file>images/prop-lost_duck.png</file>
         <file>images/material6.png</file>
         <file>images/prop-toxic_sludge.png</file>
@@ -25,14 +27,20 @@
         <file>images/smg_icon.png</file>
         <file>images/smg_icon3.png</file>
         <file>images/material7.png</file>
+        <file>images/attribute-elementalDamage.png</file>
         <file>images/hand.png</file>
         <file>images/sprayer_redMask_faceRight.png</file>
         <file>images/prop-alien_baby.png</file>
+        <file>images/attribute-armor.png</file>
         <file>images/prop-leather_vest.png</file>
+        <file>images/attribute-rangedDamage.png</file>
+        <file>images/brute_mask_faceLeft.png</file>
         <file>images/prop-acid_liquor.png</file>
         <file>images/prop-brain_injury.png</file>
+        <file>images/attribute-hpRegeneration.png</file>
         <file>images/prop-alloy.png</file>
         <file>images/prop-shmoop.png</file>
+        <file>images/attribute-meleeDamage.png</file>
         <file>images/prop-cloak.png</file>
         <file>images/stone4.png</file>
         <file>images/lock2.png</file>
@@ -41,11 +49,14 @@
         <file>images/prop-patch.png</file>
         <file>images/wellRounded_avatar.png</file>
         <file>images/sprayer_mask_faceRight.png</file>
+        <file>images/attribute-lifeSteal.png</file>
+        <file>images/pursuer_faceLeft.png</file>
         <file>images/charger_redMask_faceRight.png</file>
         <file>images/chaser_mask_faceLeft.png</file>
         <file>images/yellow_bullet.png</file>
         <file>images/prop-coal.png</file>
         <file>images/prop-claw_tree.png</file>
+        <file>images/pursuer_mask_faceRight.png</file>
         <file>images/finger.png</file>
         <file>images/prop-energy_bracelet.png</file>
         <file>images/prop-cyclops_beetle.png</file>
@@ -59,10 +70,15 @@
         <file>images/prop-clover.png</file>
         <file>images/heart.png</file>
         <file>images/mutant_avatar2.png</file>
+        <file>images/attribute-attackSpeed.png</file>
+        <file>images/pursuer_mask_faceLeft.png</file>
         <file>images/sprayer_redMask_faceLeft.png</file>
         <file>images/0.png</file>
+        <file>images/brute_faceRight.png</file>
+        <file>images/brute_faceLeft.png</file>
         <file>images/prop-master.png</file>
         <file>images/mutant_avatar3.png</file>
+        <file>images/brute_mask_faceRight.png</file>
         <file>images/lock3.png</file>
         <file>images/wellRounded_avatar3.png</file>
         <file>images/material5.png</file>
@@ -74,6 +90,7 @@
         <file>images/prop-defective_steroids.png</file>
         <file>images/lock.png</file>
         <file>images/red_bullet.png</file>
+        <file>images/attribute-engineering.png</file>
         <file>images/stone3.png</file>
         <file>images/charger_mask_faceLeft.png</file>
         <file>images/prop-toolbox.png</file>
@@ -83,6 +100,7 @@
         <file>images/chaser_mask_faceRight.png</file>
         <file>images/skull.png</file>
         <file>images/material4.png</file>
+        <file>images/attribute-dodge.png</file>
         <file>images/prop-terrifying_onion.png</file>
         <file>images/prop-boiling_water.png</file>
         <file>images/prop-guard_helmet.png</file>
@@ -91,13 +109,18 @@
         <file>images/wellRounded_faceRight.png</file>
         <file>images/mutant_faceRight.png</file>
         <file>images/prop-hedgehog.png</file>
+        <file>images/attribute-luck.png</file>
         <file>images/prop-fertilizer.png</file>
         <file>images/02.png</file>
         <file>images/sprayer_mask_faceLeft.png</file>
+        <file>images/brute_redMask_faceRight.png</file>
+        <file>images/attribute-speed.png</file>
         <file>images/prop-yarmulke.png</file>
+        <file>images/pursuer_faceRight.png</file>
         <file>images/prop-break_through.png</file>
         <file>images/babyAlien_mask_faceRight.png</file>
         <file>images/prop-bat.png</file>
+        <file>images/brute_redMask_faceLeft.png</file>
         <file>images/prop-coffee.png</file>
         <file>images/prop-glass_cannon.png</file>
         <file>images/prop-book.png</file>
@@ -105,8 +128,10 @@
         <file>images/material2.png</file>
         <file>images/prop-helmet.png</file>
         <file>images/prop-small_muscle_man.png</file>
+        <file>images/attribute-damage.png</file>
         <file>images/chaser_faceLeft.png</file>
         <file>images/prop-gear.png</file>
+        <file>images/attribute-harvesting.png</file>
         <file>images/mutant_faceLeft.png</file>
         <file>images/teeth.png</file>
         <file>images/prop-flag.png</file>
@@ -130,25 +155,10 @@
         <file>images/sprayer_faceRight.png</file>
         <file>images/stone2.png</file>
         <file>images/mutant_avatar.png</file>
+        <file>images/attribute-maxHp.png</file>
         <file>images/charger_faceRight.png</file>
         <file>images/stone1.png</file>
         <file>images/upgrade_icon.png</file>
         <file>images/smg_faceRight.png</file>
-        <file>images/attribute-armor.png</file>
-        <file>images/attribute-attackSpeed.png</file>
-        <file>images/attribute-critChance.png</file>
-        <file>images/attribute-damage.png</file>
-        <file>images/attribute-dodge.png</file>
-        <file>images/attribute-elementalDamage.png</file>
-        <file>images/attribute-engineering.png</file>
-        <file>images/attribute-harvesting.png</file>
-        <file>images/attribute-hpRegeneration.png</file>
-        <file>images/attribute-lifeSteal.png</file>
-        <file>images/attribute-luck.png</file>
-        <file>images/attribute-maxHp.png</file>
-        <file>images/attribute-meleeDamage.png</file>
-        <file>images/attribute-range.png</file>
-        <file>images/attribute-rangedDamage.png</file>
-        <file>images/attribute-speed.png</file>
     </qresource>
 </RCC>
