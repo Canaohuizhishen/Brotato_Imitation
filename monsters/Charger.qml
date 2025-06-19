@@ -22,6 +22,9 @@ Monster{
         var distance = Math.sqrt(dx * dx + dy * dy);
         var x=charger.x-dx/distance*chargeRange
         var y=charger.y-dy/distance*chargeRange
+        if(dx>0)charger.faceLeft()
+        else charger.faceRight()
+        faceTarget=false
         chargeAnimation.targetPoint=Qt.point(Math.min(Math.max(x,0),charger.parent.width-charger.width),Math.min(Math.max(y,0),charger.parent.height-charger.height))
         chargeAnimation.start()
         makeRedMask(charger)
@@ -33,7 +36,7 @@ Monster{
                     Image {
                         id: redOverlay
                         anchors.fill: parent
-                        source: parent.isFaceRight ? "/images/charger_redMask_faceRight.png" : "/images/charger_redMask_faceLeft.png"
+                        source: parent.isFaceRight ? "/images/${monsterName}_redMask_faceRight.png" : "/images/${monsterName}_redMask_faceLeft.png"
                         z: 100
                         Component.onCompleted: {
                         }
@@ -117,10 +120,11 @@ Monster{
         }
 
         onStopped: {
-            charger.isCharging=false
             charger.inChargeCoolDown=true
             coolDownTimer.start()
+            charger.isCharging=false
             charger.active=true
+            charger.faceTarget=true
             running=false
         }
     }

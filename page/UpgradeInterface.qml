@@ -51,9 +51,9 @@ Rectangle {
         orientation: ListView.Horizontal
         spacing: 5*root.scaleFactor
         anchors.left: root.left
-        anchors.leftMargin: (attributePanel.x-width)/2
+        anchors.leftMargin:20*root.scaleFactor
         anchors.verticalCenter: root.verticalCenter
-        anchors.verticalCenterOffset: -10
+        anchors.verticalCenterOffset: -15*root.scaleFactor
         model: ListModel {}
 
         delegate:UpgradeOption {
@@ -135,9 +135,9 @@ Rectangle {
         id: attributePanel
         scaleFactor: root.scaleFactor
         anchors.right: parent.right
-        anchors.rightMargin: 15*root.scaleFactor
+        anchors.rightMargin: 13*root.scaleFactor
         anchors.top: root.top
-        anchors.topMargin: 120*root.scaleFactor
+        anchors.topMargin: 125*root.scaleFactor
     }
 }
 
