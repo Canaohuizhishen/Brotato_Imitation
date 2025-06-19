@@ -7,6 +7,7 @@ Item {
     property alias babyAlien: babyAlien
     property alias chaser: chaser
     property alias charger: charger
+    property alias sprayer: sprayer
 
     onWaveNumberChanged: {
         init()
@@ -25,11 +26,13 @@ Item {
         case 4:{
             babyAlien.initCount=6
             charger.initCount=4
+            sprayer.initCount=2
         }break;
         case 5:{
             babyAlien.initCount=4
             chaser.initCount=3
             charger.initCount=4
+            sprayer.initCount=1
         }break;
         case 6:{
             chaser.initCount=3
@@ -95,6 +98,33 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.02
         readonly property double chestDropRate: 0.03
+
+        property double initCount: 0
+        property double countRation: 1
+        readonly property double countIcreaseRation: 0.05
+
+        function init(){
+            initCount=0
+            countRation=1
+        }
+    }
+
+    Item{
+        id: sprayer
+        objectName: "sprayer"
+        property string monsterName: "喷射者"
+        readonly property string source: "Sprayer.qml"
+        readonly property int attackRange: 400
+
+        readonly property int initHp: 8
+        readonly property double hpBonus: 1
+        readonly property int initVelocity: 200
+        readonly property int maxVelocity: 200
+        readonly property int initDamage: 1
+        readonly property double damageBonus: 0.6
+        readonly property int materialDrops: 1
+        readonly property double consumableDropRate: 0.03
+        readonly property double chestDropRate: 0.1
 
         property double initCount: 0
         property double countRation: 1
