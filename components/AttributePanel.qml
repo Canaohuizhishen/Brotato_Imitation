@@ -99,6 +99,7 @@ Rectangle {
         anchors.bottom: root.bottom
         anchors.topMargin: 112*root.scaleFactor
         anchors.left: parent.left
+        anchors.leftMargin: 10
         anchors.right: parent.right
         spacing: 10*root.scaleFactor
         model: ListModel {
@@ -120,22 +121,22 @@ Rectangle {
         }
         function addAttributes(){
             mainattributesModel.append({ "name": "目前等级","value":PlayerData.curLevel ,"imageSource":"/images/upgrade_icon.png"})
-            mainattributesModel.append({ "name": "最大生命值","value":PlayerData.maxHp })
-            mainattributesModel.append({ "name": "生命再生","value":PlayerData.hpRegeneration })
-            mainattributesModel.append({ "name": "%生命窃取","value":PlayerData.lifeSteal })
-            mainattributesModel.append({ "name": "%伤害","value":PlayerData.damage })
-            mainattributesModel.append({ "name": "近战伤害","value":PlayerData.meleeDamage })
-            mainattributesModel.append({ "name": "远程伤害","value":PlayerData.rangedDamage })
-            mainattributesModel.append({ "name": "元素伤害","value":PlayerData.elementalDamage })
-            mainattributesModel.append({ "name": "%攻击速度","value":PlayerData.attackSpeed })
-            mainattributesModel.append({ "name": "%暴击率","value":PlayerData.critChance })
-            mainattributesModel.append({ "name": "工程学","value":PlayerData.engineering })
-            mainattributesModel.append({ "name": "范围","value":PlayerData.range })
-            mainattributesModel.append({ "name": "护甲","value":PlayerData.armor })
-            mainattributesModel.append({ "name": "%闪避","value":PlayerData.dodge })
-            mainattributesModel.append({ "name": "%速度","value":PlayerData.speed })
-            mainattributesModel.append({ "name": "幸运","value":PlayerData.luck })
-            mainattributesModel.append({ "name": "收获","value":PlayerData.harvesting })
+            mainattributesModel.append({ "name": "最大生命值","value":PlayerData.maxHp ,"imageSource":"/images/attribute-maxHp.png"})
+            mainattributesModel.append({ "name": "生命再生","value":PlayerData.hpRegeneration, "imageSource":"/images/attribute-hpRegeneration.png"})
+            mainattributesModel.append({ "name": "%生命窃取","value":PlayerData.lifeSteal , "imageSource":"/images/attribute-lifeSteal.png"})
+            mainattributesModel.append({ "name": "%伤害","value":PlayerData.damage , "imageSource":"/images/attribute-damage.png"})
+            mainattributesModel.append({ "name": "近战伤害","value":PlayerData.meleeDamage, "imageSource":"/images/attribute-meleeDamage.png" })
+            mainattributesModel.append({ "name": "远程伤害","value":PlayerData.rangedDamage , "imageSource":"/images/attribute-rangedDamage.png"})
+            mainattributesModel.append({ "name": "元素伤害","value":PlayerData.elementalDamage, "imageSource":"/images/attribute-elementalDamage.png" })
+            mainattributesModel.append({ "name": "%攻击速度","value":PlayerData.attackSpeed , "imageSource":"/images/attribute-attackSpeed.png"})
+            mainattributesModel.append({ "name": "%暴击率","value":PlayerData.critChance, "imageSource":"/images/attribute-critChance.png"})
+            mainattributesModel.append({ "name": "工程学","value":PlayerData.engineering,"imageSource":"/images/attribute-engineering.png" })
+            mainattributesModel.append({ "name": "范围","value":PlayerData.range ,"imageSource":"/images/attribute-range.png"})
+            mainattributesModel.append({ "name": "护甲","value":PlayerData.armor ,"imageSource":"/images/attribute-armor.png"})
+            mainattributesModel.append({ "name": "%闪避","value":PlayerData.dodge ,"imageSource":"/images/attribute-dodge.png"})
+            mainattributesModel.append({ "name": "%速度","value":PlayerData.speed ,"imageSource":"/images/attribute-speed.png"})
+            mainattributesModel.append({ "name": "幸运","value":PlayerData.luck ,"imageSource":"/images/attribute-luck.png"})
+            mainattributesModel.append({ "name": "收获","value":PlayerData.harvesting ,"imageSource":"/images/attribute-harvesting.png"})
         }
     }
 
