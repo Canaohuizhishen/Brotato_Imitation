@@ -128,5 +128,21 @@
         <file>images/stone1.png</file>
         <file>images/upgrade_icon.png</file>
         <file>images/smg_faceRight.png</file>
+        <file>images/attribute-armor.png</file>
+        <file>images/attribute-attackSpeed.png</file>
+        <file>images/attribute-critChance.png</file>
+        <file>images/attribute-damage.png</file>
+        <file>images/attribute-dodge.png</file>
+        <file>images/attribute-elementalDamage.png</file>
+        <file>images/attribute-engineering.png</file>
+        <file>images/attribute-harvesting.png</file>
+        <file>images/attribute-hpRegeneration.png</file>
+        <file>images/attribute-lifeSteal.png</file>
+        <file>images/attribute-luck.png</file>
+        <file>images/attribute-maxHp.png</file>
+        <file>images/attribute-meleeDamage.png</file>
+        <file>images/attribute-range.png</file>
+        <file>images/attribute-rangedDamage.png</file>
+        <file>images/attribute-speed.png</file>
     </qresource>
 </RCC>
