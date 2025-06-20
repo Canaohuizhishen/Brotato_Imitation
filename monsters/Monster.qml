@@ -5,7 +5,7 @@ import "../data"
 
 Image {
     id: monster
-    property Player target: null
+    property var target: null
     property var bulletsParent
     source: "/images/"+monster.monsterName+"_faceRight.png"
     objectName: "Monster"
@@ -22,8 +22,10 @@ Image {
     property bool isDead: false
     property bool isHited: false
     property bool isFaceRight: true
+    property bool isFaceUp: true
     property bool moveDirectionConverse: false
     property bool faceTarget: true
+    property bool isFrontHaveOtherMonster: false
 
     property int waveNumber: 0
     property alias monsterData: monsterData
@@ -84,25 +86,28 @@ Image {
         id: moveTimer
         interval: monster.interval; running: monster.active; repeat: true
         onTriggered: {
-                    if(monster.isDead==true)return
-                    var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
-                    var dy = (monster.target.y + monster.target.height/2) - (monster.y + monster.height/2);
-                    var distance = Math.sqrt(dx * dx + dy * dy);
+            if(monster.isDead==true)return
+            if(monster.isFrontHaveOtherMonster)return
+            var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
+            var dy = (monster.target.y + monster.target.height/2) - (monster.y + monster.height/2);
+            var distance = Math.sqrt(dx * dx + dy * dy);
 
-                    if (distance < monster.target.width/2) {//已碰撞
-                        monster.hit()
-                    } else {
-                        var stepX = (dx / distance) * monster.stepSize;
-                        var stepY = (dy / distance) * monster.stepSize;
-                        if(monster.moveDirectionConverse){
-                            if(monster.x>0 && monster.x<monster.parent.width-monster.width)monster.x -= stepX;
-                            if(monster.y>0 && monster.y<monster.parent.height-monster.height)monster.y -= stepY;
-                        }else {
-                            monster.x += stepX;
-                            monster.y += stepY;
-                        }
+            if (distance < monster.target.width/2) {//已碰撞
+                monster.hit()
+            } else {
+                var stepX = (dx / distance) * monster.stepSize;
+                var stepY = (dy / distance) * monster.stepSize;
+                if(monster.moveDirectionConverse){
+                    if(monster.x>0 && monster.x<monster.parent.width-monster.width)monster.x -= stepX;
+                    if(monster.y>0 && monster.y<monster.parent.height-monster.height)monster.y -= stepY;
+                }else {
+                    monster.x += stepX;
+                    monster.y += stepY;
+                }
 
-                    }
+            }
+
+            monster.z=monster.y//实现相对靠下的怪物在上层
         }
     }
 
@@ -111,6 +116,7 @@ Image {
         interval: 100; running: monster.faceTarget; repeat: true
         onTriggered: {
             var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
+            var dy = (monster.target.y + monster.target.height/2) - (monster.y + monster.height/2);
             if(dx<0){
                 if(monster.moveDirectionConverse)monster.faceRight()
                 else monster.faceLeft()
@@ -118,6 +124,8 @@ Image {
                 if(monster.moveDirectionConverse)monster.faceLeft()
                 else monster.faceRight()
             }
+            if(dy<0)monster.isFaceUp=true
+            else monster.isFaceUp=false
         }
     }
 

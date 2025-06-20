@@ -18,8 +18,143 @@ Item {
     property int maxNum: 100
 
     Component.onCompleted: {
-        //monsters.spawnMonsters(1,"pursuer")
+        // var monster1=spawnMonster(monsters,"babyAlien")
+        // monster1.x=800
+        // monster1.y=800
+        // monster1.target=target
+        // monster1.active=false
+        // var monster3=spawnMonster(monsters,"babyAlien")
+        // monster3.x=900
+        // monster3.y=800
+        // monster3.target=target
+        // monster3.active=false
+        // var monster2=spawnMonster(monsters,"babyAlien")
+        // monster2.x=1000
+        // monster2.y=800
+        // monster2.target=monster1
+
+        // var monster4=spawnMonster(monsters,"babyAlien")
+        // monster4.x=800
+        // monster4.y=1000
+        // monster4.target=monster1
+        // var monster5=spawnMonster(monsters,"babyAlien")
+        // monster5.x=800
+        // monster5.y=900
+        // monster5.target=target
+        // monster5.active=false
+
+        // var monster6=spawnMonster(monsters,"babyAlien")
+        // monster6.x=930
+        // monster6.y=930
+        // monster6.target=monster1
+        // var monster7=spawnMonster(monsters,"babyAlien")
+        // monster7.x=850
+        // monster7.y=850
+        // monster7.target=target
+        // monster7.active=false
+
+        //monsters.spawnMonsters(100,"babyAlien")
         //monsters.spawnMonsters(1,"charger")
+    }
+
+    MonsterCustomizationCore{
+        id: monsterCore
+        waveNumber: monsters.waveNumber
+    }
+
+    //用来管理所有怪物生成的子弹
+    Bullets{
+        id: bullets
+        target: monsters.target
+        active: true
+        scaleFactor: monsters.scaleFactor
+        z: 3
+    }
+
+    //用来实现从fork生成到怪物生成之间的时间间隔
+    Timer {
+        id: sleepTimer
+        interval: 700
+        running: false
+        repeat: false
+        onTriggered: {
+            monsters.forksToMonsters()
+        }
+        function start(){
+            running=true
+        }
+    }
+
+    //定时生成怪物
+    Timer {
+        id: createMonsterTimer
+        interval: 3000; running: monsters.active; repeat: true
+        onTriggered: {
+            if(monsters.children.length<monsters.maxNum){
+                //console.log(monsterCore.children.length)
+                for(var i=0;i<monsterCore.children.length;i++){
+                    var monsterData=monsterCore.children[i]
+                    var n=Math.floor(monsterData.initCount*monsterData.countRation)
+                    if(n==0)continue
+                    //console.log(n,monsterData.initCount,monsterData.countRation)
+                    monsterData.countRation*=1+monsterData.countIcreaseRation
+                    monsters.spawnMonsters(n,monsterData.objectName)
+                }
+            }
+        }
+    }
+
+    //检测怪物间的碰撞
+    Timer {
+        id: checkCollidingMonsterTimer
+        interval: 50; running: true; repeat: true
+        onTriggered: {
+            for (var i = 0; i < monsters.children.length; i++) {
+                var child = monsters.children[i];
+                if (child.objectName === "Monster") {
+                    if(monsters.isFrontHaveOtherMonster(child,child.width/2))child.isFrontHaveOtherMonster=true
+                    else child.isFrontHaveOtherMonster=false
+                }
+            }
+        }
+    }
+
+    //返回target的前进方向checkDistance处有其他怪物挡路的布尔值
+    function isFrontHaveOtherMonster(target,checkDistance){
+        for (var i = 0; i < monsters.children.length; i++) {
+            var other = monsters.children[i];
+            if (other.objectName === "Monster") {
+                if(other==target || other.monsterName!==target.monsterName)continue
+                var dx=target.x-other.x
+                var dy=(target.y+target.height)-(other.y+other.height)
+                if(target.isFaceRight){
+                    if(dx<=0){
+                        if(target.isFaceUp){
+                            if(dy>=0){
+                                if(Tool.getDistance(Qt.point(target.x,target.y),Qt.point(other.x,other.y))<checkDistance)return true
+                            }
+                        }else{
+                            if(dy<=0){
+                                if(Tool.getDistance(Qt.point(target.x,target.y),Qt.point(other.x,other.y))<checkDistance)return true
+                            }
+                        }
+                    }
+                }else{
+                    if(dx>=0){
+                        if(target.isFaceUp){
+                            if(dy>=0){
+                                if(Tool.getDistance(Qt.point(target.x,target.y),Qt.point(other.x,other.y))<checkDistance)return true
+                            }
+                        }else{
+                            if(dy<=0){
+                                if(Tool.getDistance(Qt.point(target.x,target.y),Qt.point(other.x,other.y))<checkDistance)return true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false
     }
 
     //返回当前被target击中的怪物
@@ -36,6 +171,7 @@ Item {
         return null
     }
 
+    //返回range范围内距离坐标(x,y)最近的怪物
     function getClosestMonster(x,y,range){
         if(monsters.children.length==0)return null
         var m=null
@@ -52,6 +188,7 @@ Item {
         return m
     }
 
+    //令所有怪物消失
     function disappear(){
         for (var i = 0; i < monsters.children.length; i++) {
             var child = monsters.children[i];
@@ -62,6 +199,7 @@ Item {
         bullets.clear()
     }
 
+    //生成n个怪物名为monsterName的怪物
     function spawnMonsters(n,monsterName) {
         var forkComponent = Qt.createComponent("../components/Fork.qml");
         if (forkComponent.status === Component.Ready) {
@@ -84,28 +222,37 @@ Item {
         }else console.error("Error loading component:", forkComponent.errorString())
     }
 
+    //将场上所有的fork转换成对应的怪物
     function forksToMonsters() {
             for (var i = 0; i < monsters.parent.children.length; i++) {
                 var child = monsters.parent.children[i];
                 if (child.objectName === "Fork") {
-                    var source=monsterCore.getMonster(child.targetMonsterName).source
-                    var monsterComponent = Qt.createComponent(source);
-                    if (monsterComponent.status === Component.Ready) {
-                        var monster = monsterComponent.createObject(monsters);
-                        monster.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-                        monster.x = child.x;
-                        monster.y = child.y;
-                        monster.z = 2
-                        monster.owner=monsters
-                        monster.target=monsters.target
-                        monster.waveNumber=monsters.waveNumber
-                        monster.bulletsParent=bullets
-                        child.destroy();
-                    }else console.error("Error loading component:", monsterComponent.errorString())
+                    var monster = spawnMonster(monsters,child.targetMonsterName)
+                    monster.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+                    monster.x = child.x;
+                    monster.y = child.y;
+                    //monster.z = 2
+                    monster.owner=monsters
+                    monster.target=monsters.target
+                    monster.waveNumber=monsters.waveNumber
+                    monster.bulletsParent=bullets
+                    //monster.active=monsters.active
+                    child.destroy();
                 }
             }
     }
 
+    //在parent中动态生成一个怪物名为monsterName的怪物
+    function spawnMonster(parent,monsterName) {
+        var source=monsterCore.getMonster(monsterName).source
+        var monsterComponent = Qt.createComponent(source);
+        if (monsterComponent.status === Component.Ready) {
+            var monster = monsterComponent.createObject(parent);
+        }else console.error("Error loading component:", monsterComponent.errorString())
+        return monster
+    }
+
+    //在materialsParent中怪物monster的当前位置上生成其死亡时应掉落的材料
     function dropMaterial(monster){
         var materialComponent=Qt.createComponent("../components/Material.qml")
         if (materialComponent.status === Component.Ready){
@@ -121,49 +268,5 @@ Item {
                 }
             }
         }else console.log("Error loading component:", materialComponent.errorString());
-    }
-
-    MonsterCustomizationCore{
-        id: monsterCore
-        waveNumber: monsters.waveNumber
-    }
-
-    Bullets{
-        id: bullets
-        target: monsters.target
-        active: true
-        scaleFactor: monsters.scaleFactor
-        z: 3
-    }
-
-    Timer {
-        id: sleepTimer
-        interval: 700
-        running: false
-        repeat: false
-        onTriggered: {
-            monsters.forksToMonsters()
-        }
-        function start(){
-            running=true
-        }
-    }
-
-    Timer {
-        id: createMonsterTimer
-        interval: 3000; running: monsters.active; repeat: true
-        onTriggered: {
-            if(monsters.children.length<monsters.maxNum){
-                //console.log(monsterCore.children.length)
-                for(var i=0;i<monsterCore.children.length;i++){
-                    var monsterData=monsterCore.children[i]
-                    var n=Math.floor(monsterData.initCount*monsterData.countRation)
-                    if(n==0)continue
-                    //console.log(n,monsterData.initCount,monsterData.countRation)
-                    monsterData.countRation*=1+monsterData.countIcreaseRation
-                    monsters.spawnMonsters(n,monsterData.objectName)
-                }
-            }
-        }
     }
 }
