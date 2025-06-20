@@ -3,7 +3,7 @@ import singleton.PlayerData
 
 Item {
     id: core
-    property int waveNumber: 1
+    property int waveNumber: PlayerData.currentWaveNumber
     property alias babyAlien: babyAlien
     property alias chaser: chaser
     property alias charger: charger

@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import "../tool.js" as Tool
+import "../components"
 import "../data"
 
 Image {
@@ -13,12 +14,88 @@ Image {
     property var originPos: Qt.point(weapon.x,weapon.y)
     property var core: weaponCore.getWeapon(weapon.weaponName)
     property var targetPoint: null
+    property bool active: true
+    property bool paused: true
     property bool isFaceRight: true
     property bool isAiming: false
     width: 45*scaleFactor
     height: width*core.aspectRatio
     z: 2
     rotation: 0
+
+    onPausedChanged: {
+        if(paused==true){
+            fireTimer.pause()
+        }else{
+            fireTimer.resume()
+        }
+    }
+
+    onActiveChanged: {
+        if(active==false)rotationReset()
+    }
+
+    onTargetPointChanged: {
+        if(targetPoint!=null)aimToTarget()
+        else rotationReset()
+    }
+
+    WeaponCustomizationCore{
+        id: weaponCore
+    }
+
+    Timer {
+        id: waitTimer
+        interval: rotate.duration
+        running: false
+        repeat: false
+        property double angle
+        property int degree
+        onTriggered: {
+            rotateBehavior.stop()
+            if(weapon.isFaceRight){
+                weapon.faceLeft()
+                weapon.rotation=Tool.reduceAbs(weapon.rotation,180)
+                //angle-=10//图片偏移量，确保枪口朝向目标点
+            }else {
+                weapon.faceRight()
+                weapon.rotation=Tool.reduceAbs(weapon.rotation,180)
+                //angle+=10//图片偏移量，确保枪口朝向目标点
+            }
+            rotateBehavior.start()
+            rotate.duration=waitTimer.degree*rotate.durationPerDegree
+            weapon.rotation=waitTimer.angle
+            weapon.isAiming=false
+        }
+    }
+
+    Behavior on rotation {
+        id: rotateBehavior
+        //enabled: false
+        function stop(){enabled=false}
+        function start(){enabled=true}
+        RotationAnimation {
+            id: rotate
+            target: weapon
+            readonly property double  durationPerDegree: 0.5
+            duration: 30000
+            easing.type: Easing.Linear
+            direction: RotationAnimation.Shortest
+            onDurationChanged: {
+                if(duration>90*durationPerDegree)duration=90*durationPerDegree
+            }
+        }
+    }
+
+    TimerCanPause {
+        id: fireTimer
+        interval: weapon.core.cooldown*1000
+        running: weapon.targetPoint!=null && weapon.active
+        repeat: true;
+        onTriggered: {
+            if(!weapon.isAiming && weapon.active)weapon.fire()
+        }
+    }
 
     function rotationReset(){
         rotation=0
@@ -99,67 +176,5 @@ Image {
 
     function fire(){
         //虚函数
-    }
-
-    onTargetPointChanged: {
-        if(targetPoint!=null)aimToTarget()
-        else rotationReset()
-    }
-
-    WeaponCustomizationCore{
-        id: weaponCore
-    }
-
-    Timer {
-        id: waitTimer
-        interval: rotate.duration
-        running: false
-        repeat: false
-        property double angle
-        property int degree
-        onTriggered: {
-            rotateBehavior.pause()
-            if(weapon.isFaceRight){
-                weapon.faceLeft()
-                weapon.rotation=Tool.reduceAbs(weapon.rotation,180)
-                //angle-=10//图片偏移量，确保枪口朝向目标点
-            }else {
-                weapon.faceRight()
-                weapon.rotation=Tool.reduceAbs(weapon.rotation,180)
-                //angle+=10//图片偏移量，确保枪口朝向目标点
-            }
-            rotateBehavior.resume()
-            rotate.duration=waitTimer.degree*rotate.durationPerDegree
-            weapon.rotation=waitTimer.angle
-            weapon.isAiming=false
-        }
-    }
-
-    Behavior on rotation {
-        id: rotateBehavior
-        //enabled: false
-        function pause(){enabled=false}
-        function resume(){enabled=true}
-        RotationAnimation {
-            id: rotate
-            target: weapon
-            readonly property double  durationPerDegree: 0.5
-            duration: 30000
-            easing.type: Easing.Linear
-            direction: RotationAnimation.Shortest
-            onDurationChanged: {
-                if(duration>90*durationPerDegree)duration=90*durationPerDegree
-            }
-        }
-    }
-
-    Timer {
-        id: fireTimer
-        interval: weapon.core.cooldown*1000
-        running: weapon.targetPoint!=null
-        repeat: true
-        onTriggered: {
-            if(!weapon.isAiming)weapon.fire()
-        }
     }
 }

@@ -13,7 +13,6 @@ Item {
     anchors.right: parent.right
     anchors.rightMargin: 20*scaleFactor
     property alias number: repeater.model
-    property bool isCombatting: true
 
     onCurLevelChanged: {
         addOne()
@@ -30,7 +29,7 @@ Item {
             anchors.verticalCenter: upgradeBar.verticalCenter
             anchors.right: upgradeBar.right
             anchors.rightMargin: (5*upgradeBar.scaleFactor+width)*index
-            opacity: upgradeBar.isCombatting ? 0.5 : 1
+            opacity: PlayerData.isInCombat ? 0.5 : 1
         }
     }
 

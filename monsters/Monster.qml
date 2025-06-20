@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import Brotato
 import singleton.PlayerData
+import "../components"
 import "../data"
 
 Image {
@@ -19,6 +20,8 @@ Image {
     height: imageHeight*scaleFactor
     z: 2
     property bool active: true
+    property bool paused: false
+    property bool isMoveStoped: false
     property bool isDead: false
     property bool isHited: false
     property bool isFaceRight: true
@@ -27,7 +30,6 @@ Image {
     property bool faceTarget: true
     property bool isFrontHaveOtherMonster: false
 
-    property int waveNumber: 0
     property alias monsterData: monsterData
     property var core: monsterCore.getMonster(monsterName)
 
@@ -35,11 +37,27 @@ Image {
     property int interval: 5
     property double stepSize: v*interval/1200*scaleFactor
 
+    onPausedChanged: {
+        if(paused==true){
+            squashSequence.pause()
+            deadAnimation.pause()
+            disappearAnimation.pause()
+            stunnedTimer.pause()
+            hitingTimer.pause()
+        }else{
+            squashSequence.resume()
+            deadAnimation.resume()
+            disappearAnimation.resume()
+            stunnedTimer.resume()
+            hitingTimer.resume()
+        }
+    }
+
     Item {
         id: monsterData
-        property int maxHp: monster.core.initHp+monster.core.hpBonus*(monster.waveNumber-1)
+        property int maxHp: monster.core.initHp+monster.core.hpBonus*(PlayerData.currentWaveNumber-1)
         property int hp: maxHp
-        property int damage: monster.core.initDamage+monster.core.damageBonus*(monster.waveNumber-1)
+        property int damage: monster.core.initDamage+monster.core.damageBonus*(PlayerData.currentWaveNumber-1)
         property int materialDrops: monster.core.materialDrops
         property double consumableDropRate: monster.core.consumableDropRate
         property double chestDropRate: monster.core.chestDropRate
@@ -68,7 +86,7 @@ Image {
     SequentialAnimation {
         id: squashSequence
         loops: Animation.Infinite
-        running: true
+        running: monster.active
 
         // 阶段一：同时扁平 X 并拉长 Y
         ParallelAnimation {
@@ -80,14 +98,18 @@ Image {
             NumberAnimation { target: squashScale; property: "xScale"; to: 1; duration: 1000; easing.type: Easing.InOutQuad }
             NumberAnimation { target: squashScale; property: "yScale"; to: 1; duration: 1000; easing.type: Easing.InOutQuad }
         }
+        function pause(){
+            if(running)paused=true
+        }
     }
 
     Timer {
         id: moveTimer
-        interval: monster.interval; running: monster.active; repeat: true
+        interval: monster.interval; running: monster.active && !monster.paused; repeat: true
         onTriggered: {
             if(monster.isDead==true)return
             if(monster.isFrontHaveOtherMonster)return
+            if(monster.isMoveStoped==true)return
             var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
             var dy = (monster.target.y + monster.target.height/2) - (monster.y + monster.height/2);
             var distance = Math.sqrt(dx * dx + dy * dy);
@@ -104,7 +126,6 @@ Image {
                     monster.x += stepX;
                     monster.y += stepY;
                 }
-
             }
 
             monster.z=monster.y//实现相对靠下的怪物在上层
@@ -113,7 +134,7 @@ Image {
 
     Timer {
         id: checkFaceDirectionTimer
-        interval: 100; running: monster.faceTarget; repeat: true
+        interval: 100; running: monster.faceTarget && !monster.paused; repeat: true
         onTriggered: {
             var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
             var dy = (monster.target.y + monster.target.height/2) - (monster.y + monster.height/2);
@@ -155,6 +176,9 @@ Image {
         onStarted: {
             disappearAnimation.start()
         }
+        function pause(){
+            if(running)paused=true
+        }
     }
 
     ParallelAnimation{
@@ -181,9 +205,12 @@ Image {
         onStopped:{
             monster.destroy()
         }
+        function pause(){
+            if(running)paused=true
+        }
     }
 
-    Timer {
+    TimerCanPause {
         id: stunnedTimer
         interval: 200
         running: false
@@ -193,7 +220,7 @@ Image {
         }
     }
 
-    Timer {
+    TimerCanPause {
         id: hitingTimer
         interval: 250
         running: false
@@ -201,6 +228,24 @@ Image {
         onTriggered: {
             monster.isHited=false
         }
+    }
+
+    //无法暂停whiteOverlayAnimator
+    OpacityAnimator {
+        id: whiteOverlayAnimator
+        target: whiteOverlay
+        from: 1
+        to: 0
+        duration: 200
+        running: false
+    }
+
+    Image {
+        id: whiteOverlay
+        anchors.fill: monster
+        source: monster.isFaceRight ? "/images/"+monster.monsterName+"_mask_faceRight.png" : "/images/"+monster.monsterName+"_mask_faceLeft.png"
+        opacity: 0
+        z: 100
     }
 
     function faceLeft(){
@@ -242,14 +287,15 @@ Image {
     }
 
     function onHit(bullet) {
-        //设置攻击角度
-        deadAnimation.angle=monster.isFaceRight ? bullet.rotation+180 : bullet.rotation
+        //设置击飞角度
+        deadAnimation.angle=bullet.rotation
 
         //僵直
         //stunned(100)
 
         // 白色遮罩动画
-        makeMask(monster)
+        whiteOverlayAnimator.start()
+        //makeMask(monster)
 
         // 飙血动画
         for (var i = 0; i < 5; i++) {
@@ -263,33 +309,33 @@ Image {
         monsterData.hp-=bullet.damage
     }
 
-    function makeMask(parent){
-        var mask = Qt.createQmlObject(
-                    `import QtQuick 2.15;
-                    Image {
-                        id: whiteOverlay
-                        anchors.fill: parent
-                        source: parent.isFaceRight ? "/images/"+monster.monsterName+"_mask_faceRight.png" : "/images/"+monster.monsterName+"_mask_faceLeft.png"
-                        z: 100
-                        Component.onCompleted: {
-                        }
+    // function makeMask(parent){
+    //     var mask = Qt.createQmlObject(
+    //                 `import QtQuick 2.15;
+    //                 Image {
+    //                     id: whiteOverlay
+    //                     anchors.fill: parent
+    //                     source: parent.isFaceRight ? "/images/"+monster.monsterName+"_mask_faceRight.png" : "/images/"+monster.monsterName+"_mask_faceLeft.png"
+    //                     z: 100
+    //                     Component.onCompleted: {
+    //                     }
 
-                        OpacityAnimator {
-                            id: whiteOverlayAnimator
-                            target: whiteOverlay
-                            from: 1
-                            to: 0
-                            duration: 200
-                            running: true
-                            onStopped: {
-                                whiteOverlay.destroy()
-                            }
-                        }
-                    }`,
-                    parent,
-                    "dynamicImage"
-                    );
-    }
+    //                     OpacityAnimator {
+    //                         id: whiteOverlayAnimator
+    //                         target: whiteOverlay
+    //                         from: 1
+    //                         to: 0
+    //                         duration: 200
+    //                         running: true
+    //                         onStopped: {
+    //                             whiteOverlay.destroy()
+    //                         }
+    //                     }
+    //                 }`,
+    //                 parent,
+    //                 "dynamicImage"
+    //                 );
+    // }
 
     function makeBlood(x,y,dx,dy, width, parent){
         var blood = Qt.createQmlObject(

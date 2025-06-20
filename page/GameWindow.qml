@@ -18,8 +18,7 @@ Item {
     }
 
     Component.onCompleted: {
-        gameArea.visible=true
-        gameArea.active=true
+        waveCountdown.start()
         gameArea.player.focus=true
         gameArea.player.roleName="wellRounded"
     }
@@ -92,9 +91,7 @@ Item {
 
     //     onSelected:{
     //         difficultySelectionInterface.visible=false
-    //         gameArea.visible=true
-    //         gameArea.active=true
-    //         gameArea.player.focus=true
+    //         waveCountdown.start()
     //         gameArea.player.roleName=selectedRoleName
     //         gameArea.monsters.difficulty=selectedDifficulty
     //     }
@@ -111,12 +108,10 @@ Item {
         target: gameWindow
         visible: false
         scaleFactor: gameWindow.scaleFactor
-        active: false
-        curWaveNumber: waveCountdown.waveNumber
 
-        onIsWaveOverChanged: {
-            if(isWaveOver){
-                materials.allToBag(gameWindow.mapToItem(gameArea,52.5,117.5))
+        onIsInCombatChanged: {
+            if(!isInCombat){
+                materials.allToBag(bagBar.mapToItem(gameArea,bagBar.imageCenterPoint))
             }
         }
     }
@@ -134,7 +129,7 @@ Item {
         scaleFactor: gameWindow.scaleFactor
         goButton.onClicked:{
             visible=false
-            gameArea.active=true
+            waveCountdown.start()
         }
     }
 
@@ -173,31 +168,33 @@ Item {
         id: waveNumberText
         visible: gameArea.visible
         scaleFactor: gameWindow.scaleFactor
-        text: gameArea.curWaveNumber
+        text: PlayerData.currentWaveNumber
     }
 
     WaveCountdown{
         id: waveCountdown
         visible: gameArea.visible
         scaleFactor: gameWindow.scaleFactor
-        running: gameArea.active
-        //running:false
+        active: gameArea.active
+        paused: gameArea.paused
         states: [
             State {
-                name: "waveOver"; when: (waveCountdown.isWaveOver)
-                PropertyChanges { gameArea.isWaveOver: true; gameArea.active: false}
-                PropertyChanges { delaytimer.running: true}
-                PropertyChanges { upgradeNotificationBar.isCombatting: false}
+                name: "notInCombat"; when: (!PlayerData.isInCombat)
+                PropertyChanges { delaytimer.running: true }
             },
             State {
-                name: "waveRunning"; when: (!waveCountdown.isWaveOver)
-                PropertyChanges { gameArea.isWaveOver: false; gameArea.active: true}
-                PropertyChanges { storeInterface.visible: false}
-                PropertyChanges { upgradeNotificationBar.isCombatting: true}
+                name: "inCombat"; when: (PlayerData.isInCombat)
+                PropertyChanges { storeInterface.visible: false }
             }
         ]
-
-        Timer {
+        onPausedChanged: {
+            if(paused==true){
+                delaytimer.pause()
+            }else{
+                delaytimer.resume()
+            }
+        }
+        TimerCanPause {
             id: delaytimer
             interval: 2000; running: false; repeat: false
             onTriggered: {

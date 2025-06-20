@@ -18,3 +18,7 @@ function getQuadrant(angle){
     else if(angle%360<270)return 3
     else return 4
 }
+
+function approximatelyEqual(a, b, epsilon = 1e-6) {
+    return Math.abs(a - b) < epsilon;
+}

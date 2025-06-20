@@ -14,9 +14,12 @@ Item {
     property string roleName
     property string weaponName
     property var ground: parent
-    property bool active: true
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
+    property bool active: true
+    property bool paused: false
+    property bool isSlow: true
+    property bool isFaceRight: true
 
     property int interval: 5
     property double v: 500*scaleFactor
@@ -49,23 +52,12 @@ Item {
         height=Qt.binding(function (){return width*roleData.aspectRatio})
     }
 
-    function faceLeft(){
-        playerIcon.source="/images/"+ roleName +"_faceLeft.png"
-        faceLefted()
-    }
-
-    function faceRight(){
-        playerIcon.source="/images/"+ roleName +"_faceRight.png"
-        faceRighted()
-    }
-
-    function getMaterial(material){
-        PlayerData.materialsNumber+=material.value
-        PlayerData.curXp+=material.value
-    }
-
-    function onHit(bullet){
-        PlayerData.curHp-=bullet.damage
+    onPausedChanged: {
+        if(paused==true){
+            playerAnimation.pause()
+        }else{
+            playerAnimation.resume()
+        }
     }
 
     // Timer {
@@ -129,11 +121,13 @@ Item {
         }
 
         function faster(){
+            player.isSlow=false
             squashSequence_slow.pause()
             squashSequence_fast.resume()
         }
 
         function slower(){
+            player.isSlow=true
             squashSequence_slow.resume()
             squashSequence_fast.pause()
 
@@ -142,7 +136,7 @@ Item {
         SequentialAnimation {
             id: squashSequence_slow
             loops: Animation.Infinite
-            running: true
+            running: player.active
             property double duration: 1050
 
             ParallelAnimation {
@@ -170,18 +164,40 @@ Item {
                 NumberAnimation { target: squashScale; property: "yScale"; to: 0.8; duration: squashSequence_fast.duration*4/7; easing.type: Easing.Linear }
             }
         }
+        function pause(){
+            if(squashSequence_slow.running)squashSequence_slow.pause()
+            if(squashSequence_fast.running)squashSequence_fast.pause()
+        }
+        function resume(){
+            if(player.isSlow)squashSequence_slow.resume()
+            else squashSequence_fast.resume()
+        }
     }
 
     states: [
         State {
-            name: "stationary"; when: ((!player.wPressed && !player.sPressed && !player.aPressed && !player.dPressed)||(!player.active)||(player.wPressed && player.sPressed && !player.aPressed && !player.dPressed)||(player.aPressed && player.dPressed && !player.wPressed && !player.sPressed))
+            name: "paused"; when: (player.paused)
             StateChangeScript {
-                script: {//console.log("1")
-                    if(!player.active){
+                script: {
+                    player.wPressed==false
+                    player.sPressed==false
+                    player.aPressed==false
+                    player.dPressed==false
+                    playerAnimation.slower()
+                    playerAnimation.pause()
+                }
+            }
+        },
+        State {
+            name: "stationary"; when: ((!player.wPressed && !player.sPressed && !player.aPressed && !player.dPressed)||(!player.active || player.paused)||(player.wPressed && player.sPressed && !player.aPressed && !player.dPressed)||(player.aPressed && player.dPressed && !player.wPressed && !player.sPressed))
+            StateChangeScript {
+                script: {
+                    if(!player.active || player.paused){
                         player.wPressed==false
                         player.sPressed==false
                         player.aPressed==false
                         player.dPressed==false
+                        playerAnimation.slower()
                     }
                     playerAnimation.slower()
                 }
@@ -345,7 +361,7 @@ Item {
 
     Keys.onPressed: function(event) {
         //console.log("Key pressed: " + event.key)  // 调试输出
-        if(player.active){
+        if(player.active && !player.paused){
             if (event.key === Qt.Key_W || event.key === Qt.Key_Up) {
                 player.wPressed=true;
             }else if (event.key === Qt.Key_S || event.key === Qt.Key_Down) {
@@ -375,5 +391,26 @@ Item {
             player.dPressed=false;
             pressD.running=false;
         }
+    }
+
+    function faceLeft(){
+        playerIcon.source="/images/"+ roleName +"_faceLeft.png"
+        isFaceRight=false
+        faceLefted()
+    }
+
+    function faceRight(){
+        playerIcon.source="/images/"+ roleName +"_faceRight.png"
+        isFaceRight=true
+        faceRighted()
+    }
+
+    function getMaterial(material){
+        PlayerData.materialsNumber+=material.value
+        PlayerData.curXp+=material.value
+    }
+
+    function onHit(bullet){
+        PlayerData.curHp-=bullet.damage
     }
 }

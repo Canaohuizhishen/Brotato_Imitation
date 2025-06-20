@@ -1,13 +1,14 @@
 import QtQuick 2.15
+import singleton.PlayerData
 
 Item {
     id: waveCountdown
     property double scaleFactor: 1.0
-    property int waveNumber: 0
-    property bool isWaveOver: false
-    property int totalTime: Math.min(15+waveNumber*5,60)
+    property int totalTime: Math.min(15+PlayerData.currentWaveNumber*5,60)
     property int remainingTime: totalTime
-    property bool running: false
+    property bool running: PlayerData.isInCombat
+    property bool active: true
+    property bool paused: false
     width: parent.width
     height: 35*waveCountdown.scaleFactor
     z: 10
@@ -16,27 +17,41 @@ Item {
 
     onRemainingTimeChanged: {
         if(remainingTime==0){
-            //running=false
-            isWaveOver=true
+            PlayerData.isInCombat=false
         }
     }
     onRunningChanged: {
         if(running==true){
-            waveNumber++
+            PlayerData.currentWaveNumber++
             remainingTime=totalTime
-            isWaveOver=false
+        }
+    }
+
+    onPausedChanged: {
+        if(paused==true){
+            timer.pause()
+        }else{
+            timer.resume()
         }
     }
 
     function start(){
-        running=true
+        PlayerData.isInCombat=true
     }
 
-    Timer {
+    function pause(){
+        PlayerData.isInCombat=false
+    }
+
+    function stop(){
+        PlayerData.isInCombat=false
+    }
+
+    TimerCanPause {
         id: timer
-        interval: 1000; running: waveCountdown.running; repeat: true
+        interval: 1000; running: PlayerData.isInCombat && waveCountdown.active; repeat: true;
         onTriggered: {
-            waveCountdown.remainingTime--;
+            if(waveCountdown.remainingTime>0)waveCountdown.remainingTime--;
         }
     }
 

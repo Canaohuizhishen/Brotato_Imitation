@@ -16,9 +16,9 @@ Item {
         id: submachineGun
         objectName: "smg"
         property string weaponName: "冲锋枪"
-        property int damage: 3+0.5* PlayerData.rangedDamage
-        property int critical:  1.5* PlayerData.critChance
-        property double cooldown: 0.16/(1+PlayerData.attackSpeed)
+        property int damage: 3+PlayerData.rangedDamage/2
+        property double critical:  1.5* PlayerData.critChance/100
+        property double cooldown: 0.16/(1+PlayerData.attackSpeed/100)
         property int range: 400+PlayerData.range
 
         readonly property string source: "SMG.qml"
