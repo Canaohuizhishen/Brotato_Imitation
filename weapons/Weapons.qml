@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import "../monsters"
+import "../components"
 import "../data"
 
 Item{
@@ -8,12 +9,20 @@ Item{
     property Monsters target
     property var bulletsParent: parent
     property double scaleFactor: 1.0
+    property bool active: true
+    property bool paused: false
     anchors.centerIn: owner
     anchors.horizontalCenterOffset: 10
     width: 110*scaleFactor
     height: 110*scaleFactor
     z: 3
     property bool isFaceRight: true
+
+    onActiveChanged: {
+        if(active==false){
+            owner.isFaceRight ? faceRight() : faceLeft()
+        }
+    }
 
     Rectangle{
         visible: false
@@ -41,6 +50,42 @@ Item{
 
     onScaleFactorChanged: {
         relocation()
+    }
+
+    WeaponCustomizationCore{
+        id: weaponCore
+    }
+
+    Timer {
+        id: setGoalTimer
+        interval: 100
+        running: weapons.active
+        repeat: true
+        onTriggered: {
+            for(var i=0;i<weapons.children.length;i++){
+                var child=weapons.children[i]
+                if(child.objectName!=""){
+                    var weapon=weaponCore.getWeapon(child.weaponName)
+                    var monster=weapons.target.getClosestMonster(child.x+weapons.x,child.y+weapons.y,weapon.range*weapons.scaleFactor)
+                    if(monster==null){
+                        child.targetPoint=null
+                        owner.isFaceRight ? child.faceRight() : child.faceLeft()
+                    }else child.targetPoint=Qt.point(monster.x+monster.width/2-weapons.x,monster.y+monster.height/2-weapons.y)
+                }
+            }
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            for(var i=0;i<weapons.children.length;i++){
+                var child=weapons.children[i]
+                if(child.objectName!=""){
+                    child.targetPoint=Qt.point(mouseX,mouseY)
+                }
+            }
+        }
     }
 
     function faceLeft(){
@@ -78,6 +123,8 @@ Item{
             var weapon = component.createObject(weapons);
             weapon.bulletsParent=weapons.bulletsParent
             weapon.scaleFactor=Qt.binding(function() { return weapons.scaleFactor; })
+            weapon.active=Qt.binding(function() { return weapons.active; })
+            weapon.paused=Qt.binding(function() { return weapons.paused; })
             weaponsNum++
             relocation()
         } else {
@@ -143,42 +190,6 @@ Item{
                 child.y=(weapons.getPosition(weaponsNum,n).y-weapon.iconHeightOffset)*scaleFactor
                 child.originPos=Qt.point(child.x,child.y)
                 n++
-            }
-        }
-    }
-
-    WeaponCustomizationCore{
-        id: weaponCore
-    }
-
-    Timer {
-        id: setGoalTimer
-        interval: 100
-        running: true
-        repeat: true
-        onTriggered: {
-            for(var i=0;i<weapons.children.length;i++){
-                var child=weapons.children[i]
-                if(child.objectName!=""){
-                    var weapon=weaponCore.getWeapon(child.weaponName)
-                    var monster=weapons.target.getClosestMonster(child.x+weapons.x,child.y+weapons.y,weapon.range*weapons.scaleFactor)
-                    if(monster==null){
-                        child.targetPoint=null
-                        isFaceRight ? child.faceRight() : child.faceLeft()
-                    }else child.targetPoint=Qt.point(monster.x+monster.width/2-weapons.x,monster.y+monster.height/2-weapons.y)
-                }
-            }
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            for(var i=0;i<weapons.children.length;i++){
-                var child=weapons.children[i]
-                if(child.objectName!=""){
-                    child.targetPoint=Qt.point(mouseX,mouseY)
-                }
             }
         }
     }

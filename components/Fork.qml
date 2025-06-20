@@ -7,9 +7,15 @@ Item {
     property string targetMonsterName
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
+    property bool paused: false
     width: 70*scaleFactor
     height: 70*scaleFactor
     z: 0
+
+    onPausedChanged: {
+        if(paused)blink.pause()
+        else blink.resume()
+    }
 
     onScaleFactorChanged: {
         root.x = root.x*scaleFactor/lastScaleFactor;
@@ -26,8 +32,10 @@ Item {
     }
 
     SequentialAnimation on opacity {
-            loops: 1
-            PropertyAnimation { from: 0; to: 1; duration: 350 }  // 淡出
-            PropertyAnimation { from: 0; to: 1; duration: 350 }  // 淡入
+        id: blink
+        running: true
+        loops: Animation.Infinite
+        PropertyAnimation { from: 0; to: 1; duration: 175 }  // 淡入
+        PropertyAnimation { from: 1; to: 0; duration: 175 }  // 淡出
     }
 }

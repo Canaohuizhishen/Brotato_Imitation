@@ -50,6 +50,9 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Sprayer.qml
     QML_FILES monsters/Pursuer.qml
     QML_FILES monsters/Brute.qml
+    QML_FILES components/TimerCanPause.qml
+    QML_FILES components/EllipticalBullet.qml
+    QML_FILES components/RoundBullet.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

@@ -11,10 +11,10 @@ Item {
     property string difficulty
     property Player target: null
     property var materialsParent: parent
-    property bool active: true
     property double scaleFactor: 1.0
+    property bool active: true
+    property bool paused: false
 
-    property int waveNumber: 0
     property int maxNum: 100
 
     Component.onCompleted: {
@@ -55,11 +55,21 @@ Item {
 
         //monsters.spawnMonsters(100,"babyAlien")
         //monsters.spawnMonsters(1,"charger")
+        monsters.spawnMonsters(10,"sprayer")
+    }
+
+    onPausedChanged: {
+        if(paused==true){
+            sleepTimer.pause()
+            createMonsterTimer.pause()
+        }else{
+            sleepTimer.resume()
+            createMonsterTimer.resume()
+        }
     }
 
     MonsterCustomizationCore{
         id: monsterCore
-        waveNumber: monsters.waveNumber
     }
 
     //用来管理所有怪物生成的子弹
@@ -68,28 +78,26 @@ Item {
         target: monsters.target
         active: true
         scaleFactor: monsters.scaleFactor
-        z: 3
+        z: 3000
     }
 
     //用来实现从fork生成到怪物生成之间的时间间隔
-    Timer {
+    TimerCanPause {
         id: sleepTimer
         interval: 700
         running: false
         repeat: false
         onTriggered: {
-            monsters.forksToMonsters()
-        }
-        function start(){
-            running=true
+            if(monsters.active)monsters.forksToMonsters()
         }
     }
 
     //定时生成怪物
-    Timer {
+    TimerCanPause {
         id: createMonsterTimer
         interval: 3000; running: monsters.active; repeat: true
         onTriggered: {
+            if(!monsters.active)return
             if(monsters.children.length<monsters.maxNum){
                 //console.log(monsterCore.children.length)
                 for(var i=0;i<monsterCore.children.length;i++){
@@ -107,7 +115,7 @@ Item {
     //检测怪物间的碰撞
     Timer {
         id: checkCollidingMonsterTimer
-        interval: 50; running: true; repeat: true
+        interval: 50; running: monsters.active && !monsters.paused; repeat: true
         onTriggered: {
             for (var i = 0; i < monsters.children.length; i++) {
                 var child = monsters.children[i];
@@ -196,6 +204,12 @@ Item {
                 child.disappear()
             }
         }
+        for (var i = 0; i < monsters.parent.children.length; i++) {
+            var child = monsters.parent.children[i];
+            if(child.objectName === "Fork"){
+                child.destroy()
+            }
+        }
         bullets.clear()
     }
 
@@ -217,6 +231,7 @@ Item {
                 fork.y = y
                 fork.rotation = Math.random() * 360
                 fork.targetMonsterName=monsterName
+                fork.paused=Qt.binding(function(){return monsters.paused})
             }
             sleepTimer.start()
         }else console.error("Error loading component:", forkComponent.errorString())
@@ -225,19 +240,20 @@ Item {
     //将场上所有的fork转换成对应的怪物
     function forksToMonsters() {
             for (var i = 0; i < monsters.parent.children.length; i++) {
-                var child = monsters.parent.children[i];
+                var child = monsters.parent.children[i]
                 if (child.objectName === "Fork") {
                     var monster = spawnMonster(monsters,child.targetMonsterName)
                     monster.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-                    monster.x = child.x;
-                    monster.y = child.y;
-                    //monster.z = 2
+                    monster.x = child.x
+                    monster.y = child.y
                     monster.owner=monsters
                     monster.target=monsters.target
-                    monster.waveNumber=monsters.waveNumber
                     monster.bulletsParent=bullets
-                    //monster.active=monsters.active
-                    child.destroy();
+                    monster.active=Qt.binding(function(){return monsters.active})
+                    monster.paused=Qt.binding(function(){return monsters.paused})
+                    if((monster.x-monster.target.x)>0)monster.faceLeft()
+                    else monster.faceRight()
+                    child.destroy()
                 }
             }
     }
@@ -245,7 +261,7 @@ Item {
     //在parent中动态生成一个怪物名为monsterName的怪物
     function spawnMonster(parent,monsterName) {
         var source=monsterCore.getMonster(monsterName).source
-        var monsterComponent = Qt.createComponent(source);
+        var monsterComponent = Qt.createComponent(source)
         if (monsterComponent.status === Component.Ready) {
             var monster = monsterComponent.createObject(parent);
         }else console.error("Error loading component:", monsterComponent.errorString())
@@ -267,6 +283,24 @@ Item {
                     material.y=monster.y+monster.height-material.height+(Math.random()-0.5)*monster.width*2
                 }
             }
-        }else console.log("Error loading component:", materialComponent.errorString());
+        }else console.log("Error loading component:", materialComponent.errorString())
+    }
+
+    function spawnBullet(x,y,width,height,damage,range,shootAngle,color){
+        var bulletComponent = Qt.createComponent("../components/RoundBullet.qml")
+        if (bulletComponent.status === Component.Ready) {
+            var bullet = bulletComponent.createObject(bullets);
+            bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
+            bullet.paused=Qt.binding(function(){return monsters.paused})
+            bullet.width=width
+            bullet.height=height
+            bullet.x=x - bullet.width / 2
+            bullet.y=y - bullet.height / 2
+            bullet.originPoint=Qt.point(x - bullet.width / 2,y - bullet.height / 2)
+            bullet.color=color
+            bullet.damage=damage
+            bullet.range=range
+            bullet.shootAngle=shootAngle
+        }else console.error("Error loading component:", bulletComponent.errorString())
     }
 }

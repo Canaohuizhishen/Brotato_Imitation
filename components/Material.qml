@@ -76,7 +76,7 @@ Item {
             property: "x"
             from: root.x
             to: toBagAnimation.targetPoint.x-root.width/2
-            duration: Tool.getDistance(Qt.point(root.x,root.y),toBagAnimation.targetPoint)
+            duration: Tool.getDistance(Qt.point(root.x+root.width/2,root.y+root.height/2),toBagAnimation.targetPoint)
             easing.type: Easing.OutQuart
         }
 

@@ -11,6 +11,7 @@ Item {
     anchors.topMargin: 135*bagBar.scaleFactor
     anchors.leftMargin: 15*bagBar.scaleFactor
     z: 10
+    property var imageCenterPoint: Qt.point(image.x+image.width/2,image.y+image.height/2)
 
     Image {
         id: image

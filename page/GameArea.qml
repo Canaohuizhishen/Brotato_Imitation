@@ -14,13 +14,13 @@ Item{
     x: Math.min(Math.max(gameArea.width/2-player.x+(target.width-gameArea.width)/2,target.width*28/30-gameArea.width),target.width*1/15)
     y: Math.min(Math.max(gameArea.height/2-player.y+(target.height-gameArea.height)/2,target.height*18/20-gameArea.height),target.height*1/10)
     focus: false
-    property bool active: false
     property double scaleFactor: 1.0
+    property bool active: false
+    property bool paused: false
 
     property int interval: 1
-    property int curWaveNumber: 1
     property int totalWaveNumber: 20
-    property bool isWaveOver: false
+    property bool isInCombat: PlayerData.isInCombat
 
     property var bullets: bullets
     property var materials: materials
@@ -28,14 +28,18 @@ Item{
     Component.onCompleted: {
     }
 
-    onIsWaveOverChanged: {
-        if(isWaveOver){
-            monsters.disappear()
-        }else {
+    onIsInCombatChanged: {
+        if(isInCombat){
             PlayerData.curHp=PlayerData.maxHp
+            visible=true
+            active=true
+            paused=false
             player.focus=true
             player.x=gameArea.width/2
             player.y=gameArea.height/2
+        }else {
+            active=false
+            monsters.disappear()
         }
     }
 
@@ -46,13 +50,17 @@ Item{
 
     Player {
         id: player
-        active: gameArea.active
         scaleFactor: gameArea.scaleFactor
+        active: gameArea.isInCombat && gameArea.active
+        paused: gameArea.paused
         onFaceLefted: {
             weapons.faceLeft()
         }
         onFaceRighted: {
             weapons.faceRight()
+        }
+        Keys.onEscapePressed: {
+            gameArea.paused=!gameArea.paused
         }
     }
 
@@ -62,28 +70,30 @@ Item{
         owner: player
         target: monsters
         bulletsParent: bullets
+        active: gameArea.isInCombat && gameArea.active
+        paused: gameArea.paused
     }
 
     Monsters {
         id: monsters
         target: player
-        active: gameArea.active
+        active: gameArea.isInCombat && gameArea.active
+        paused: gameArea.paused
         scaleFactor: gameArea.scaleFactor
         materialsParent: materials
-        waveNumber: gameArea.curWaveNumber
     }
 
     Bullets{
         id: bullets
         target: monsters
-        active: gameArea.active
+        active: gameArea.isInCombat && gameArea.active
         scaleFactor: gameArea.scaleFactor
     }
 
     Materials{
         id: materials
         target: player
-        active: gameArea.active
+        active: gameArea.isInCombat && gameArea.active
         scaleFactor: gameArea.scaleFactor
     }
 }
