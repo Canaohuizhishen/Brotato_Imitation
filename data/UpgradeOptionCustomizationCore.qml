@@ -185,6 +185,7 @@ Item {
                                                                 `
                                                                 function choose(){
                                                                     PlayerData.maxHp+=value
+                                                                    PlayerData.curHp+=value
                                                                 }
                                                                 }
                                                                     Item{

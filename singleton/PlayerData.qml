@@ -51,6 +51,12 @@ QtObject {
     property int materialsNumber: 0
     property int remainingMaterialsNumber: 0
 
+    onCurHpChanged: {
+        if(curHp>=maxHp){
+            curHp=maxHp
+        }
+    }
+
     onCurXpChanged: {
         if(curXp>=maxXp){
             curXp-=maxXp

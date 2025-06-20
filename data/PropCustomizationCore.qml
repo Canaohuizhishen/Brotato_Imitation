@@ -13,6 +13,10 @@ Item {
     property double grade_four_prop_spawn_probability: 0.065*(1+PlayerData.luck/125)
 
     Component.onCompleted: {
+        countPropNumber()
+    }
+
+    function countPropNumber(){
         for(var i=0;i<core.children.length;i++){
             var prop=core.children[i]
             switch(prop.grade){
@@ -26,30 +30,34 @@ Item {
     }
 
     //返回随机不重复的n个道具信息结构体
-    function getPropRandomly(n){
+    function getPropRandomly(number){
+        if(grade_one_prop_number==0)countPropNumber()
         var result=[]//存储所有选中的道具
         var array=[]//存储所有选中的道具的等级和索引，便于查重
         var random//存储随机数
         var probability
         var grade
         var index
-        for(var i=0;i<n;i++){
+        var isSame
+        for(var i=0;i<number;i++){
             //获得随机等级
             random=Math.random()*(grade_one_prop_spawn_probability+grade_two_prop_spawn_probability+grade_three_prop_spawn_probability+grade_four_prop_spawn_probability)
             probability=grade_four_prop_spawn_probability
-            grade
             if(random<probability){
                 grade=4
+            }else{
                 probability+=grade_three_prop_spawn_probability
-            }else if(random<probability){
-                grade=3
-                probability+=grade_two_prop_spawn_probability
-            }else if(random<probability){
-                grade=2
-            }else grade=1
+                if(random<probability){
+                    grade=3
+                }else{
+                    probability+=grade_two_prop_spawn_probability
+                    if(random<probability){
+                        grade=2
+                    }else grade=1
+                }
+            }
 
             //获得随机索引
-            index
             switch(grade){
             case 1: index=Math.floor(Math.random()*grade_one_prop_number);break;
             case 2: index=Math.floor(Math.random()*grade_two_prop_number);break;
@@ -59,9 +67,9 @@ Item {
             }
 
             //查重
-            var isSame=false
-            for(var i=0,n=0;i<array.length;i++){
-                if(array[i][0]==grade && array[i][1]==index){
+            isSame=false
+            for(var a=0,n=0;a<array.length;a++){
+                if(array[a][0]==grade && array[a][1]==index){
                     isSame=true
                     break
                 }
@@ -69,16 +77,15 @@ Item {
 
             //存储结果
             if(!isSame){
-                for(var i=0,n=0;i<core.children.length;i++){
-                    var prop=core.children[i]
-                    if(prop.grade==grade){
-                        if(n==index){
-                            array.push([grade,index])
-                            result.push(prop)
-                        }else n++
-                    }
+                for(var b=0,n=0;b<core.children.length;b++){
+                    var prop=core.children[b]
+                    if(n==index){
+                        array.push([grade,index])
+                        result.push(prop)
+                        break
+                    }else n++
                 }
-            }
+            }else i--
         }
 
         return result
