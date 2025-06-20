@@ -94,6 +94,7 @@ Item {
         property string monsterName: "外星婴儿"
         readonly property string source: "BabyAlien.qml"
         readonly property int attackRange: 0
+        readonly property int maxCurNumber: 100
 
         readonly property int initHp: 3
         readonly property double hpBonus: 2
