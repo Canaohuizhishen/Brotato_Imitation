@@ -55,7 +55,7 @@ Item {
 
         //monsters.spawnMonsters(100,"babyAlien")
         //monsters.spawnMonsters(1,"charger")
-        monsters.spawnMonsters(10,"sprayer")
+        //monsters.spawnMonsters(10,"sprayer")
     }
 
     onPausedChanged: {
@@ -299,6 +299,7 @@ Item {
             bullet.originPoint=Qt.point(x - bullet.width / 2,y - bullet.height / 2)
             bullet.color=color
             bullet.damage=damage
+            bullet.speed=400
             bullet.range=range
             bullet.shootAngle=shootAngle
         }else console.error("Error loading component:", bulletComponent.errorString())

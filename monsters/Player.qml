@@ -22,7 +22,7 @@ Item {
     property bool isFaceRight: true
 
     property int interval: 5
-    property double v: 500*scaleFactor
+    property double v: 500*scaleFactor*(1+PlayerData.speed/100)
     property double stepSize: v*interval/1200
     property double diagonalStepSize: stepSize*0.7
 
@@ -76,6 +76,14 @@ Item {
     //         console.log("active: ", player.active)
     //     }
     // }
+
+    Timer {
+        id: hpRegenerationTimer
+        interval: 1000; running: PlayerData.isInCombat; repeat: true
+        onTriggered: {
+            PlayerData.hpRegeneratPerSecond()
+        }
+    }
 
     RoleCustomizationCore{
         id: core
@@ -411,6 +419,11 @@ Item {
     }
 
     function onHit(bullet){
-        PlayerData.curHp-=bullet.damage
+        //当闪避失败时造成伤害
+        if(Math.random()>PlayerData.dodge/100){
+            //护甲减伤
+            var damage=bullet.damage*(1-PlayerData.damageReduction())
+            PlayerData.curHp-=damage
+        }
     }
 }

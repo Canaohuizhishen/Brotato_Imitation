@@ -14,6 +14,7 @@ Canvas {
     property color color: Qt.rgba(1, 0, 0, 1)
     property int damage: 0
     property int range: 300
+    property double speed: 400
     property double shootAngle: 0
     rotation: -shootAngle
 
@@ -58,8 +59,8 @@ Canvas {
     ParallelAnimation {
         id: shoot
         running: false
-        NumberAnimation { id: xAnimation; target: bullet; property: "x"; to: bullet.originPoint.x+Math.cos(bullet.shootAngle* (Math.PI/180))*bullet.range*bullet.scaleFactor; loops: 1; duration: 3*bullet.range; easing.type: Easing.Linear }
-        NumberAnimation { id: yAnimation; target: bullet; property: "y"; to: bullet.originPoint.y-Math.sin(bullet.shootAngle* (Math.PI/180))*bullet.range*bullet.scaleFactor;  loops: 1; duration: 3*bullet.range; easing.type: Easing.Linear }
+        NumberAnimation { id: xAnimation; target: bullet; property: "x"; to: bullet.originPoint.x+Math.cos(bullet.shootAngle* (Math.PI/180))*bullet.range*bullet.scaleFactor; loops: 1; duration: bullet.range/(bullet.speed/1000); easing.type: Easing.Linear }
+        NumberAnimation { id: yAnimation; target: bullet; property: "y"; to: bullet.originPoint.y-Math.sin(bullet.shootAngle* (Math.PI/180))*bullet.range*bullet.scaleFactor;  loops: 1; duration: bullet.range/(bullet.speed/1000); easing.type: Easing.Linear }
         onStopped: {
             //console.log(bullet.x,xAnimation.to)
             if(Tool.approximatelyEqual(bullet.x,xAnimation.to,bullet.range*bullet.scaleFactor/10))bullet.destroy()

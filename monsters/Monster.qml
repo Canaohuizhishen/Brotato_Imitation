@@ -83,6 +83,10 @@ Image {
         id: monsterCore
     }
 
+    WeaponCustomizationCore{
+        id: weaponCore
+    }
+
     SequentialAnimation {
         id: squashSequence
         loops: Animation.Infinite
@@ -307,6 +311,16 @@ Image {
 
         //掉血
         monsterData.hp-=bullet.damage
+
+        //可能的暴击
+        if(Math.random()<weaponCore.getWeapon(bullet.sourceWeaponName).critical/100){
+            monsterData.hp-=bullet.damage
+        }
+
+        //可能的生命窃取
+        if(Math.random()<PlayerData.lifeSteal/100){
+            PlayerData.curHp++
+        }
     }
 
     // function makeMask(parent){
