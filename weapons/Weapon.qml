@@ -8,11 +8,12 @@ Image {
     source: "/images/"+weapon.weaponName+"_faceRight.png"
     objectName: "Weapon"
     property string weaponName
+    property int grade: 1
     property double scaleFactor: 1
     //transformOrigin: Item.Left
     property var bulletsParent: parent
     property var originPos: Qt.point(weapon.x,weapon.y)
-    property var core: weaponCore.getWeapon(weapon.weaponName)
+    property var core: weaponCore.getWeapon(weapon.weaponName,grade)
     property var targetPoint: null
     property bool active: true
     property bool paused: true

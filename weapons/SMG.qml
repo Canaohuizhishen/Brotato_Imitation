@@ -134,13 +134,15 @@ Weapon {
             var bullet = bulletComponent.createObject(bulletsParent);
             bullet.scaleFactor=Qt.binding(function(){return smg.scaleFactor})
             bullet.paused=Qt.binding(function(){return smg.paused})
-            bullet.width=smg.width
+            bullet.sourceWeaponName=smg.weaponName
+            bullet.width=smg.width*1.2
             bullet.height=bullet.width*0.28
             bullet.x=x - bullet.width / 2
             bullet.y=y - bullet.height / 2
             bullet.originPoint=Qt.point(x - bullet.width / 2,y - bullet.height / 2)
             bullet.color=Qt.rgba(1, 1, 0.45, 1)
             bullet.damage=core.damage
+            bullet.speed=2000
             bullet.range=weaponCore.smg.range
             bullet.shootAngle=backAnimation.angle
         }else console.error("Error loading component:", bulletComponent.errorString())

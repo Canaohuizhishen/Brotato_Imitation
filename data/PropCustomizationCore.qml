@@ -14,6 +14,10 @@ Item {
 
     Component.onCompleted: {
         countPropNumber()
+        console.log(grade_one_prop_number)
+        console.log(grade_two_prop_number)
+        console.log(grade_three_prop_number)
+        console.log(grade_four_prop_number)
     }
 
     function countPropNumber(){
@@ -106,6 +110,7 @@ Item {
         readonly property string propName: "蝙蝠"
         readonly property int grade: 1
         readonly property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+2</font><font color='white'>生命窃取</font><br>
@@ -123,6 +128,7 @@ Item {
         readonly property string propName: "刺猬"
         readonly property int grade: 1
         readonly property int basePrice: 30
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+2</font><font color='white'>近战伤害</font><br>
@@ -142,6 +148,7 @@ Item {
         readonly property string propName: "头盔"
         readonly property int grade: 1
         readonly property int basePrice: 25
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+1</font><font color='white'>护甲</font><br>
@@ -159,6 +166,7 @@ Item {
         readonly property string propName: "橡皮狂暴战士"
         readonly property int grade: 1
         readonly property int basePrice: 25
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+5</font><font color='white'> 攻击速度</font><br>
@@ -177,6 +185,7 @@ Item {
         readonly property string propName: "颅脑损伤"
         readonly property int grade: 1
         readonly property int basePrice: 25
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+6</font><font color='white'>伤害</font><br>
@@ -194,6 +203,7 @@ Item {
         readonly property string propName: "咖啡"
         readonly property int grade: 1
         readonly property int basePrice: 15
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+10</font><font color='white'>攻速</font><br>
@@ -211,6 +221,7 @@ Item {
         readonly property string propName: "爪子树"
         readonly property int grade: 1
         readonly property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+1</font><font color='white'>近战伤害</font><br>
@@ -231,6 +242,7 @@ Item {
         readonly property string propName: "沸水"
         readonly property int grade: 1
         readonly property int basePrice: 30
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+2</font><font color='white'>元素伤害</font><br>
@@ -249,6 +261,7 @@ Item {
         readonly property string propName: "书"
         readonly property int grade: 1
         readonly property int basePrice: 8
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+1</font><font color='white'>工程</font><br>
@@ -264,6 +277,7 @@ Item {
         readonly property string propName: "破口"
         readonly property int grade: 1
         readonly property int basePrice: 25
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+5</font><font color='white'>最大生命值</font><br>
@@ -281,6 +295,7 @@ Item {
         readonly property string propName: "蝴蝶"
         readonly property int grade: 1
         readonly property int basePrice: 30
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+2</font><font color='white'>生命偷取</font><br>
@@ -298,6 +313,7 @@ Item {
         readonly property int grade: 1
 
         readonly property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+2</font><font color='white'>近战伤害</font><br>
@@ -317,6 +333,7 @@ Item {
         readonly property string propName: "牛皮胶布"
         readonly property int grade: 1
         readonly property int basePrice: 25
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+1</font><font color='white'>护甲</font><br>
@@ -338,6 +355,7 @@ Item {
         readonly property string propName: "蛋糕"
         readonly property int grade: 1
         readonly property int basePrice: 15
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+3</font><font color='white'>最大生命</font><br>
@@ -355,6 +373,7 @@ Item {
         readonly property string propName: "眼镜"
         readonly property int grade: 1
         readonly property int basePrice: 25
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+20</font><font color='white'>射程</font><br>
@@ -370,6 +389,7 @@ Item {
         readonly property string propName: "山羊头骨"
         readonly property int grade: 1
         readonly property int basePrice: 25
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+3</font><font color='white'>近战伤害</font><br>
@@ -388,6 +408,7 @@ Item {
         readonly property int grade: 1
         readonly property string propName: "小圆帽"
         readonly property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+4</font><font color='white'>速度</font><br>
@@ -406,6 +427,7 @@ Item {
         readonly property int grade: 1
         readonly property string propName: "注射"
         readonly property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+7</font><font color='white'>伤害</font><br>
@@ -424,6 +446,7 @@ Item {
         readonly property string propName: "精神错乱"
         readonly property int grade: 1
         readonly property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+6</font><font color='white'>暴击率</font><br>
@@ -441,6 +464,7 @@ Item {
         readonly property string propName: "镜头"
         readonly property int grade: 1
         readonly property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+1</font><font color='white'>远程伤害</font><br>
@@ -458,6 +482,7 @@ Item {
         readonly property int grade: 1
         readonly property string propName: "迷失之鸭"
         readonly property int basePrice: 25
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+10</font><font color='white'>运气</font><br>
@@ -475,6 +500,7 @@ Item {
         readonly property int grade: 1
         readonly property string propName: "螺旋桨帽子"
         readonly property int basePrice: 28
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+10</font><font color='white'>运气</font><br>
@@ -492,6 +518,7 @@ Item {
         readonly property int grade: 1
         readonly property string propName: "恐怖洋葱"
         readonly property int basePrice: 15
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+4</font><font color='white'>速度</font><br>
@@ -509,6 +536,7 @@ Item {
         readonly property string propName: "有毒的烂泥"
         readonly property int grade: 1
         readonly property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+2</font><font color='white'>元素伤害</font><br>
@@ -526,6 +554,7 @@ Item {
         readonly property int grade: 1
         readonly property string propName: "煤炭"
         readonly property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+1</font><font color='white'>元素伤害</font><br>
@@ -545,6 +574,7 @@ Item {
         readonly property int grade: 1
         readonly property string propName: "肥料"
         readonly property int basePrice: 15
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+8</font><font color='white'>收获</font><br>
@@ -565,6 +595,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "酸液"
         readonly property int basePrice: 65
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+8</font><font color='white'>最大生命值</font><br>
@@ -582,6 +613,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "能量手镯"
         readonly property int basePrice: 55
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+4</font><font color='white'>暴击率</font><br>
@@ -602,6 +634,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "齿轮"
         readonly property int basePrice: 35
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+4</font><font color='white'>工程</font><br>
@@ -619,6 +652,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "独眼虫"
         readonly property int basePrice: 45
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+12</font><font color='white'>伤害</font><br>
@@ -636,6 +670,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "燃料箱"
         readonly property int basePrice: 45
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+4</font><font color='white'>元素伤害</font><br>
@@ -655,6 +690,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "筹码"
         readonly property int basePrice: 60
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+8</font><font color='white'>闪避</font><br>
@@ -673,6 +709,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "营火"
         readonly property int basePrice: 40
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+2</font><font color='white'>元素伤害</font><br>
@@ -693,6 +730,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "黑带"
         readonly property int basePrice: 50
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+25</font><font color='white'>经验获取</font><br>
@@ -713,6 +751,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "眼罩"
         readonly property int basePrice: 45
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+5</font><font color='white'>暴击率</font><br>
@@ -733,6 +772,7 @@ Item {
         readonly property int grade: 2
         readonly property int basePrice: 55
         readonly property string propName: "旗帜"
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+20</font><font color='white'>射程</font><br>
@@ -753,6 +793,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "皮制背心"
         readonly property int basePrice: 45
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+2</font><font color='white'>护甲</font><br>
@@ -772,6 +813,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "小肌肉男"
         readonly property int basePrice: 50
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+3</font><font color='white'>近战伤害</font><br>
@@ -791,6 +833,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "精通"
         readonly property int basePrice: 55
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+6</font><font color='white'>近战伤害</font><br>
@@ -808,6 +851,7 @@ Item {
         readonly property int grade: 2
         readonly property string propName: "奖牌"
         readonly property int basePrice: 55
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+3</font><font color='white'>伤害</font><br>
@@ -832,6 +876,8 @@ Item {
         objectName: "alien_baby"
         readonly property int grade: 3
         readonly property string propName: "外星人宝宝"
+        readonly property int basePrice: 80
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+15</font><font color='white'>最大生命值</font><br>
@@ -849,6 +895,7 @@ Item {
         readonly property int grade: 3
         readonly property string propName: "外星人魔法"
         readonly property int basePrice: 85
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+8</font><font color='white'>最大生命值</font><br>
@@ -868,6 +915,7 @@ Item {
         readonly property int grade: 3
         readonly property string propName: "四叶草"
         readonly property int basePrice: 65
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+20</font><font color='white'>运气</font><br>
@@ -887,6 +935,7 @@ Item {
         readonly property int grade: 3
         readonly property string propName: "合金"
         readonly property int basePrice: 80
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+3</font><font color='white'>近战伤害</font><br>
@@ -912,6 +961,7 @@ Item {
         readonly property int grade: 3
         readonly property string propName: "有毒补药"
         readonly property int basePrice: 80
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+10</font><font color='white'>攻速</font><br>
@@ -933,6 +983,7 @@ Item {
         readonly property int grade: 3
         readonly property string propName: "Shmoop"
         readonly property int basePrice: 60
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+6</font><font color='white'>最大生命</font><br>
@@ -955,6 +1006,7 @@ Item {
         readonly property int grade: 3
         readonly property string propName: "工具箱"
         readonly property int basePrice: 55
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+6</font><font color='white'>工程</font><br>
@@ -972,6 +1024,7 @@ Item {
         readonly property int grade: 3
         readonly property string propName: "守卫头盔"
         readonly property int basePrice: 80
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+3</font><font color='white'>护甲</font><br>
@@ -991,6 +1044,7 @@ Item {
         readonly property int grade: 3
         readonly property string propName: "玻璃大炮"
         readonly property int basePrice: 75
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+25</font><font color='white'>伤害</font><br>
@@ -1010,6 +1064,7 @@ Item {
         readonly property int grade: 4
         readonly property string propName: "斗篷"
         readonly property int basePrice: 110
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+5</font><font color='white'>生命偷取</font><br>
@@ -1033,6 +1088,7 @@ Item {
         readonly property int grade: 4
         readonly property string propName: "外骨骼"
         readonly property int basePrice: 90
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+5</font><font color='white'>护甲</font><br>
@@ -1058,6 +1114,7 @@ Item {
         readonly property int grade: 4
         readonly property string propName: "重子弹"
         readonly property int basePrice: 100
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
         <font color='green'>+5</font><font color='white'>远程伤害</font><br>

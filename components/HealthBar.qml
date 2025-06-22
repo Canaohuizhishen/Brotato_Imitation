@@ -5,8 +5,8 @@ Item {
     width: 215*healthBar.scaleFactor
     height: 30*healthBar.scaleFactor
     property double scaleFactor: 1.0
-    property double maxHp: 0
-    property double hp: 0
+    property int maxHp: 0
+    property int hp: 0
     property color backgroundColor: "#454545"
     property color fillColor: Qt.rgba(0.7,0,0,1)
     anchors.top: parent.top

@@ -39,10 +39,6 @@ Item {
         PlayerData.isInCombat=true
     }
 
-    function pause(){
-        PlayerData.isInCombat=false
-    }
-
     function stop(){
         PlayerData.isInCombat=false
     }

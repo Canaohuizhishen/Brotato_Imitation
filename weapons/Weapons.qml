@@ -44,7 +44,7 @@ Item{
     property int weaponsNum: 0
 
     Component.onCompleted: {
-        for(var i=0;i<1;i++)addWeapon("smg")
+        for(var i=0;i<1;i++)addWeapon("smg",4)
         //addWeapon("冲锋枪")
     }
 
@@ -116,11 +116,12 @@ Item{
         anchors.horizontalCenterOffset=10
     }
 
-    function addWeapon(weaponName){
-        var weapon = weaponCore.getWeapon(weaponName)
-        var component = Qt.createComponent(weapon.source);
+    function addWeapon(weaponName,grade=1){
+        var weaponData = weaponCore.getWeapon(weaponName)
+        var component = Qt.createComponent(weaponData.source);
         if (component.status === Component.Ready) {
             var weapon = component.createObject(weapons);
+            weapon.grade=grade
             weapon.bulletsParent=weapons.bulletsParent
             weapon.scaleFactor=Qt.binding(function() { return weapons.scaleFactor; })
             weapon.active=Qt.binding(function() { return weapons.active; })
