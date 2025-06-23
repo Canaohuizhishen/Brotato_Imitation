@@ -3,6 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import "../logic/ShopLogicHandler.js" as Controller
 import "../color.js" as Color
+import "../data"
 import singleton.PlayerData
 
 Item {
@@ -12,26 +13,23 @@ Item {
     property var itemData
     property string cionImage : "qrc:/images/material_icon.png"
     property var itemIndex
+    property var wGrade
 
     //点击购买时发出的信号
     signal buyRequested(int index)
     signal locked(int index)
 
-    // function getOptionColor(grade){
-    //     switch(grade){
-    //     case 1: return "#000000"
-    //     case 2: return "#1E90FF"
-    //     case 3: return "#BA55D3"
-    //     case 4: return "#FF0000"
-    //     default: console.log("不正确的等级: ",grade)
-    //     }
-    // }
+    WeaponCustomizationCore {
+        id: weaponCore
+    }
 
     Rectangle {
         id: backGround
-        color: Color.getBackgroundColor(itemData.grade)
+        color: itemData.type === "道具" ? Color.getBackgroundColor(itemData.grade)
+                                      : Color.getBackgroundColor(wGrade)
         radius: 8
-        border.color: Color.getOptionColor(itemData.grade)
+        border.color: itemData.type === "道具" ? Color.getBorderColor(itemData.grade)
+                                             : Color.getBorderColor(wGrade)
         height: shopItem.height
         width: shopItem.width
         // anchors.centerIn: shopItem
@@ -48,7 +46,8 @@ Item {
                 id: goodsImageBackground
                 width: 63
                 height: 63
-                color: Color.getImageBackgroundColor(itemData.grade)
+                color: itemData.type === "道具" ? Color.getImageBackgroundColor(itemData.grade)
+                                              : Color.getImageBackgroundColor(wGrade)
                 anchors.top: parent.top
                 anchors.topMargin: 3
                 anchors.left: parent.left
@@ -57,7 +56,8 @@ Item {
 
                 Image {
                     id: goodsImage
-                    source: "/images/prop-" + itemData.objectName + ".png"
+                    source: itemData.type === "道具" ? "/images/prop-" + itemData.objectName + ".png"
+                                                   : "/images/smg_icon.png"
                     width: 63
                     height: 63
                     fillMode: Image.PreserveAspectFit
@@ -74,8 +74,8 @@ Item {
 
                 Text {
                     id: goodsName
-                    text: itemData.propName
-                    color: "white"
+                    text: itemData.type === "道具" ? itemData.propName  : itemData.weaponName
+                    color: (itemData.grade === 1 || wGrade === 1) ? "white": (itemData.type === "道具" ? Color.getBorderColor(itemData.grade) : Color.getBorderColor(wGrade))
                     font.pixelSize: 18
                 }
 
@@ -86,12 +86,14 @@ Item {
                 }
             }
 
+
             //物品属性
             Text {
                 anchors.top: goodsImageBackground.bottom
                 anchors.topMargin: 5
                 anchors.left: goodsImageBackground.left
-                text: itemData.talentText
+                text: itemData.type === "道具" ? itemData.talentText
+                                             : weaponCore.getWeapon(itemData.objectName,wGrade).talentText
                 font.pixelSize: 12
                 font.weight: Font.DemiBold
             }
@@ -110,7 +112,9 @@ Item {
                 background: Rectangle {
                     id: buttonBg
                     radius: 10
-                    color: buyButton.hovered ? "white" : Color.getButtonColor(itemData.grade)
+                    color: buyButton.hovered ? "white" : (itemData.type === "道具"
+                                                          ? Color.getButtonColor(itemData.grade)
+                                                        : Color.getButtonColor(wGrade))
                 }
 
                 contentItem: Item {
