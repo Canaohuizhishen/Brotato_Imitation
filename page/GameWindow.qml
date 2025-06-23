@@ -122,6 +122,23 @@ Item {
     //     anchors.fill: parent
     // }
 
+    ChestOpeningInterface{
+        id: chestOpeningInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
+        chestNotificationBar: chestNotificationBar
+        onProcessedOne:{
+            if(chestNotificationBar.number==0){
+                visible=false
+                if(upgradeNotificationBar.number){
+                    upgradeInterface.visible=true
+                    waveCountdown.visible=false
+                }else{
+                    storeInterface.visible=true
+                }
+            }
+        }
+    }
 
     UpgradeInterface{
         id: upgradeInterface
@@ -130,17 +147,17 @@ Item {
         upgradeNotificationBar: upgradeNotificationBar
     }
 
-    Pause{
-        id:pause
-        visible: false
-    }
-    Shortcut {
-        sequence: "Esc"
-        onActivated: {
-            pause.visible = !pause.visible
-            // 这里可以添加游戏暂停/继续的逻辑
-        }
-    }
+    // Pause{
+    //     id:pause
+    //     visible: false
+    // }
+    // Shortcut {
+    //     sequence: "Esc"
+    //     onActivated: {
+    //         pause.visible = !pause.visible
+    //         // 这里可以添加游戏暂停/继续的逻辑
+    //     }
+    // }
 
     StoreInterface{
         id: storeInterface
@@ -217,7 +234,9 @@ Item {
             id: delaytimer
             interval: 2000; running: false; repeat: false
             onTriggered: {
-                if(upgradeNotificationBar.number){
+                if(chestNotificationBar.number){
+                    chestOpeningInterface.visible=true
+                }else if(upgradeNotificationBar.number){
                     upgradeInterface.visible=true
                     waveCountdown.visible=false
                 }else{

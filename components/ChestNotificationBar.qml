@@ -5,6 +5,7 @@ import singleton.PlayerData
 Item {
     id: chestBar
     property int number: repeater.model.count
+    property var chests: repeater.model
     property double scaleFactor: 1.0
     width: parent.width
     height: 40*scaleFactor
@@ -31,13 +32,12 @@ Item {
 
     function addChest(chest){
         repeater.model.append({"grade": chest.grade,"propName": chest.propName})
-        number++
     }
 
     function reduceChest(){
-        var data={"grade":repeater.model.get(0).grade,"propName": repeater.model.get(0).propName}
+        if(number==0)return
+        var propName=repeater.model.get(0).propName
         repeater.model.remove(0)
-        number--
-        return data
+        return propName
     }
 }

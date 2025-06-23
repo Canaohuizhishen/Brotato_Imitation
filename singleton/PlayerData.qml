@@ -78,6 +78,12 @@ QtObject {
         curHp++
     }
 
+    onMaxHpChanged: {
+        if(curHp>=maxHp){
+            curHp=maxHp
+        }
+    }
+
     onCurHpChanged: {
         if(curHp>=maxHp){
             curHp=maxHp

@@ -67,6 +67,8 @@ qt_add_qml_module(appBrotato
     QML_FILES components/Fruit.qml
     QML_FILES components/Chest.qml
     QML_FILES components/ChestNotificationBar.qml
+    QML_FILES page/ChestOpeningInterface.qml
+    QML_FILES components/PropCard.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

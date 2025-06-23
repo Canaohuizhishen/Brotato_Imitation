@@ -101,7 +101,7 @@ Item {
     //返回指定道具名对应的道具信息结构体
     function getProp(propName){
         for(var i=0;i<core.children.length;i++){
-            if(core.children[i].objectName===propName)break
+            if(core.children[i].objectName===propName || core.children[i].propName===propName)break
         }
         return core.children[i]
     }
