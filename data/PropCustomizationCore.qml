@@ -14,10 +14,10 @@ Item {
 
     Component.onCompleted: {
         countPropNumber()
-        console.log(grade_one_prop_number)
-        console.log(grade_two_prop_number)
-        console.log(grade_three_prop_number)
-        console.log(grade_four_prop_number)
+        // console.log(grade_one_prop_number)
+        // console.log(grade_two_prop_number)
+        // console.log(grade_three_prop_number)
+        // console.log(grade_four_prop_number)
     }
 
     function countPropNumber(){
@@ -34,7 +34,7 @@ Item {
     }
 
     //返回随机不重复的n个道具信息结构体
-    function getPropRandomly(number){
+    function getPropRandomly(number=1){
         if(grade_one_prop_number==0)countPropNumber()
         var result=[]//存储所有选中的道具
         var array=[]//存储所有选中的道具的等级和索引，便于查重
@@ -72,8 +72,8 @@ Item {
 
             //查重
             isSame=false
-            for(var a=0,n=0;a<array.length;a++){
-                if(array[a][0]==grade && array[a][1]==index){
+            for(var a=0;a<array.length;a++){
+                if(array[a][0]===grade && array[a][1]===index){
                     isSame=true
                     break
                 }
@@ -83,22 +83,25 @@ Item {
             if(!isSame){
                 for(var b=0,n=0;b<core.children.length;b++){
                     var prop=core.children[b]
-                    if(n==index){
-                        array.push([grade,index])
-                        result.push(prop)
-                        break
-                    }else n++
+                    if(prop.grade===grade){
+                        if(n===index){
+                            array.push([grade,index])
+                            result.push(prop)
+                            break
+                        }else n++
+                    }
                 }
             }else i--
         }
 
-        return result
+        if(number===1)return result[0]
+        else return result
     }
 
     //返回指定道具名对应的道具信息结构体
     function getProp(propName){
         for(var i=0;i<core.children.length;i++){
-            if(core.children[i].objectName==propName)break
+            if(core.children[i].objectName===propName)break
         }
         return core.children[i]
     }
@@ -530,7 +533,7 @@ Item {
         }
     }
     Item{
-        //有毒的烂泥 23
+        //有毒的烂泥 24
         id: toxic_sludge
         objectName: "toxic_sludge"
         readonly property string propName: "有毒的烂泥"
@@ -548,7 +551,7 @@ Item {
         }
     }
     Item{
-        //煤炭 24
+        //煤炭 25
         id: coal
         objectName: "coal"
         readonly property int grade: 1
@@ -568,7 +571,7 @@ Item {
         }
     }
     Item{
-        //肥料 25
+        //肥料 26
         id: fertilizer
         objectName: "fertilizer"
         readonly property int grade: 1

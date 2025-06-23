@@ -108,10 +108,12 @@ Item {
         target: gameWindow
         visible: false
         scaleFactor: gameWindow.scaleFactor
-
+        chestBar: chestNotificationBar
         onIsInCombatChanged: {
             if(!isInCombat){
-                materials.allToBag(bagBar.mapToItem(gameArea,bagBar.imageCenterPoint))
+                drops.allMaterialsToBag(bagBar.mapToItem(gameArea,bagBar.imageCenterPoint))
+                drops.allFruitsToPlayer(player)
+                drops.allChestToPlayer(player)
             }
         }
     }
@@ -230,10 +232,23 @@ Item {
         visible: gameArea.visible
         scaleFactor: gameWindow.scaleFactor
         onNumberChanged: {
-            if(number==0){
+            if(number===0){
                 upgradeInterface.visible=false
                 waveCountdown.visible=true
                 storeInterface.visible=true
+            }
+        }
+    }
+
+    ChestNotificationBar{
+        id: chestNotificationBar
+        visible: gameArea.visible
+        scaleFactor: gameWindow.scaleFactor
+        onNumberChanged: {
+            if(number===0){
+                // upgradeInterface.visible=false
+                // waveCountdown.visible=true
+                // storeInterface.visible=true
             }
         }
     }

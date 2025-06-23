@@ -31,7 +31,7 @@ qt_add_qml_module(appBrotato
     QML_FILES page/StoreInterface.qml
     QML_FILES components/Material.qml
     QML_FILES components/Bullets.qml
-    QML_FILES components/Materials.qml
+    QML_FILES components/Drops.qml
     QML_FILES components/MaterialsBar.qml
     QML_FILES components/BagBar.qml
     QML_FILES monsters/BabyAlien.qml
@@ -64,6 +64,9 @@ qt_add_qml_module(appBrotato
     QML_FILES components/SetButton.qml
     QML_FILES components/SwitchSettingButton.qml
     QML_FILES components/ProgressBarControlButton.qml
+    QML_FILES components/Fruit.qml
+    QML_FILES components/Chest.qml
+    QML_FILES components/ChestNotificationBar.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

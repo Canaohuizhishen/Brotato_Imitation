@@ -10,7 +10,7 @@ Item {
     z: 3
     property string difficulty
     property Player target: null
-    property var materialsParent: parent
+    property var dropsParent: parent
     property double scaleFactor: 1.0
     property bool active: true
     property bool paused: false
@@ -132,7 +132,7 @@ Item {
         for (var i = 0; i < monsters.children.length; i++) {
             var other = monsters.children[i];
             if (other.objectName === "Monster") {
-                if(other==target || other.monsterName!==target.monsterName)continue
+                if(other===target || other.monsterName!==target.monsterName)continue
                 var dx=target.x-other.x
                 var dy=(target.y+target.height)-(other.y+other.height)
                 if(target.isFaceRight){
@@ -170,7 +170,7 @@ Item {
         for (var i = 0; i < monsters.children.length; i++) {
             var child = monsters.children[i];
             if (child.objectName === "Monster") {
-                if(child.isDead==true)continue
+                if(child.isDead===true)continue
                 if(Math.abs(target.x-child.x)<(target.width+child.width)/2 && Math.abs(target.y-child.y)<(target.height+child.height)/2){
                     return child
                 }
@@ -181,12 +181,12 @@ Item {
 
     //返回range范围内距离坐标(x,y)最近的怪物
     function getClosestMonster(x,y,range){
-        if(monsters.children.length==0)return null
+        if(monsters.children.length===0)return null
         var m=null
         for (var i = 0; i < monsters.children.length; i++) {
             var child = monsters.children[i];
             if (child.objectName === "Monster") {
-                if(child.isDead==true)continue
+                if(child.isDead===true)continue
                 if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(x,y))<range){
                     if(m==null)m=child
                     else if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(x,y)) < Tool.getDistance(Qt.point(m.x,m.y),Qt.point(x,y)))m=child
@@ -198,18 +198,19 @@ Item {
 
     //令所有怪物消失
     function disappear(){
+        var child
         for (var i = 0; i < monsters.children.length; i++) {
-            var child = monsters.children[i];
+            child = monsters.children[i];
             if (child.objectName === "Monster") {
                 child.disappear()
             }
         }
-        for (var i = 0; i < monsters.parent.children.length; i++) {
-            var child = monsters.parent.children[i];
-            if(child.objectName === "Fork"){
-                child.destroy()
-            }
-        }
+        // for (var k = 0; i < monsters.parent.children.length; k++) {
+        //     child = monsters.parent.children[k];
+        //     if(child.objectName == "Fork"){
+        //         child.destroy()
+        //     }
+        // }
         bullets.clear()
     }
 
@@ -268,12 +269,12 @@ Item {
         return monster
     }
 
-    //在materialsParent中怪物monster的当前位置上生成其死亡时应掉落的材料
+    //在dropsParent中怪物monster的当前位置附近生成其死亡时应掉落数量个材料
     function dropMaterial(monster){
         var materialComponent=Qt.createComponent("../components/Material.qml")
         if (materialComponent.status === Component.Ready){
             for(var i=0;i<monster.monsterData.materialDrops;i++){
-                var material=materialComponent.createObject(materialsParent)
+                var material=materialComponent.createObject(dropsParent)
                 material.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
                 if(i==0){
                     material.x=monster.x+monster.width/2-material.width/2
@@ -286,6 +287,29 @@ Item {
         }else console.log("Error loading component:", materialComponent.errorString())
     }
 
+    //在dropsParent中怪物monster的当前位置附近生成一个果实
+    function dropFruit(monster){
+        var fruitComponent=Qt.createComponent("../components/Fruit.qml")
+        if (fruitComponent.status === Component.Ready){
+            var fruit=fruitComponent.createObject(dropsParent)
+            fruit.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+            fruit.x=monster.x+monster.width/2-fruit.width/2+(Math.random()-0.5)*monster.width*1.6
+            fruit.y=monster.y+monster.height-fruit.height+(Math.random()-0.5)*monster.width*1.6
+        }else console.log("Error loading component:", fruitComponent.errorString())
+    }
+
+    //在dropsParent中怪物monster的当前位置附近生成一个宝箱
+    function dropChest(monster){
+        var chestComponent=Qt.createComponent("../components/Chest.qml")
+        if (chestComponent.status === Component.Ready){
+            var chest=chestComponent.createObject(dropsParent)
+            chest.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+            chest.x=monster.x+monster.width/2-chest.width/2+(Math.random()-0.5)*monster.width*1.6
+            chest.y=monster.y+monster.height-chest.height+(Math.random()-0.5)*monster.width*1.6
+        }else console.log("Error loading component:", chestComponent.errorString())
+    }
+
+    //在bulletsParent中怪物monster的当前位置上生成参数描述的子弹
     function spawnBullet(x,y,width,height,damage,range,shootAngle,color){
         var bulletComponent = Qt.createComponent("../components/RoundBullet.qml")
         if (bulletComponent.status === Component.Ready) {

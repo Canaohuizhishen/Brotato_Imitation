@@ -132,7 +132,7 @@ Image {
                 }
             }
 
-            monster.z=monster.y//实现相对靠下的怪物在上层
+            monster.z=monster.y+monster.height//实现相对靠下的怪物在上层
         }
     }
 
@@ -273,7 +273,14 @@ Image {
 
     function kill(){
         monster.isDead=true
+        //掉落材料
         monster.owner.dropMaterial(monster)
+        //可能掉落果实
+        //if(Math.random()<core.consumableDropRate)
+            monster.owner.dropFruit(monster)
+        //可能掉落宝箱
+        //if(Math.random()<core.chestDropRate)
+            monster.owner.dropChest(monster)
         deadAnimation.start()
     }
 
