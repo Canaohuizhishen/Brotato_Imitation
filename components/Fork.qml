@@ -34,8 +34,11 @@ Item {
     SequentialAnimation on opacity {
         id: blink
         running: true
-        loops: Animation.Infinite
+        loops: 3
         PropertyAnimation { from: 0; to: 1; duration: 175 }  // 淡入
         PropertyAnimation { from: 1; to: 0; duration: 175 }  // 淡出
+        onStopped: {
+            root.destroy()
+        }
     }
 }
