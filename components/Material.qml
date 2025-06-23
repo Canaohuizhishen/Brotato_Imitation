@@ -3,14 +3,15 @@ import singleton.PlayerData
 import "../tool.js" as Tool
 
 Item {
-    id: root
-    property double scaleFactor: 1
-    width: 30*scaleFactor
-    height: width
+    id: material
     objectName: "材料"
     property int value: 1
     property var materialImageAspectRatioArray: [0.643, 0.905, 0.681, 0.886, 0.93, 0.415, 0.623, 0.906]
     property bool isGeted: false
+    property double scaleFactor: 1
+    width: 30*scaleFactor
+    height: width
+    z: y+height
 
     Component.onCompleted: {
         if(PlayerData.remainingMaterialsNumber>0){
@@ -18,12 +19,12 @@ Item {
             value++
         }
         var array=materialImageAspectRatioArray
-        root.rotation=Math.random()*360
+        materialImage.rotation=Math.random()*360
         var index=Math.floor(Math.random()*array.length)
-        material.source="/images/material"+(index+1)+".png"
+        materialImage.source="/images/material"+(index+1)+".png"
         var k=1/array[index]
-        material.width=Qt.binding(function(){return root.width*k/Math.sqrt(k*k+1)})
-        material.height=Qt.binding(function(){return material.width/k})
+        materialImage.width=Qt.binding(function(){return material.width*k/Math.sqrt(k*k+1)})
+        materialImage.height=Qt.binding(function(){return material.width/k})
     }
 
     function toBag(point){
@@ -32,22 +33,22 @@ Item {
     }
 
     function beGetedTo(target){
-        root.isGeted=true
+        material.isGeted=true
         beGetedAnimation.target=target
         beGetedAnimation.start()
     }
 
     Image{
-        id: material
-        anchors.centerIn: root
+        id: materialImage
+        anchors.centerIn: material
         z: 1
     }
 
     Canvas {
         id: flame
-        width: root.width*1.5
+        width: material.width*1.5
         height: width
-        anchors.centerIn: root
+        anchors.centerIn: material
         z: 0
         onPaint: {
             var ctx = getContext("2d")
@@ -72,11 +73,11 @@ Item {
 
         PropertyAnimation {
             id: xtoBagAnimation
-            target: root
+            target: material
             property: "x"
-            from: root.x
-            to: toBagAnimation.targetPoint.x-root.width/2
-            duration: Tool.getDistance(Qt.point(root.x+root.width/2,root.y+root.height/2),toBagAnimation.targetPoint)
+            from: material.x
+            to: toBagAnimation.targetPoint.x-material.width/2
+            duration: Tool.getDistance(Qt.point(material.x+material.width/2,material.y+material.height/2),toBagAnimation.targetPoint)
             easing.type: Easing.OutQuart
         }
 
@@ -84,15 +85,15 @@ Item {
             id: ytoBagAnimation
             target: xtoBagAnimation.target
             property: "y"
-            from: root.y
-            to: toBagAnimation.targetPoint.y-root.height/2
+            from: material.y
+            to: toBagAnimation.targetPoint.y-material.height/2
             duration: xtoBagAnimation.duration
             easing.type: xtoBagAnimation.easing.type
         }
 
         onStopped: {
             PlayerData.remainingMaterialsNumber++
-            root.destroy()
+            material.destroy()
         }
     }
 
@@ -100,15 +101,15 @@ Item {
         id: beGetedAnimation
         loops: 1
         running: false
-        property var target: root
+        property var target: material
 
         PropertyAnimation {
             id: xbeGetedAnimation
-            target: root
+            target: material
             property: "x"
-            from: root.x
-            to: beGetedAnimation.target.x+beGetedAnimation.target.width/2-root.width/2
-            duration: Tool.getDistance(Qt.point(root.x,root.y),Qt.point(beGetedAnimation.target.x,beGetedAnimation.target.y))*1
+            from: material.x
+            to: beGetedAnimation.target.x+beGetedAnimation.target.width/2-material.width/2
+            duration: Tool.getDistance(Qt.point(material.x,material.y),Qt.point(beGetedAnimation.target.x,beGetedAnimation.target.y))*1
             easing.type: Easing.InBack
         }
 
@@ -116,8 +117,8 @@ Item {
             id: ybeGetedAnimation
             target: xbeGetedAnimation.target
             property: "y"
-            from: root.y
-            to: beGetedAnimation.target.y-root.height/2
+            from: material.y
+            to: beGetedAnimation.target.y-material.height/2
             duration: xbeGetedAnimation.duration
             easing.type: xbeGetedAnimation.easing.type
         }
@@ -125,13 +126,14 @@ Item {
         onStopped: {
             // 残渣掉落动画
             for (var i = 0; i < 6; i++) {
-                var radius = 13*root.scaleFactor;
+                var radius = 13*material.scaleFactor;
                 var angle=Math.random() * 2 * 3.14159
-                var dx = Math.cos(angle)*(Math.random() * root.width*6-root.width*3)
-                var dy = Math.sin(angle)*(Math.random() * root.width*6-root.width*3)+root.width*1.5
-                root.makeResidue(target.x+target.width/2,target.y,dx,dy, radius,gameArea);
+                var dx = Math.cos(angle)*(Math.random() * material.width*6-material.width*3)
+                var dy = Math.sin(angle)*(Math.random() * material.width*6-material.width*3)+material.width*1.5
+                material.makeResidue(target.x+target.width/2,target.y,dx,dy, radius,gameArea);
             }
-            root.visible=false
+            material.visible=false
+            target.getMaterial(material)
             waitDestroyTimer.start()
         }
     }
@@ -142,7 +144,7 @@ Item {
         running: false
         repeat: false
         onTriggered: {
-            root.destroy()
+            material.destroy()
         }
     }
 

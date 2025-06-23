@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Shapes 1.15
 import singleton.PlayerData
 import Brotato
+import "../components"
 import "../data"
 
 Item {
@@ -14,6 +15,7 @@ Item {
     property string roleName
     property string weaponName
     property var ground: parent
+    property ChestNotificationBar chestBar: chestBar
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
     property bool active: true
@@ -416,6 +418,14 @@ Item {
     function getMaterial(material){
         PlayerData.materialsNumber+=material.value
         PlayerData.curXp+=material.value
+    }
+
+    function getFruit(fruit){
+        PlayerData.curHp+=fruit.value
+    }
+
+    function getChest(chest){
+        chestBar.addChest(chest)
     }
 
     function onHit(bullet){

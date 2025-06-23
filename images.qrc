@@ -11,6 +11,7 @@
         <file>images/material3.png</file>
         <file>images/attribute-critChance.png</file>
         <file>images/prop-lost_duck.png</file>
+        <file>images/chest_purple.png</file>
         <file>images/material6.png</file>
         <file>images/prop-toxic_sludge.png</file>
         <file>images/prop-goat_skull.png</file>
@@ -25,9 +26,11 @@
         <file>images/prop-fuel_tank.png</file>
         <file>images/charger_faceLeft.png</file>
         <file>images/smg_icon.png</file>
+        <file>images/chest_blue.png</file>
         <file>images/smg_icon3.png</file>
         <file>images/material7.png</file>
         <file>images/attribute-elementalDamage.png</file>
+        <file>images/chest_green.png</file>
         <file>images/hand.png</file>
         <file>images/sprayer_redMask_faceRight.png</file>
         <file>images/prop-alien_baby.png</file>
@@ -99,6 +102,7 @@
         <file>images/prop-butterfly.png</file>
         <file>images/chaser_mask_faceRight.png</file>
         <file>images/skull.png</file>
+        <file>images/chest_white.png</file>
         <file>images/material4.png</file>
         <file>images/attribute-dodge.png</file>
         <file>images/prop-terrifying_onion.png</file>
@@ -113,6 +117,7 @@
         <file>images/prop-fertilizer.png</file>
         <file>images/02.png</file>
         <file>images/sprayer_mask_faceLeft.png</file>
+        <file>images/fruit.png</file>
         <file>images/brute_redMask_faceRight.png</file>
         <file>images/attribute-speed.png</file>
         <file>images/prop-yarmulke.png</file>
@@ -160,5 +165,6 @@
         <file>images/stone1.png</file>
         <file>images/upgrade_icon.png</file>
         <file>images/smg_faceRight.png</file>
+        <file>images/chest_red.png</file>
     </qresource>
 </RCC>

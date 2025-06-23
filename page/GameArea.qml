@@ -22,8 +22,9 @@ Item{
     property int totalWaveNumber: 20
     property bool isInCombat: PlayerData.isInCombat
 
-    property var bullets: bullets
-    property var materials: materials
+    property Bullets bullets: bullets
+    property Drops drops: drops
+    property ChestNotificationBar chestBar
 
     Component.onCompleted: {
     }
@@ -53,6 +54,7 @@ Item{
         scaleFactor: gameArea.scaleFactor
         active: gameArea.isInCombat && gameArea.active
         paused: gameArea.paused
+        chestBar: gameArea.chestBar
         onFaceLefted: {
             weapons.faceLeft()
         }
@@ -80,7 +82,7 @@ Item{
         active: gameArea.isInCombat && gameArea.active
         paused: gameArea.paused
         scaleFactor: gameArea.scaleFactor
-        materialsParent: materials
+        dropsParent: drops
     }
 
     Bullets{
@@ -90,8 +92,8 @@ Item{
         scaleFactor: gameArea.scaleFactor
     }
 
-    Materials{
-        id: materials
+    Drops{
+        id: drops
         target: player
         active: gameArea.isInCombat && gameArea.active
         scaleFactor: gameArea.scaleFactor

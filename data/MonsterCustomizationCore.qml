@@ -103,8 +103,8 @@ Item {
         readonly property int initDamage: 1
         readonly property double damageBonus: 0.6
         readonly property int materialDrops: 1
-        readonly property double consumableDropRate: 0.01
-        readonly property double chestDropRate: 0.01
+        readonly property double consumableDropRate: 0.01*(1+PlayerData.luck/100)
+        readonly property double chestDropRate: 0.01*(1+PlayerData.luck/100)
 
         property double initCount: 0
         property double countRation: 1
@@ -130,8 +130,8 @@ Item {
         readonly property int initDamage: 1
         readonly property double damageBonus: 0.6
         readonly property int materialDrops: 1
-        readonly property double consumableDropRate: 0.02
-        readonly property double chestDropRate: 0.03
+        readonly property double consumableDropRate: 0.02*(1+PlayerData.luck/100)
+        readonly property double chestDropRate: 0.03*(1+PlayerData.luck/100)
 
         property double initCount: 0
         property double countRation: 1
@@ -157,8 +157,8 @@ Item {
         readonly property int initDamage: 1
         readonly property double damageBonus: 0.6
         readonly property int materialDrops: 1
-        readonly property double consumableDropRate: 0.03
-        readonly property double chestDropRate: 0.1
+        readonly property double consumableDropRate: 0.03*(1+PlayerData.luck/100)
+        readonly property double chestDropRate: 0.1*(1+PlayerData.luck/100)
 
         property double initCount: 0
         property double countRation: 1
@@ -184,8 +184,8 @@ Item {
         readonly property int initDamage: 1
         readonly property double damageBonus: 0.85
         readonly property int materialDrops: 1
-        readonly property double consumableDropRate: 0.01
-        readonly property double chestDropRate: 0.01
+        readonly property double consumableDropRate: 0.01*(1+PlayerData.luck/100)
+        readonly property double chestDropRate: 0.01*(1+PlayerData.luck/100)
 
         property double initCount: 0
         property double countRation: 1
@@ -211,8 +211,8 @@ Item {
         readonly property int initDamage: 2
         readonly property double damageBonus: 0.85
         readonly property int materialDrops: 3
-        readonly property double consumableDropRate: 0.03
-        readonly property double chestDropRate: 0.03
+        readonly property double consumableDropRate: 0.03*(1+PlayerData.luck/100)
+        readonly property double chestDropRate: 0.03*(1+PlayerData.luck/100)
 
         property double initCount: 0
         property double countRation: 1
@@ -238,8 +238,8 @@ Item {
         readonly property int initDamage: 1
         readonly property double damageBonus: 1.5
         readonly property int materialDrops: 3
-        readonly property double consumableDropRate: 0.03
-        readonly property double chestDropRate: 0.03
+        readonly property double consumableDropRate: 0.03*(1+PlayerData.luck/100)
+        readonly property double chestDropRate: 0.03*(1+PlayerData.luck/100)
 
         property double initCount: 0
         property double countRation: 1

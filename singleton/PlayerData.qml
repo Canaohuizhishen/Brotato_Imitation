@@ -26,7 +26,7 @@ QtObject {
     property int harvesting: 0               //收获
 
     //次要属性
-    property int consumptiveTherapy :0       //消耗性治疗
+    property int consumptiveTherapy :0       //消耗品治疗
     property int materialTherapy:0           //材料治疗
     property int gainExperience:0            //获得经验
     property int pickingRegion :0            //拾取范围
@@ -57,7 +57,7 @@ QtObject {
     property var weapons: ListModel{}
     property var props: ListModel{}
     property var lastStoreGoods: ListModel{} //上次游戏退出时商店的商品项
-    property var lastStoreRefreshTimes: 0    //上次游戏退出时商店的刷新次数
+    property int lastStoreRefreshTimes: 0    //上次游戏退出时商店的刷新次数
 
     property bool isInCombat: false //正在战斗状态的布尔值
 
