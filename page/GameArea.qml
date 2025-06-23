@@ -34,7 +34,6 @@ Item{
             PlayerData.curHp=PlayerData.maxHp
             visible=true
             active=true
-            paused=false
             player.focus=true
             player.x=gameArea.width/2
             player.y=gameArea.height/2
@@ -61,9 +60,9 @@ Item{
         onFaceRighted: {
             weapons.faceRight()
         }
-        Keys.onEscapePressed: {
-            gameArea.paused=!gameArea.paused
-        }
+        // Keys.onEscapePressed: {
+        //     gameArea.paused=!gameArea.paused
+        // }
     }
 
     Weapons{
