@@ -116,9 +116,9 @@ Item {
         }
     }
 
-    ShopScreen {
-        anchors.fill: parent
-    }
+    // ShopScreen {
+    //     anchors.fill: parent
+    // }
 
 
     UpgradeInterface{
@@ -126,6 +126,18 @@ Item {
         visible: false
         scaleFactor: gameWindow.scaleFactor
         upgradeNotificationBar: upgradeNotificationBar
+    }
+
+    Pause{
+        id:pause
+        visible: false
+    }
+    Shortcut {
+        sequence: "Esc"
+        onActivated: {
+            pause.visible = !pause.visible
+            // 这里可以添加游戏暂停/继续的逻辑
+        }
     }
 
     StoreInterface{
