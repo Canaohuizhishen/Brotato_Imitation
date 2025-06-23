@@ -116,6 +116,11 @@ Item {
         }
     }
 
+    ShopScreen {
+        anchors.fill: parent
+    }
+
+
     UpgradeInterface{
         id: upgradeInterface
         visible: false
