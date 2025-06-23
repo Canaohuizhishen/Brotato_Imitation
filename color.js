@@ -18,7 +18,7 @@ function lightenColor(hexColor, factor) {
     return `#${toHex(rLightened)}${toHex(gLightened)}${toHex(bLightened)}`
 }
 
-function getOptionColor(grade) {
+function getBorderColor(grade) {
     const colors = {
         1: "#000000",
         2: "#52ADE8",

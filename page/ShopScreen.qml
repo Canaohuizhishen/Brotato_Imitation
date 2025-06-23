@@ -219,8 +219,10 @@ Item {
                     }
                 }
                 itemData: goods
-                visible: index < shopView.columns
                 itemIndex: index
+                wGrade: weaponGrade
+                visible: index < shopView.columns
+
 
                 width: shopView.cellW
                 height: shopView.cellH
@@ -236,7 +238,11 @@ Item {
         }
 
         PropCustomizationCore {
-            id: core
+            id: propCore
+        }
+
+        WeaponCustomizationCore {
+            id: weaponCore
         }
 
         Component.onCompleted: {

@@ -1,55 +1,142 @@
 //刷新商店
+// function refreshShop() {
+//     var old = [];
+//     for (var i = 0; i < shopModel.count; ++i) {
+//         var item = shopModel.get(i)
+//         old.push({
+//                      goods: item.goods,
+//                      isLockedModel: item.isLockedModel
+//                  })
+//     }
+
+//     var lockedItemNum = 0
+//     shopModel.clear()
+//     for (var idx = 0; idx < shopView.columns; ++idx) {
+//         if (old[idx] && old[idx].isLockedModel) {
+//             // 保留旧项
+//             lockedItemNum++
+//             // console.log(old[idx].isLockedModel)
+//             shopModel.append({
+//                 goods:     old[idx].goods,
+//                 isLockedModel: true
+//             })
+//         }
+//     }
+//     // else {
+//     // for (var l = 0; l < shopView.columns; ++l) {
+//     //     // console.log(old[idx].isLockedModel)
+//     //     if (old[l] && old[l].isLockedModel) {
+//     //         // var p = core.getPropRandomly(1)[0]
+//     //         // shopModel.append({
+//     //         //                      propItem:     p,
+//     //         //                      isLockedModel: false
+//     //         //                  })
+//     //         // console.log(shopModel.get(idx).isLockedModel,"111")
+//     //     } else {
+//     //         var p = core.getPropRandomly(1)[0]
+//     //         shopModel.append({
+//     //                              propItem:     p,
+//     //                              isLockedModel: false
+//     //                          })
+//     //     }
+//     // }
+//     var randomItemNum = shopView.columns - lockedItemNum
+//     var p = propCore.getPropRandomly(randomItemNum)
+//     var w = weaponCore.getWeaponRandomly(randomItemNum)
+
+//     for(var l = 0; l < randomItemNum; ++l) {
+//         var singleItem = p[l]
+//         shopModel.append({
+//                              goods:     singleItem,
+//                              isLockedModel: false
+//                          })
+//     }
+//     // delete(p)
+// }
 function refreshShop() {
-    var old = [];
+    var old = []
     for (var i = 0; i < shopModel.count; ++i) {
         var item = shopModel.get(i)
         old.push({
                      goods: item.goods,
-                     isLockedModel: item.isLockedModel
+                     isLockedModel: item.isLockedModel,
+                     weaponGrade: item.weaponGrade
                  })
     }
 
+
     var lockedItemNum = 0
     shopModel.clear()
+
     for (var idx = 0; idx < shopView.columns; ++idx) {
         if (old[idx] && old[idx].isLockedModel) {
-            // 保留旧项
             lockedItemNum++
-            // console.log(old[idx].isLockedModel)
             shopModel.append({
-                goods:     old[idx].goods,
-                isLockedModel: true
-            })
+                                 goods: old[idx].goods,
+                                 isLockedModel: true,
+                                 weaponGrade: old[idx].weaponGrade
+                             })
         }
     }
-    // else {
-    // for (var l = 0; l < shopView.columns; ++l) {
-    //     // console.log(old[idx].isLockedModel)
-    //     if (old[l] && old[l].isLockedModel) {
-    //         // var p = core.getPropRandomly(1)[0]
-    //         // shopModel.append({
-    //         //                      propItem:     p,
-    //         //                      isLockedModel: false
-    //         //                  })
-    //         // console.log(shopModel.get(idx).isLockedModel,"111")
-    //     } else {
-    //         var p = core.getPropRandomly(1)[0]
-    //         shopModel.append({
-    //                              propItem:     p,
-    //                              isLockedModel: false
-    //                          })
-    //     }
-    // }
+
     var randomItemNum = shopView.columns - lockedItemNum
-    var p = core.getPropRandomly(randomItemNum)
-    for(var l = 0; l < randomItemNum; ++l) {
-        var singleItem = p[l]
-        shopModel.append({
-                             goods:     singleItem,
-                             isLockedModel: false
-                         })
+    var baseItemProbability = 0.6
+    var waveFactor = Math.min(waveNumberText.text / 20, 1.0)
+    var waveEffect = baseItemProbability + waveFactor * 0.3
+    var randomFluctuation = (Math.random() * 0.2) - 0.1
+    var itemProbability = waveEffect + randomFluctuation
+    itemProbability = Math.max(0.3, Math.min(0.9, itemProbability))
+
+    var newWeaponCount = 0
+    var maxNewWeapons = 2
+
+    for (var i = 0; i < randomItemNum; i++) {
+        var isItem
+        var newGoods
+
+        if (newWeaponCount >= maxNewWeapons) {
+            isItem = true
+        }else {
+            isItem = Math.random() < itemProbability
+        }
+
+        if (isItem) {
+            var items = propCore.getPropRandomly(1)
+            if (items.length > 0) {
+                newGoods = items[0]
+            }
+        } else {
+            var weapons = weaponCore.getWeaponRandomly(1)
+            if (weapons.length > 0) {
+                newGoods = weapons[0]
+                newWeaponCount++
+            }
+        }
+
+        if (newGoods) {
+            shopModel.append({
+                                 goods: newGoods,
+                                 isLockedModel: false,
+                                 weaponGrade: newGoods.grade
+                             })
+        }
     }
-    // delete(p)
+
+    var actualItemCount = 0
+    var actualWeaponCount = 0
+    for (var j = lockedItemNum; j < shopModel.count; j++) {
+        var good = shopModel.get(j).goods
+        if (good.type === "道具") {
+            actualItemCount++
+        } else {
+            actualWeaponCount++
+        }
+    }
+
+    // console.log(`刷新商店: 波次=${waveNumberText.text}, ` +
+    //             `道具=${actualItemCount}, 武器=${actualWeaponCount}, ` +
+    //             `概率=${(itemProbability*100).toFixed(1)}%, ` +
+    //             `新武器数量=${newWeaponCount}/${maxNewWeapons}`);
 }
 
 //购买商品 进行数据分发
