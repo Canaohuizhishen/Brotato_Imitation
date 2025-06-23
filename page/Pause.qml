@@ -7,19 +7,18 @@ Rectangle {
     height: 720
     color: Qt.rgba(0,0,0,0.7)
     visible: true
-    // 添加键盘事件监听
-    focus: true  // 必须设置focus才能接收键盘事件
-    Keys.onPressed: {
-        if (event.key === Qt.Key_Escape) {
-            pause.visible = !pause.visible  // 切换暂停界面显示状态
-            event.accepted = true  // 阻止事件继续传递
-        }
-    }
+    focus: true
+    // Keys.onPressed: {
+    //     if (event.key === Qt.Key_Escape) {
+    //         pause.visible = !pause.visible  // 切换暂停界面显示状态
+    //         event.accepted = true  // 阻止事件继续传递
+    //     }
+    // }
+
     TextMetrics {
         id: textMetrics
         font: backgroundComboBox.font
     }
-
 
     Item {
         anchors.left: parent.left

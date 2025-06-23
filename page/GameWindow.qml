@@ -9,6 +9,7 @@ Item {
     anchors.centerIn: parent
     clip: true
     property double scaleFactor: 1.0
+    property bool paused: false
 
     onWidthChanged: updateScale()
     onHeightChanged: updateScale()
@@ -21,6 +22,14 @@ Item {
         waveCountdown.start()
         gameArea.player.focus=true
         gameArea.player.roleName="wellRounded"
+    }
+
+    Shortcut {
+        sequence: "Esc"
+        onActivated: {
+            gameWindow.paused=!gameWindow.paused
+            pause.visible = !pause.visible
+        }
     }
 
     // Timer {
@@ -109,6 +118,7 @@ Item {
         visible: false
         scaleFactor: gameWindow.scaleFactor
         chestBar: chestNotificationBar
+        paused: gameWindow.paused
         onIsInCombatChanged: {
             if(!isInCombat){
                 drops.allMaterialsToBag(bagBar.mapToItem(gameArea,bagBar.imageCenterPoint))
@@ -147,17 +157,10 @@ Item {
         upgradeNotificationBar: upgradeNotificationBar
     }
 
-    // Pause{
-    //     id:pause
-    //     visible: false
-    // }
-    // Shortcut {
-    //     sequence: "Esc"
-    //     onActivated: {
-    //         pause.visible = !pause.visible
-    //         // 这里可以添加游戏暂停/继续的逻辑
-    //     }
-    // }
+    Pause{
+        id:pause
+        visible: false
+    }
 
     StoreInterface{
         id: storeInterface

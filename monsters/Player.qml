@@ -56,8 +56,10 @@ Item {
 
     onPausedChanged: {
         if(paused==true){
+            hpRegenerationTimer.pause()
             playerAnimation.pause()
         }else{
+            hpRegenerationTimer.resume()
             playerAnimation.resume()
         }
     }
@@ -79,7 +81,7 @@ Item {
     //     }
     // }
 
-    Timer {
+    TimerCanPause {
         id: hpRegenerationTimer
         interval: 1000; running: PlayerData.isInCombat; repeat: true
         onTriggered: {

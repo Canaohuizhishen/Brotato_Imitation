@@ -276,10 +276,10 @@ Image {
         //掉落材料
         monster.owner.dropMaterial(monster)
         //可能掉落果实
-        //if(Math.random()<core.consumableDropRate)
+        if(Math.random()<core.consumableDropRate)
             monster.owner.dropFruit(monster)
         //可能掉落宝箱
-        //if(Math.random()<core.chestDropRate)
+        if(Math.random()<core.chestDropRate)
             monster.owner.dropChest(monster)
         deadAnimation.start()
     }
