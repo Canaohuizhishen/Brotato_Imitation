@@ -311,7 +311,7 @@ Item {
         id: defective_steroids
         objectName: "defective_steroids"
         readonly property int grade: 1
-
+        readonly property string propName: "有缺陷的类固醇"
         readonly property int basePrice: 20
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
