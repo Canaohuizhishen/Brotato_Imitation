@@ -20,13 +20,17 @@ Item {
     }
 
     Component.onCompleted: {
-        // gameArea.player.roleName="wellRounded"
-        // PlayerData.isInCombat=true
+        gameArea.player.roleName="wellRounded"
+        PlayerData.addWeapon("smg")
+        PlayerData.isInCombat=true
+        inSelectInterface=false
     }
 
     Shortcut {
         sequence: "Esc"
+        enabled: pauseInterface.inMain ? true : false
         onActivated: {
+            if(inSelectInterface)return
             if(gameWindow.paused)gameWindow.resume()
             else gameWindow.pause()
         }
@@ -39,77 +43,77 @@ Item {
     //     }
     // }
 
-    StartInterface{
-        id: startInterface
-        visible: true
-        scaleFactor: gameWindow.scaleFactor
-        z:100
+    // StartInterface{
+    //     id: startInterface
+    //     visible: true
+    //     scaleFactor: gameWindow.scaleFactor
+    //     z:100
 
-        startButton.onClicked:{
-            startInterface.visible=false
-            roleSelectionInterface.visible=true
-        }
+    //     startButton.onClicked:{
+    //         startInterface.visible=false
+    //         roleSelectionInterface.visible=true
+    //     }
 
-        exitButton.onClicked:{
-            Qt.quit()
-        }
-    }
+    //     exitButton.onClicked:{
+    //         Qt.quit()
+    //     }
+    // }
 
-    RoleSelectionInterface{
-        id: roleSelectionInterface
-        visible: false
-        scaleFactor: gameWindow.scaleFactor
+    // RoleSelectionInterface{
+    //     id: roleSelectionInterface
+    //     visible: false
+    //     scaleFactor: gameWindow.scaleFactor
 
-        onSelected:{
-            roleSelectionInterface.visible=false
-            weaponSelectionInterface.visible=true
-            weaponSelectionInterface.selectedRoleName=selectedRoleName
+    //     onSelected:{
+    //         roleSelectionInterface.visible=false
+    //         weaponSelectionInterface.visible=true
+    //         weaponSelectionInterface.selectedRoleName=selectedRoleName
 
-        }
+    //     }
 
-        backButton.onClicked: {
-            init()
-            startInterface.visible=true
-        }
-    }
+    //     backButton.onClicked: {
+    //         init()
+    //         startInterface.visible=true
+    //     }
+    // }
 
-    WeaponSelectionInterface{
-        id: weaponSelectionInterface
-        visible: false
-        scaleFactor: gameWindow.scaleFactor
+    // WeaponSelectionInterface{
+    //     id: weaponSelectionInterface
+    //     visible: false
+    //     scaleFactor: gameWindow.scaleFactor
 
-        onSelected:{
-            weaponSelectionInterface.visible=false
-            difficultySelectionInterface.visible=true
-            difficultySelectionInterface.selectedRoleName=selectedRoleName
-            difficultySelectionInterface.selectedWeaponName=selectedWeaponName
-        }
+    //     onSelected:{
+    //         weaponSelectionInterface.visible=false
+    //         difficultySelectionInterface.visible=true
+    //         difficultySelectionInterface.selectedRoleName=selectedRoleName
+    //         difficultySelectionInterface.selectedWeaponName=selectedWeaponName
+    //     }
 
-        backButton.onClicked: {
-            init()
-            roleSelectionInterface.visible=true
-        }
-    }
+    //     backButton.onClicked: {
+    //         init()
+    //         roleSelectionInterface.visible=true
+    //     }
+    // }
 
-    DifficultySelectionInterface{
-        id: difficultySelectionInterface
-        visible: false
-        scaleFactor: gameWindow.scaleFactor
+    // DifficultySelectionInterface{
+    //     id: difficultySelectionInterface
+    //     visible: false
+    //     scaleFactor: gameWindow.scaleFactor
 
-        onSelected:{
-            difficultySelectionInterface.visible=false
-            gameArea.player.roleName=selectedRoleName
-            PlayerData.addWeapon(selectedWeaponName)
-            gameArea.monsters.difficulty=selectedDifficulty
-            PlayerData.isInCombat=true
-            inSelectInterface=false
-        }
+    //     onSelected:{
+    //         difficultySelectionInterface.visible=false
+    //         gameArea.player.roleName=selectedRoleName
+    //         PlayerData.addWeapon(selectedWeaponName)
+    //         gameArea.monsters.difficulty=selectedDifficulty
+    //         PlayerData.isInCombat=true
+    //         inSelectInterface=false
+    //     }
 
-        backButton.onClicked: {
-            init()
-            weaponSelectionInterface.visible=true
-        }
-    }
+    //     backButton.onClicked: {
+    //         init()
+    //         weaponSelectionInterface.visible=true
+    //     }
+    // }
 
     GameArea {
         id: gameArea
@@ -171,6 +175,7 @@ Item {
     PauseInterface{
         id: pauseInterface
         visible: false
+        scaleFactor: gameWindow.scaleFactor
         continueButton.onClicked: gameWindow.resume()
         restartButton.onClicked: gameWindow.restart()
         z: 100
@@ -303,12 +308,12 @@ Item {
     }
 
     function init(){
-        paused=false
-        inSelectInterface=true
-        startInterface.init()
-        roleSelectionInterface.init()
-        weaponSelectionInterface.init()
-        difficultySelectionInterface.init()
+        // paused=false
+        // inSelectInterface=true
+        // startInterface.init()
+        // roleSelectionInterface.init()
+        // weaponSelectionInterface.init()
+        // difficultySelectionInterface.init()
         gameArea.init()
         chestOpeningInterface.init()
         upgradeInterface.init()

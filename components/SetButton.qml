@@ -9,11 +9,11 @@ Button {
     property color hoverColor: "white"
     property color textNormalColor: "white"
     property color textHoverColor: "#000000"
-    property int textSize: 30
+    property int textSize: height*3/5
 
     background: Rectangle {
         id: buttonBg
-        radius: 5
+        radius: 10
         color: root.hovered ? root.hoverColor : root.normalColor
         Behavior on color { ColorAnimation { duration: 100 } }
     }
