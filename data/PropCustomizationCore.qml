@@ -980,11 +980,11 @@ Item {
         }
     }
     Item{
-        //Shmoop  6
+        //休穆糖  6
         id: shmoop
         objectName: "shmoop"
         readonly property int grade: 3
-        readonly property string propName: "Shmoop"
+        readonly property string propName: "休穆糖"
         readonly property int basePrice: 60
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"

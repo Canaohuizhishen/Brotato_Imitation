@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import "../components"
 
 Rectangle {
     id: background
@@ -10,11 +11,17 @@ Rectangle {
     property int stoneNum: 100
     property int stoneWidth: 40*scaleFactor
     property int stoneHeight: 40*scaleFactor
+    property Forks forks: forks
 
     Component.onCompleted: {
         stoneNum=width*height/stoneWidth/stoneHeight*0.1
         createStones()
         createJaggedEdges()
+    }
+
+    Forks{
+        id: forks
+        scaleFactor: background.scaleFactor
     }
 
     function createJaggedEdges(){

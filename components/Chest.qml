@@ -10,6 +10,7 @@ Image {
     property int grade: 1
     property string propName
     property bool isGeted: false
+    property bool isDestroy: false
     property double scaleFactor: 1
     width: 50*scaleFactor
     height: width*0.9505

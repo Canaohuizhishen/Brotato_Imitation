@@ -47,6 +47,7 @@ QtObject {
     property int enemy:0                     //敌人
     property int enemySpeed:0                //敌人速度
 
+    property int totalWaveNumber: 20         //通关波数
     property int currentWaveNumber: 0        //当前波次
     property int materialsNumber: 0          //当前材料数
     property int remainingMaterialsNumber: 0 //存储材料数
@@ -61,8 +62,10 @@ QtObject {
 
     property bool isInCombat: false //正在战斗状态的布尔值
 
+    signal weaponsListChanged()
+
     Component.onCompleted: {
-        for(var i=0;i<1;i++)addWeapon("smg",1)
+        //for(var i=0;i<1;i++)addWeapon("smg",1)
         // addWeapon("smg",4)
         // addProp("bat",12)
         // addProp("flag",101)
@@ -131,6 +134,39 @@ QtObject {
         speed = 0
         luck = 0
         harvesting = 0
+
+        consumptiveTherapy = 0
+        materialTherapy = 0
+        gainExperience = 0
+        pickingRegion = 0
+        propPrices = 0
+        explosiveDamage = 0
+        explosionRange = 0
+        rebound = 0
+        penetrate = 0
+        penetratingDamage = 0
+        damageToBoss = 0
+        burningRatePercentage = 0
+        burningRate = 0
+        repel = 0
+        obtainingDoubleMaterial = 0
+        materialsInTheBox = 0
+        freeRefresh = 0
+        trees = 0
+        enemy = 0
+        enemySpeed = 0
+
+        currentWaveNumber = 0
+        materialsNumber = 0
+        remainingMaterialsNumber = 0
+        pickupRange = 150
+        goodsDiscountRate = 1
+        expDiscountRate = 1
+        weapons.clear()
+        props.clear()
+        lastStoreGoods.clear()
+        lastStoreRefreshTimes = 0
+        isInCombat = false
     }
 
     function hpRegeneratPerSecond(){
@@ -141,15 +177,16 @@ QtObject {
         return armor/(armor+15)
     }
 
-    function addWeapon(weaponName,grade){
+    function addWeapon(weaponName,grade=1){
         weapons.append({"weaponName": weaponName,"grade": grade})
+        weaponsListChanged()
     }
 
-    function addProp(propName,number){
+    function addProp(propName,number=1){
         props.append({"propName": propName,"number": number})
     }
 
-    function addGood(goodName,grade){
+    function addGood(goodName,grade=1){
         lastStoreGoods.append({"goodName": goodName,"grade": grade})
     }
 

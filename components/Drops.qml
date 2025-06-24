@@ -23,7 +23,23 @@ Item {
         lastScaleFactor=scaleFactor
     }
 
+    function init(){
+        active=true
+        clear()
+    }
+
+    function clear(){
+        for(var i=0;i<drops.children.length;i++){
+            var child=drops.children[i]
+            if(child.objectName==="材料" || child.objectName==="果实" || child.objectName==="宝箱"){
+                child.destroy()
+                child.isDestroy=true
+            }
+        }
+    }
+
     function allMaterialsToBag(point){
+        if(PlayerData.currentWaveNumber===0)return
         for(var i=0;i<drops.children.length;i++){
             var child=drops.children[i]
             if(child.objectName==="材料" && child.isGeted===false){
@@ -33,6 +49,7 @@ Item {
     }
 
     function allFruitsToPlayer(player){
+        if(PlayerData.currentWaveNumber===0)return
         for(var i=0;i<drops.children.length;i++){
             var child=drops.children[i]
             if(child.objectName==="果实" && child.isGeted===false){
@@ -42,6 +59,7 @@ Item {
     }
 
     function allChestToPlayer(player){
+        if(PlayerData.currentWaveNumber===0)return
         for(var i=0;i<drops.children.length;i++){
             var child=drops.children[i]
             if(child.objectName==="宝箱" && child.isGeted===false){
@@ -58,21 +76,20 @@ Item {
         onTriggered: {
             for(var i=0;i<drops.children.length;i++){
                 var child=drops.children[i]
-                if(child.objectName==="材料" && child.isGeted===false){
+                if(child.objectName==="材料" && child.isGeted===false && !child.isDestroy){
                     if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange){
                         child.beGetedTo(target)
                     }
-                }else if(child.objectName==="果实" && child.isGeted===false){
+                }else if(child.objectName==="果实" && child.isGeted===false && !child.isDestroy){
                     if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange){
                         child.beGetedTo(target)
                     }
-                }else if(child.objectName==="宝箱" && child.isGeted===false){
+                }else if(child.objectName==="宝箱" && child.isGeted===false && !child.isDestroy){
                     if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange){
                         child.beGetedTo(target)
                     }
                 }
             }
-
         }
     }
 }

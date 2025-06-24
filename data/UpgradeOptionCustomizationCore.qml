@@ -12,7 +12,7 @@ Item {
     //返回指定等级的指定升级选项名对应的升级选项信息结构体
     function getUpgradeOption(grade,optionName){
         for(var i=0;i<core.children.length;i++){
-            if(core.children[i].objectName==optionName)break
+            if(core.children[i].objectName===optionName || core.children[i].optionName===optionName)break
         }
         core.children[i].grade=grade
         return core.children[i]
@@ -51,7 +51,7 @@ Item {
             //查重
             var isSame=false
             for(var i=0;i<array.length;i++){
-                if(array[i]==index){
+                if(array[i]===index){
                     isSame=true
                     break
                 }

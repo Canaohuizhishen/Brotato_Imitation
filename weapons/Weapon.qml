@@ -19,6 +19,7 @@ Image {
     property bool paused: true
     property bool isFaceRight: true
     property bool isAiming: false
+    property bool isDestroy: false //用来标记是否已销毁，因为qml的destroy()是异步方法
     width: 45*scaleFactor
     height: width*core.aspectRatio
     z: 2

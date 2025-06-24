@@ -6,7 +6,7 @@ Item {
 
     function getRole(roleName){
         for(var i=0;i<core.children.length;i++){
-            if(core.children[i].objectName==roleName)break
+            if(core.children[i].objectName===roleName || core.children[i].roleName===roleName)break
         }
         return core.children[i]
     }

@@ -23,6 +23,7 @@ Image {
     property bool paused: false
     property bool isMoveStoped: false
     property bool isDead: false
+    property bool isDestroy: false
     property bool isHited: false
     property bool isFaceRight: true
     property bool isFaceUp: true
@@ -279,7 +280,7 @@ Image {
         if(Math.random()<core.consumableDropRate)
             monster.owner.dropFruit(monster)
         //可能掉落宝箱
-        if(Math.random()<core.chestDropRate)
+        //if(Math.random()<core.chestDropRate)
             monster.owner.dropChest(monster)
         deadAnimation.start()
     }

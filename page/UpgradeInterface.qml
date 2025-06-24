@@ -11,12 +11,18 @@ Rectangle {
     property UpgradeNotificationBar upgradeNotificationBar
     color: Qt.rgba(0,0,0,0.5)
     anchors.fill: parent
+    signal choosedOne()
 
     Component.onCompleted: {
         upgradeOptionsRow.addOptions()
     }
 
     function init(){
+        visible=false
+        upData()
+    }
+
+    function upData(){
         upgradeOptionsRow.model.clear()
         upgradeOptionsRow.addOptions()
         refreshButton.count=0
@@ -71,7 +77,8 @@ Rectangle {
 
             chooseButton.onClicked: {
                 root.upgradeNotificationBar.number--
-                root.init()
+                root.upData()
+                root.choosedOne()
             }
         }
 

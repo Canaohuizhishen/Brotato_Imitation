@@ -15,7 +15,7 @@ Item {
     property alias number: repeater.model
 
     onCurLevelChanged: {
-        addOne()
+        if(curLevel!=0)addOne()
     }
 
     Repeater{
@@ -39,5 +39,9 @@ Item {
 
     function reduceOne(){
         number--
+    }
+
+    function init(){
+        number=0
     }
 }

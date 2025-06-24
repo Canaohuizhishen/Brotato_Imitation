@@ -18,14 +18,14 @@ Item {
         onTriggered: {
             for(var i=0;i<bullets.children.length;i++){
                 var child=bullets.children[i]
-                if(child.objectName=="子弹"){
-                    if(bullets.target.objectName=="Monsters"){
+                if(child.objectName==="子弹" && !child.isDestroy){
+                    if(bullets.target.objectName==="Monsters"){
                         var monster=bullets.target.getCollidingChild(child)
-                        if(monster!=null){
+                        if(monster!==null){
                             monster.onHit(child)
                             child.destroy()
                         }
-                    }else if(bullets.target.objectName=="Player"){
+                    }else if(bullets.target.objectName==="Player"){
                         var player=bullets.target
                         if(Math.abs(bullets.target.x-child.x)<(bullets.target.width+child.width)/2 && Math.abs(bullets.target.y-child.y)<(bullets.target.height+child.height)/2){
                             player.onHit(child)
@@ -40,9 +40,15 @@ Item {
     function clear(){
         for(var i=0;i<bullets.children.length;i++){
             var child=bullets.children[i]
-            if(child.objectName=="子弹"){
+            if(child.objectName==="子弹"){
                 child.destroy()
+                child.isDestroy=true
             }
         }
+    }
+
+    function init(){
+        active=true
+        clear()
     }
 }

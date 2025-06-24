@@ -18,6 +18,7 @@ Item {
     signal selected()
 
     function init(){
+        visible=false
         selectedDifficulty=""
         difficultyCard.difficulty=""
         difficultyRow.selectedObjectName=risk0.objectName

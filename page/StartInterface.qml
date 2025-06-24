@@ -110,4 +110,8 @@ Item{
             verticalAlignment: Text.AlignVCenter
         }
     }
+
+    function init(){
+        visible=false
+    }
 }
