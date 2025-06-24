@@ -10,12 +10,19 @@ Item {
     z: 3
     property string difficulty
     property Player target: null
-    property var dropsParent: parent
+    property Forks forkParent: parent
+    property Drops dropsParent: parent
     property double scaleFactor: 1.0
     property bool active: true
     property bool paused: false
 
     property int maxNum: 100
+
+    function init(){
+        active=true
+        paused=false
+        clear()
+    }
 
     Component.onCompleted: {
         // var monster1=spawnMonster(monsters,"babyAlien")
@@ -169,7 +176,7 @@ Item {
     function getCollidingChild(target){
         for (var i = 0; i < monsters.children.length; i++) {
             var child = monsters.children[i];
-            if (child.objectName === "Monster") {
+            if (child.objectName === "Monster" && !child.isDestroy) {
                 if(child.isDead===true)continue
                 if(Math.abs(target.x-child.x)<(target.width+child.width)/2 && Math.abs(target.y-child.y)<(target.height+child.height)/2){
                     return child
@@ -185,7 +192,7 @@ Item {
         var m=null
         for (var i = 0; i < monsters.children.length; i++) {
             var child = monsters.children[i];
-            if (child.objectName === "Monster") {
+            if (child.objectName === "Monster" && !child.isDestroy) {
                 if(child.isDead===true)continue
                 if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(x,y))<range){
                     if(m==null)m=child
@@ -201,23 +208,27 @@ Item {
         var child
         for (var i = 0; i < monsters.children.length; i++) {
             child = monsters.children[i];
-            if (child.objectName === "Monster") {
+            if (child.objectName === "Monster" && !child.isDestroy) {
                 child.disappear()
             }
         }
-        // for (var k = 0; i < monsters.parent.children.length; k++) {
-        //     child = monsters.parent.children[k];
-        //     if(child.objectName == "Fork"){
-        //         child.destroy()
-        //     }
-        // }
+        forkParent.clear()
         bullets.clear()
+    }
+
+    function clear(){
+        for (var i = 0; i < monsters.children.length; i++) {
+            var child = monsters.children[i];
+            if (child.objectName === "Monster") {
+                child.destroy()
+                child.isDestroy=true
+            }
+        }
+        forkParent.clear()
     }
 
     //生成n个怪物名为monsterName的怪物
     function spawnMonsters(n,monsterName) {
-        var forkComponent = Qt.createComponent("../components/Fork.qml");
-        if (forkComponent.status === Component.Ready) {
             for(var i=0;i<n;i++){
                 var margin = 50
                 var x=Math.random() * (monsters.parent.width - margin*2)+margin;
@@ -226,7 +237,7 @@ Item {
                     i--
                     continue
                 }
-                var fork = forkComponent.createObject(monsters.parent);
+                var fork = forkParent.spawnFork()
                 fork.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
                 fork.x = x
                 fork.y = y
@@ -235,14 +246,13 @@ Item {
                 fork.paused=Qt.binding(function(){return monsters.paused})
             }
             sleepTimer.start()
-        }else console.error("Error loading component:", forkComponent.errorString())
     }
 
     //将场上所有的fork转换成对应的怪物
     function forksToMonsters() {
-            for (var i = 0; i < monsters.parent.children.length; i++) {
-                var child = monsters.parent.children[i]
-                if (child.objectName === "Fork") {
+            for (var i = 0; i < monsters.forkParent.children.length; i++) {
+                var child = monsters.forkParent.children[i]
+                if (child.objectName === "Fork" && !child.isDestroy) {
                     var monster = spawnMonster(monsters,child.targetMonsterName)
                     monster.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
                     monster.x = child.x
@@ -271,6 +281,7 @@ Item {
 
     //在dropsParent中怪物monster的当前位置附近生成其死亡时应掉落数量个材料
     function dropMaterial(monster){
+        if(monster.isDestroy)return
         var materialComponent=Qt.createComponent("../components/Material.qml")
         if (materialComponent.status === Component.Ready){
             for(var i=0;i<monster.monsterData.materialDrops;i++){
@@ -289,6 +300,7 @@ Item {
 
     //在dropsParent中怪物monster的当前位置附近生成一个果实
     function dropFruit(monster){
+        if(monster.isDestroy)return
         var fruitComponent=Qt.createComponent("../components/Fruit.qml")
         if (fruitComponent.status === Component.Ready){
             var fruit=fruitComponent.createObject(dropsParent)
@@ -300,6 +312,7 @@ Item {
 
     //在dropsParent中怪物monster的当前位置附近生成一个宝箱
     function dropChest(monster){
+        if(monster.isDestroy)return
         var chestComponent=Qt.createComponent("../components/Chest.qml")
         if (chestComponent.status === Component.Ready){
             var chest=chestComponent.createObject(dropsParent)

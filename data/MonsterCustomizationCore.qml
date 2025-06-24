@@ -77,7 +77,7 @@ Item {
 
     function getMonster(monsterName){
         for(var i=0;i<core.children.length;i++){
-            if(core.children[i].objectName==monsterName)break
+            if(core.children[i].objectName===monsterName || core.children[i].monsterName===monsterName)break
         }
         return core.children[i]
     }

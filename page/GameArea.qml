@@ -17,9 +17,6 @@ Item{
     property double scaleFactor: 1.0
     property bool active: false
     property bool paused: false
-
-    property int interval: 1
-    property int totalWaveNumber: 20
     property bool isInCombat: PlayerData.isInCombat
 
     property Bullets bullets: bullets
@@ -43,8 +40,12 @@ Item{
         }
     }
 
+    onActiveChanged: {
+        if(active)player.focus=true
+    }
+
     onPausedChanged: {
-        player.focus=true
+        if(!paused)player.focus=true
     }
 
     Background {
@@ -58,15 +59,8 @@ Item{
         active: gameArea.isInCombat && gameArea.active
         paused: gameArea.paused
         chestBar: gameArea.chestBar
-        onFaceLefted: {
-            weapons.faceLeft()
-        }
-        onFaceRighted: {
-            weapons.faceRight()
-        }
-        // Keys.onEscapePressed: {
-        //     gameArea.paused=!gameArea.paused
-        // }
+        onFaceLefted: weapons.faceLeft()
+        onFaceRighted: weapons.faceRight()
     }
 
     Weapons{
@@ -86,6 +80,7 @@ Item{
         paused: gameArea.paused
         scaleFactor: gameArea.scaleFactor
         dropsParent: drops
+        forkParent: background.forks
     }
 
     Bullets{
@@ -100,5 +95,29 @@ Item{
         target: player
         active: gameArea.isInCombat && gameArea.active
         scaleFactor: gameArea.scaleFactor
+    }
+
+    function init(){
+        visible=false
+        active=false
+        paused=false
+        player.init()
+        weapons.init()
+        monsters.init()
+        bullets.init()
+        drops.init()
+
+        player.active=Qt.binding(function(){return isInCombat && active})
+        player.paused=Qt.binding(function(){return paused})
+        weapons.active=Qt.binding(function(){return isInCombat && active})
+        weapons.paused=Qt.binding(function(){return paused})
+        monsters.active=Qt.binding(function(){return isInCombat && active})
+        monsters.paused=Qt.binding(function(){return paused})
+        bullets.active=Qt.binding(function(){return isInCombat && active})
+        drops.active=Qt.binding(function(){return isInCombat && active})
+    }
+
+    function clear(){
+
     }
 }

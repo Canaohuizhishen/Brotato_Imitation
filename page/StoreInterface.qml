@@ -20,7 +20,9 @@ Item {
         }
     }
 
-
+    function init(){
+        visible=false
+    }
 
     Button{
         id: go

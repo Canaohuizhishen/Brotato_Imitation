@@ -17,6 +17,7 @@ Canvas {
     property double speed: 400
     property double shootAngle: 0
     rotation: -shootAngle
+    property bool isDestroy: false
 
     onPausedChanged: {
         if(paused==true){

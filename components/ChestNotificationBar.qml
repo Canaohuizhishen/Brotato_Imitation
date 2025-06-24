@@ -40,4 +40,8 @@ Item {
         repeater.model.remove(0)
         return propName
     }
+
+    function init(){
+        chests.clear()
+    }
 }

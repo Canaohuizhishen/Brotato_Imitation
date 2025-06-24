@@ -60,9 +60,9 @@ Item {
 
     function getWeapon(weaponName,grade=1){
         for(var i=0;i<core.children.length;i++){
-            if(core.children[i].objectName==weaponName)break
+            if(core.children[i].objectName===weaponName || core.children[i].weaponName===weaponName)break
         }
-        //core.children[i].grade=grade
+        core.children[i].grade=grade
         return core.children[i]
     }
 
@@ -73,7 +73,7 @@ Item {
         property int grade: 1
         property int baseDamage: 3
         property double rangedDamageMultiplier: 0.5
-        property int damage: (baseDamage+PlayerData.rangedDamage*rangedDamageMultiplier)*(1+PlayerData.damage/100)
+        property int damage: Math.max((baseDamage+PlayerData.rangedDamage*rangedDamageMultiplier)*(1+PlayerData.damage/100),1)
         property double critical:  1.5* PlayerData.critChance/100
         property double cooldown: 0.17/(1+PlayerData.attackSpeed/100)
         property int range: 400+PlayerData.range

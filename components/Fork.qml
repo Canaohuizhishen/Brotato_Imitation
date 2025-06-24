@@ -8,6 +8,7 @@ Item {
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
     property bool paused: false
+    property bool isDestroy: false
     width: 70*scaleFactor
     height: 70*scaleFactor
     z: 0

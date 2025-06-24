@@ -5,7 +5,7 @@ import "../components"
 
 Item {
     id: chestOpeningInterface
-    property ChestNotificationBar chestNotificationBar
+    property ChestNotificationBar chestNotificationBar //数据来源
     property double scaleFactor: 1.0
     anchors.fill: parent
     anchors.centerIn: parent
@@ -14,6 +14,10 @@ Item {
     property alias getButton: getButton
     property alias recycleButton: recycleButton
     signal processedOne()
+
+    function init(){
+        visible=false
+    }
 
     Rectangle {
         id: background

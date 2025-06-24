@@ -8,6 +8,7 @@ Image {
     source:"/images/fruit"
     property int value: 2+PlayerData.consumptiveTherapy
     property bool isGeted: false
+    property bool isDestroy: false
     property double scaleFactor: 1
     width: 35*scaleFactor
     height: width*1.209

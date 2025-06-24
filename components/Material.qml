@@ -8,6 +8,7 @@ Item {
     property int value: 1
     property var materialImageAspectRatioArray: [0.643, 0.905, 0.681, 0.886, 0.93, 0.415, 0.623, 0.906]
     property bool isGeted: false
+    property bool isDestroy: false
     property double scaleFactor: 1
     width: 30*scaleFactor
     height: width

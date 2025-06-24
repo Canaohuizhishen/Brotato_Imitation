@@ -17,6 +17,7 @@ Item {
     signal selected()
 
     function init(){
+        visible=false
         selectedWeaponName=""
         weaponCard.weaponName=""
         weaponRow.selectedObjectName=randomSelect.objectName

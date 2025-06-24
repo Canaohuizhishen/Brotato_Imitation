@@ -191,10 +191,10 @@ Item {
             name: "paused"; when: (player.paused)
             StateChangeScript {
                 script: {
-                    player.wPressed==false
-                    player.sPressed==false
-                    player.aPressed==false
-                    player.dPressed==false
+                    player.wPressed=false
+                    player.sPressed=false
+                    player.aPressed=false
+                    player.dPressed=false
                     playerAnimation.slower()
                     playerAnimation.pause()
                 }
@@ -205,10 +205,10 @@ Item {
             StateChangeScript {
                 script: {
                     if(!player.active || player.paused){
-                        player.wPressed==false
-                        player.sPressed==false
-                        player.aPressed==false
-                        player.dPressed==false
+                        player.wPressed=false
+                        player.sPressed=false
+                        player.aPressed=false
+                        player.dPressed=false
                         playerAnimation.slower()
                     }
                     playerAnimation.slower()
@@ -403,6 +403,17 @@ Item {
             player.dPressed=false;
             pressD.running=false;
         }
+    }
+
+    function init(){
+        active=true
+        paused=false
+        playerAnimation.slower()
+        faceRight()
+        wPressed=false
+        sPressed=false
+        aPressed=false
+        dPressed=false
     }
 
     function faceLeft(){

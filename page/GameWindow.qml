@@ -9,6 +9,7 @@ Item {
     anchors.centerIn: parent
     clip: true
     property double scaleFactor: 1.0
+    property bool inSelectInterface: true
     property bool paused: false
 
     onWidthChanged: updateScale()
@@ -19,16 +20,15 @@ Item {
     }
 
     Component.onCompleted: {
-        waveCountdown.start()
-        gameArea.player.focus=true
-        gameArea.player.roleName="wellRounded"
+        // gameArea.player.roleName="wellRounded"
+        // PlayerData.isInCombat=true
     }
 
     Shortcut {
         sequence: "Esc"
         onActivated: {
-            gameWindow.paused=!gameWindow.paused
-            pause.visible = !pause.visible
+            if(gameWindow.paused)gameWindow.resume()
+            else gameWindow.pause()
         }
     }
 
@@ -39,83 +39,83 @@ Item {
     //     }
     // }
 
-    // StartInterface{
-    //     id: startInterface
-    //     visible: true
-    //     scaleFactor: gameWindow.scaleFactor
-    //     z:100
+    StartInterface{
+        id: startInterface
+        visible: true
+        scaleFactor: gameWindow.scaleFactor
+        z:100
 
-    //     startButton.onClicked:{
-    //         startInterface.visible=false
-    //         roleSelectionInterface.visible=true
-    //     }
+        startButton.onClicked:{
+            startInterface.visible=false
+            roleSelectionInterface.visible=true
+        }
 
-    //     exitButton.onClicked:{
-    //         Qt.quit()
-    //     }
-    // }
+        exitButton.onClicked:{
+            Qt.quit()
+        }
+    }
 
-    // RoleSelectionInterface{
-    //     id: roleSelectionInterface
-    //     visible: false
-    //     scaleFactor: gameWindow.scaleFactor
+    RoleSelectionInterface{
+        id: roleSelectionInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
 
-    //     onSelected:{
-    //         roleSelectionInterface.visible=false
-    //         weaponSelectionInterface.visible=true
-    //         weaponSelectionInterface.selectedRoleName=selectedRoleName
+        onSelected:{
+            roleSelectionInterface.visible=false
+            weaponSelectionInterface.visible=true
+            weaponSelectionInterface.selectedRoleName=selectedRoleName
 
-    //     }
+        }
 
-    //     backButton.onClicked: {
-    //         init()
-    //         roleSelectionInterface.visible=false
-    //         startInterface.visible=true
-    //     }
-    // }
+        backButton.onClicked: {
+            init()
+            startInterface.visible=true
+        }
+    }
 
-    // WeaponSelectionInterface{
-    //     id: weaponSelectionInterface
-    //     visible: false
-    //     scaleFactor: gameWindow.scaleFactor
+    WeaponSelectionInterface{
+        id: weaponSelectionInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
 
-    //     onSelected:{
-    //         weaponSelectionInterface.visible=false
-    //         difficultySelectionInterface.visible=true
-    //         difficultySelectionInterface.selectedRoleName=selectedRoleName
-    //         difficultySelectionInterface.selectedWeaponName=selectedWeaponName
-    //     }
+        onSelected:{
+            weaponSelectionInterface.visible=false
+            difficultySelectionInterface.visible=true
+            difficultySelectionInterface.selectedRoleName=selectedRoleName
+            difficultySelectionInterface.selectedWeaponName=selectedWeaponName
+        }
 
-    //     backButton.onClicked: {
-    //         init()
-    //         weaponSelectionInterface.visible=false
-    //         roleSelectionInterface.visible=true
-    //     }
-    // }
+        backButton.onClicked: {
+            init()
+            roleSelectionInterface.visible=true
+        }
+    }
 
-    // DifficultySelectionInterface{
-    //     id: difficultySelectionInterface
-    //     visible: false
-    //     scaleFactor: gameWindow.scaleFactor
+    DifficultySelectionInterface{
+        id: difficultySelectionInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
 
-    //     onSelected:{
-    //         difficultySelectionInterface.visible=false
-    //         waveCountdown.start()
-    //         gameArea.player.roleName=selectedRoleName
-    //         gameArea.monsters.difficulty=selectedDifficulty
-    //     }
+        onSelected:{
+            difficultySelectionInterface.visible=false
+            gameArea.player.roleName=selectedRoleName
+            PlayerData.addWeapon(selectedWeaponName)
+            gameArea.monsters.difficulty=selectedDifficulty
+            PlayerData.isInCombat=true
+            inSelectInterface=false
+        }
 
-    //     backButton.onClicked: {
-    //         init()
-    //         difficultySelectionInterface.visible=false
-    //         weaponSelectionInterface.visible=true
-    //     }
-    // }
+        backButton.onClicked: {
+            init()
+            weaponSelectionInterface.visible=true
+        }
+    }
 
     GameArea {
         id: gameArea
         target: gameWindow
         visible: false
+        active: false
         scaleFactor: gameWindow.scaleFactor
         chestBar: chestNotificationBar
         paused: gameWindow.paused
@@ -155,6 +155,13 @@ Item {
         visible: false
         scaleFactor: gameWindow.scaleFactor
         upgradeNotificationBar: upgradeNotificationBar
+        onChoosedOne: {
+            if(upgradeNotificationBar.number===0){
+                upgradeInterface.visible=false
+                waveCountdown.visible=true
+                storeInterface.visible=true
+            }
+        }
     }
 
     // SettlementInterface{
@@ -162,8 +169,11 @@ Item {
     // }
 
     PauseInterface{
-        id:pause
+        id: pauseInterface
         visible: false
+        continueButton.onClicked: gameWindow.resume()
+        restartButton.onClicked: gameWindow.restart()
+        z: 100
     }
 
     StoreInterface{
@@ -173,6 +183,57 @@ Item {
         goButton.onClicked:{
             visible=false
             waveCountdown.start()
+        }
+    }
+
+    UpgradeNotificationBar{
+        id: upgradeNotificationBar
+        visible: gameArea.visible
+        scaleFactor: gameWindow.scaleFactor
+    }
+
+    ChestNotificationBar{
+        id: chestNotificationBar
+        visible: gameArea.visible
+        scaleFactor: gameWindow.scaleFactor
+    }
+
+    WaveCountdown{
+        id: waveCountdown
+        visible: gameArea.visible
+        scaleFactor: gameWindow.scaleFactor
+        active: gameArea.active
+        paused: gameArea.paused
+        states: [
+            State {
+                name: "notInCombat"; when: (!PlayerData.isInCombat && !gameWindow.inSelectInterface)
+                PropertyChanges { delaytimer.running: true }
+            },
+            State {
+                name: "inCombat"; when: (PlayerData.isInCombat)
+                PropertyChanges { storeInterface.visible: false }
+            }
+        ]
+        onPausedChanged: {
+            if(paused==true){
+                delaytimer.pause()
+            }else{
+                delaytimer.resume()
+            }
+        }
+        TimerCanPause {
+            id: delaytimer
+            interval: 2000; running: false; repeat: false
+            onTriggered: {
+                if(chestNotificationBar.number){
+                    chestOpeningInterface.visible=true
+                }else if(upgradeNotificationBar.number){
+                    upgradeInterface.visible=true
+                    waveCountdown.visible=false
+                }else{
+                    storeInterface.visible=true
+                }
+            }
         }
     }
 
@@ -214,68 +275,51 @@ Item {
         text: PlayerData.currentWaveNumber
     }
 
-    WaveCountdown{
-        id: waveCountdown
-        visible: gameArea.visible
-        scaleFactor: gameWindow.scaleFactor
-        active: gameArea.active
-        paused: gameArea.paused
-        states: [
-            State {
-                name: "notInCombat"; when: (!PlayerData.isInCombat)
-                PropertyChanges { delaytimer.running: true }
-            },
-            State {
-                name: "inCombat"; when: (PlayerData.isInCombat)
-                PropertyChanges { storeInterface.visible: false }
-            }
-        ]
-        onPausedChanged: {
-            if(paused==true){
-                delaytimer.pause()
-            }else{
-                delaytimer.resume()
-            }
-        }
-        TimerCanPause {
-            id: delaytimer
-            interval: 2000; running: false; repeat: false
-            onTriggered: {
-                if(chestNotificationBar.number){
-                    chestOpeningInterface.visible=true
-                }else if(upgradeNotificationBar.number){
-                    upgradeInterface.visible=true
-                    waveCountdown.visible=false
-                }else{
-                    storeInterface.visible=true
-                }
-            }
-        }
+    function pause(){
+        gameWindow.paused = true
+        pauseInterface.visible = true
     }
 
-    UpgradeNotificationBar{
-        id: upgradeNotificationBar
-        visible: gameArea.visible
-        scaleFactor: gameWindow.scaleFactor
-        onNumberChanged: {
-            if(number===0){
-                upgradeInterface.visible=false
-                waveCountdown.visible=true
-                storeInterface.visible=true
-            }
-        }
+    function resume(){
+        gameWindow.paused = false
+        pauseInterface.visible = false
     }
 
-    ChestNotificationBar{
-        id: chestNotificationBar
-        visible: gameArea.visible
-        scaleFactor: gameWindow.scaleFactor
-        onNumberChanged: {
-            if(number===0){
-                // upgradeInterface.visible=false
-                // waveCountdown.visible=true
-                // storeInterface.visible=true
-            }
-        }
+    function restart(){
+        gameArea.init()
+        chestOpeningInterface.init()
+        upgradeInterface.init()
+        pauseInterface.init()
+        storeInterface.init()
+        upgradeNotificationBar.init()
+        chestNotificationBar.init()
+        PlayerData.init()
+
+        gameArea.paused=Qt.binding(function(){return paused})
+        upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
+        chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
+        PlayerData.isInCombat=true
+        paused=false
+    }
+
+    function init(){
+        paused=false
+        inSelectInterface=true
+        startInterface.init()
+        roleSelectionInterface.init()
+        weaponSelectionInterface.init()
+        difficultySelectionInterface.init()
+        gameArea.init()
+        chestOpeningInterface.init()
+        upgradeInterface.init()
+        pauseInterface.init()
+        storeInterface.init()
+        upgradeNotificationBar.init()
+        chestNotificationBar.init()
+        PlayerData.init()
+
+        gameArea.paused=Qt.binding(function(){return paused})
+        upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
+        chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
     }
 }

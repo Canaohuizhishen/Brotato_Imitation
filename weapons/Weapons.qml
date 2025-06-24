@@ -12,7 +12,6 @@ Item{
     property double scaleFactor: 1.0
     property bool active: true
     property bool paused: false
-    property ListModel weaponList: PlayerData.weapons
     anchors.centerIn: owner
     anchors.horizontalCenterOffset: 10
     width: 110*scaleFactor
@@ -26,11 +25,10 @@ Item{
         }
     }
 
-    onWeaponListChanged: {
-        clear()
-        for(var i=0;i<weaponList.count;i++){
-            var weapon=weaponList.get(i)
-            addWeapon(weapon.weaponName,weapon.grade)
+    Connections {
+        target: PlayerData
+        function onWeaponsListChanged() {
+            weapons.upDataWeapons()
         }
     }
 
@@ -41,21 +39,18 @@ Item{
         opacity: 0.5
     }
 
-    Rectangle{
-        visible: false
-        x: weapons.getPosition(3,3).x
-        y: weapons.getPosition(3,3).y
-        width: 5
-        height: 5
-        color: "red"
-        z: 100
-    }
-
-    property int weaponsNum: 0
+    // Rectangle{
+    //     visible: false
+    //     x: weapons.getPosition(3,3).x
+    //     y: weapons.getPosition(3,3).y
+    //     width: 5
+    //     height: 5
+    //     color: "red"
+    //     z: 100
+    // }
 
     Component.onCompleted: {
         //for(var i=0;i<1;i++)addWeapon("smg",4)
-        //addWeapon("冲锋枪")
     }
 
     onScaleFactorChanged: {
@@ -86,16 +81,9 @@ Item{
         }
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            for(var i=0;i<weapons.children.length;i++){
-                var child=weapons.children[i]
-                if(child.objectName==="Weapon"){
-                    child.targetPoint=Qt.point(mouseX,mouseY)
-                }
-            }
-        }
+    function init(){
+        active=true
+        paused=false
     }
 
     function faceLeft(){
@@ -129,14 +117,23 @@ Item{
     function clear(){
         for(var i=0;i<weapons.children.length;i++){
             var child=weapons.children[i]
-            if(child.objectName==="Weapon"){
-                child.destroy()
+            if(child.objectName==="Weapon"){//console.log(8);console.log(weapons.children.length)
+                child.destroy();//console.log(9);console.log(weapons.children.length)//可以发现，销毁后孩子列表的长度没有发生变化，说明destroy()是异步方法
+                child.isDestroy=true
             }
         }
     }
 
+    function upDataWeapons(){
+        clear()
+        for(var i=0;i<PlayerData.weapons.count;i++){
+            var weapon=PlayerData.weapons.get(i)
+            addWeapon(weapon.weaponName,weapon.grade)
+        }
+    }
+
     function addWeapon(weaponName,grade=1){
-        var weaponData = weaponCore.getWeapon(weaponName)
+        var weaponData = weaponCore.getWeapon(weaponName,grade)
         var component = Qt.createComponent(weaponData.source);
         if (component.status === Component.Ready) {
             var weapon = component.createObject(weapons);
@@ -145,7 +142,6 @@ Item{
             weapon.scaleFactor=Qt.binding(function() { return weapons.scaleFactor; })
             weapon.active=Qt.binding(function() { return weapons.active; })
             weapon.paused=Qt.binding(function() { return weapons.paused; })
-            weaponsNum++
             relocation()
         } else {
             console.log("Error loading component:", component.errorString());
@@ -204,10 +200,10 @@ Item{
         var n=1
         for(var i=0;i<weapons.children.length;i++){
             var child=weapons.children[i]
-            if(child.objectName==="Weapon"){
+            if(child.objectName==="Weapon" && !child.isDestroy){
                 var weapon = weaponCore.getWeapon(child.weaponName)
-                child.x=(weapons.getPosition(weaponsNum,n).x-weapon.iconWidthOffset)*scaleFactor
-                child.y=(weapons.getPosition(weaponsNum,n).y-weapon.iconHeightOffset)*scaleFactor
+                child.x=(weapons.getPosition(PlayerData.weapons.count,n).x-weapon.iconWidthOffset)*scaleFactor
+                child.y=(weapons.getPosition(PlayerData.weapons.count,n).y-weapon.iconHeightOffset)*scaleFactor
                 child.originPos=Qt.point(child.x,child.y)
                 n++
             }

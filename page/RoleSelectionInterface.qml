@@ -16,6 +16,7 @@ Item {
     signal selected()
 
     function init(){
+        visible=false
         selectedRoleName=""
         roleCard.roleName=""
         roleGrid.selectedObjectName=randomSelect.objectName
