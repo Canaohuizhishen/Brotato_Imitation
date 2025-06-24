@@ -3,6 +3,7 @@ import singleton.PlayerData
 
 Item {
     id: core
+    property double velocityRate: 0.8
     property int waveNumber: PlayerData.currentWaveNumber
     property alias babyAlien: babyAlien
     property alias chaser: chaser
@@ -98,8 +99,8 @@ Item {
 
         readonly property int initHp: 3
         readonly property double hpBonus: 2
-        readonly property int initVelocity: 200
-        readonly property int maxVelocity: 300
+        readonly property int initVelocity: 250*core.velocityRate
+        readonly property int maxVelocity: 300*core.velocityRate
         readonly property int initDamage: 1
         readonly property double damageBonus: 0.6
         readonly property int materialDrops: 1
@@ -125,8 +126,8 @@ Item {
 
         readonly property int initHp: 1
         readonly property double hpBonus: 1
-        readonly property int initVelocity: 380
-        readonly property int maxVelocity: 380
+        readonly property int initVelocity: 380*core.velocityRate
+        readonly property int maxVelocity: 380*core.velocityRate
         readonly property int initDamage: 1
         readonly property double damageBonus: 0.6
         readonly property int materialDrops: 1
@@ -152,8 +153,8 @@ Item {
 
         readonly property int initHp: 8
         readonly property double hpBonus: 1
-        readonly property int initVelocity: 200
-        readonly property int maxVelocity: 200
+        readonly property int initVelocity: 200*core.velocityRate
+        readonly property int maxVelocity: 200*core.velocityRate
         readonly property int initDamage: 1
         readonly property double damageBonus: 0.6
         readonly property int materialDrops: 1
@@ -179,8 +180,8 @@ Item {
 
         readonly property int initHp: 4
         readonly property double hpBonus: 2.5
-        readonly property int initVelocity: 400
-        readonly property int maxVelocity: 400
+        readonly property int initVelocity: 400*core.velocityRate
+        readonly property int maxVelocity: 400*core.velocityRate
         readonly property int initDamage: 1
         readonly property double damageBonus: 0.85
         readonly property int materialDrops: 1
@@ -206,8 +207,8 @@ Item {
 
         readonly property int initHp: 20
         readonly property double hpBonus: 11
-        readonly property int initVelocity: 300
-        readonly property int maxVelocity: 300
+        readonly property int initVelocity: 300*core.velocityRate
+        readonly property int maxVelocity: 300*core.velocityRate
         readonly property int initDamage: 2
         readonly property double damageBonus: 0.85
         readonly property int materialDrops: 3
@@ -233,8 +234,8 @@ Item {
 
         readonly property int initHp: 100000
         readonly property double hpBonus: 2.4
-        readonly property int initVelocity: 150
-        readonly property int maxVelocity: 600
+        readonly property int initVelocity: 150*core.velocityRate
+        readonly property int maxVelocity: 600*core.velocityRate
         readonly property int initDamage: 1
         readonly property double damageBonus: 1.5
         readonly property int materialDrops: 3

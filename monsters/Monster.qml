@@ -35,7 +35,7 @@ Image {
     property var core: monsterCore.getMonster(monsterName)
 
     property double v: core.initVelocity
-    property int interval: 5
+    property int interval: 10
     property double stepSize: v*interval/1200*scaleFactor
 
     onPausedChanged: {
@@ -95,13 +95,13 @@ Image {
 
         // 阶段一：同时扁平 X 并拉长 Y
         ParallelAnimation {
-            NumberAnimation { target: squashScale; property: "xScale"; to: 1.1; duration: 1000; easing.type: Easing.InOutQuad }
-            NumberAnimation { target: squashScale; property: "yScale"; to: 0.9; duration: 1000; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: squashScale; property: "xScale"; to: 1.1; duration: 600; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: squashScale; property: "yScale"; to: 0.9; duration: 600; easing.type: Easing.InOutQuad }
         }
         // 阶段二：同时恢复 X、Y
         ParallelAnimation {
-            NumberAnimation { target: squashScale; property: "xScale"; to: 1; duration: 1000; easing.type: Easing.InOutQuad }
-            NumberAnimation { target: squashScale; property: "yScale"; to: 1; duration: 1000; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: squashScale; property: "xScale"; to: 1; duration: 600; easing.type: Easing.InOutQuad }
+            NumberAnimation { target: squashScale; property: "yScale"; to: 1; duration: 600; easing.type: Easing.InOutQuad }
         }
         function pause(){
             if(running)paused=true
@@ -139,7 +139,7 @@ Image {
 
     Timer {
         id: checkFaceDirectionTimer
-        interval: 100; running: monster.faceTarget && !monster.paused; repeat: true
+        interval: 175; running: monster.faceTarget && !monster.paused; repeat: true
         onTriggered: {
             var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
             var dy = (monster.target.y + monster.target.height/2) - (monster.y + monster.height/2);
@@ -280,7 +280,7 @@ Image {
         if(Math.random()<core.consumableDropRate)
             monster.owner.dropFruit(monster)
         //可能掉落宝箱
-        //if(Math.random()<core.chestDropRate)
+        if(Math.random()<core.chestDropRate)
             monster.owner.dropChest(monster)
         deadAnimation.start()
     }

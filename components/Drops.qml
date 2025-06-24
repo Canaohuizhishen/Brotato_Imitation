@@ -77,15 +77,15 @@ Item {
             for(var i=0;i<drops.children.length;i++){
                 var child=drops.children[i]
                 if(child.objectName==="材料" && child.isGeted===false && !child.isDestroy){
-                    if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange){
+                    if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange*scaleFactor){
                         child.beGetedTo(target)
                     }
                 }else if(child.objectName==="果实" && child.isGeted===false && !child.isDestroy){
-                    if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange){
+                    if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange*scaleFactor){
                         child.beGetedTo(target)
                     }
                 }else if(child.objectName==="宝箱" && child.isGeted===false && !child.isDestroy){
-                    if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange){
+                    if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange*scaleFactor){
                         child.beGetedTo(target)
                     }
                 }

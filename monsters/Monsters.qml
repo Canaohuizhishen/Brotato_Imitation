@@ -122,7 +122,7 @@ Item {
     //检测怪物间的碰撞
     Timer {
         id: checkCollidingMonsterTimer
-        interval: 50; running: monsters.active && !monsters.paused; repeat: true
+        interval: 150; running: monsters.active && !monsters.paused; repeat: true
         onTriggered: {
             for (var i = 0; i < monsters.children.length; i++) {
                 var child = monsters.children[i];

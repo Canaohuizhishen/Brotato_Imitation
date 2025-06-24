@@ -8,12 +8,12 @@ Monster{
 
     Timer {
         id: accelerateTimer
-        interval: 35
+        interval: 175
         running: true
         repeat: true
         onTriggered: {
             var v=pursuer.v
-            pursuer.v++
+            pursuer.v+=5
             if(pursuer.v>pursuer.core.maxVelocity)running=false
         }
     }

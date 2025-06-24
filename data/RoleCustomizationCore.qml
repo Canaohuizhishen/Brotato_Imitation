@@ -41,7 +41,8 @@ Item {
         <font color='red'>+50</font><font color='white'> %道具价格</font>
         `
         function setInitRoleAttributes(){
-            //do nothing
+            PlayerData.expDiscountRate=0.33
+            PlayerData.goodsDiscountRate=1.5
         }
     }
 }

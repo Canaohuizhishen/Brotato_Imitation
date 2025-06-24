@@ -17,13 +17,14 @@ Item {
 
     function updateScale() {
         scaleFactor = width / 1280
+        //console.log(scaleFactor)
     }
 
     Component.onCompleted: {
-        gameArea.player.roleName="wellRounded"
-        PlayerData.addWeapon("smg")
-        PlayerData.isInCombat=true
-        inSelectInterface=false
+        // gameArea.player.roleName="wellRounded"
+        // PlayerData.addWeapon("smg")
+        // PlayerData.isInCombat=true
+        // inSelectInterface=false
     }
 
     Shortcut {
@@ -43,77 +44,79 @@ Item {
     //     }
     // }
 
-    // StartInterface{
-    //     id: startInterface
-    //     visible: true
-    //     scaleFactor: gameWindow.scaleFactor
-    //     z:100
+    StartInterface{
+        id: startInterface
+        visible: true
+        scaleFactor: gameWindow.scaleFactor
+        z:100
+        resumeButton.visible: PlayerData.currentWaveNumber ? true : false
+        resumeButton.onClicked: continueGame()
+        startButton.onClicked:{
+            startInterface.visible=false
+            roleSelectionInterface.init()
+            roleSelectionInterface.visible=true
+        }
+        exitButton.onClicked: Qt.quit()
+    }
 
-    //     startButton.onClicked:{
-    //         startInterface.visible=false
-    //         roleSelectionInterface.visible=true
-    //     }
+    RoleSelectionInterface{
+        id: roleSelectionInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
 
-    //     exitButton.onClicked:{
-    //         Qt.quit()
-    //     }
-    // }
+        onSelected:{
+            roleSelectionInterface.visible=false
+            weaponSelectionInterface.init()
+            weaponSelectionInterface.selectedRoleName=selectedRoleName
+            weaponSelectionInterface.visible=true
+        }
 
-    // RoleSelectionInterface{
-    //     id: roleSelectionInterface
-    //     visible: false
-    //     scaleFactor: gameWindow.scaleFactor
+        backButton.onClicked: {
+            init()
+            startInterface.visible=true
+        }
+    }
 
-    //     onSelected:{
-    //         roleSelectionInterface.visible=false
-    //         weaponSelectionInterface.visible=true
-    //         weaponSelectionInterface.selectedRoleName=selectedRoleName
+    WeaponSelectionInterface{
+        id: weaponSelectionInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
 
-    //     }
+        onSelected:{
+            PlayerData.init()
+            weaponSelectionInterface.visible=false
+            difficultySelectionInterface.init()
+            difficultySelectionInterface.selectedRoleName=selectedRoleName
+            difficultySelectionInterface.selectedWeaponName=selectedWeaponName
+            difficultySelectionInterface.visible=true
+        }
 
-    //     backButton.onClicked: {
-    //         init()
-    //         startInterface.visible=true
-    //     }
-    // }
+        backButton.onClicked: {
+            init()
+            roleSelectionInterface.visible=true
+        }
+    }
 
-    // WeaponSelectionInterface{
-    //     id: weaponSelectionInterface
-    //     visible: false
-    //     scaleFactor: gameWindow.scaleFactor
+    DifficultySelectionInterface{
+        id: difficultySelectionInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
 
-    //     onSelected:{
-    //         weaponSelectionInterface.visible=false
-    //         difficultySelectionInterface.visible=true
-    //         difficultySelectionInterface.selectedRoleName=selectedRoleName
-    //         difficultySelectionInterface.selectedWeaponName=selectedWeaponName
-    //     }
+        onSelected:{
+            difficultySelectionInterface.visible=false
+            gameArea.player.roleName=selectedRoleName
+            PlayerData.addWeapon(selectedWeaponName)
+            gameArea.monsters.difficulty=selectedDifficulty
+            PlayerData.isInCombat=true
+            inSelectInterface=false
+            paused=false
+        }
 
-    //     backButton.onClicked: {
-    //         init()
-    //         roleSelectionInterface.visible=true
-    //     }
-    // }
-
-    // DifficultySelectionInterface{
-    //     id: difficultySelectionInterface
-    //     visible: false
-    //     scaleFactor: gameWindow.scaleFactor
-
-    //     onSelected:{
-    //         difficultySelectionInterface.visible=false
-    //         gameArea.player.roleName=selectedRoleName
-    //         PlayerData.addWeapon(selectedWeaponName)
-    //         gameArea.monsters.difficulty=selectedDifficulty
-    //         PlayerData.isInCombat=true
-    //         inSelectInterface=false
-    //     }
-
-    //     backButton.onClicked: {
-    //         init()
-    //         weaponSelectionInterface.visible=true
-    //     }
-    // }
+        backButton.onClicked: {
+            init()
+            weaponSelectionInterface.visible=true
+        }
+    }
 
     GameArea {
         id: gameArea
@@ -178,6 +181,7 @@ Item {
         scaleFactor: gameWindow.scaleFactor
         continueButton.onClicked: gameWindow.resume()
         restartButton.onClicked: gameWindow.restart()
+        backMainMenuButton.onClicked: backMainMenu()
         z: 100
     }
 
@@ -305,6 +309,31 @@ Item {
         chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
         PlayerData.isInCombat=true
         paused=false
+    }
+
+    function continueGame(){
+        startInterface.visible=false
+        storeInterface.visible=true
+        paused=false
+        inSelectInterface=false
+    }
+
+    function backMainMenu(){
+        gameArea.clear()
+        chestOpeningInterface.init()
+        upgradeInterface.init()
+        pauseInterface.init()
+        storeInterface.init()
+        upgradeNotificationBar.init()
+        chestNotificationBar.init()
+
+        PlayerData.isInCombat=false
+        PlayerData.currentWaveNumber--
+        inSelectInterface=true
+        gameArea.paused=Qt.binding(function(){return paused})
+        upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
+        chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
+        startInterface.visible=true
     }
 
     function init(){

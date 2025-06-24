@@ -32,7 +32,7 @@ Monster{
 
     Timer {
         id: checkTimer
-        interval: 100
+        interval: 150
         running: sprayer.active && !sprayer.paused
         repeat: true
         onTriggered: {
@@ -112,16 +112,6 @@ Monster{
         }
         function pause(){
             if(running)paused=true
-        }
-    }
-
-    Timer {
-        id: collisionDetectionTimer
-        interval: sprayer.interval; running: sprayAnimation.running; repeat: true
-        onTriggered: {
-            if (Tool.getDistance(Qt.point(sprayer.x,sprayer.y),Qt.point(sprayer.target.x,sprayer.target.y)) < sprayer.target.width/2) {//已碰撞
-                sprayer.hit()
-            }
         }
     }
 
