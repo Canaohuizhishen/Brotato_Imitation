@@ -157,6 +157,10 @@ Item {
         upgradeNotificationBar: upgradeNotificationBar
     }
 
+    // SettlementInterface{
+    //     visible: true
+    // }
+
     Pause{
         id:pause
         visible: false
