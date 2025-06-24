@@ -70,7 +70,7 @@ Monster{
 
     Timer {
         id: checkTimer
-        interval: 100
+        interval: 150
         running: !charger.isCharging && !charger.inChargeCoolDown
         repeat: true
         onTriggered: {

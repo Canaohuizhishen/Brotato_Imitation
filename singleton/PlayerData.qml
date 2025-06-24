@@ -49,6 +49,7 @@ QtObject {
 
     property int totalWaveNumber: 20         //通关波数
     property int currentWaveNumber: 0        //当前波次
+    property int lastWaveNumber: 0           //上一次的波次，用来判断波次改变时的增减
     property int materialsNumber: 0          //当前材料数
     property int remainingMaterialsNumber: 0 //存储材料数
     property int pickupRange: 150            //拾取范围
@@ -106,11 +107,13 @@ QtObject {
         if(dodge>60)dodge=60
     }
 
-    onIsInCombatChanged: {
-        if(isInCombat==false){
+    onCurrentWaveNumberChanged: {
+        //console.log(PlayerData.lastWaveNumber,PlayerData.currentWaveNumber)
+        if(currentWaveNumber>1 && PlayerData.lastWaveNumber<PlayerData.currentWaveNumber){
             curXp+=harvesting
             materialsNumber+=harvesting
             harvesting=Math.ceil(harvesting*1.05)
+            lastWaveNumber=currentWaveNumber
         }
     }
 

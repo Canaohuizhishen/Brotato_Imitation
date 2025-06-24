@@ -118,6 +118,8 @@ Item{
     }
 
     function clear(){
-
+        monsters.clear()
+        bullets.clear()
+        drops.clear()
     }
 }

@@ -24,7 +24,7 @@ Item {
     property bool isFaceRight: true
 
     property int interval: 5
-    property double v: 500*scaleFactor*(1+PlayerData.speed/100)
+    property double v: 500*scaleFactor*(1+PlayerData.speed/100)*0.8
     property double stepSize: v*interval/1200
     property double diagonalStepSize: stepSize*0.7
 
@@ -52,6 +52,7 @@ Item {
         var roleData=core.getRole(roleName)
         roleData.setInitRoleAttributes()
         height=Qt.binding(function (){return width*roleData.aspectRatio})
+        faceRight()
     }
 
     onPausedChanged: {
@@ -148,7 +149,7 @@ Item {
         SequentialAnimation {
             id: squashSequence_slow
             loops: Animation.Infinite
-            running: player.active
+            running: true
             property double duration: 1050
 
             ParallelAnimation {

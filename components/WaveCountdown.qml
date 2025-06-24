@@ -22,6 +22,7 @@ Item {
     }
     onRunningChanged: {
         if(running==true){
+            //console.log(PlayerData.lastWaveNumber,PlayerData.currentWaveNumber)
             PlayerData.currentWaveNumber++
             remainingTime=totalTime
         }
