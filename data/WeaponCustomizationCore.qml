@@ -59,11 +59,23 @@ Item {
     }
 
     function getWeapon(weaponName,grade=1){
+        // console.log(weaponName,grade)
+        let foundWeapon = null
         for(var i=0;i<core.children.length;i++){
-            if(core.children[i].objectName==weaponName)break
+            if(core.children[i].objectName===weaponName || core.children[i].weaponName===weaponName) {
+                 foundWeapon =  core.children[i]
+                break
+            }
         }
-        //core.children[i].grade=grade
-        return core.children[i]
+        if(foundWeapon) {
+            // core.children[i].grade=grade
+            foundWeapon.grade = grade
+            return foundWeapon
+        } else {
+            return  console.error("Weapon not found")
+        }
+
+        // return core.children[i]
     }
 
     Item{

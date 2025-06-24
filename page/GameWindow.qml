@@ -161,7 +161,7 @@ Item {
     //     visible: true
     // }
 
-    Pause{
+    PauseInterface{
         id:pause
         visible: false
     }
