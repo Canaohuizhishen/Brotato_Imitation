@@ -43,6 +43,10 @@ Item{
         }
     }
 
+    onPausedChanged: {
+        player.focus=true
+    }
+
     Background {
         id: background
         scaleFactor: gameArea.scaleFactor
