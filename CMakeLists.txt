@@ -60,7 +60,7 @@ qt_add_qml_module(appBrotato
     QML_FILES components/PurchasedWeaponsBar.qml
     QML_FILES components/PurchasedWeaponsImage.qml
     QML_FILES color.js
-    QML_FILES page/Pause.qml
+    QML_FILES page/PauseInterface.qml
     QML_FILES components/SetButton.qml
     QML_FILES components/SwitchSettingButton.qml
     QML_FILES components/ProgressBarControlButton.qml
@@ -70,6 +70,7 @@ qt_add_qml_module(appBrotato
     QML_FILES page/ChestOpeningInterface.qml
     QML_FILES components/PropCard.qml
     QML_FILES page/SettlementInterface.qml
+    QML_FILES page/SettingInterface.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)
