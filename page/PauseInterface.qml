@@ -3,114 +3,180 @@ import QtQuick.Controls
 import"../components"
 
 Rectangle {
+    id: root
     anchors.fill: parent
     color: Qt.rgba(0,0,0,0.7)
     visible: true
+    focus: true
+    property double scaleFactor: 1.0
     property alias backMainMenuButton: backMainMenuButton
     property alias continueButton: continueButton
     property alias restartButton: restartButton
     property alias settingButton: settingButton
+    property bool inMain: true
 
     Item {
-        anchors.left: parent.left
-        anchors.leftMargin: 100
         id:pause
-        width: 300
-        height: 200
-        y: 260
+        anchors.fill: parent
 
         Column {
-            anchors.fill: parent
-            anchors.margins: 10
-            spacing: 10
+            anchors.left: parent.left
+            anchors.leftMargin: 100*root.scaleFactor
+            anchors.top: parent.top
+            anchors.topMargin: 260*root.scaleFactor
+            width: 380*root.scaleFactor
+            height: 230*root.scaleFactor
+            spacing: 10*root.scaleFactor
 
             SetButton {
                 id:continueButton
                 text: "继续"
-                anchors.left: parent.left
-                anchors.right: parent.right
+                width: parent.width
+                height: width/8
                 onClicked: {
                 }
             }
             SetButton {
-                id:restartButton
                 text: "重新开始"
-                anchors.left: parent.left
-                anchors.right: parent.right
+                width: parent.width
+                height: width/8
+                onClicked: {
+                    root.inMain=false
+                    pause.visible = false
+                    restartMenu.visible = true
+                    restartMenu.forceActiveFocus()
+                }
             }
 
             SetButton {
-                id:settingButton
-               text: "设置"
-                anchors.left: parent.left
-                anchors.right: parent.right
-                onClicked: {
-                    // settingsPopup.visible = true
-                    // pause.visible = false
-                    console.log("设置按钮被点击")
-                }
+                id: settingButton
+                text: "设置"
+                width: parent.width
+                height: width/8
             }
             SetButton {
                 text: "返回主菜单"
-                anchors.left: parent.left
-                anchors.right: parent.right
+                width: parent.width
+                height: width/8
                 onClicked: {
+                    root.inMain=false
                     pause.visible = false
-                    backmenu.visible = true
-                    console.log("返回主菜单按钮被点击")
+                    backMenu.visible = true
+                    backMenu.forceActiveFocus()
                 }
             }
+        }
+
+        AttributePanel{
+            id: attributePanel
+            inLeft: true
+            scaleFactor: root.scaleFactor
+            anchors.right: parent.right
+            anchors.rightMargin: 100*root.scaleFactor
+            anchors.verticalCenter: parent.verticalCenter
         }
     }
 
     Item {
-        id: backmenu
-        width: 300
-        height: 200
+        id: backMenu
+        width: 380*root.scaleFactor
+        height: 200*root.scaleFactor
         visible: false
+        focus: true
         anchors.centerIn: parent
+
+        Keys.onEscapePressed: {
+            backMenu.visible = false
+            pause.visible = true
+            root.inMain=true
+        }
 
         Column {
             anchors.fill: parent
-            anchors.margins: 20
-            spacing: 15
+            anchors.margins: 20*root.scaleFactor
+            spacing: 15*root.scaleFactor
 
             Text {
                 text: "是否返回主菜单?"
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "white"
-                font.pixelSize: 30
+                font.pixelSize: 30*root.scaleFactor
             }
 
             SetButton {
                 id:backMainMenuButton
                 text: "是"
                 width: parent.width
+                height: width/8
                 onClicked: {
-                    // backmenu.visible = true
-                    // console.log("游戏操作被点击")
-
+                    backMenu.visible = false
+                    pause.visible = true
+                    root.inMain=true
                 }
             }
 
             SetButton {
                 text: "否"
                 width: parent.width
+                height: width/8
                 onClicked: {
-                    backmenu.visible = false
+                    backMenu.visible = false
                     pause.visible = true
-                    console.log("游戏操作被点击")
+                    root.inMain=true
                 }
             }
         }
     }
-    AttributePanel{
-        id: attributePanel
-        inLeft: true
-        //scaleFactor: chestOpeningInterface.scaleFactor
-        anchors.right: parent.right
-        anchors.rightMargin: 50
-        anchors.verticalCenter: parent.verticalCenter
+
+    Item {
+        id: restartMenu
+        width: 380*root.scaleFactor
+        height: 200*root.scaleFactor
+        visible: false
+        focus: true
+        anchors.centerIn: parent
+
+        Keys.onEscapePressed: {
+            restartMenu.visible = false
+            pause.visible = true
+            root.inMain=true
+        }
+
+        Column {
+            anchors.fill: parent
+            anchors.margins: 20*root.scaleFactor
+            spacing: 15
+
+            Text {
+                text: "是否重新开始本轮游戏?"
+                anchors.horizontalCenter: parent.horizontalCenter
+                color: "white"
+                font.pixelSize: 30*root.scaleFactor
+            }
+
+            SetButton {
+                id: restartButton
+                text: "是"
+                width: parent.width
+                height: width/8
+                onClicked: {
+                    restartMenu.visible = false
+                    pause.visible = true
+                    root.inMain=true
+                }
+            }
+
+            SetButton {
+                text: "否"
+                width: parent.width
+                height: width/8
+                onClicked: {
+                    restartMenu.visible = false
+                    pause.visible = true
+                    root.inMain=true
+                }
+            }
+        }
     }
 
     function init(){
