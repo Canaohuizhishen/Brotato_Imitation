@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import singleton.PlayerData
 import "../monsters"
 import "../components"
 import "../data"
@@ -11,6 +12,7 @@ Item{
     property double scaleFactor: 1.0
     property bool active: true
     property bool paused: false
+    property ListModel weaponList: PlayerData.weapons
     anchors.centerIn: owner
     anchors.horizontalCenterOffset: 10
     width: 110*scaleFactor
@@ -21,6 +23,14 @@ Item{
     onActiveChanged: {
         if(active==false){
             owner.isFaceRight ? faceRight() : faceLeft()
+        }
+    }
+
+    onWeaponListChanged: {
+        clear()
+        for(var i=0;i<weaponList.count;i++){
+            var weapon=weaponList.get(i)
+            addWeapon(weapon.weaponName,weapon.grade)
         }
     }
 
@@ -44,7 +54,7 @@ Item{
     property int weaponsNum: 0
 
     Component.onCompleted: {
-        for(var i=0;i<1;i++)addWeapon("smg",4)
+        //for(var i=0;i<1;i++)addWeapon("smg",4)
         //addWeapon("冲锋枪")
     }
 
@@ -64,10 +74,10 @@ Item{
         onTriggered: {
             for(var i=0;i<weapons.children.length;i++){
                 var child=weapons.children[i]
-                if(child.objectName!=""){
+                if(child.objectName==="Weapon"){
                     var weapon=weaponCore.getWeapon(child.weaponName)
                     var monster=weapons.target.getClosestMonster(child.x+weapons.x,child.y+weapons.y,weapon.range*weapons.scaleFactor)
-                    if(monster==null){
+                    if(monster===null){
                         child.targetPoint=null
                         owner.isFaceRight ? child.faceRight() : child.faceLeft()
                     }else child.targetPoint=Qt.point(monster.x+monster.width/2-weapons.x,monster.y+monster.height/2-weapons.y)
@@ -81,7 +91,7 @@ Item{
         onClicked: {
             for(var i=0;i<weapons.children.length;i++){
                 var child=weapons.children[i]
-                if(child.objectName!=""){
+                if(child.objectName==="Weapon"){
                     child.targetPoint=Qt.point(mouseX,mouseY)
                 }
             }
@@ -91,8 +101,8 @@ Item{
     function faceLeft(){
         for(var i=0;i<weapons.children.length;i++){
             var child=weapons.children[i]
-            if(child.objectName!=""&&isFaceRight){
-                if(child.targetPoint==null){
+            if(child.objectName==="Weapon"&&isFaceRight){
+                if(child.targetPoint===null){
                     child.faceLeft()
                     child.rotationReset()
                 }
@@ -105,8 +115,8 @@ Item{
     function faceRight(){
         for(var i=0;i<weapons.children.length;i++){
             var child=weapons.children[i]
-            if(child.objectName!=""&&!isFaceRight){
-                if(child.targetPoint==null){
+            if(child.objectName==="Weapon"&&!isFaceRight){
+                if(child.targetPoint===null){
                     child.faceRight()
                     child.rotationReset()
                 }
@@ -114,6 +124,15 @@ Item{
         }
         isFaceRight=true
         anchors.horizontalCenterOffset=10
+    }
+
+    function clear(){
+        for(var i=0;i<weapons.children.length;i++){
+            var child=weapons.children[i]
+            if(child.objectName==="Weapon"){
+                child.destroy()
+            }
+        }
     }
 
     function addWeapon(weaponName,grade=1){
@@ -185,7 +204,7 @@ Item{
         var n=1
         for(var i=0;i<weapons.children.length;i++){
             var child=weapons.children[i]
-            if(child.objectName!=""){
+            if(child.objectName==="Weapon"){
                 var weapon = weaponCore.getWeapon(child.weaponName)
                 child.x=(weapons.getPosition(weaponsNum,n).x-weapon.iconWidthOffset)*scaleFactor
                 child.y=(weapons.getPosition(weaponsNum,n).y-weapon.iconHeightOffset)*scaleFactor

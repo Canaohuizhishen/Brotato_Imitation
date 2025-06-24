@@ -62,7 +62,7 @@ QtObject {
     property bool isInCombat: false //正在战斗状态的布尔值
 
     Component.onCompleted: {
-        // addWeapon("smg",1)
+        for(var i=0;i<1;i++)addWeapon("smg",1)
         // addWeapon("smg",4)
         // addProp("bat",12)
         // addProp("flag",101)
