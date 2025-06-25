@@ -109,12 +109,12 @@ QtObject {
 
     onCurrentWaveNumberChanged: {
         //console.log(PlayerData.lastWaveNumber,PlayerData.currentWaveNumber)
-        if(currentWaveNumber>1 && PlayerData.lastWaveNumber<PlayerData.currentWaveNumber){
-            curXp+=harvesting
-            materialsNumber+=harvesting
-            harvesting=Math.ceil(harvesting*1.05)
-            lastWaveNumber=currentWaveNumber
-        }
+        // if(currentWaveNumber>1 && PlayerData.lastWaveNumber<PlayerData.currentWaveNumber){
+        //     curXp+=harvesting
+        //     materialsNumber+=harvesting
+        //     harvesting=Math.ceil(harvesting*1.05)
+        //     lastWaveNumber=currentWaveNumber
+        // }
     }
 
     function init(){
@@ -172,8 +172,8 @@ QtObject {
         isInCombat = false
     }
 
-    function hpRegeneratPerSecond(){
-        curHp+=0.1+0.09*hpRegeneration
+    function hpRegenerationPerSecond(){
+        return 0.1+0.09*hpRegeneration
     }
 
     function damageReduction(){

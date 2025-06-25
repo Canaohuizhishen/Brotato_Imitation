@@ -101,17 +101,16 @@ Item {
         id: difficultySelectionInterface
         visible: false
         scaleFactor: gameWindow.scaleFactor
-
         onSelected:{
             difficultySelectionInterface.visible=false
+            gameArea.player.roleName=""
             gameArea.player.roleName=selectedRoleName
-            PlayerData.addWeapon(selectedWeaponName)
+            PlayerData.addWeapon(selectedWeaponName,1)
             gameArea.monsters.difficulty=selectedDifficulty
             PlayerData.isInCombat=true
             inSelectInterface=false
             paused=false
         }
-
         backButton.onClicked: {
             init()
             weaponSelectionInterface.visible=true
