@@ -1,3 +1,4 @@
+// .pragma library
 //刷新商店
 // function refreshShop() {
 //     var old = [];
@@ -55,6 +56,8 @@
 // }
 function refreshShop() {
     var old = []
+    //将模型里面的数据复制下来，方便在锁定商品时进行保留
+    //需要额外的weaponGrade来确定武器的等级
     for (var i = 0; i < shopModel.count; ++i) {
         var item = shopModel.get(i)
         old.push({
@@ -68,6 +71,7 @@ function refreshShop() {
     var lockedItemNum = 0
     shopModel.clear()
 
+    //将锁定的商品压入新模型
     for (var idx = 0; idx < shopView.columns; ++idx) {
         if (old[idx] && old[idx].isLockedModel) {
             lockedItemNum++
@@ -79,16 +83,16 @@ function refreshShop() {
         }
     }
 
-    var randomItemNum = shopView.columns - lockedItemNum
-    var baseItemProbability = 0.6
+    var randomItemNum = shopView.columns - lockedItemNum //需要随机生产的商品数量
+    var baseItemProbability = 0.6 //道具的基础随机概率
     var waveFactor = Math.min(waveNumberText.text / 20, 1.0)
-    var waveEffect = baseItemProbability + waveFactor * 0.3
-    var randomFluctuation = (Math.random() * 0.2) - 0.1
+    var waveEffect = baseItemProbability + waveFactor * 0.3 //道具的概率(受波次影响)
+    var randomFluctuation = (Math.random() * 0.2) - 0.1 //增加范围在-+0.1的随机率
     var itemProbability = waveEffect + randomFluctuation
-    itemProbability = Math.max(0.3, Math.min(0.9, itemProbability))
+    itemProbability = Math.max(0.3, Math.min(0.9, itemProbability)) //道具最终概率(确保概率不会过高或过低)
 
     var newWeaponCount = 0
-    var maxNewWeapons = 2
+    var maxNewWeapons = 2 //最大的武器生成数量
 
     for (var i = 0; i < randomItemNum; i++) {
         var isItem
@@ -101,18 +105,19 @@ function refreshShop() {
         }
 
         if (isItem) {
-            var items = propCore.getPropRandomly(1)
+            var items = propCore.getPropRandomly(1) //调用道具核心，随机获取一个道具
             if (items) {
                 newGoods = items
             }
         } else {
-            var weapons = weaponCore.getWeaponRandomly(1)
+            var weapons = weaponCore.getWeaponRandomly(1) //调用武器核心，随机获取一个武器
             if (weapons.length > 0) {
                 newGoods = weapons[0]
                 newWeaponCount++
             }
         }
 
+        //将获得的物品压入模型
         if (newGoods) {
             shopModel.append({
                                  goods: newGoods,
@@ -122,16 +127,16 @@ function refreshShop() {
         }
     }
 
-    var actualItemCount = 0
-    var actualWeaponCount = 0
-    for (var j = lockedItemNum; j < shopModel.count; j++) {
-        var good = shopModel.get(j).goods
-        if (good.type === "道具") {
-            actualItemCount++
-        } else {
-            actualWeaponCount++
-        }
-    }
+    // var actualItemCount = 0
+    // var actualWeaponCount = 0
+    // for (var j = lockedItemNum; j < shopModel.count; j++) {
+    //     var good = shopModel.get(j).goods
+    //     if (good.type === "道具") {
+    //         actualItemCount++
+    //     } else {
+    //         actualWeaponCount++
+    //     }
+    // }
 }
 
 //购买商品 进行数据分发
@@ -140,6 +145,8 @@ function buyItem(itemIndex)
     var purchasedItem = shopModel.get(itemIndex)
     if(purchasedItem.goods.type === "道具") {
         shopscreen.shopContext._purchasedPropsModel.append({propItem: purchasedItem.goods})
+        purchasedItem.goods.apply()
+        attributeBar.upData()
         mergeDuplicateProps(purchasedItem)
         shopItem.visible = false
         return true
@@ -270,7 +277,7 @@ function getPurchasedWNum()
 function recycleWeapons(wIndex)
 {
     purchasedWeaponsModel.remove(wIndex)
-    //...增加角色剩余货币
+    // PlayerData.materialsNumber -= recycledPrice(wIndex,wGrade)
 }
 
 //武器回收价格
@@ -305,3 +312,13 @@ function getSpecificWeapon() {
     }
     return null
 }
+
+//初始化道具效果
+function initPropEffects()
+{
+    for(var i = 0;i < purchasedPropsModel.count;i++) {
+        var prop = purchasedPropsModel.get(i).propItem
+        prop.apply()
+    }
+}
+

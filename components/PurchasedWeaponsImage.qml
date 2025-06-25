@@ -4,6 +4,7 @@ import QtQuick.Layouts
 import "../logic/ShopLogicHandler.js" as Controller
 import "../color.js" as Color
 import "../data"
+import singleton.PlayerData
 
 Item {
     id: root
@@ -215,6 +216,7 @@ Item {
 
                     onClicked:  {
                         infoPopup.close()
+                        PlayerData.materialsNumber += Controller.recycledPrice(wIndex,wGrade)
                         Controller.recycleWeapons(wIndex)
                     }
 

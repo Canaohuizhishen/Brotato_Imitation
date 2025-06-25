@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-
+import "../logic/ShopLogicHandler.js" as Controller
 //道具栏
 Rectangle {
 
@@ -12,11 +12,13 @@ Rectangle {
     }
 
     //已经购买了的道具不重复
+    //元素：propItem
     ListModel {
         id: purchasedPropsModel
     }
 
     //将重复道具合并
+    //元素：propItem
     ListModel {
         id: duplicatePropsCountModel
     }
@@ -24,6 +26,7 @@ Rectangle {
     Component.onCompleted: {
         shopscreen.shopContext._purchasedPropsModel = purchasedPropsModel
         shopscreen.shopContext._duplicatePropsCountModel = duplicatePropsCountModel
+        Controller.initPropEffects()
     }
 
     GridView {
