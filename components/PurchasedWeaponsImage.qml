@@ -3,28 +3,35 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import "../logic/ShopLogicHandler.js" as Controller
 import "../color.js" as Color
+import "../data"
 
 Item {
     id: root
 
     property var itemData
     property int wIndex
+    property int wGrade
     property bool popupActive: false
+    // property var specificWeapon : itemData.type === "道具" ? "" : weaponCore.getWeapon(itemData.objectName, wGrade)
+
+    WeaponCustomizationCore {
+        id: weaponCore
+    }
 
     Rectangle {
         id: weaponImageBackground
         width: parent.width
         height: parent.height
         radius: 6
-        color: weaponImageBackground.hovered ? "white" : Color.getImageBackgroundColor(itemData.grade)
-        // border.color:
+        color: weaponImageBackground.hovered ? "white" : Color.getImageBackgroundColor(wGrade)
 
         property bool hovered: false
 
         Image {
             id: weaponImage
-            // source: "/images/weapon-" + itemData.objectName + ".png"
-            source: "/images/prop-" + itemData.objectName + ".png"
+            source: "/images/weapon-" + itemData.objectName + ".png"
+            // source: "/images/prop-" + itemData.objectName + ".png"
+            // source: "/images/smg_icon.png"
             width: parent.width
             height: parent.height
             anchors.centerIn: parent
@@ -82,9 +89,9 @@ Item {
 
         background: Rectangle {
             anchors.fill: parent
-            color: Color.getBackgroundColor(itemData.grade)
-            // border.color:
+            color: Color.getBackgroundColor(wGrade)
             radius: 5
+            border.color: Color.getBorderColor(wGrade)
         }
 
         contentItem: ColumnLayout {
@@ -96,17 +103,18 @@ Item {
 
                 Rectangle {
                     id: background
-                    color: Color.getImageBackgroundColor(itemData.grade)
+                    color: Color.getImageBackgroundColor(wGrade)
                     radius: 6
                     Layout.minimumWidth: 63
                     Layout.minimumHeight: 63
                     Layout.leftMargin: 8
                     Layout.topMargin: 8
+                    // border.color: Color.getBorderColor()
 
                     Image {
                         id: image
-                        // source: "/images/weapon-" + itemData.objectName + ".png"
-                        source: "/images/prop-" + itemData.objectName + ".png"
+                        source: "/images/weapon-" + itemData.objectName + ".png"
+                        // source: "/images/prop-" + itemData.objectName + ".png"
                         width: 63
                         height: 63
                         fillMode: Image.PreserveAspectFit
@@ -123,7 +131,7 @@ Item {
                     Text {
                         id: text
                         // text: itemData.weaponName
-                        text: itemData.objectName
+                        text: itemData.weaponName
                         color: "white"
                         font.pixelSize: 18
                     }
@@ -137,7 +145,7 @@ Item {
             }
 
             Text {
-                text: itemData.talentText
+                text: Controller.getSpecificWeapon().talentText
                 font.pixelSize: 12
                 font.weight: Font.DemiBold
 
@@ -189,7 +197,7 @@ Item {
 
                     background: Rectangle {
                         radius: 10
-                        color: compositeButton.isHovered ? "white" : Color.getButtonColor(itemData.grade)
+                        color: compositeButton.isHovered ? "white" : Color.getButtonColor(wGrade)
                     }
                 }
 
@@ -211,7 +219,7 @@ Item {
                     }
 
                     contentItem: Text {
-                        text: "回收(" + Controller.recycledPrice(wIndex) + ")"
+                        text: "回收(+" + Controller.recycledPrice(wIndex,wGrade) + ")"
                         font.pixelSize: 18
                         color: recycleButton.isHovered ? "#444444" : "white"
                         horizontalAlignment: Text.AlignHCenter
@@ -221,7 +229,7 @@ Item {
 
                     background: Rectangle {
                         radius: 10
-                        color: recycleButton.isHovered ? "white" : Color.getButtonColor(itemData.grade)
+                        color: recycleButton.isHovered ? "white" : Color.getButtonColor(wGrade)
                     }
                 }
 
@@ -250,7 +258,7 @@ Item {
 
                     background: Rectangle {
                         radius: 10
-                        color: cancelButton.isHovered ? "white" : Color.getButtonColor(itemData.grade)
+                        color: cancelButton.isHovered ? "white" : Color.getButtonColor(wGrade)
                     }
                 }
             }

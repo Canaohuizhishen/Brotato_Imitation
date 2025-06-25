@@ -102,8 +102,8 @@ function refreshShop() {
 
         if (isItem) {
             var items = propCore.getPropRandomly(1)
-            if (items.length > 0) {
-                newGoods = items[0]
+            if (items) {
+                newGoods = items
             }
         } else {
             var weapons = weaponCore.getWeaponRandomly(1)
@@ -132,11 +132,6 @@ function refreshShop() {
             actualWeaponCount++
         }
     }
-
-    // console.log(`刷新商店: 波次=${waveNumberText.text}, ` +
-    //             `道具=${actualItemCount}, 武器=${actualWeaponCount}, ` +
-    //             `概率=${(itemProbability*100).toFixed(1)}%, ` +
-    //             `新武器数量=${newWeaponCount}/${maxNewWeapons}`);
 }
 
 //购买商品 进行数据分发
@@ -146,15 +141,33 @@ function buyItem(itemIndex)
     if(purchasedItem.goods.type === "道具") {
         shopscreen.shopContext._purchasedPropsModel.append({propItem: purchasedItem.goods})
         mergeDuplicateProps(purchasedItem)
+        shopItem.visible = false
+        return true
 
-
-        if(shopscreen.shopContext._purchasedWeaponsModel.count <= 5) {
-            shopscreen.shopContext._purchasedWeaponsModel.append({weaponItem: purchasedItem.goods})
+// if(shopscreen.shopContext._purchasedWeaponsModel.count <= 6)
+    } else {
+        if (shopscreen.shopContext._purchasedWeaponsModel.count === 6 ) { //当武器栏已经满了6个，如果购买了一个和已拥有的武器相同的武器，那么两者自动合并
+            for(var i = 0;i < shopscreen.shopContext._purchasedWeaponsModel.count;i++) {
+                var weapon = shopscreen.shopContext._purchasedWeaponsModel.get(i)
+                if(purchasedItem.goods.objectName === weapon.weaponItem.objectName
+                        && purchasedItem.weaponGrade === weapon.weaponGrade
+                        && weapon.weaponGrade !== 4) {
+                    // shopscreen.shopContext._purchasedWeaponsModel.get(i).weaponGrade++
+                    shopscreen.shopContext._purchasedWeaponsModel.setProperty(i, "weaponGrade", weapon.weaponGrade + 1)
+                    shopscreen.shopContext._purchasedWeaponsModel.move(i, shopscreen.shopContext._purchasedWeaponsModel.count - 1, 1)
+                    shopItem.visible = false //购买了该武器后商品项就该不可见
+                    shopscreen.shopContext._purchasedWeaponsModel.layoutChanged() //强制模型刷新，确保合成按钮的可见性正确
+                    return true //确保商品成功购买并且加入到模型才进行扣费
+                }
+            }
+        } else if (shopscreen.shopContext._purchasedWeaponsModel.count <= 5){
+            shopscreen.shopContext._purchasedWeaponsModel.append({weaponItem: purchasedItem.goods,weaponGrade: purchasedItem.weaponGrade})
+            shopItem.visible = false
+            return true
         }
-
-    } else if(shopscreen.shopContext._purchasedWeaponsModel.count <= 5) {
-        shopscreen.shopContext._purchasedWeaponsModel.append({weaponItem: purchasedItem.goods})
     }
+
+    return false
 }
 
 //将相同的道具进行合并
@@ -192,7 +205,7 @@ function compositeWeapon(wIndex)
         }
 
         if(purchasedWeaponsModel.get(i).weaponItem.objectName === currentWeapon.weaponItem.objectName
-                && purchasedWeaponsModel.get(i).weaponItem.grade === currentWeapon.weaponItem.grade) {
+                && purchasedWeaponsModel.get(i).weaponGrade === currentWeapon.weaponGrade) {
             matchIndex = i
             break
         }
@@ -210,9 +223,12 @@ function compositeWeapon(wIndex)
         wIndex--
     }
 
-    purchasedWeaponsModel.move(wIndex, purchasedWeaponsModel.count -1, 1);
-    var movedItem = purchasedWeaponsModel.get(purchasedWeaponsModel.count - 1);
-    movedItem.weaponItem.grade++;
+    purchasedWeaponsModel.move(wIndex, purchasedWeaponsModel.count -1, 1)
+    var movedItem = purchasedWeaponsModel.get(purchasedWeaponsModel.count - 1)
+    // movedItem.weaponGrade++;
+    purchasedWeaponsModel.setProperty(purchasedWeaponsModel.count - 1, "weaponGrade", currentWeapon.weaponGrade + 1)
+
+    purchasedWeaponsModel.layoutChanged() //强制模型更新，触发按钮可见性的重新计算
 }
 
 //控制合成按钮的可见性
@@ -222,6 +238,12 @@ function isCompositeVisible(wIndex)
     // console.log(wIndex)
     // console.log(purchasedWeaponsModel.count)
     var currentWeapon = purchasedWeaponsModel.get(wIndex)
+
+    //等级为4的武器不能够继续
+    // if (currentWeapon.weaponGrade === 4) {
+    //     return false
+    // }
+
     // var isVisible = false
     for(var i = 0; i < purchasedWeaponsModel.count; i++) {
         if(i === wIndex) {
@@ -230,7 +252,8 @@ function isCompositeVisible(wIndex)
 
         //因为按钮的可视性不断在计算，当合成后purchasedWeaponsModel.count减少，可能该次循环i已经超过了模型的大小导致报错
         if(purchasedWeaponsModel.get(i).weaponItem.objectName === currentWeapon.weaponItem.objectName
-                && purchasedWeaponsModel.get(i).weaponItem.grade === currentWeapon.weaponItem.grade) {
+                && purchasedWeaponsModel.get(i).weaponGrade === currentWeapon.weaponGrade
+                && currentWeapon.weaponGrade !== 4) {
             return true
         }
     }
@@ -251,9 +274,9 @@ function recycleWeapons(wIndex)
 }
 
 //武器回收价格
-function recycledPrice(wIndex)
+function recycledPrice(wIndex,wGrade)
 {
-
+    return Math.floor(weaponCore.getWeapon(purchasedWeaponsModel.get(wIndex).weaponItem.objectName,wGrade).basePrice * 0.7)
 }
 
 //全局变量存放商店刷新次数
@@ -275,14 +298,10 @@ function refreshPrice(waveNum)
     }
 }
 
-//刷新后扣费
-function refreshDeduction()
-{
 
-}
-
-//购买物品扣费
-function purchaseDeduction(itemIndex)
-{
-
+function getSpecificWeapon() {
+    if (itemData && itemData.type !== "道具") {
+        return weaponCore.getWeapon(itemData.objectName, wGrade)
+    }
+    return null
 }

@@ -12,7 +12,7 @@ Item {
         id: propImageBackground
         width: parent.width
         height: parent.height
-        color: propImageBackground.hovered ? "white" : Color.getImageBackgroundColor(itemData.grade)
+        color: propImageBackground.hovered ? "white" : Color.getBackgroundColor(itemData.grade)
         radius: 6
 
         property bool hovered: false
@@ -64,26 +64,28 @@ Item {
         id: infoPopup
 
         width: 245
-        height: 150
+        height: 160
 
         closePolicy: Popup.NoAutoClose
         x: propImage.mapToItem(root,0,0).x
-        y: propImage.mapToItem(root,0,-155).y
+        y: propImage.mapToItem(root,0,-165).y
 
         background: Rectangle {
             anchors.fill: parent
             color: Color.getBackgroundColor(itemData.grade)
             radius: 5
-            // border.color: Color.getOptionColor
+            border.color: Color.getBorderColor(itemData.grade)
         }
 
-        contentItem: Rectangle {
+        contentItem: Item {
             id: info
             // anchors.fill: parent
             anchors.top: parent.top
             anchors.margins: 8
             anchors.left: parent.left
             anchors.leftMargin: 8
+            // width: parent.width
+            // height: parent.height
             // color: "black"
 
             Rectangle {

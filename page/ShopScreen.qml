@@ -10,7 +10,6 @@ import singleton.PlayerData
 Item {
     id: shopscreen
 
-    property var attributeModeView: [] //需要传入角色属性
     property string cionImage : "qrc:/images/material_icon.png"
     property var shopContext: QtObject {
         property var _purchasedPropsModel
@@ -101,9 +100,8 @@ Item {
             onClicked: {
                 // if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
                 Controller.refreshShop()
-                // console.log("111")
+                PlayerData.materialsNumber -= currentRefreshPrice
                 currentRefreshPrice = Controller.refreshPrice(waveNumberText.text)
-                Controller.refreshDeduction()
                 // }
             }
 

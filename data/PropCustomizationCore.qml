@@ -21,6 +21,10 @@ Item {
     }
 
     function countPropNumber(){
+        grade_one_prop_number = 0
+        grade_two_prop_number = 0
+        grade_three_prop_number = 0
+        grade_four_prop_number = 0
         for(var i=0;i<core.children.length;i++){
             var prop=core.children[i]
             switch(prop.grade){
