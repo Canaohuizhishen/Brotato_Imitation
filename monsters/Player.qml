@@ -48,6 +48,7 @@ Item {
     }
 
     onRoleNameChanged: {
+        if(roleName==="")return
         PlayerData.init()
         var roleData=core.getRole(roleName)
         roleData.setInitRoleAttributes()

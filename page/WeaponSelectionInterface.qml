@@ -109,7 +109,7 @@ Item {
             Image {
                 width: parent.width
                 height: width
-                source: "/images/smg_icon.png"
+                source: "/images/weapon-smg.png"
                 anchors.centerIn: parent
             }
 
