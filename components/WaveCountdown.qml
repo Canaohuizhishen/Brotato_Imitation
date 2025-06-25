@@ -4,7 +4,7 @@ import singleton.PlayerData
 Item {
     id: waveCountdown
     property double scaleFactor: 1.0
-    property int totalTime: Math.min(15+PlayerData.currentWaveNumber*5,60)
+    property int totalTime: Math.min(15+PlayerData.currentWaveNumber*5,90)
     property int remainingTime: totalTime
     property bool running: PlayerData.isInCombat
     property bool active: true

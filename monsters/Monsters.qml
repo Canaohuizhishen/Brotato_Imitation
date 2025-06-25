@@ -84,6 +84,7 @@ Item {
         id: bullets
         target: monsters.target
         active: true
+        paused: monsters.paused
         scaleFactor: monsters.scaleFactor
         z: 3000
     }
@@ -178,7 +179,7 @@ Item {
             var child = monsters.children[i];
             if (child.objectName === "Monster" && !child.isDestroy) {
                 if(child.isDead===true)continue
-                if(Math.abs(target.x-child.x)<(target.width+child.width)/2 && Math.abs(target.y-child.y)<(target.height+child.height)/2){
+                if(Math.abs(target.x+target.width/2-child.x-child.width/2)<(target.width+child.width)/2 && Math.abs(target.y+target.height/2-child.y-child.height/2)<(target.height+child.height)/2){
                     return child
                 }
             }
@@ -229,44 +230,44 @@ Item {
 
     //生成n个怪物名为monsterName的怪物
     function spawnMonsters(n,monsterName) {
-            for(var i=0;i<n;i++){
-                var margin = 50
-                var x=Math.random() * (monsters.parent.width - margin*2)+margin;
-                var y=Math.random() * (monsters.parent.height - margin*2)+margin;
-                if(Tool.getDistance(Qt.point(target.x,target.y),Qt.point(x,y))<300){//离玩家太近时重新定位
-                    i--
-                    continue
-                }
-                var fork = forkParent.spawnFork()
-                fork.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-                fork.x = x
-                fork.y = y
-                fork.rotation = Math.random() * 360
-                fork.targetMonsterName=monsterName
-                fork.paused=Qt.binding(function(){return monsters.paused})
+        for(var i=0;i<n;i++){
+            var margin = 50
+            var x=Math.random() * (monsters.parent.width - margin*2)+margin;
+            var y=Math.random() * (monsters.parent.height - margin*2)+margin;
+            if(Tool.getDistance(Qt.point(target.x,target.y),Qt.point(x,y))<200){//离玩家太近时重新定位
+                i--
+                continue
             }
-            sleepTimer.start()
+            var fork = forkParent.spawnFork()
+            fork.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+            fork.x = x
+            fork.y = y
+            fork.rotation = Math.random() * 360
+            fork.targetMonsterName=monsterName
+            fork.paused=Qt.binding(function(){return monsters.paused})
+        }
+        sleepTimer.start()
     }
 
     //将场上所有的fork转换成对应的怪物
     function forksToMonsters() {
-            for (var i = 0; i < monsters.forkParent.children.length; i++) {
-                var child = monsters.forkParent.children[i]
-                if (child.objectName === "Fork" && !child.isDestroy) {
-                    var monster = spawnMonster(monsters,child.targetMonsterName)
-                    monster.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-                    monster.x = child.x
-                    monster.y = child.y
-                    monster.owner=monsters
-                    monster.target=monsters.target
-                    monster.bulletsParent=bullets
-                    monster.active=Qt.binding(function(){return monsters.active})
-                    monster.paused=Qt.binding(function(){return monsters.paused})
-                    if((monster.x-monster.target.x)>0)monster.faceLeft()
-                    else monster.faceRight()
-                    child.destroy()
-                }
+        for (var i = 0; i < monsters.forkParent.children.length; i++) {
+            var child = monsters.forkParent.children[i]
+            if (child.objectName === "Fork" && !child.isDestroy) {
+                var monster = spawnMonster(monsters,child.targetMonsterName)
+                monster.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+                monster.x = child.x+child.width/2-monster.width/2
+                monster.y = child.y+child.height/2-monster.height/2
+                monster.owner=monsters
+                monster.target=monsters.target
+                monster.bulletsParent=bullets
+                monster.active=Qt.binding(function(){return monsters.active})
+                monster.paused=Qt.binding(function(){return monsters.paused})
+                if((monster.x-monster.target.x)>0)monster.faceLeft()
+                else monster.faceRight()
+                child.destroy()
             }
+        }
     }
 
     //在parent中动态生成一个怪物名为monsterName的怪物
@@ -322,9 +323,9 @@ Item {
         }else console.log("Error loading component:", chestComponent.errorString())
     }
 
-    //在bulletsParent中怪物monster的当前位置上生成参数描述的子弹
+    //在bulletsParent中的点（x,y）位置上生成宽width高height伤害为damage射程为range攻击角度为shootAngle颜色为color的飞行子弹
     function spawnBullet(x,y,width,height,damage,range,shootAngle,color){
-        var bulletComponent = Qt.createComponent("../components/RoundBullet.qml")
+        var bulletComponent = Qt.createComponent("../components/MovingRoundBullet.qml")
         if (bulletComponent.status === Component.Ready) {
             var bullet = bulletComponent.createObject(bullets);
             bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
@@ -339,6 +340,51 @@ Item {
             bullet.speed=400
             bullet.range=range
             bullet.shootAngle=shootAngle
+        }else console.error("Error loading component:", bulletComponent.errorString())
+    }
+
+    //在bulletsParent中的点（centerX,centerY）方圆spawnR内随机生成n个宽width高height伤害为damage颜色为color存在时间为existTime的静止子弹
+    function spawnRandomStaticBullets(n,centerX,centerY,width,height,damage,color,existTime,spawnR){
+        var bulletComponent = Qt.createComponent("../components/StaticRoundBullet.qml")
+        if (bulletComponent.status === Component.Ready) {
+            for(var i=0;i<n;i++){
+                var bullet = bulletComponent.createObject(bullets);
+                var angle=360*Math.random()
+                var distance=spawnR*Math.random()
+                var x=centerX+distance*Math.cos(angle* (Math.PI/180))
+                var y=centerY+distance*Math.sin(angle* (Math.PI/180))
+                bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
+                bullet.paused=Qt.binding(function(){return monsters.paused})
+                bullet.width=width
+                bullet.height=height
+                bullet.x=x - bullet.width / 2
+                bullet.y=y - bullet.height / 2
+                bullet.color=color
+                bullet.damage=damage
+                bullet.existTime=existTime
+            }
+        }else console.error("Error loading component:", bulletComponent.errorString())
+    }
+
+    //以bulletsParent中的点（centerX,centerY）为圆心spawnR为半径生成n个宽width高height伤害为damage颜色为color存在时间为existTime的静止子弹均匀分布在圆周
+    function spawnCircularStaticBullets(n,centerX,centerY,width,height,damage,color,existTime,spawnR){
+        var bulletComponent = Qt.createComponent("../components/StaticRoundBullet.qml")
+        if (bulletComponent.status === Component.Ready) {
+            for(var i=0;i<n;i++){
+                var bullet = bulletComponent.createObject(bullets);
+                var angle=360/(n+1)*i
+                var x=centerX+spawnR*Math.cos(angle* (Math.PI/180))
+                var y=centerY+spawnR*Math.sin(angle* (Math.PI/180))
+                bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
+                bullet.paused=Qt.binding(function(){return monsters.paused})
+                bullet.width=width
+                bullet.height=height
+                bullet.x=x - bullet.width / 2
+                bullet.y=y - bullet.height / 2
+                bullet.color=color
+                bullet.damage=damage
+                bullet.existTime=existTime
+            }
         }else console.error("Error loading component:", bulletComponent.errorString())
     }
 }

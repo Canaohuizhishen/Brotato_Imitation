@@ -24,7 +24,7 @@ Image {
     property bool isMoveStoped: false
     property bool isDead: false
     property bool isDestroy: false
-    property bool isHited: false
+    property bool inHitCoolDown: false
     property bool isFaceRight: true
     property bool isFaceUp: true
     property bool moveDirectionConverse: false
@@ -231,7 +231,7 @@ Image {
         running: false
         repeat: false
         onTriggered: {
-            monster.isHited=false
+            monster.inHitCoolDown=false
         }
     }
 
@@ -292,8 +292,9 @@ Image {
     }
 
     function hit(){
-        if(isHited)return
-        else isHited=true
+        if(inHitCoolDown)return
+        else inHitCoolDown=true
+
         PlayerData.curHp-=monster.monsterData.damage
         hitingTimer.start()
     }
