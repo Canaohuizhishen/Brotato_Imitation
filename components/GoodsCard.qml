@@ -14,10 +14,11 @@ Item {
     property string cionImage : "qrc:/images/material_icon.png"
     property var itemIndex
     property var wGrade
+    // property var specificWeapon : itemData.type === "道具" ? "" : weaponCore.getWeapon(itemData.objectName, wGrade)
 
     //点击购买时发出的信号
-    signal buyRequested(int index)
-    signal locked(int index)
+    // signal buyRequested(int index)
+    // signal locked(int index)
 
     WeaponCustomizationCore {
         id: weaponCore
@@ -57,7 +58,7 @@ Item {
                 Image {
                     id: goodsImage
                     source: itemData.type === "道具" ? "/images/prop-" + itemData.objectName + ".png"
-                                                   : "/images/smg_icon.png"
+                                                   : "/images/weapon-" + itemData.objectName + ".png"
                     width: 63
                     height: 63
                     fillMode: Image.PreserveAspectFit
@@ -92,10 +93,16 @@ Item {
                 anchors.top: goodsImageBackground.bottom
                 anchors.topMargin: 5
                 anchors.left: goodsImageBackground.left
+                // text: itemData.type === "道具" ? itemData.talentText
+                //                              : specificWeapon.talentText
                 text: itemData.type === "道具" ? itemData.talentText
-                                             : weaponCore.getWeapon(itemData.objectName,wGrade).talentText
+                                             : Controller.getSpecificWeapon().talentText
                 font.pixelSize: 12
                 font.weight: Font.DemiBold
+
+                // Component.onCompleted: {
+                //     console.log(specificWeapon,"111111111111111111")
+                // }
             }
 
 
@@ -125,9 +132,13 @@ Item {
 
                         Text {
                             // text: "" + itemData.price
-                            text: "123"
+                            text: itemData.type === "道具"
+                                  ? itemData.curPrice
+                                : Controller.getSpecificWeapon().curPrice
                             // color:  //需要完善 当剩余的钱币<当前商品的价格 颜色为红色 反之为白色
-                            color: buyButton.hovered ? "black" : "white"
+                            color: ((Controller.getSpecificWeapon() && PlayerData.materialsNumber < Controller.getSpecificWeapon().curPrice)
+                                    || PlayerData.materialsNumber < itemData.curPrice)
+                                   ? "red" : (buyButton.hovered ? "black" : "white")
                             font.pixelSize: 22
                             font.bold: true
                         }
@@ -150,13 +161,27 @@ Item {
 
                 onPressed: {
                     shrinkAnimation.start()
+
                 }
 
                 onReleased: {
                     restoreAnimation.start()
-                    Controller.buyItem(itemIndex)
-                    Controller.purchaseDeduction(itemIndex)
-                    // console.log("buy ", itemIndex, "item")
+                    // if( PlayerData.materialsNumber > specificWeapon.curPrice
+                            // || PlayerData.materialsNumber > itemData.curPrice) {
+                        // Controller.buyItem(itemIndex)
+
+                    if(itemData.type === "道具") {
+                        if(Controller.buyItem(itemIndex)) {
+                            PlayerData.materialsNumber -= itemData.curPrice
+                        }
+                    } else {
+                        if(Controller.buyItem(itemIndex)) {
+                            PlayerData.materialsNumber -= Controller.getSpecificWeapon().curPrice
+                        }
+                    }
+                        // shopItem.visible = false
+                    // }
+
                 }
 
                 PropertyAnimation {

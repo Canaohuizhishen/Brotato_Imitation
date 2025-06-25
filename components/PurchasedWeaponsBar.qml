@@ -47,6 +47,7 @@ Rectangle {
 
             itemData: weaponItem
             wIndex: index
+            wGrade: weaponGrade
         }
 
     }
