@@ -173,7 +173,7 @@ QtObject {
     }
 
     function hpRegenerationPerSecond(){
-        return 0.1+0.09*hpRegeneration
+        return hpRegeneration==0 ? 0.01 : 0.1+0.09*hpRegeneration
     }
 
     function damageReduction(){

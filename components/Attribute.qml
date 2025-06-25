@@ -12,7 +12,7 @@ Item {
     property string iconSource: ""
     property string detailImage: ""
     property string attribute: ""
-    property int attributeValue:0
+    property int attributeValue: 0
     property color attributeColor: "white"
     property color valueColor: "white"
     property int fontSize: height
@@ -69,13 +69,13 @@ Item {
     }
     Popup {
         id: detailPopup
-        width: 350
-        height: 100
-        padding: 10
+        width: 350*root.scaleFactor
+        height: 100*root.scaleFactor
+        padding: 10*root.scaleFactor
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
         background: Rectangle {
             color: "#000000"
-            radius: 5
+            radius: 5*root.scaleFactor
         }
 
         x: attributeImage.x+(root.inLeft?(-width): root.width)
@@ -83,15 +83,15 @@ Item {
 
         Row {
             id: contentColumn
-            width: 350
-            height: 100
+            width: 350*root.scaleFactor
+            height: 100*root.scaleFactor
             anchors.fill: parent
-            spacing: 10
+            spacing: 10*root.scaleFactor
             Image {
                 id:poupImage
                 source: root.detailImage
-                width: 60
-                height: 60
+                width: 60*root.scaleFactor
+                height: 60*root.scaleFactor
                 fillMode: Image.PreserveAspectFit
                 anchors.verticalCenter: parent.verticalCenter
                 visible: root.detailImage
@@ -99,20 +99,21 @@ Item {
 
             // 详细描述文本（始终显示）
             Column{
-                width:240
-                spacing: 5
+                width:240*root.scaleFactor
+                spacing: 5*root.scaleFactor
                 Text {
                     id:text1
-                    width:100
+                    width:100*root.scaleFactor
                     text:root.attribute
                     color: "white"
+                    font.pixelSize: 14*root.scaleFactor
                 }
                 Text {
                     width:parent.width
                     text: root.detailDescription
                     color: "white"
                     wrapMode: Text.Wrap
-                    font.pixelSize: 14
+                    font.pixelSize: 14*root.scaleFactor
                     visible: text !== ""
                 }
             }
