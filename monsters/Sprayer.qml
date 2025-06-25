@@ -194,7 +194,7 @@ Monster{
                             OpacityAnimator {
                                 target: redOverlay
                                 from: 0
-                                to: 0.9
+                                to: 0.55
                                 duration: 600
                                 onStopped: {
                                     redOverlay.destroy()
@@ -202,7 +202,7 @@ Monster{
                             }
                             OpacityAnimator {
                                 target: redOverlay
-                                from: 0.9
+                                from: 0.55
                                 to: 0
                                 duration: 200
                                 onStopped: {

@@ -19,8 +19,8 @@ Image {
     width: imageWidth*scaleFactor
     height: imageHeight*scaleFactor
     z: 2
-    property bool active: true
-    property bool paused: false
+    property bool active: owner.active
+    property bool paused: owner.paused
     property bool isMoveStoped: false
     property bool isDead: false
     property bool isDestroy: false

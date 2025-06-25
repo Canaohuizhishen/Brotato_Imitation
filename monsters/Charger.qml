@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import "../tool.js" as Tool
+import "../components"
 
 Monster{
     id: charger
@@ -12,6 +13,16 @@ Monster{
 
     onIsDeadChanged: {
         if(chargeAnimation.running)chargeAnimation.pause()
+    }
+
+    onPausedChanged: {
+        if(paused==true){
+            coolDownTimer.pause()
+            chargeAnimation.pause()
+        }else{
+            coolDownTimer.resume()
+            chargeAnimation.resume()
+        }
     }
 
     function charge(){
@@ -46,7 +57,7 @@ Monster{
                             OpacityAnimator {
                                 target: redOverlay
                                 from: 0
-                                to: 0.9
+                                to: 0.7
                                 duration: 600
                                 onStopped: {
                                     redOverlay.destroy()
@@ -54,7 +65,7 @@ Monster{
                             }
                             OpacityAnimator {
                                 target: redOverlay
-                                from: 0.9
+                                from: 0.7
                                 to: 0
                                 duration: 200
                                 onStopped: {
@@ -71,7 +82,7 @@ Monster{
     Timer {
         id: checkTimer
         interval: 150
-        running: !charger.isCharging && !charger.inChargeCoolDown
+        running: !charger.isCharging && !charger.inChargeCoolDown && !charger.paused
         repeat: true
         onTriggered: {
             var inAttackRange=Tool.getDistance(Qt.point(charger.x,charger.y),Qt.point(charger.target.x,charger.target.y))<charger.core.attackRange
@@ -79,7 +90,7 @@ Monster{
         }
     }
 
-    Timer {
+    TimerCanPause {
         id: coolDownTimer
         interval: 800
         running: false
@@ -127,11 +138,15 @@ Monster{
             charger.faceTarget=true
             running=false
         }
+
+        function pause(){
+            if(running)paused=true
+        }
     }
 
     Timer {
         id: collisionDetectionTimer
-        interval: charger.interval; running: chargeAnimation.running; repeat: true
+        interval: charger.interval; running: chargeAnimation.running &&!charger.paused; repeat: true
         onTriggered: {
             if (Tool.getDistance(Qt.point(charger.x,charger.y),Qt.point(charger.target.x,charger.target.y)) < charger.target.width/2) {//已碰撞
                 charger.hit()
