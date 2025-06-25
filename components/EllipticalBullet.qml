@@ -19,6 +19,8 @@ Canvas {
     property double shootAngle: 0
     rotation: -shootAngle
     property bool isDestroy: false
+    property bool canPaintBullet: true //可以画出子弹的布尔值
+    property bool hitNotDestroy: false //击中目标后不会销毁的布尔值
 
     onPausedChanged: {
         if(paused==true){
@@ -40,17 +42,7 @@ Canvas {
     }
 
     onPaint: {
-        var ctx = getContext("2d")
-        var gradient = ctx.createRadialGradient(
-                    width / 2, height / 2, 0,
-                    width / 2, height / 2, Math.max(width / 2, height / 2)
-                    )
-        gradient.addColorStop(0.64, Qt.rgba(bullet.color.r, bullet.color.g, bullet.color.b, 1))
-        gradient.addColorStop(1, Qt.rgba(bullet.color.r, bullet.color.g, bullet.color.b, 0))
-        ctx.fillStyle = gradient
-        ctx.beginPath()
-        ctx.ellipse(0, 0, width, height) // 绘制椭圆
-        ctx.fill()
+        if(canPaintBullet)paintBullet()
     }
     Component.onCompleted: {
         shoot.start()
@@ -96,5 +88,19 @@ Canvas {
         function resume(){
             paused=false
         }
+    }
+
+    function paintBullet(){
+        var ctx = getContext("2d")
+        var gradient = ctx.createRadialGradient(
+                    width / 2, height / 2, 0,
+                    width / 2, height / 2, Math.max(width / 2, height / 2)
+                    )
+        gradient.addColorStop(0.64, Qt.rgba(bullet.color.r, bullet.color.g, bullet.color.b, 1))
+        gradient.addColorStop(1, Qt.rgba(bullet.color.r, bullet.color.g, bullet.color.b, 0))
+        ctx.fillStyle = gradient
+        ctx.beginPath()
+        ctx.ellipse(0, 0, width, height) // 绘制椭圆
+        ctx.fill()
     }
 }

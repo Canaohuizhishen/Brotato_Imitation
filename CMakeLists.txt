@@ -52,7 +52,7 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Brute.qml
     QML_FILES components/TimerCanPause.qml
     QML_FILES components/EllipticalBullet.qml
-    QML_FILES components/RoundBullet.qml
+    QML_FILES components/MovingRoundBullet.qml
     QML_FILES page/ShopScreen.qml
     QML_FILES logic/ShopLogicHandler.js
     QML_FILES components/PurchasedPropsBar.qml
@@ -78,6 +78,9 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/HelmetBrute.qml
     QML_FILES monsters/HelmetCharger.qml
     QML_FILES monsters/FinChaser.qml
+    QML_FILES monsters/Prayer.qml
+    QML_FILES components/StaticRoundBullet.qml
+    QML_FILES components/RoundBullet.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

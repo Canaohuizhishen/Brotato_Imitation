@@ -105,11 +105,12 @@ Item {
             difficultySelectionInterface.visible=false
             gameArea.player.roleName=""
             gameArea.player.roleName=selectedRoleName
-            PlayerData.addWeapon(selectedWeaponName,1)
+            for(var i=0;i<1;i++)PlayerData.addWeapon(selectedWeaponName,1)
             gameArea.monsters.difficulty=selectedDifficulty
             PlayerData.isInCombat=true
             inSelectInterface=false
             paused=false
+            //PlayerData.currentWaveNumber=20
         }
         backButton.onClicked: {
             init()
@@ -131,6 +132,7 @@ Item {
                 drops.allFruitsToPlayer(player)
                 drops.allChestToPlayer(player)
             }
+            //monsters.spawnMonsters(1,"prayer")
         }
     }
 

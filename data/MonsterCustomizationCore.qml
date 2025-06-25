@@ -17,6 +17,7 @@ Item {
     property alias scavenger:scavenger
     property alias helmetBrute: helmetBrute
     property alias helmetCharger: helmetCharger
+    property alias prayer: prayer
 
     onWaveNumberChanged: {
         init()
@@ -137,6 +138,7 @@ Item {
             finChaser.initCount=3
             summoner.initCount=1
             helmetBrute.initCount=2
+            prayer.initCount=1
         }break;
         }
     }
@@ -472,6 +474,33 @@ Item {
         property double initCount: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
+
+        function init(){
+            initCount=0
+            countRation=1
+        }
+    }
+
+    Item{
+        id: prayer
+        objectName: "prayer"
+        property string monsterName: "祈祷者"
+        readonly property string source: "Prayer.qml"
+        readonly property int attackRange: 10000
+
+        readonly property int initHp: 29900
+        readonly property double hpBonus: 0
+        readonly property int initVelocity: 175*core.velocityRate
+        readonly property int maxVelocity: 175*core.velocityRate
+        readonly property int initDamage: 30
+        readonly property double damageBonus: 1.5
+        readonly property int materialDrops: 10
+        readonly property double consumableDropRate: 0*(1+PlayerData.luck/100)
+        readonly property double chestDropRate: 0*(1+PlayerData.luck/100)
+
+        property double initCount: 0
+        property double countRation: 1
+        readonly property double countIcreaseRation: -1
 
         function init(){
             initCount=0

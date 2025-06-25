@@ -9,11 +9,12 @@ Item {
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
     property bool active: true
+    property bool paused: false
 
     Timer {
         id: collidingTimer
         interval: 30
-        running: bullets.active
+        running: bullets.active && !bullets.paused
         repeat: true
         onTriggered: {
             for(var i=0;i<bullets.children.length;i++){
@@ -23,13 +24,16 @@ Item {
                         var monster=bullets.target.getCollidingChild(child)
                         if(monster!==null){
                             monster.onHit(child)
-                            child.destroy()
+                            if(!child.hitNotDestroy)child.destroy()
                         }
                     }else if(bullets.target.objectName==="Player"){
                         var player=bullets.target
-                        if(Math.abs(bullets.target.x-child.x)<(bullets.target.width+child.width)/2 && Math.abs(bullets.target.y-child.y)<(bullets.target.height+child.height)/2){
-                            player.onHit(child)
-                            child.destroy()
+                        if(Math.abs(bullets.target.x+bullets.target.width/2-child.x-child.width/2)<(bullets.target.width+child.width)/2 && Math.abs(bullets.target.y+bullets.target.height/2-child.y-child.height/2)<(bullets.target.height+child.height)/2){
+                            if(!child.inHitCoolDown){
+                                player.onHit(child)
+                                if(!child.hitNotDestroy)child.destroy()
+                                else child.inHitCoolDown=true
+                            }
                         }
                     }
                 }
