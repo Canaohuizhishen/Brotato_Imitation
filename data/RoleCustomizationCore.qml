@@ -6,9 +6,11 @@ Item {
 
     function getRole(roleName){
         for(var i=0;i<core.children.length;i++){
-            if(core.children[i].objectName===roleName || core.children[i].roleName===roleName)break
+            if(core.children[i].objectName===roleName || core.children[i].roleName===roleName){
+                return core.children[i]
+            }
         }
-        return core.children[i]
+        console.error("roleName: ",roleName,"not found")
     }
 
     Item{

@@ -307,6 +307,8 @@ Item {
         gameArea.paused=Qt.binding(function(){return paused})
         upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
         chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
+        gameArea.player.roleName=""
+        gameArea.player.roleName=difficultySelectionInterface.selectedRoleName
         PlayerData.isInCombat=true
         paused=false
     }
