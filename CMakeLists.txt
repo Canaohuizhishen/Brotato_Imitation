@@ -72,6 +72,12 @@ qt_add_qml_module(appBrotato
     QML_FILES page/SettlementInterface.qml
     QML_FILES page/SettingInterface.qml
     QML_FILES components/Forks.qml
+    QML_FILES monsters/HelmetAlien.qml
+    QML_FILES monsters/Summoner.qml
+    QML_FILES monsters/Scavenger.qml
+    QML_FILES monsters/HelmetBrute.qml
+    QML_FILES monsters/HelmetCharger.qml
+    QML_FILES monsters/FinChaser.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)
