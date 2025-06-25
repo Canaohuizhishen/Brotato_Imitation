@@ -87,7 +87,7 @@ Item {
         id: hpRegenerationTimer
         interval: 1000; running: PlayerData.isInCombat; repeat: true
         onTriggered: {
-            PlayerData.hpRegeneratPerSecond()
+            PlayerData.curHp+=PlayerData.hpRegenerationPerSecond()
         }
     }
 

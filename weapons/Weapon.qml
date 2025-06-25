@@ -3,9 +3,8 @@ import "../tool.js" as Tool
 import "../components"
 import "../data"
 
-Image {
+Item {
     id: weapon
-    source: "/images/"+weapon.weaponName+"_faceRight.png"
     objectName: "Weapon"
     property string weaponName
     property int grade: 1
@@ -41,6 +40,23 @@ Image {
         if(targetPoint!=null)aimToTarget()
         else rotationReset()
     }
+
+    Image{
+        id: weaponIcon
+        source: weapon.grade>1 ? "/images/"+weapon.weaponName+"-mask-"+weapon.grade+(weaponIcon.isRight ? "_faceRight.png" : "_faceLeft.png") : ""
+        width: weapon.width
+        height: width*core.aspectRatio*1.05
+        anchors.centerIn: weapon
+        property bool isRight: true
+
+        Image{
+            source: "/images/"+weapon.weaponName+(weaponIcon.isRight ? "_faceRight.png" : "_faceLeft.png")
+            width: weapon.width*0.9
+            height: width*core.aspectRatio
+            anchors.centerIn: parent
+        }
+    }
+
 
     WeaponCustomizationCore{
         id: weaponCore
@@ -105,13 +121,13 @@ Image {
 
     function faceLeft(){
         if(!isFaceRight)return
-        weapon.source="/images/"+weapon.weaponName+"_faceLeft.png"
+        weaponIcon.isRight=false
         isFaceRight=false
     }
 
     function faceRight(){
         if(isFaceRight)return
-        weapon.source="/images/"+weapon.weaponName+"_faceRight.png"
+        weaponIcon.isRight=true
         isFaceRight=true
     }
 

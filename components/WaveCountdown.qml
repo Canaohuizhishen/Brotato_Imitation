@@ -22,9 +22,15 @@ Item {
     }
     onRunningChanged: {
         if(running==true){
-            //console.log(PlayerData.lastWaveNumber,PlayerData.currentWaveNumber)
             PlayerData.currentWaveNumber++
             remainingTime=totalTime
+        }else{
+            if(PlayerData.currentWaveNumber>1 && PlayerData.lastWaveNumber<PlayerData.currentWaveNumber){
+                PlayerData.curXp+=PlayerData.harvesting
+                PlayerData.materialsNumber+=PlayerData.harvesting
+                PlayerData.harvesting=Math.ceil(PlayerData.harvesting*1.05)
+                PlayerData.lastWaveNumber=PlayerData.currentWaveNumber
+            }
         }
     }
 

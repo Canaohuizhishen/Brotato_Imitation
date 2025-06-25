@@ -25,9 +25,9 @@
         <file>images/back.png</file>
         <file>images/prop-fuel_tank.png</file>
         <file>images/charger_faceLeft.png</file>
-        <file>images/weapon-smg.png</file>
         <file>images/chest_blue.png</file>
         <file>images/smg_icon3.png</file>
+        <file>images/smg-mask-4_faceRight.png</file>
         <file>images/material7.png</file>
         <file>images/attribute-elementalDamage.png</file>
         <file>images/chest_green.png</file>
@@ -41,6 +41,7 @@
         <file>images/prop-acid_liquor.png</file>
         <file>images/prop-brain_injury.png</file>
         <file>images/attribute-hpRegeneration.png</file>
+        <file>images/smg-mask-3_faceLeft.png</file>
         <file>images/prop-alloy.png</file>
         <file>images/prop-shmoop.png</file>
         <file>images/attribute-meleeDamage.png</file>
@@ -108,6 +109,7 @@
         <file>images/prop-terrifying_onion.png</file>
         <file>images/prop-boiling_water.png</file>
         <file>images/prop-guard_helmet.png</file>
+        <file>images/weapon-smg.png</file>
         <file>images/prop-alien_magic.png</file>
         <file>images/leg.png</file>
         <file>images/wellRounded_faceRight.png</file>
@@ -126,6 +128,7 @@
         <file>images/babyAlien_mask_faceRight.png</file>
         <file>images/prop-bat.png</file>
         <file>images/brute_redMask_faceLeft.png</file>
+        <file>images/smg-mask-3_faceRight.png</file>
         <file>images/prop-coffee.png</file>
         <file>images/prop-glass_cannon.png</file>
         <file>images/prop-book.png</file>
@@ -136,6 +139,8 @@
         <file>images/attribute-damage.png</file>
         <file>images/chaser_faceLeft.png</file>
         <file>images/prop-gear.png</file>
+        <file>images/smg-mask-2_faceRight.png</file>
+        <file>images/smg-mask-2_faceLeft.png</file>
         <file>images/attribute-harvesting.png</file>
         <file>images/mutant_faceLeft.png</file>
         <file>images/teeth.png</file>
@@ -163,6 +168,7 @@
         <file>images/attribute-maxHp.png</file>
         <file>images/charger_faceRight.png</file>
         <file>images/stone1.png</file>
+        <file>images/smg-mask-4_faceLeft.png</file>
         <file>images/upgrade_icon.png</file>
         <file>images/smg_faceRight.png</file>
         <file>images/chest_red.png</file>
