@@ -46,7 +46,7 @@ Item {
 
     Row{
         anchors.centerIn: chestOpeningInterface
-        spacing: 170
+        spacing: 170*chestOpeningInterface.scaleFactor
 
         AttributePanel{
             id: attributePanel
@@ -58,21 +58,22 @@ Item {
         PropCard{
             id: propCard
             propName: chestNotificationBar.number ? chestNotificationBar.chests.get(0).propName : ""
+            scaleFactor: chestOpeningInterface.scaleFactor
             anchors.verticalCenter: parent.verticalCenter
         }
 
         Column{
-            spacing: 50
+            spacing: 50*chestOpeningInterface.scaleFactor
             anchors.verticalCenter: parent.verticalCenter
 
             Button{
                 id: getButton
                 text: "拿取"
-                width: 230
+                width: 230*chestOpeningInterface.scaleFactor
                 height: width/4
                 background: Rectangle {
                     color: getButton.pressed || getButton.hovered ? "white" : "black"
-                    radius: 4
+                    radius: 4*chestOpeningInterface.scaleFactor
                 }
                 contentItem: Text {
                     text: getButton.text
@@ -95,14 +96,14 @@ Item {
                 height: width/4
                 background: Rectangle {
                     color: recycleButton.pressed || recycleButton.hovered ? "white" : "black"
-                    radius: 4
+                    radius: 4*chestOpeningInterface.scaleFactor
                 }
                 Row {
-                    spacing: 8
+                    spacing: 8*chestOpeningInterface.scaleFactor
                     anchors.centerIn: recycleButton
                     Image {
                         source: "qrc:/images/material_icon.png"
-                        width: 30
+                        width: 30*chestOpeningInterface.scaleFactor
                         height: width
                     }
                     Text {
