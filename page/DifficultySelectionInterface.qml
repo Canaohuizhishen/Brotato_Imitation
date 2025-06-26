@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
+import singleton.PlayerData
 import "../components"
 
 Item {
@@ -19,9 +20,9 @@ Item {
 
     function init(){
         visible=false
+        selectedRoleName=""
+        selectedWeaponName=""
         selectedDifficulty=""
-        difficultyCard.difficulty=""
-        difficultyRow.selectedObjectName=risk0.objectName
     }
 
     Rectangle {
@@ -63,107 +64,69 @@ Item {
 
     DifficultyCard{
         id: difficultyCard
-        //visible: false
         scaleFactor: difficultySelectionInterface.scaleFactor
-        //difficulty: difficultySelectionInterface.selectedDifficulty
+        difficulty: difficultyRow.currentItemIsDifficulty ? difficultyRow.currentItem.name : ""
         anchors.left: weaponCard.right
         anchors.leftMargin: 6*difficultySelectionInterface.scaleFactor
     }
 
     LockCard{
         id: lockCard
-        visible: {
-            for(var i=0;i<difficultyRow.children.length;i++){
-                if(difficultyRow.children[i].objectName==difficultyRow.selectedObjectName){
-                    return difficultyRow.children[i].isLocked
-                }
-            }
-            return false
-        }
+        visible: !difficultyRow.currentItemIsDifficulty
         anchors.left: weaponCard.right
         anchors.leftMargin: 6*difficultySelectionInterface.scaleFactor
     }
 
-    RowLayout {
+    GridView {
         id: difficultyRow
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 165*difficultySelectionInterface.scaleFactor
-        spacing: 5*difficultySelectionInterface.scaleFactor
-        property string selectedObjectName
-        property  double cellWidth: 60*difficultySelectionInterface.scaleFactor
-        property  double cellHeight: cellWidth
-
-        Component.onCompleted: {
-            var maxDifficultyNum='0'
-            var targetChild
-            for(var i=0;i<difficultyRow.children.length;i++){
-                if(!difficultyRow.children[i].isLocked && difficultyRow.children[i].objectName[0]>=maxDifficultyNum){
-                    targetChild=difficultyRow.children[i]
-                    maxDifficultyNum=targetChild.objectName[0]
+        anchors.horizontalCenterOffset: spacing/2
+        anchors.top: weaponCard.bottom
+        anchors.topMargin: 25*difficultySelectionInterface.scaleFactor
+        width: cellWidth*5
+        height:  cellHeight
+        property int spacing: 5*difficultySelectionInterface.scaleFactor
+        cellWidth: 68*difficultySelectionInterface.scaleFactor
+        cellHeight: cellWidth
+        interactive: false
+        property int canUsedDifficultyNumber: PlayerData.maxDifficultyCompleted+2
+        property bool currentItemIsDifficulty: currentItem===null ? false : currentItem.name!=="lock"
+        model: ListModel{
+            Component.onCompleted: {
+                for(var i=0;i<difficultyRow.canUsedDifficultyNumber;i++){
+                    append({ name: i.toString()});
+                }
+                while(difficultyRow.count<5){
+                    append({ name: "lock"});
                 }
             }
-            targetChild.click()
         }
 
-        Button {
-            id: risk0
-            objectName: "0"
-            property bool isLocked: false
-            Layout.preferredWidth: difficultyRow.cellWidth
-            Layout.preferredHeight: difficultyRow.cellHeight
+        delegate: Button {
+            required property string name
+            required property int index
+            width: difficultyRow.cellWidth-difficultyRow.spacing
+            height: width
             background: Rectangle {
-                color: parent.pressed || parent.hovered || difficultyRow.selectedObjectName == parent.objectName ? "#cfcfcf" : "#222222"
-                radius: 4
+                color: pressed || hovered || difficultyRow.currentIndex===index ? (name==="lock" ? "#7e7e7e" : "#cfcfcf") : (name==="lock" ? "#292929" : "#222222")
+                radius: 4*difficultySelectionInterface.scaleFactor
             }
-
             Image {
-                width: parent.width*0.8
+                width: parent.width*(name==="lock" ? 0.9 : 1)
                 height: width
-                source: parent.pressed || parent.hovered || difficultyRow.selectedObjectName == parent.objectName ? "/images/0.png":"/images/02.png"
+                source: name==="lock" && (pressed || hovered || difficultyRow.currentIndex===index) ? "/images/icon_lock_white.png" : "/images/icon_"+name+".png"
                 anchors.centerIn: parent
             }
-
             onClicked: {
-                if(difficultyRow.selectedObjectName == objectName){
-                    difficultySelectionInterface.selectedDifficulty = difficultyRow.selectedObjectName
-                    //console.log(difficultyCard.)
-                    difficultySelectionInterface.selected()
+                if(name==="lock"){
+                    difficultyRow.currentIndex=index
                 }else {
-                    difficultyRow.selectedObjectName = objectName
-                    difficultyCard.difficulty = objectName
-                }
-            }
-        }
-
-        Button {
-            id: risk1
-            objectName: "1"
-            property bool isLocked: true
-            Layout.preferredWidth: difficultyRow.cellWidth
-            Layout.preferredHeight: difficultyRow.cellHeight
-            background: Rectangle {
-                color: parent.pressed || parent.hovered || difficultyRow.selectedObjectName == parent.objectName ? (parent.isLocked ? "#7e7e7e" :"#cfcfcf") : (parent.isLocked ? "#292929" : "#222222")
-                radius: 4
-            }
-
-            Image {
-                width: parent.width*0.64
-                height: width*1.305
-                source: parent.pressed || parent.hovered || difficultyRow.selectedObjectName == parent.objectName ? (parent.isLocked ? "/images/lock.png" : "/images/1.png") : (parent.isLocked ? "/images/lock2.png" : "/images/12.png")
-                anchors.centerIn: parent
-            }
-
-            onClicked: {
-                if(isLocked){
-                    difficultyRow.selectedObjectName = objectName
-                    difficultyCard.difficulty = ""
-                }else if(difficultyRow.selectedObjectName == objectName){
-                    difficultySelectionInterface.selectedDifficulty = difficultyRow.selectedObjectName
-                    difficultySelectionInterface.selected()
-                }else {
-                    difficultyRow.selectedObjectName = objectName
-                    difficultyCard.difficulty = objectName
+                    if(difficultyRow.currentIndex === index){
+                        difficultySelectionInterface.selectedDifficulty = name
+                        difficultySelectionInterface.selected()
+                    }else {
+                        difficultyRow.currentIndex=index
+                    }
                 }
             }
         }

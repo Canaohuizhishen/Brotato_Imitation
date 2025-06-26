@@ -34,7 +34,7 @@ Rectangle {
 
     Text{
         text: "通关最高难度"
-        color: "#dad2a4"
+        color: "#ffffc0"
         font.pixelSize: 15*recardCard.scaleFactor
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top

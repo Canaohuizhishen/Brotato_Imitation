@@ -139,7 +139,7 @@ Rectangle {
                 }
                 Text {
                     text: root.subtitle
-                    color: "yellow"
+                    color: "#ffffc0"
                     font.pixelSize: 15*root.scaleFactor
                 }
             }

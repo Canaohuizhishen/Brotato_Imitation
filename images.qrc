@@ -11,7 +11,6 @@
         <file>images/babyAlien_faceRight.png</file>
         <file>images/babyAlien_mask_faceLeft.png</file>
         <file>images/edge.png</file>
-        <file>images/wellRounded_avatar2.png</file>
         <file>images/material3.png</file>
         <file>images/helmetBrute_redMask_faceRight.png</file>
         <file>images/attribute-critChance.png</file>
@@ -25,7 +24,6 @@
         <file>images/prop-glasses.png</file>
         <file>images/startInterface.png</file>
         <file>images/summoner_mask_faceRight.png</file>
-        <file>images/smg_icon2.png</file>
         <file>images/startInterface3.png</file>
         <file>images/material_icon.png</file>
         <file>images/back.png</file>
@@ -33,11 +31,12 @@
         <file>images/charger_faceLeft.png</file>
         <file>images/helmetAlien_mask_faceLeft.png</file>
         <file>images/prayer_redMask_faceLeft.png</file>
+        <file>images/icon_lock_white.png</file>
         <file>images/chest_blue.png</file>
         <file>images/helmetCharger_redMask_faceRight.png</file>
-        <file>images/smg_icon3.png</file>
         <file>images/smg-mask-4_faceRight.png</file>
         <file>images/material7.png</file>
+        <file>images/icon_smg.png</file>
         <file>images/attribute-elementalDamage.png</file>
         <file>images/chest_green.png</file>
         <file>images/hand.png</file>
@@ -63,7 +62,6 @@
         <file>images/nose.png</file>
         <file>images/helmetBrute_faceLeft.png</file>
         <file>images/prop-patch.png</file>
-        <file>images/wellRounded_avatar.png</file>
         <file>images/sprayer_mask_faceRight.png</file>
         <file>images/attribute-lifeSteal.png</file>
         <file>images/pursuer_faceLeft.png</file>
@@ -86,7 +84,6 @@
         <file>images/prop-propeller_hat.png</file>
         <file>images/prop-clover.png</file>
         <file>images/heart.png</file>
-        <file>images/mutant_avatar2.png</file>
         <file>images/attribute-attackSpeed.png</file>
         <file>images/pursuer_mask_faceLeft.png</file>
         <file>images/sprayer_redMask_faceLeft.png</file>
@@ -95,17 +92,17 @@
         <file>images/brute_faceLeft.png</file>
         <file>images/prayer_faceRight.png</file>
         <file>images/prop-master.png</file>
-        <file>images/mutant_avatar3.png</file>
         <file>images/helmetCharger_redMask_faceLeft.png</file>
+        <file>images/icon_lock.png</file>
         <file>images/brute_mask_faceRight.png</file>
         <file>images/lock3.png</file>
-        <file>images/wellRounded_avatar3.png</file>
         <file>images/material5.png</file>
         <file>images/chest.png</file>
         <file>images/prop-campfire.png</file>
         <file>images/startInterface2.png</file>
         <file>images/helmetAlien_mask_faceRight.png</file>
         <file>images/babyAlien_faceLeft.png</file>
+        <file>images/icon_wellRounded.png</file>
         <file>images/eyes.png</file>
         <file>images/prop-defective_steroids.png</file>
         <file>images/lock.png</file>
@@ -148,6 +145,7 @@
         <file>images/attribute-speed.png</file>
         <file>images/helmetAlien_faceRight.png</file>
         <file>images/prop-yarmulke.png</file>
+        <file>images/icon_mutant.png</file>
         <file>images/pursuer_faceRight.png</file>
         <file>images/prop-break_through.png</file>
         <file>images/babyAlien_mask_faceRight.png</file>
@@ -175,6 +173,7 @@
         <file>images/prop-flag.png</file>
         <file>images/helmetCharger_faceLeft.png</file>
         <file>images/prop-medal.png</file>
+        <file>images/icon_question.png</file>
         <file>images/prayer_mask_faceLeft.png</file>
         <file>images/helmetCharger_mask_faceRight.png</file>
         <file>images/prop-toxic_tonics.png</file>
@@ -200,7 +199,7 @@
         <file>images/material8.png</file>
         <file>images/sprayer_faceRight.png</file>
         <file>images/stone2.png</file>
-        <file>images/mutant_avatar.png</file>
+        <file>images/icon_0.png</file>
         <file>images/attribute-maxHp.png</file>
         <file>images/charger_faceRight.png</file>
         <file>images/stone1.png</file>

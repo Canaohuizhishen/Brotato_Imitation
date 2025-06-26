@@ -106,7 +106,7 @@ Item {
             gameArea.player.roleName=""
             gameArea.player.roleName=selectedRoleName
             for(var i=0;i<1;i++)PlayerData.addWeapon(selectedWeaponName,1)
-            gameArea.monsters.difficulty=selectedDifficulty
+            PlayerData.curDifficulty=selectedDifficulty
             PlayerData.isInCombat=true
             inSelectInterface=false
             paused=false

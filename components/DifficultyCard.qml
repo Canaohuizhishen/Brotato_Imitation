@@ -10,11 +10,11 @@ Rectangle {
     width: 250*scaleFactor
     height: width*1.4359
     color: "black"
-    radius: 4
+    radius: 4*difficultyCard.scaleFactor
 
     Rectangle {
         id: difficultyIcon
-        width: 68
+        width: 68*difficultyCard.scaleFactor
         height: width
         anchors.left: parent.left
         anchors.leftMargin: 12*difficultyCard.scaleFactor
@@ -24,9 +24,9 @@ Rectangle {
         radius: 4
 
         Image {
-            width: parent.width*0.72
+            width: parent.width
             height: width
-            source: difficultyCard.difficulty == "" ? "" : "/images/"+difficultyCard.difficulty+"3.png"
+            source: difficultyCard.difficulty == "" ? "" : "/images/icon_"+difficultyCard.difficulty+".png"
             anchors.centerIn: parent
         }
     }
@@ -43,7 +43,7 @@ Rectangle {
 
     Text{
         text: "难度"
-        color: "#dad2a4"
+        color: "#ffffc0"
         font.pixelSize: 15*difficultyCard.scaleFactor
         anchors.left: parent.left
         anchors.leftMargin: difficultyIcon.width+20*difficultyCard.scaleFactor

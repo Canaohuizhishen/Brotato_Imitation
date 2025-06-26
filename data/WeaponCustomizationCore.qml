@@ -95,10 +95,10 @@ Item {
         readonly property double iconHeightOffset: 16
         readonly property string type: "枪械"
         readonly property string talentText: `
-        <font color='#dad2a4'>伤害 : </font><font color='white'>`+damage+`(+50%远程伤害)</font><br>
-        <font color='#dad2a4'>暴击 : </font><font color='white'>x1.5(`+critical+`%概率)</font><br>
-        <font color='#dad2a4'>冷却 : </font><font color='white'>`+cooldown+`</font><br>
-        <font color='#dad2a4'>范围 : </font><font color='white'>`+range+`(远战)</font><br>
+        <font color='#ffffc0'>伤害 : </font><font color='white'>`+damage+`(+50%远程伤害)</font><br>
+        <font color='#ffffc0'>暴击 : </font><font color='white'>x1.5(`+critical+`%概率)</font><br>
+        <font color='#ffffc0'>冷却 : </font><font color='white'>`+cooldown+`</font><br>
+        <font color='#ffffc0'>范围 : </font><font color='white'>`+range+`(远战)</font><br>
         `
         onGradeChanged: {
             switch(grade){

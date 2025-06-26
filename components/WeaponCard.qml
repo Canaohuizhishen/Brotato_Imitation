@@ -4,6 +4,7 @@ import "../data"
 Rectangle {
     id: weaponCard
     property string weaponName
+    property var core: weaponName == "" ? weaponCore.smg : weaponCore.getWeapon(weaponName)
     property double scaleFactor: 1.0
     visible: weaponName != ""
     anchors.top: parent.top
@@ -11,7 +12,7 @@ Rectangle {
     width: 250*scaleFactor
     height: width*1.4359
     color: "black"
-    radius: 4
+    radius: 4*scaleFactor
 
     Rectangle {
         id: weaponIcon
@@ -22,18 +23,18 @@ Rectangle {
         anchors.top: parent.top
         anchors.topMargin: 12*weaponCard.scaleFactor
         color: "#323232"
-        radius: 4
+        radius: 4*weaponCard.scaleFactor
 
         Image {
-            width: parent.width*0.9
+            width: parent.width
             height: width
-            source: weaponCard.weaponName == "" ? "" : "/images/weapon-"+weaponCard.weaponName+".png"
+            source: weaponCard.weaponName == "" ? "" : "/images/icon_"+weaponCard.weaponName+".png"
             anchors.centerIn: parent
         }
     }
 
     Text{
-        text: weaponCard.weaponName == "" ? "" : core.getWeapon(weaponCard.weaponName).weaponName
+        text: weaponCard.weaponName == "" ? "" : core.weaponName
         color: "white"
         font.pixelSize: 18*weaponCard.scaleFactor
         anchors.left: parent.left
@@ -43,8 +44,8 @@ Rectangle {
     }
 
     Text{
-        text: weaponCard.weaponName=="" ? "" : core.getWeapon(weaponCard.weaponName).type
-        color: "#dad2a4"
+        text: weaponCard.weaponName=="" ? "" : core.type
+        color: "#ffffc0"
         font.pixelSize: 15*weaponCard.scaleFactor
         anchors.left: parent.left
         anchors.leftMargin: weaponIcon.width+20*weaponCard.scaleFactor
@@ -53,11 +54,11 @@ Rectangle {
     }
 
     WeaponCustomizationCore{
-        id: core
+        id: weaponCore
     }
 
     TextEdit {
-        text: weaponCard.weaponName=="" ? "" : core.getWeapon(weaponCard.weaponName).talentText
+        text: weaponCard.weaponName=="" ? "" : core.talentText
         font.pixelSize: 14*weaponCard.scaleFactor
         readOnly: true
         textFormat: TextEdit.RichText
