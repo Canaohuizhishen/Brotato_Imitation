@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "../components"
+import "../data"
 
 Item {
     id: roleSelectionInterface
@@ -18,8 +19,6 @@ Item {
     function init(){
         visible=false
         selectedRoleName=""
-        roleCard.roleName=""
-        roleGrid.selectedObjectName=randomSelect.objectName
     }
 
     Rectangle {
@@ -46,6 +45,7 @@ Item {
 
     RoleCard {
         id: roleCard
+        roleName: roleGrid.currentItemIsRole ? roleGrid.currentItem.name : ""
         scaleFactor: roleSelectionInterface.scaleFactor
         anchors.right: parent.horizontalCenter
         anchors.rightMargin: 3*roleCard.scaleFactor
@@ -60,128 +60,68 @@ Item {
     LockCard {
         id: lockCard
         scaleFactor: roleSelectionInterface.scaleFactor
-        visible: roleGrid.selectedObjectName.substring(0, 4)=="lock"
+        visible: roleGrid.currentItem.name==="lock"
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
-    Grid {
+    RoleCustomizationCore{
+        id: roleCore
+    }
+
+    GridView {
         id: roleGrid
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 36*roleSelectionInterface.scaleFactor
-        columns: 15
-        spacing: 5*roleSelectionInterface.scaleFactor
-        property string selectedObjectName: randomSelect.objectName
-        property  double cellWidth: 60*roleSelectionInterface.scaleFactor
-        property  double cellHeight: cellWidth
-
-        Button {
-            id: randomSelect
-            objectName: "随机角色"
-            width: roleGrid.cellWidth
-            height: roleGrid.cellHeight
-            background: Rectangle {
-                color: randomSelect.pressed || randomSelect.hovered || roleGrid.selectedObjectName == randomSelect.objectName ? "#cfcfcf" : "#222222"
-                radius: 4
+        anchors.horizontalCenterOffset: spacing/2
+        anchors.top: roleCard.bottom
+        anchors.topMargin: 25*roleSelectionInterface.scaleFactor
+        width: cellWidth*17
+        height:  cellHeight*3
+        property int spacing: 5*roleSelectionInterface.scaleFactor
+        cellWidth: 68*roleSelectionInterface.scaleFactor
+        cellHeight: cellWidth
+        interactive: false
+        property int canUsedRoleNumber: roleCore.children.length
+        property bool currentItemIsRole: currentItem.name!=="question" && currentItem.name!=="lock"
+        model: ListModel{
+            Component.onCompleted: {
+                for(var i=0;i<roleCore.children.length;i++){
+                    var role=roleCore.children[i]
+                    append({ name: role.objectName});
+                }
+                while(roleGrid.count<49){
+                    append({ name: "lock"});
+                }
             }
-
-            Image {
-                width: parent.width*0.64
-                height: width*1.3513
-                source: randomSelect.pressed || randomSelect.hovered || roleGrid.selectedObjectName == randomSelect.objectName ? "/images/question_mark.png" :"/images/question_mark2.png"
-                anchors.centerIn: parent
-            }
-
-            onClicked: {
-                do{
-                    var randomObject = roleGrid.children[Math.floor(Math.random()*roleGrid.children.length)]
-                }while(randomObject.objectName=="随机角色"|| randomObject.objectName.substring(0, 4)=="lock")
-                roleGrid.selectedObjectName = randomObject.objectName
-                roleCard.roleName = randomObject.objectName
-            }
+            ListElement{ name: "question" }
         }
 
-        Button {
-            id: wellRounded
-            objectName: "wellRounded"
-            width: roleGrid.cellWidth
-            height: roleGrid.cellHeight
+        delegate: Button {
+            required property string name
+            required property int index
+            width: roleGrid.cellWidth-roleGrid.spacing
+            height: width
             background: Rectangle {
-                color: wellRounded.pressed || wellRounded.hovered || roleGrid.selectedObjectName == wellRounded.objectName ? "#cfcfcf" : "#222222"
-                radius: 4
+                color: pressed || hovered || roleGrid.currentIndex==index ? (name==="lock" ? "#7e7e7e" : "#cfcfcf") : (name==="lock" ? "#292929" : "#222222")
+                radius: 4*roleSelectionInterface.scaleFactor
             }
-
             Image {
-                width: parent.width*0.78
-                height: width*1.158
-                source: wellRounded.pressed || wellRounded.hovered || roleGrid.selectedObjectName == wellRounded.objectName ? "/images/wellRounded_avatar.png":"/images/wellRounded_avatar2.png"
+                width: parent.width*(name==="lock"||name==="question" ? 0.9 : 1)
+                height: width
+                source: name==="lock" && (pressed || hovered || roleGrid.currentIndex===index) ? "/images/icon_lock_white.png" : "/images/icon_"+name+".png"
                 anchors.centerIn: parent
             }
-
             onClicked: {
-                if(roleGrid.selectedObjectName == objectName){
-                    roleSelectionInterface.selectedRoleName = roleGrid.selectedObjectName
-                    roleSelectionInterface.selected()
-                }else {
-                    roleGrid.selectedObjectName = objectName
-                    roleCard.roleName = objectName
-                }
-            }
-        }
-
-        Button {
-            id: mutant
-            objectName: "mutant"
-            width: roleGrid.cellWidth
-            height: roleGrid.cellHeight
-            background: Rectangle {
-                color: mutant.pressed || mutant.hovered || roleGrid.selectedObjectName == mutant.objectName ? "#cfcfcf" : "#222222"
-                radius: 4
-            }
-
-            Image {
-                width: parent.width*0.8
-                height: width*1.13
-                source: mutant.pressed || mutant.hovered || roleGrid.selectedObjectName == mutant.objectName ? "/images/mutant_avatar.png":"/images/mutant_avatar2.png"
-                anchors.centerIn: parent
-            }
-
-            onClicked: {
-                if(roleGrid.selectedObjectName == objectName){
-                    roleSelectionInterface.selectedRoleName = roleGrid.selectedObjectName
-                    roleSelectionInterface.selected()
-                }else {
-                    roleGrid.selectedObjectName = objectName
-                    roleCard.roleName = objectName
-                }
-            }
-        }
-
-        Repeater {
-            id: locks
-            model: 42
-            objectName: "locks"
-            delegate: Button {
-                required property int index
-                width: roleGrid.cellWidth
-                height: roleGrid.cellHeight
-                objectName: "lock" + index
-                background: Rectangle {
-                    color: parent.pressed || parent.hovered || roleGrid.selectedObjectName == parent.objectName ? "#7e7e7e" : "#292929"
-                    radius: 4
-                }
-
-                Image {
-                    width: parent.width*0.64
-                    height: width*1.305
-                    //import "./components"
-                    source: parent.pressed || parent.hovered || roleGrid.selectedObjectName == parent.objectName ? "/images/lock.png" : "/images/lock2.png"
-                    anchors.centerIn: parent
-                }
-
-                onClicked: {
-                    roleGrid.selectedObjectName = objectName
-                    roleCard.roleName = ""
+                if(name==="question"){
+                    roleGrid.currentIndex=Math.floor(Math.random()*roleGrid.canUsedRoleNumber)+1
+                }else if(name==="lock"){
+                    roleGrid.currentIndex=index
+                }else{
+                    if(roleGrid.currentIndex === index){
+                        roleSelectionInterface.selectedRoleName = name
+                        roleSelectionInterface.selected()
+                    }else {
+                        roleGrid.currentIndex=index
+                    }
                 }
             }
         }

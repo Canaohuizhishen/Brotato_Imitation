@@ -8,7 +8,6 @@ Item {
     anchors.fill: parent
     objectName: "Monsters"
     z: 3
-    property string difficulty
     property Player target: null
     property Forks forkParent: parent
     property Drops dropsParent: parent

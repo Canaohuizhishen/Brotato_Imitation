@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts
 import "../components"
+import "../data"
 
 Item {
     id: weaponSelectionInterface
@@ -18,9 +19,8 @@ Item {
 
     function init(){
         visible=false
+        selectedRoleName=""
         selectedWeaponName=""
-        weaponCard.weaponName=""
-        weaponRow.selectedObjectName=randomSelect.objectName
     }
 
     Rectangle {
@@ -47,79 +47,75 @@ Item {
 
     RoleCard{
         id: roleCard
-        scaleFactor: weaponSelectionInterface.scaleFactor
         roleName: weaponSelectionInterface.selectedRoleName
+        scaleFactor: weaponSelectionInterface.scaleFactor
         anchors.right: parent.horizontalCenter
-        anchors.rightMargin: 3*roleCard.scaleFactor
+        anchors.rightMargin: 3*weaponCard.scaleFactor
     }
 
     WeaponCard{
         id: weaponCard
+        weaponName: weaponRow.currentItemIsWeapon ? weaponRow.currentItem.name : ""
         scaleFactor: weaponSelectionInterface.scaleFactor
         anchors.left: parent.horizontalCenter
         anchors.leftMargin: 3
     }
 
-    RowLayout {
+    WeaponCustomizationCore{
+        id: weaponCore
+    }
+
+    GridView {
         id: weaponRow
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 165*weaponSelectionInterface.scaleFactor
-        spacing: 5*weaponSelectionInterface.scaleFactor
-        property string selectedObjectName: randomSelect.objectName
-        property  double cellWidth: 60*weaponSelectionInterface.scaleFactor
-        property  double cellHeight: cellWidth
-
-        Button {
-            id: randomSelect
-            objectName: "随机角色"
-            Layout.preferredWidth: weaponRow.cellWidth
-            Layout.preferredHeight: weaponRow.cellHeight
-            background: Rectangle {
-                color: randomSelect.pressed || randomSelect.hovered || weaponRow.selectedObjectName == randomSelect.objectName ? "#cfcfcf" : "#222222"
-                radius: 4
+        anchors.horizontalCenterOffset: spacing/2
+        anchors.top: weaponCard.bottom
+        anchors.topMargin: 25*weaponSelectionInterface.scaleFactor
+        width: cellWidth*(canUsedWeaponNumber+1)
+        height:  cellHeight
+        property int spacing: 5*weaponSelectionInterface.scaleFactor
+        cellWidth: 68*weaponSelectionInterface.scaleFactor
+        cellHeight: cellWidth
+        interactive: false
+        property int canUsedWeaponNumber: weaponCore.children.length
+        property bool currentItemIsWeapon: currentItem.name!=="question"
+        model: ListModel{
+            Component.onCompleted: {
+                for(var i=0;i<weaponCore.children.length;i++){
+                    var weapon=weaponCore.children[i]
+                    append({ name: weapon.objectName});
+                }
             }
-
-            Image {
-                width: parent.width*0.64
-                height: width*1.3513
-                source: randomSelect.pressed || randomSelect.hovered || weaponRow.selectedObjectName == randomSelect.objectName ? "/images/question_mark.png" :"/images/question_mark2.png"
-                anchors.centerIn: parent
-            }
-
-            onClicked: {
-                do{
-                    var randomObject = weaponRow.children[Math.floor(Math.random()*weaponRow.children.length)]
-                }while(randomObject.objectName=="随机角色"|| randomObject.objectName.substring(0, 4)=="lock")
-                weaponRow.selectedObjectName = randomObject.objectName
-                weaponCard.weaponName = randomObject.objectName
-            }
+            ListElement{ name: "question" }
         }
 
-        Button {
-            id: wellRounded
-            objectName: "smg"
-            Layout.preferredWidth: weaponRow.cellWidth
-            Layout.preferredHeight: weaponRow.cellHeight
+        delegate: Button {
+            required property string name
+            required property int index
+            width: weaponRow.cellWidth-weaponRow.spacing
+            height: width
             background: Rectangle {
-                color: wellRounded.pressed || wellRounded.hovered || weaponRow.selectedObjectName == wellRounded.objectName ? "#cfcfcf" : "#222222"
-                radius: 4
+                color: pressed || hovered || weaponRow.currentIndex==index ? "#cfcfcf" : "#222222"
+                radius: 4*weaponSelectionInterface.scaleFactor
             }
 
             Image {
-                width: parent.width
+                width: parent.width*(name==="question" ? 0.9 : 1)
                 height: width
-                source: "/images/weapon-smg.png"
+                source: "/images/icon_"+name+".png"
                 anchors.centerIn: parent
             }
 
             onClicked: {
-                if(weaponRow.selectedObjectName == objectName){
-                    weaponSelectionInterface.selectedWeaponName = weaponRow.selectedObjectName
-                    weaponSelectionInterface.selected()
+                if(name==="question"){
+                    weaponRow.currentIndex=Math.floor(Math.random()*weaponRow.canUsedWeaponNumber)+1
                 }else {
-                    weaponRow.selectedObjectName = objectName
-                    weaponCard.weaponName = objectName
+                    if(weaponRow.currentIndex === index){
+                        weaponSelectionInterface.selectedWeaponName = name
+                        weaponSelectionInterface.selected()
+                    }else {
+                        weaponRow.currentIndex=index
+                    }
                 }
             }
         }

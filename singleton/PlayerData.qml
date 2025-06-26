@@ -60,6 +60,8 @@ QtObject {
     property var props: ListModel{}
     property var lastStoreGoods: ListModel{} //上次游戏退出时商店的商品项
     property int lastStoreRefreshTimes: 0    //上次游戏退出时商店的刷新次数
+    property int curDifficulty: 0            //当前难度
+    property int maxDifficultyCompleted: -1  //已通关的最高难度
 
     property bool isInCombat: false //正在战斗状态的布尔值
 
