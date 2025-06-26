@@ -129,12 +129,12 @@ Weapon {
         flame.flame()
         var x=smg.parent.x+smg.x+smg.width/2+Math.cos(backAnimation.angle* (Math.PI/180))*smg.width/2
         var y=smg.parent.y+smg.y+smg.height/4-Math.sin(backAnimation.angle* (Math.PI/180))*smg.width/2
-        var bulletComponent = Qt.createComponent("../components/EllipticalBullet.qml")
+        var bulletComponent = Qt.createComponent("../bullets/EllipticalMovingBullet.qml")
         if (bulletComponent.status === Component.Ready) {
             var bullet = bulletComponent.createObject(bulletsParent);
             bullet.scaleFactor=Qt.binding(function(){return smg.scaleFactor})
             bullet.paused=Qt.binding(function(){return smg.paused})
-            bullet.sourceWeaponName=smg.weaponName
+            bullet.critical=core.critical
             bullet.width=smg.width*1.2
             bullet.height=bullet.width*0.28
             bullet.x=x - bullet.width / 2
@@ -142,75 +142,9 @@ Weapon {
             bullet.originPoint=Qt.point(x - bullet.width / 2,y - bullet.height / 2)
             bullet.color=Qt.rgba(1, 1, 0.45, 1)
             bullet.damage=core.damage
-            bullet.speed=2000
-            bullet.range=weaponCore.smg.range
+            bullet.fireRate=2000
+            bullet.fireRange=core.range
             bullet.shootAngle=backAnimation.angle
         }else console.error("Error loading component:", bulletComponent.errorString())
-        // var bullet = Qt.createQmlObject(
-        //             `import QtQuick 2.15;
-        //             Canvas {
-        //                 id: bullet
-        //                 width: smg.width
-        //                 height: width*0.28
-        //                 objectName: "子弹"
-        //                 x: ${x}-width/2;
-        //                 y: ${y}-height/2;
-        //                 z: 5
-        //                 property int damage: ${core.damage}
-        //                 onPaint: {
-        //                     var ctx = getContext("2d")
-        //                     var gradient = ctx.createRadialGradient(
-        //                                 width / 2, height / 2, 0,
-        //                                 width / 2, height / 2, Math.max(width / 2, height / 2)
-        //                                 )
-        //                     gradient.addColorStop(0.64, Qt.rgba(1, 1, 0.45, 1))
-        //                     gradient.addColorStop(1, Qt.rgba(1, 1, 0.5, 0))
-        //                     ctx.fillStyle = gradient
-        //                     ctx.beginPath()
-        //                     ctx.ellipse(0, 0, width, height) // 绘制椭圆
-        //                     ctx.fill()
-        //                 }
-        //                 Component.onCompleted: {
-        //                     rotation=smg.rotation
-        //                     shoot.start()
-        //                 }
-        //                 Canvas {
-        //                     width: bullet.width/1.2
-        //                     height: bullet.height/1.1
-        //                     anchors.centerIn: bullet
-        //                     z: 4
-        //                     onPaint: {
-        //                         var ctx = getContext("2d")
-        //                         ctx.fillStyle = Qt.rgba(1, 1, 0.45, 1)
-        //                         ctx.beginPath()
-        //                         ctx.ellipse(0, 0, width, height) // 绘制椭圆
-        //                         ctx.fill()
-        //                     }
-        //                 }
-        //                 Canvas {
-        //                     width: bullet.width/1.5
-        //                     height: bullet.height/1.3
-        //                     anchors.centerIn: bullet
-        //                     z: 5
-        //                     onPaint: {
-        //                         var ctx = getContext("2d")
-        //                         ctx.fillStyle = "white"
-        //                         ctx.beginPath()
-        //                         ctx.ellipse(0, 0, width, height) // 绘制椭圆
-        //                         ctx.fill()
-        //                     }
-        //                 }
-        //                 ParallelAnimation {
-        //                     id: shoot
-        //                     running: false
-        //                     property int range: weaponCore.smg.range
-        //                     NumberAnimation { target: bullet; property: "x"; to: x+Math.cos(backAnimation.angle* (Math.PI/180))*shoot.range*gameArea.scaleFactor; loops: 1; duration: 0.6*shoot.range; easing.type: Easing.Linear }
-        //                     NumberAnimation { target: bullet; property: "y"; to: y-Math.sin(backAnimation.angle* (Math.PI/180))*shoot.range*gameArea.scaleFactor;  loops: 1; duration: 0.6*shoot.range; easing.type: Easing.Linear }
-        //                     onStopped: bullet.destroy()
-        //                 }
-        //             }`,
-        //             bulletsParent,
-        //             "dynamicImage"
-        //             );
     }
 }

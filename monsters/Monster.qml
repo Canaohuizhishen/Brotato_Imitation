@@ -322,7 +322,7 @@ Image {
         monsterData.hp-=bullet.damage
 
         //可能的暴击
-        if(Math.random()<weaponCore.getWeapon(bullet.sourceWeaponName).critical/100){
+        if(Math.random()<bullet.critical){
             monsterData.hp-=bullet.damage
         }
 

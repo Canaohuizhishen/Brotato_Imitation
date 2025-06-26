@@ -30,7 +30,6 @@ qt_add_qml_module(appBrotato
     QML_FILES data/WeaponCustomizationCore.qml data/RoleCustomizationCore.qml
     QML_FILES page/StoreInterface.qml
     QML_FILES components/Material.qml
-    QML_FILES components/Bullets.qml
     QML_FILES components/Drops.qml
     QML_FILES components/MaterialsBar.qml
     QML_FILES components/BagBar.qml
@@ -51,8 +50,6 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Pursuer.qml
     QML_FILES monsters/Brute.qml
     QML_FILES components/TimerCanPause.qml
-    QML_FILES components/EllipticalBullet.qml
-    QML_FILES components/MovingRoundBullet.qml
     QML_FILES page/ShopScreen.qml
     QML_FILES logic/ShopLogicHandler.js
     QML_FILES components/PurchasedPropsBar.qml
@@ -79,8 +76,10 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/HelmetCharger.qml
     QML_FILES monsters/FinChaser.qml
     QML_FILES monsters/Prayer.qml
-    QML_FILES components/StaticRoundBullet.qml
-    QML_FILES components/RoundBullet.qml
+    QML_FILES bullets/Bullets.qml bullets/EllipticalMovingBullet.qml bullets/RoundMovingBullet.qml  bullets/RoundStaticBullet.qml
+    QML_FILES bullets/Bullet.qml
+    QML_FILES bullets/StaticBullet.qml
+    QML_FILES bullets/MovingBullet.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)
