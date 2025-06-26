@@ -325,7 +325,7 @@ Item {
 
     //在bulletsParent中的点（x,y）位置上生成宽width高height伤害为damage射程为range攻击角度为shootAngle颜色为color的飞行子弹
     function spawnBullet(x,y,width,height,damage,range,shootAngle,color){
-        var bulletComponent = Qt.createComponent("../components/MovingRoundBullet.qml")
+        var bulletComponent = Qt.createComponent("../bullets/RoundMovingBullet.qml")
         if (bulletComponent.status === Component.Ready) {
             var bullet = bulletComponent.createObject(bullets);
             bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
@@ -337,15 +337,15 @@ Item {
             bullet.originPoint=Qt.point(x - bullet.width / 2,y - bullet.height / 2)
             bullet.color=color
             bullet.damage=damage
-            bullet.speed=400
-            bullet.range=range
+            bullet.fireRate=400
+            bullet.fireRange=range
             bullet.shootAngle=shootAngle
         }else console.error("Error loading component:", bulletComponent.errorString())
     }
 
     //在bulletsParent中的点（centerX,centerY）方圆spawnR内随机生成n个宽width高height伤害为damage颜色为color存在时间为existTime的静止子弹
     function spawnRandomStaticBullets(n,centerX,centerY,width,height,damage,color,existTime,spawnR){
-        var bulletComponent = Qt.createComponent("../components/StaticRoundBullet.qml")
+        var bulletComponent = Qt.createComponent("../bullets/RoundStaticBullet.qml")
         if (bulletComponent.status === Component.Ready) {
             for(var i=0;i<n;i++){
                 var bullet = bulletComponent.createObject(bullets);
@@ -368,7 +368,7 @@ Item {
 
     //以bulletsParent中的点（centerX,centerY）为圆心spawnR为半径生成n个宽width高height伤害为damage颜色为color存在时间为existTime的静止子弹均匀分布在圆周
     function spawnCircularStaticBullets(n,centerX,centerY,width,height,damage,color,existTime,spawnR){
-        var bulletComponent = Qt.createComponent("../components/StaticRoundBullet.qml")
+        var bulletComponent = Qt.createComponent("../bullets/RoundStaticBullet.qml")
         if (bulletComponent.status === Component.Ready) {
             for(var i=0;i<n;i++){
                 var bullet = bulletComponent.createObject(bullets);
