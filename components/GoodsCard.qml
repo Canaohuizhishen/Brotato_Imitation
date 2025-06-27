@@ -57,8 +57,8 @@ Item {
 
                 Image {
                     id: goodsImage
-                    source: itemData.type === "道具" ? "/images/prop-" + itemData.objectName + ".png"
-                                                   : "/images/weapon-" + itemData.objectName + ".png"
+                    source: itemData.type === "道具" ? "qrc:/images/prop-" + itemData.objectName + ".png"
+                                                   : "qrc:/images/weapon-" + itemData.objectName + ".png"
                     width: 63
                     height: 63
                     fillMode: Image.PreserveAspectFit

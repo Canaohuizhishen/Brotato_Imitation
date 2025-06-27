@@ -217,7 +217,7 @@ Item {
                                 ListElement { text: "泥地"; icon: "" }
                                 ListElement { text: "森林"; icon: "" }
                                 ListElement { text: "火山"; icon: "" }
-                                ListElement { text: "梦幻之地"; icon: "/images/stone3.png" }
+                                ListElement { text: "梦幻之地"; icon: "qrc:/images/stone3.png" }
                                 ListElement { text: "墓地"; icon: "" }
                                 ListElement { text: "黑暗之地"; icon: "" }
                             }

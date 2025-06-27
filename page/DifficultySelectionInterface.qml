@@ -120,7 +120,7 @@ Item {
             Image {
                 width: parent.width*0.8
                 height: width
-                source: parent.pressed || parent.hovered || difficultyRow.selectedObjectName == parent.objectName ? "/images/0.png":"/images/02.png"
+                source: parent.pressed || parent.hovered || difficultyRow.selectedObjectName == parent.objectName ? "qrc:/images/0.png":"qrc:/images/02.png"
                 anchors.centerIn: parent
             }
 
@@ -150,7 +150,7 @@ Item {
             Image {
                 width: parent.width*0.64
                 height: width*1.305
-                source: parent.pressed || parent.hovered || difficultyRow.selectedObjectName == parent.objectName ? (parent.isLocked ? "/images/lock.png" : "/images/1.png") : (parent.isLocked ? "/images/lock2.png" : "/images/12.png")
+                source: parent.pressed || parent.hovered || difficultyRow.selectedObjectName == parent.objectName ? (parent.isLocked ? "qrc:/images/lock.png" : "qrc:/images/1.png") : (parent.isLocked ? "qrc:/images/lock2.png" : "qrc:/images/12.png")
                 anchors.centerIn: parent
             }
 

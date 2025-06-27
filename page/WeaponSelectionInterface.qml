@@ -83,7 +83,7 @@ Item {
             Image {
                 width: parent.width*0.64
                 height: width*1.3513
-                source: randomSelect.pressed || randomSelect.hovered || weaponRow.selectedObjectName == randomSelect.objectName ? "/images/question_mark.png" :"/images/question_mark2.png"
+                source: randomSelect.pressed || randomSelect.hovered || weaponRow.selectedObjectName == randomSelect.objectName ? "qrc:/images/question_mark.png" :"qrc:/images/question_mark2.png"
                 anchors.centerIn: parent
             }
 
@@ -109,7 +109,7 @@ Item {
             Image {
                 width: parent.width
                 height: width
-                source: "/images/weapon-smg.png"
+                source: "qrc:/images/weapon-smg.png"
                 anchors.centerIn: parent
             }
 

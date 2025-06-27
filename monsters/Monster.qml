@@ -38,6 +38,8 @@ Image {
     property int interval: 10
     property double stepSize: v*interval/1200*scaleFactor
 
+
+
     onPausedChanged: {
         if(paused==true){
             squashSequence.pause()
