@@ -11,11 +11,12 @@ Item {
     id: shopscreen
 
     property string cionImage : "qrc:/images/material_icon.png"
-    property var shopContext: QtObject {
-        property var _purchasedPropsModel
-        property var _duplicatePropsCountModel
-        property var _purchasedWeaponsModel
-    } //实现向js文件传递模型数据
+    // property var shopContext: QtObject {
+    //     property var _purchasedPropsModel: ListModel {}
+    //     property var _duplicatePropsCountModel: ListModel {}
+    //     property var _purchasedWeaponsModel: ListModel {}
+    // }//实现向js文件传递模型数据
+
 
 
     //主背景
@@ -117,8 +118,8 @@ Item {
                         text: "刷新-" + refreshButton.currentRefreshPrice
                         font.pixelSize: 24
                         color: PlayerData.materialsNumber >= refreshButton.currentRefreshPrice
-                                ? (refreshButton.isHovered ? "black" : "white")
-                                : "red"
+                               ? (refreshButton.isHovered ? "black" : "white")
+                               : "red"
                     }
 
                     Image {
@@ -248,6 +249,7 @@ Item {
         }
     }
 
+
     //道具和武器栏
     Item {
         anchors.bottom: shopscreen.bottom
@@ -262,14 +264,18 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 15
-        }
+            purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
+                    duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
 
+        }
 
         //武器栏
         PurchasedWeaponsBar {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 215
+            purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
+
         }
     }
 

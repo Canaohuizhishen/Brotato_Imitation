@@ -37,6 +37,8 @@ Item {
         }
     }
 
+
+
     // Timer {
     //     interval: 100; running: true; repeat: true
     //     onTriggered: {
@@ -70,12 +72,13 @@ Item {
             weaponSelectionInterface.selectedRoleName=selectedRoleName
             weaponSelectionInterface.visible=true
         }
-
-        backButton.onClicked: {
-            init()
-            startInterface.visible=true
-        }
     }
+
+    //     backButton.onClicked: {
+    //         init()
+    //         startInterface.visible=true
+    //     }
+    // }
 
     WeaponSelectionInterface{
         id: weaponSelectionInterface
@@ -135,9 +138,14 @@ Item {
         }
     }
 
-    // ShopScreen {
-    //     anchors.fill: parent
-    // }
+    DyingBorder{
+        anchors.fill: parent
+    }
+
+
+    ShopScreen {
+        anchors.fill: parent
+    }
 
     ChestOpeningInterface{
         id: chestOpeningInterface
@@ -171,9 +179,12 @@ Item {
         }
     }
 
-    // SettlementInterface{
-    //     visible: true
-    // }
+
+
+    SettlementInterface {
+        visible: false
+    }
+
 
     PauseInterface{
         id: pauseInterface

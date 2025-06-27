@@ -109,7 +109,7 @@ Rectangle {
             scaleFactor: root.scaleFactor
             attribute: "目前等级"
             attributeValue: PlayerData.curLevel
-            iconSource: "/images/upgrade_icon.png"
+            iconSource: "qrc:/images/upgrade_icon.png"
         }
 
         ListView{
@@ -146,22 +146,22 @@ Rectangle {
                 addAttributes()
             }
             function addAttributes(){
-                mainattributesModel.append({ "name": "最大生命值","value":PlayerData.maxHp ,"imageSource":"/images/attribute-maxHp.png",imageSource2:"/images/heart.png","detail":"你可承受的伤害不能超过"+PlayerData.maxHp})
-                mainattributesModel.append({ "name": "生命再生","value":PlayerData.hpRegeneration, "imageSource":"/images/attribute-hpRegeneration.png",imageSource2:"/images/lung.png","detail":"每隔"+1/PlayerData.hpRegeneration+"秒，你恢复1点生命值("+PlayerData.hpRegeneration+"点生命值/秒"})
-                mainattributesModel.append({ "name": "%生命窃取","value":PlayerData.lifeSteal , "imageSource":"/images/attribute-lifeSteal.png",imageSource2:"/images/teeth.png","detail":"你的攻击有"+PlayerData.lifeSteal+"概率为自己恢复1生命值。上限：10生命值/秒"})
-                mainattributesModel.append({ "name": "%伤害","value":PlayerData.damage , "imageSource":"/images/attribute-damage.png",imageSource2:"/images/triceps.png","detail":"你的攻击造成的伤害"+PlayerData.damage})
-                mainattributesModel.append({ "name": "近战伤害","value":PlayerData.meleeDamage, "imageSource":"/images/attribute-meleeDamage.png" ,imageSource2:"/images/foream.png","detail":"你的近战攻击造成的伤害"+PlayerData.meleeDamage})
-                mainattributesModel.append({ "name": "远程伤害","value":PlayerData.rangedDamage , "imageSource":"/images/attribute-rangedDamage.png",imageSource2:"/images/shoulder.png","detail":"你的远战攻击造成的伤害"+PlayerData.rangedDamage})
-                mainattributesModel.append({ "name": "元素伤害","value":PlayerData.elementalDamage, "imageSource":"/images/attribute-elementalDamage.png" ,imageSource2:"/images/brain.png","detail":"元素伤害增加"+PlayerData.elementalDamage})
-                mainattributesModel.append({ "name": "%攻击速度","value":PlayerData.attackSpeed , "imageSource":"/images/attribute-attackSpeed.png",imageSource2:"/images/reflexes.png","detail":"攻击速度提高"+PlayerData.attackSpeed+",同样适用于远战武器"})
-                mainattributesModel.append({ "name": "%暴击率","value":PlayerData.critChance, "imageSource":"/images/attribute-critChance.png",imageSource2:"/images/finger.png","detail":"你的攻击有"+PlayerData.critChance+"造成更多伤害"})
-                mainattributesModel.append({ "name": "工程学","value":PlayerData.engineering,"imageSource":"/images/attribute-engineering.png" ,imageSource2:"/images/skull.png","detail":"增强构筑物的力量。除次要属性外的其他主要属性皆不会影响构筑物。(例如贯通,反弹，爆炸等)"})
-                mainattributesModel.append({ "name": "范围","value":PlayerData.range ,"imageSource":"/images/attribute-range.png",imageSource2:"/images/eyes.png","detail":"你的武器最大射程增加"+PlayerData.range+"对近战武器的效果减半。攻击范围变大也会延长近战武器的冷却时间（移动距离增长）"})
-                mainattributesModel.append({ "name": "护甲","value":PlayerData.armor ,"imageSource":"/images/attribute-armor.png",imageSource2:"/images/chest.png","detail":"你受到的伤害减少"+PlayerData.armor})
-                mainattributesModel.append({ "name": "%闪避","value":PlayerData.dodge ,"imageSource":"/images/attribute-dodge.png",imageSource2:"/images/back.png","detail":"你有"+PlayerData.dodge+"的概率闪避攻击。上限：60%"})
-                mainattributesModel.append({ "name": "%速度","value":PlayerData.speed ,"imageSource":"/images/attribute-speed.png",imageSource2:"/images/leg.png","detail":"移速提高"+PlayerData.speed})
-                mainattributesModel.append({ "name": "幸运","value":PlayerData.luck ,"imageSource":"/images/attribute-luck.png",imageSource2:"/images/nose.png","detail":"击杀敌人发现道具或消耗品的概率提高"+PlayerData.luck+"。此外，提高商店中道具的品级和等级提升"})
-                mainattributesModel.append({ "name": "收获","value":PlayerData.harvesting ,"imageSource":"/images/attribute-harvesting.png",imageSource2:"/images/hand.png","detail":"敌袭结束后获得"+PlayerData.harvesting+"材料和XP。每次发动时增加13%直至第20波敌袭，随后减低至20%"})
+                mainattributesModel.append({ "name": "最大生命值","value":PlayerData.maxHp ,"imageSource":"qrc:/images/attribute-maxHp.png",imageSource2:"qrc:/images/heart.png","detail":"你可承受的伤害不能超过"+PlayerData.maxHp})
+                mainattributesModel.append({ "name": "生命再生","value":PlayerData.hpRegeneration, "imageSource":"qrc:/images/attribute-hpRegeneration.png",imageSource2:"qrc:/images/lung.png","detail":"每隔"+1/PlayerData.hpRegeneration+"秒，你恢复1点生命值("+PlayerData.hpRegeneration+"点生命值/秒"})
+                mainattributesModel.append({ "name": "%生命窃取","value":PlayerData.lifeSteal , "imageSource":"qrc:/images/attribute-lifeSteal.png",imageSource2:"qrc:/images/teeth.png","detail":"你的攻击有"+PlayerData.lifeSteal+"概率为自己恢复1生命值。上限：10生命值/秒"})
+                mainattributesModel.append({ "name": "%伤害","value":PlayerData.damage , "imageSource":"qrc:/images/attribute-damage.png",imageSource2:"qrc:/images/triceps.png","detail":"你的攻击造成的伤害"+PlayerData.damage})
+                mainattributesModel.append({ "name": "近战伤害","value":PlayerData.meleeDamage, "imageSource":"qrc:/images/attribute-meleeDamage.png" ,imageSource2:"qrc:/images/foream.png","detail":"你的近战攻击造成的伤害"+PlayerData.meleeDamage})
+                mainattributesModel.append({ "name": "远程伤害","value":PlayerData.rangedDamage , "imageSource":"qrc:/images/attribute-rangedDamage.png",imageSource2:"qrc:/images/shoulder.png","detail":"你的远战攻击造成的伤害"+PlayerData.rangedDamage})
+                mainattributesModel.append({ "name": "元素伤害","value":PlayerData.elementalDamage, "imageSource":"qrc:/images/attribute-elementalDamage.png" ,imageSource2:"qrc:/images/brain.png","detail":"元素伤害增加"+PlayerData.elementalDamage})
+                mainattributesModel.append({ "name": "%攻击速度","value":PlayerData.attackSpeed , "imageSource":"qrc:/images/attribute-attackSpeed.png",imageSource2:"qrc:/images/reflexes.png","detail":"攻击速度提高"+PlayerData.attackSpeed+",同样适用于远战武器"})
+                mainattributesModel.append({ "name": "%暴击率","value":PlayerData.critChance, "imageSource":"qrc:/images/attribute-critChance.png",imageSource2:"qrc:/images/finger.png","detail":"你的攻击有"+PlayerData.critChance+"造成更多伤害"})
+                mainattributesModel.append({ "name": "工程学","value":PlayerData.engineering,"imageSource":"qrc:/images/attribute-engineering.png" ,imageSource2:"qrc:/images/skull.png","detail":"增强构筑物的力量。除次要属性外的其他主要属性皆不会影响构筑物。(例如贯通,反弹，爆炸等)"})
+                mainattributesModel.append({ "name": "范围","value":PlayerData.range ,"imageSource":"qrc:/images/attribute-range.png",imageSource2:"qrc:/images/eyes.png","detail":"你的武器最大射程增加"+PlayerData.range+"对近战武器的效果减半。攻击范围变大也会延长近战武器的冷却时间（移动距离增长）"})
+                mainattributesModel.append({ "name": "护甲","value":PlayerData.armor ,"imageSource":"qrc:/images/attribute-armor.png",imageSource2:"qrc:/images/chest.png","detail":"你受到的伤害减少"+PlayerData.armor})
+                mainattributesModel.append({ "name": "%闪避","value":PlayerData.dodge ,"imageSource":"qrc:/images/attribute-dodge.png",imageSource2:"qrc:/images/back.png","detail":"你有"+PlayerData.dodge+"的概率闪避攻击。上限：60%"})
+                mainattributesModel.append({ "name": "%速度","value":PlayerData.speed ,"imageSource":"qrc:/images/attribute-speed.png",imageSource2:"qrc:/images/leg.png","detail":"移速提高"+PlayerData.speed})
+                mainattributesModel.append({ "name": "幸运","value":PlayerData.luck ,"imageSource":"qrc:/images/attribute-luck.png",imageSource2:"qrc:/images/nose.png","detail":"击杀敌人发现道具或消耗品的概率提高"+PlayerData.luck+"。此外，提高商店中道具的品级和等级提升"})
+                mainattributesModel.append({ "name": "收获","value":PlayerData.harvesting ,"imageSource":"qrc:/images/attribute-harvesting.png",imageSource2:"qrc:/images/hand.png","detail":"敌袭结束后获得"+PlayerData.harvesting+"材料和XP。每次发动时增加13%直至第20波敌袭，随后减低至20%"})
             }
         }
         function clear(){mainAttributesList.model.clear()}

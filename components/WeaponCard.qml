@@ -27,7 +27,7 @@ Rectangle {
         Image {
             width: parent.width*0.9
             height: width
-            source: weaponCard.weaponName == "" ? "" : "/images/weapon-"+weaponCard.weaponName+".png"
+            source: weaponCard.weaponName == "" ? "" : "qrc:/images/weapon-"+weaponCard.weaponName+".png"
             anchors.centerIn: parent
         }
     }

@@ -30,9 +30,9 @@ Item {
 
         Image {
             id: weaponImage
-            source: "/images/weapon-" + itemData.objectName + ".png"
-            // source: "/images/prop-" + itemData.objectName + ".png"
-            // source: "/images/smg_icon.png"
+            source: "qrc:/images/weapon-" + itemData.objectName + ".png"
+            // source: "qrc:/images/prop-" + itemData.objectName + ".png"
+            // source: "qrc:/images/smg_icon.png"
             width: parent.width
             height: parent.height
             anchors.centerIn: parent
@@ -114,8 +114,8 @@ Item {
 
                     Image {
                         id: image
-                        source: "/images/weapon-" + itemData.objectName + ".png"
-                        // source: "/images/prop-" + itemData.objectName + ".png"
+                        source: "qrc:/images/weapon-" + itemData.objectName + ".png"
+                        // source: "qrc:/images/prop-" + itemData.objectName + ".png"
                         width: 63
                         height: 63
                         fillMode: Image.PreserveAspectFit

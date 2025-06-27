@@ -17,7 +17,7 @@ Item{
 
     Image {
         id: startImage
-        source: "/images/startInterface3.png"
+        source: "qrc:/images/startInterface3.png"
         width: parent.width
         height: parent.height
     }

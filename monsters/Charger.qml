@@ -36,7 +36,7 @@ Monster{
                     Image {
                         id: redOverlay
                         anchors.fill: parent
-                        source: parent.isFaceRight ? "/images/${monsterName}_redMask_faceRight.png" : "/images/${monsterName}_redMask_faceLeft.png"
+                        source: parent.isFaceRight ? "qrc:/images/${monsterName}_redMask_faceRight.png" : "qrc:/images/${monsterName}_redMask_faceLeft.png"
                         z: 100
                         Component.onCompleted: {
                         }

@@ -88,7 +88,7 @@ Item {
             Image {
                 width: parent.width*0.64
                 height: width*1.3513
-                source: randomSelect.pressed || randomSelect.hovered || roleGrid.selectedObjectName == randomSelect.objectName ? "/images/question_mark.png" :"/images/question_mark2.png"
+                source: randomSelect.pressed || randomSelect.hovered || roleGrid.selectedObjectName == randomSelect.objectName ? "qrc:/images/question_mark.png" :"qrc:/images/question_mark2.png"
                 anchors.centerIn: parent
             }
 
@@ -114,7 +114,7 @@ Item {
             Image {
                 width: parent.width*0.78
                 height: width*1.158
-                source: wellRounded.pressed || wellRounded.hovered || roleGrid.selectedObjectName == wellRounded.objectName ? "/images/wellRounded_avatar.png":"/images/wellRounded_avatar2.png"
+                source: wellRounded.pressed || wellRounded.hovered || roleGrid.selectedObjectName == wellRounded.objectName ? "qrc:/images/wellRounded_avatar.png":"qrc:/images/wellRounded_avatar2.png"
                 anchors.centerIn: parent
             }
 
@@ -142,7 +142,7 @@ Item {
             Image {
                 width: parent.width*0.8
                 height: width*1.13
-                source: mutant.pressed || mutant.hovered || roleGrid.selectedObjectName == mutant.objectName ? "/images/mutant_avatar.png":"/images/mutant_avatar2.png"
+                source: mutant.pressed || mutant.hovered || roleGrid.selectedObjectName == mutant.objectName ? "qrc:/images/mutant_avatar.png":"qrc:/images/mutant_avatar2.png"
                 anchors.centerIn: parent
             }
 
@@ -175,7 +175,7 @@ Item {
                     width: parent.width*0.64
                     height: width*1.305
                     //import "./components"
-                    source: parent.pressed || parent.hovered || roleGrid.selectedObjectName == parent.objectName ? "/images/lock.png" : "/images/lock2.png"
+                    source: parent.pressed || parent.hovered || roleGrid.selectedObjectName == parent.objectName ? "qrc:/images/lock.png" : "qrc:/images/lock2.png"
                     anchors.centerIn: parent
                 }
 

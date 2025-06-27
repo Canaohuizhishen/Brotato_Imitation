@@ -72,6 +72,9 @@ qt_add_qml_module(appBrotato
     QML_FILES page/SettlementInterface.qml
     QML_FILES page/SettingInterface.qml
     QML_FILES components/Forks.qml
+    SOURCES Filemanager.h
+    QML_FILES page/DyingBorder.qml
+    QML_FILES
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

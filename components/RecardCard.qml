@@ -15,7 +15,7 @@ Rectangle {
     radius: 4
 
     Image {
-        source: "/images/recording.png"
+        source: "qrc:/images/recording.png"
         width: 50*recardCard.scaleFactor
         height: width
         anchors.horizontalCenter: parent.horizontalCenter

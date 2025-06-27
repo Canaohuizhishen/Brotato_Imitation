@@ -20,7 +20,7 @@ Item {
 
         Image {
             id: propImage
-            source: "/images/prop-" + itemData.objectName + ".png"
+            source: "qrc:/images/prop-" + itemData.objectName + ".png"
             width: parent.width
             height: parent.height
             anchors.centerIn: parent
@@ -97,7 +97,7 @@ Item {
 
                 Image {
                     id: popupImage
-                    source: "/images/prop-" + itemData.objectName + ".png"
+                    source: "qrc:/images/prop-" + itemData.objectName + ".png"
                     width: 63
                     height: 63
                     fillMode: Image.PreserveAspectFit

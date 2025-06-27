@@ -23,7 +23,7 @@ Item {
         model: 0
         delegate: Image{
             required property int index
-            source: "/images/upgrade_icon.png"
+            source: "qrc:/images/upgrade_icon.png"
             width: upgradeBar.height
             height: upgradeBar.height
             anchors.verticalCenter: upgradeBar.verticalCenter

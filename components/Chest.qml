@@ -6,7 +6,7 @@ import "../tool.js" as Tool
 Image {
     id: chest
     objectName: "宝箱"
-    source: grade==1 ? "/images/chest_white" : (grade==2 ? "/images/chest_green" : "/images/chest_red")
+    source: grade==1 ? "qrc:/images/chest_white" : (grade==2 ? "qrc:/images/chest_green" : "qrc:/images/chest_red")
     property int grade: 1
     property string propName
     property bool isGeted: false

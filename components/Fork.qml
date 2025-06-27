@@ -29,7 +29,7 @@ Item {
         anchors.centerIn: parent
         width: root.width
         height: root.height
-        source: "/images/red_fork.png"
+        source: "qrc:/images/red_fork.png"
     }
 
     SequentialAnimation on opacity {

@@ -1,8 +1,15 @@
 pragma Singleton
 import QtQuick 2.15
-
+import com.mygame.utils 1.0
 QtObject {
     id: root
+    property FileManager fileManager: FileManager {}
+    // 添加 shopContext 属性
+        property QtObject shopContext: QtObject {
+            property ListModel _purchasedPropsModel: ListModel {}
+            property ListModel _duplicatePropsCountModel: ListModel {}
+            property ListModel _purchasedWeaponsModel: ListModel {}
+        }
     //主要属性
     property int curLevel: 0                 //目前等级
     property int maxXp: (curLevel<5 ? 5+10*curLevel : 50+Math.pow(curLevel,2))*expDiscountRate //最大经验
@@ -64,6 +71,8 @@ QtObject {
     property bool isInCombat: false //正在战斗状态的布尔值
 
     signal weaponsListChanged()
+    signal hpChanged()
+
 
     Component.onCompleted: {
         //for(var i=0;i<1;i++)addWeapon("smg",1)
@@ -75,7 +84,190 @@ QtObject {
         // showWeapons()
         // showProps()
         // showLastStoreGoods()
+        shopContext._purchasedPropsModel.clear();
+                shopContext._duplicatePropsCountModel.clear();
+                shopContext._purchasedWeaponsModel.clear();
     }
+    function saveGame() {
+        try {
+            const saveData = {
+                "curLevel": curLevel,
+                "maxXp": maxXp,
+                "curXp": curXp,
+                "maxHp": maxHp,
+                "curHp": curHp,
+                "hpRegeneration": hpRegeneration,
+                "lifeSteal": lifeSteal,
+                "damage": damage,
+                "meleeDamage": meleeDamage,
+                "rangedDamage": rangedDamage,
+                "elementalDamage": elementalDamage,
+                "attackSpeed": attackSpeed,
+                "critChance": critChance,
+                "engineering": engineering,
+                "range": range,
+                "armor": armor,
+                "dodge": dodge,
+                "speed": speed,
+                "luck": luck,
+                "consumptiveTherapy": consumptiveTherapy,
+                "materialTherapy": materialTherapy,
+                "gainExperience": gainExperience,
+                "pickingRegion": pickingRegion,
+                "propPrices": propPrices,
+                "explosiveDamage": explosiveDamage,
+                "explosionRange": explosionRange,
+                "rebound": rebound,
+                "penetrate": penetrate,
+                "penetratingDamage": penetratingDamage,
+                "damageToBoss": damageToBoss,
+                "burningRatePercentage": burningRatePercentage,
+                "burningRate": burningRate,
+                "repel": repel,
+                "obtainingDoubleMaterial": obtainingDoubleMaterial,
+                "materialsInTheBox": materialsInTheBox,
+                "freeRefresh": freeRefresh,
+                "trees": trees,
+                "enemy": enemy,
+                "enemySpeed": enemySpeed,
+
+                "totalWaveNumber": totalWaveNumber,
+                "lastWaveNumber": lastWaveNumber,
+                "materialsNumber": materialsNumber,
+                "remainingMaterialsNumber": remainingMaterialsNumber,
+                "goodsDiscountRate": goodsDiscountRate,
+                "pickupRange": pickupRange,
+                "expDiscountRate": expDiscountRate,
+                "currentWaveNumber": currentWaveNumber,
+
+                "weapons": weaponsToArray(weapons),
+                "props": propsToArray(props),
+                "lastStoreRefreshTimes": lastStoreRefreshTimes,
+
+                "lastStoreGoods": propsToArray(lastStoreGoods),
+                // ...其他需要保存的属性...
+                "isInCombat": isInCombat
+            }
+
+            const savePath = appDataPath + "/savegame.json"
+            const success = fileManager.saveGameData(savePath,
+                                                     JSON.parse(JSON.stringify(saveData)))
+
+            if (success) {
+                console.log("游戏保存成功")
+            } else {
+                console.error("保存失败！")
+            }
+        } catch (e) {
+            console.error("保存异常：" + e)
+        }
+    }
+
+    // 加载游戏
+    function loadGame() {
+        try {
+            const savePath = appDataPath + "/savegame.json"
+            const saveData = fileManager.loadGameData(savePath)
+            // 检查是否为空对象
+            if (Object.keys(saveData).length === 0) {
+                console.log("未找到有效存档数据")
+                return
+            }
+
+            // 核心属性恢复（使用空值合并运算符??提供默认值）
+            curLevel = saveData.curLevel ?? 0
+            maxXp = saveData.maxXp ?? 0
+            curXp = saveData.curXp ?? 0
+            maxHp = saveData.maxHp ?? 10
+            curHp = saveData.curHp ?? maxHp
+            hpRegeneration = saveData.hpRegeneration ?? 0
+            lifeSteal = saveData.lifeSteal ?? 0
+            damage = saveData.damage ?? 0
+            meleeDamage = saveData.meleeDamage ?? 0
+            rangedDamage = saveData.rangedDamage ?? 0
+            elementalDamage = saveData.elementalDamage ?? 0
+            explosionRange = saveData.explosionRange ?? 0
+            critChance = saveData.critChance ?? 0
+            engineering = saveData.engineering ?? 0
+            range = saveData.range ?? 0
+            armor = saveData.armor ?? 0
+            dodge = saveData.dodge ?? 0
+            speed = saveData.speed ?? 0
+            luck = saveData.luck ?? 0
+            harvesting = saveData.harvesting ?? 0
+
+            // 游戏状态恢复
+            currentWaveNumber = saveData.currentWaveNumber ?? 0
+            materialsNumber = saveData.materialsNumber ?? 0
+            remainingMaterialsNumber = saveData.remainingMaterialsNumber ?? 0
+            lastWaveNumber = saveData.lastWaveNumber ?? 0
+            totalWaveNumber = saveData.totalWaveNumber ?? 20
+            goodsDiscountRate = saveData.goodsDiscountRate ?? 1.0
+            pickupRange = saveData.pickupRange ?? 150
+            expDiscountRate = saveData.expDiscountRate ?? 1.0
+            isInCombat = saveData.isInCombat ?? false
+
+            //次要属性
+            consumptiveTherapy = saveData.consumptiveTherapy ?? 0
+            materialTherapy = saveData.materialTherapy ?? 0
+            gainExperience = saveData.gainExperience ?? 0
+            pickingRegion = saveData.pickingRegion ?? 0
+            propPrices = saveData.propPrices ?? 0
+            explosiveDamage = saveData.explosiveDamage ?? 0
+            rebound = saveData.rebound ?? 0
+            penetrate = saveData.penetrate ?? 0
+            penetratingDamage = saveData.penetratingDamage ?? 0
+            damageToBoss = saveData.damageToBoss ?? 0
+            burningRatePercentage = saveData.burningRatePercentage ?? 0
+            burningRate = saveData.burningRate ?? 0
+            repel = saveData.repel ?? 0
+            obtainingDoubleMaterial = saveData.obtainingDoubleMaterial ?? 0
+            materialsInTheBox = saveData.materialsInTheBox ?? 0
+            freeRefresh = saveData.freeRefresh ?? 0
+            trees = saveData.trees ?? 0
+            enemy = saveData.enemy ?? 0
+            enemySpeed = saveData.enemySpeed ?? 0
+
+            // 武器列表恢复
+            weapons.clear()
+            if (saveData.weapons && Array.isArray(saveData.weapons)) {
+                saveData.weapons.forEach(weapon => weapons.append(weapon))
+            }
+
+            // 道具列表恢复
+            props.clear()
+            if (saveData.props && Array.isArray(saveData.props)) {
+                saveData.props.forEach(prop => props.append(prop))
+            }
+            // 商店商品项恢复
+            lastStoreGoods.clear();
+            if (saveData.lastStoreGoods && Array.isArray(saveData.lastStoreGoods)) {
+                saveData.lastStoreGoods.forEach(item => lastStoreGoods.append(item));
+            }
+
+            console.log("游戏加载成功，当前等级：" + curLevel)
+        } catch (e) {
+            console.error("加载异常：" + e)
+        }
+    }
+    function weaponsToArray(weaponsModel) {
+        const arr = []
+        for (let i = 0; i < weaponsModel.count; ++i) {
+            arr.push(weaponsModel.get(i))
+        }
+        return arr
+    }
+
+    function propsToArray(propsModel) {
+        const arr = []
+        for (let i = 0; i < propsModel.count; ++i) {
+            arr.push(propsModel.get(i))
+        }
+        return arr
+    }
+
+
+
 
     onCurLevelChanged: {
         maxHp++
@@ -89,12 +281,15 @@ QtObject {
     }
 
     onCurHpChanged: {
+        hpChanged()
         if(curHp>=maxHp){
             curHp=maxHp
         }else if(curHp<0){
             curHp=0
         }
     }
+
+
 
     onCurXpChanged: {
         if(curXp>=maxXp){

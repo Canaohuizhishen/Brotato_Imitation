@@ -1,10 +1,12 @@
 import QtQuick
 import QtQuick.Controls
+import singleton.PlayerData
 import "../components"
 
 Item {
     width: 1280
     height: 720
+
     Column{
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenter: parent.verticalCenter
@@ -23,6 +25,7 @@ Item {
             height: 600
             color: "#1A1A1A"
             Rectangle{
+                id:rec
                 width: attributePanel.width
                 height: parent.height
                 color: "black"
@@ -30,6 +33,26 @@ Item {
                     id: attributePanel
                     inLeft: false
                     scaleFactor: chestOpeningInterface.scaleFactor
+                }
+            }
+            Item {
+                anchors.left:rec.right
+                anchors.leftMargin: 100
+                height: 230
+                anchors.top: back.top
+                anchors.topMargin: 15
+                //武器栏
+                PurchasedWeaponsBar {
+                    id:weapon
+                     purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
+
+                }
+                //道具栏
+                PurchasedPropsBar {
+                    anchors.top: weapon.bottom
+                    anchors.topMargin: 180
+                    purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
+                    duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
                 }
             }
         }
