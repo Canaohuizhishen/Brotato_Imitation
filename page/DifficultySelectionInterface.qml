@@ -84,7 +84,7 @@ Item {
         anchors.horizontalCenterOffset: spacing/2
         anchors.top: weaponCard.bottom
         anchors.topMargin: 25*difficultySelectionInterface.scaleFactor
-        width: cellWidth*5
+        width: cellWidth*5+1
         height:  cellHeight
         property int spacing: 5*difficultySelectionInterface.scaleFactor
         cellWidth: 68*difficultySelectionInterface.scaleFactor

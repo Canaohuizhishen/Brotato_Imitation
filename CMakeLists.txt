@@ -34,7 +34,6 @@ qt_add_qml_module(appBrotato
     QML_FILES components/MaterialsBar.qml
     QML_FILES components/BagBar.qml
     QML_FILES monsters/BabyAlien.qml
-    QML_FILES data/MonsterCustomizationCore.qml
     QML_FILES monsters/Chaser.qml
     QML_FILES weapons/Weapon.qml
     QML_FILES data/PropCustomizationCore.qml
@@ -80,6 +79,10 @@ qt_add_qml_module(appBrotato
     QML_FILES bullets/Bullet.qml
     QML_FILES bullets/StaticBullet.qml
     QML_FILES bullets/MovingBullet.qml
+    QML_FILES weapons/Spear.qml
+    QML_FILES bullets/MeleeBullet.qml
+    QML_FILES weapons/RangedWeapon.qml
+    QML_FILES weapons/MeleeWeapon.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

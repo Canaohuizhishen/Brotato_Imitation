@@ -13,13 +13,13 @@ Item {
 
     Timer {
         id: collidingTimer
-        interval: 30
+        interval: bullets.target.objectName==="Monsters" ? 15 : 50
         running: bullets.active && !bullets.paused
         repeat: true
         onTriggered: {
             for(var i=0;i<bullets.children.length;i++){
                 var child=bullets.children[i]
-                if(child.objectName==="子弹" && !child.isDestroy){
+                if(child.objectName==="子弹" && !child.isDestroy && !child.inHitCoolDown){
                     if(bullets.target.objectName==="Monsters"){
                         var monster=bullets.target.getCollidingChild(child)
                         if(monster!==null){
@@ -29,11 +29,9 @@ Item {
                     }else if(bullets.target.objectName==="Player"){
                         var player=bullets.target
                         if(Math.abs(bullets.target.x+bullets.target.width/2-child.x-child.width/2)<(bullets.target.width+child.width)/2 && Math.abs(bullets.target.y+bullets.target.height/2-child.y-child.height/2)<(bullets.target.height+child.height)/2){
-                            if(!child.inHitCoolDown){
-                                player.onHit(child)
-                                if(!child.hitNotDestroy)child.destroy()
-                                else child.inHitCoolDown=true
-                            }
+                            player.onHit(child)
+                            if(!child.hitNotDestroy)child.destroy()
+                            else child.inHitCoolDown=true
                         }
                     }
                 }

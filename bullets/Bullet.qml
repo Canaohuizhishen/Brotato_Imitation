@@ -18,6 +18,7 @@ Canvas {
     property bool canPaintBullet: true //可以画出子弹的布尔值
     property bool hitNotDestroy: false //击中目标后不会销毁的布尔值
     property bool inHitCoolDown: false //子弹正处于击中冷却的布尔值
+    property bool canAutomaticActive: true //到期子弹可以自动退出冷却
 
     onPausedChanged: {
         if(paused==true){
@@ -30,7 +31,7 @@ Canvas {
     TimerCanPause {
         id: hitCoolDownTimer
         interval: 250
-        running: bullet.inHitCoolDown && bullet.canPaintBullet
+        running: bullet.inHitCoolDown && bullet.canAutomaticActive
         repeat: false
         onTriggered: {
             inHitCoolDown=false

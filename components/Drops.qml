@@ -70,7 +70,7 @@ Item {
 
     Timer {
         id: collidingTimer
-        interval: 100
+        interval: 200
         running: drops.active
         repeat: true
         onTriggered: {

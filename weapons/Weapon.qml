@@ -9,6 +9,7 @@ Item {
     property string weaponName
     property int grade: 1
     property double scaleFactor: 1
+    property double lastScaleFactor: 1
     //transformOrigin: Item.Left
     property var bulletsParent: parent
     property var originPos: Qt.point(weapon.x,weapon.y)
@@ -18,11 +19,22 @@ Item {
     property bool paused: true
     property bool isFaceRight: true
     property bool isAiming: false
+    property bool inFire: false
+    property bool inCoolDown: false
     property bool isDestroy: false //用来标记是否已销毁，因为qml的destroy()是异步方法
-    width: 45*scaleFactor
+    property double baseWidth: 45*core.scaleRatio
+    width: baseWidth*scaleFactor
     height: width*core.aspectRatio
     z: 2
     rotation: 0
+
+    onScaleFactorChanged: {
+        originPos.x=originPos.x*scaleFactor/lastScaleFactor
+        originPos.y=originPos.y*scaleFactor/lastScaleFactor
+        x=originPos.x
+        y=originPos.y
+        lastScaleFactor=scaleFactor
+    }
 
     onPausedChanged: {
         if(paused==true){
@@ -44,15 +56,16 @@ Item {
     Image{
         id: weaponIcon
         source: weapon.grade>1 ? "/images/"+weapon.weaponName+"-mask-"+weapon.grade+(weaponIcon.isRight ? "_faceRight.png" : "_faceLeft.png") : ""
-        width: weapon.width
-        height: width*core.aspectRatio*1.05
+        width: weapon.width+6*weapon.scaleFactor
+        height: weapon.height+6*weapon.scaleFactor
         anchors.centerIn: weapon
         property bool isRight: true
+        z: 2
 
         Image{
             source: "/images/"+weapon.weaponName+(weaponIcon.isRight ? "_faceRight.png" : "_faceLeft.png")
-            width: weapon.width*0.9
-            height: width*core.aspectRatio
+            width: weapon.width
+            height: weapon.height
             anchors.centerIn: parent
         }
     }
@@ -105,16 +118,6 @@ Item {
         }
     }
 
-    TimerCanPause {
-        id: fireTimer
-        interval: weapon.core.cooldown*1000
-        running: weapon.targetPoint!=null && weapon.active
-        repeat: true;
-        onTriggered: {
-            if(!weapon.isAiming && weapon.active)weapon.fire()
-        }
-    }
-
     function rotationReset(){
         rotation=0
     }
@@ -147,17 +150,17 @@ Item {
                 weapon.isAiming=false
                 return
             }
-            if(Tool.getQuadrant(-angle)==2){
-                if(Tool.getQuadrant(-originRotation)==1)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
-                else if(Tool.getQuadrant(-originRotation)==4)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
+            if(Tool.getQuadrant(-angle)===2){
+                if(Tool.getQuadrant(-originRotation)===1)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
+                else if(Tool.getQuadrant(-originRotation)===4)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
                 //else console.log("to 2 error")
                 rotation=-90
                 waitTimer.degree=Math.abs(Tool.reduceAbs(angle,90))
                 waitTimer.angle=Tool.reduceAbs(angle,180)
                 waitTimer.start()
-            }else if(Tool.getQuadrant(-angle)==3){
-                if(Tool.getQuadrant(-originRotation)==1)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
-                else if(Tool.getQuadrant(-originRotation)==4)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
+            }else if(Tool.getQuadrant(-angle)===3){
+                if(Tool.getQuadrant(-originRotation)===1)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
+                else if(Tool.getQuadrant(-originRotation)===4)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
                 //else console.log("to 3 error ",Tool.getQuadrant(-originRotation))
                 rotation=90
                 waitTimer.degree=Math.abs(Tool.reduceAbs(angle,90))
@@ -172,17 +175,17 @@ Item {
                 weapon.isAiming=false
                 return
             }
-            if(Tool.getQuadrant(-angle)==1){
-                if(Tool.getQuadrant(originRotation+90)==2)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
-                else if(Tool.getQuadrant(-originRotation+180)==3)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
+            if(Tool.getQuadrant(-angle)===1){
+                if(Tool.getQuadrant(originRotation+90)===2)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
+                else if(Tool.getQuadrant(-originRotation+180)===3)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
                 //else console.log("to 1 error")
                 rotation=90
                 waitTimer.degree=Math.abs(Tool.reduceAbs(angle,90))
                 waitTimer.angle=angle
                 waitTimer.start()
-            }else if(Tool.getQuadrant(-angle)==4){
-                if(Tool.getQuadrant(-originRotation+180)==2)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
-                else if(Tool.getQuadrant(-originRotation+180)==3)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
+            }else if(Tool.getQuadrant(-angle)===4){
+                if(Tool.getQuadrant(-originRotation+180)===2)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
+                else if(Tool.getQuadrant(-originRotation+180)===3)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
                 //else console.log("to 4 error",Tool.getQuadrant(-originRotation+180))
                 rotation=-90
                 waitTimer.degree=Math.abs(Tool.reduceAbs(angle,90))
@@ -190,9 +193,5 @@ Item {
                 waitTimer.start()
             }
         }
-    }
-
-    function fire(){
-        //虚函数
     }
 }

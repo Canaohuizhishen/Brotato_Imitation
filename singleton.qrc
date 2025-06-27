@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>singleton/PlayerData.qml</file>
+        <file>singleton/MonstersData.qml</file>
     </qresource>
 </RCC>

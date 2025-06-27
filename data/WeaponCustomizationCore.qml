@@ -9,6 +9,7 @@ Item {
     property double grade_three_weapon_spawn_probability: 0.125*(1+PlayerData.luck/250)
     property double grade_four_weapon_spawn_probability: 0.065*(1+PlayerData.luck/125)
     property var smg: submachineGun
+    property var spear: spear
 
     function getWeaponRandomly(n){
         var result=[]//存储所有选中的武器选项
@@ -76,6 +77,69 @@ Item {
     }
 
     Item{
+        id: spear
+        objectName: "spear"
+        property string weaponName: "长矛"
+        property int grade: 1
+        property int baseDamage: 15
+        property double meleeDamageMultiplier: 1
+        property int damage: Math.max((baseDamage+PlayerData.meleeDamage*meleeDamageMultiplier)*(1+PlayerData.damage/100),1)
+        property double critical:  2* PlayerData.critChance/100
+        property double baseCooldown: 1.52
+        property double cooldown: baseCooldown/(1+PlayerData.attackSpeed/100)
+        property double attackTime: Math.min(0.75,cooldown)
+        property int baseRange: 350
+        property int range: baseRange+PlayerData.range
+        property int basePrice: 20
+        property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
+
+        readonly property string source: "Spear.qml"
+        readonly property double aspectRatio: 0.1634
+        readonly property double scaleRatio: 2.5
+
+        readonly property double xOffset: -22 //图片中的手相对于武器定位点的水平偏移,将图片位置调整至weapons的水平中心
+        readonly property double yOffset: -5
+        readonly property double handX: 9*scaleRatio //图片中的手对于左上角的水平偏移
+        readonly property double handY: 3*scaleRatio //图片中的手对于左上角的垂直偏移
+        readonly property string type: "原始"
+        readonly property string talentText: `
+        <font color='#ffffc0'>伤害 : </font><font color='white'>`+damage+`(+100%近战伤害)</font><br>
+        <font color='#ffffc0'>暴击 : </font><font color='white'>x2(`+critical+`%概率)</font><br>
+        <font color='#ffffc0'>冷却 : </font><font color='white'>`+cooldown+`</font><br>
+        <font color='#ffffc0'>范围 : </font><font color='white'>`+range+`(近战)</font><br>
+        `
+        onGradeChanged: {
+            switch(grade){
+            case 1:{
+                baseDamage=3
+                baseCooldown=1.52
+                baseRange=350
+                basePrice=20
+            }break
+            case 2:{
+                baseDamage=4
+                baseCooldown=1.4
+                baseRange=375
+                basePrice=39
+            }break
+            case 3:{
+                baseDamage=5
+                baseCooldown=1.28
+                baseRange=400
+                basePrice=74
+            }break
+            case 4:{
+                baseDamage=8
+                baseCooldown=1.24
+                baseRange=500
+                basePrice=149
+            }break
+            default: console.log("无效的等级:",weaponName,":",grade)
+            }
+        }
+    }
+
+    Item{
         id: submachineGun
         objectName: "smg"
         property string weaponName: "冲锋枪"
@@ -85,14 +149,19 @@ Item {
         property int damage: Math.max((baseDamage+PlayerData.rangedDamage*rangedDamageMultiplier)*(1+PlayerData.damage/100),1)
         property double critical:  1.5* PlayerData.critChance/100
         property double cooldown: 0.17/(1+PlayerData.attackSpeed/100)
-        property int range: 400+PlayerData.range
+        property double attackTime: Math.min(0.1,cooldown)
+        property int baseRange: 400
+        property int range: baseRange+PlayerData.range
         property int basePrice: 20
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
 
         readonly property string source: "SMG.qml"
         readonly property double aspectRatio: 0.683
-        readonly property double iconWidthOffset: 9
-        readonly property double iconHeightOffset: 16
+        readonly property double scaleRatio: 1
+        readonly property double xOffset: -2
+        readonly property double yOffset: 0
+        readonly property double handX: 9*scaleRatio
+        readonly property double handY: 16*scaleRatio
         readonly property string type: "枪械"
         readonly property string talentText: `
         <font color='#ffffc0'>伤害 : </font><font color='white'>`+damage+`(+50%远程伤害)</font><br>

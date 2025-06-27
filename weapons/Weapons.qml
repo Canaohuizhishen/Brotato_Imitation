@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import singleton.PlayerData
+import "../tool.js" as Tool
 import "../monsters"
 import "../components"
 import "../data"
@@ -13,9 +14,9 @@ Item{
     property bool active: true
     property bool paused: false
     anchors.centerIn: owner
-    anchors.horizontalCenterOffset: 10
+    anchors.horizontalCenterOffset: 10*scaleFactor
     width: 110*scaleFactor
-    height: 110*scaleFactor
+    height: width
     z: 3
     property bool isFaceRight: true
 
@@ -39,22 +40,14 @@ Item{
         opacity: 0.5
     }
 
-    // Rectangle{
-    //     visible: false
-    //     x: weapons.getPosition(3,3).x
-    //     y: weapons.getPosition(3,3).y
-    //     width: 5
-    //     height: 5
-    //     color: "red"
-    //     z: 100
-    // }
-
-    Component.onCompleted: {
-        //for(var i=0;i<1;i++)addWeapon("smg",4)
-    }
-
-    onScaleFactorChanged: {
-        relocation()
+    Rectangle{
+        visible: false
+        x: weapons.getPosition(1,1,weapons.isFaceRight).x
+        y: weapons.getPosition(1,1,weapons.isFaceRight).y
+        width: 5
+        height: 5
+        color: "red"
+        z: 100
     }
 
     WeaponCustomizationCore{
@@ -69,8 +62,8 @@ Item{
         onTriggered: {
             for(var i=0;i<weapons.children.length;i++){
                 var child=weapons.children[i]
-                if(child.objectName==="Weapon"){
-                    var weapon=weaponCore.getWeapon(child.weaponName)
+                if(child.objectName==="Weapon" && !child.inFire){
+                    var weapon=child.core
                     var monster=weapons.target.getClosestMonster(child.x+weapons.x,child.y+weapons.y,weapon.range*weapons.scaleFactor)
                     if(monster===null){
                         child.targetPoint=null
@@ -97,7 +90,7 @@ Item{
             }
         }
         isFaceRight=false
-        anchors.horizontalCenterOffset=-10
+        anchors.horizontalCenterOffset=-10*scaleFactor
     }
 
     function faceRight(){
@@ -111,7 +104,7 @@ Item{
             }
         }
         isFaceRight=true
-        anchors.horizontalCenterOffset=10
+        anchors.horizontalCenterOffset=10*scaleFactor
     }
 
     function clear(){
@@ -148,52 +141,60 @@ Item{
         }
     }
 
-    function getPosition(n1,n2){
+    function getPosition(n1,n2,isFaceRight){
+        var point
         switch(n1){
         case 1: {
-            return Qt.point(43, 76)
-        }case 2: {
-             switch(n2){
-             case 1:return Qt.point(72, 67)
-             case 2:return Qt.point(12, 67)
-             default: return Qt.point(0,0)
-             }
-         }case 3: {
-              switch(n2){
-              case 1:return getPosition(2,1)
-              case 2:return getPosition(2,2)
-              case 3:return Qt.point(42, 25)
-              default: return Qt.point(0,0)
-              }
-          }case 4: {
-               switch(n2){
-               case 1:return Qt.point(63, 77)
-               case 2:return Qt.point(20, 77)
-               case 3:return Qt.point(63, 30)
-               case 4:return Qt.point(20, 30)
-               default: return Qt.point(0,0)
-               }
-           }case 5: {
-                switch(n2){
-                case 1:return Qt.point(63, 77)
-                case 2:return Qt.point(20, 77)
-                case 3:return Qt.point(78, 37)
-                case 4:return Qt.point(5, 37)
-                case 5:return Qt.point(42, 10)
-                default: return Qt.point(0,0)
-                }
-            }case 6: {
-                 switch(n2){
-                 case 1:return Qt.point(63, 80)
-                 case 2:return Qt.point(20, 80)
-                 case 3:return Qt.point(78, 50)
-                 case 4:return Qt.point(5, 50)
-                 case 5:return Qt.point(63, 20)
-                 case 6:return Qt.point(20, 20)
-                 default: return Qt.point(0,0)
-                 }
-             }default: return Qt.point(0,0)
+            point=Qt.point(43, 76)
+        }break
+        case 2: {
+            switch(n2){
+            case 1:point=Qt.point(72, 67);break
+            case 2:point=Qt.point(12, 67);break
+            default: point=Qt.point(0,0)
+            }
+        }break
+        case 3: {
+            switch(n2){
+            case 1:point=getPosition(2,1);break
+            case 2:point=getPosition(2,2);break
+            case 3:point=Qt.point(42, 25);break
+            default: point=Qt.point(0,0)
+            }
+        }break
+        case 4: {
+            switch(n2){
+            case 1:point=Qt.point(63, 77);break
+            case 2:point=Qt.point(20, 77);break
+            case 3:point=Qt.point(63, 30);break
+            case 4:point=Qt.point(20, 30);break
+            default: point=Qt.point(0,0)
+            }
+        }break
+        case 5: {
+            switch(n2){
+            case 1:point=Qt.point(63, 77);break
+            case 2:point=Qt.point(20, 77);break
+            case 3:point=Qt.point(78, 37);break
+            case 4:point=Qt.point(5, 37);break
+            case 5:point=Qt.point(42, 10);break
+            default: point=Qt.point(0,0)
+            }
+        }break
+        case 6: {
+            switch(n2){
+            case 1:point=Qt.point(63, 80);break
+            case 2:point=Qt.point(20, 80);break
+            case 3:point=Qt.point(78, 50);break
+            case 4:point=Qt.point(5, 50);break
+            case 5:point=Qt.point(63, 20);break
+            case 6:point=Qt.point(20, 20);break
+            default: point=Qt.point(0,0)
+            }
+        }break
+        default: point=Qt.point(0,0)
         }
+        return Qt.point(point.x,point.y)
     }
 
     function relocation(){
@@ -202,8 +203,13 @@ Item{
             var child=weapons.children[i]
             if(child.objectName==="Weapon" && !child.isDestroy){
                 var weapon = weaponCore.getWeapon(child.weaponName)
-                child.x=(weapons.getPosition(PlayerData.weapons.count,n).x-weapon.iconWidthOffset)*scaleFactor
-                child.y=(weapons.getPosition(PlayerData.weapons.count,n).y-weapon.iconHeightOffset)*scaleFactor
+                var targetPoint=weapons.getPosition(PlayerData.weapons.count,n,child.isFaceRight)
+                if(child.isFaceRight){
+                    child.x=(targetPoint.x-weapon.handX+weapon.xOffset)*scaleFactor
+                }else{
+                    child.x=(targetPoint.x-child.baseWidth+weapon.handX-weapon.xOffset)*scaleFactor
+                }
+                child.y=(targetPoint.y-weapon.handY+weapon.yOffset)*scaleFactor
                 child.originPos=Qt.point(child.x,child.y)
                 n++
             }

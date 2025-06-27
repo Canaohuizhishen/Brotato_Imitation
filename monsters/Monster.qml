@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import Brotato
 import singleton.PlayerData
+import singleton.MonstersData
 import "../components"
 import "../data"
 
@@ -32,11 +33,19 @@ Image {
     property bool isFrontHaveOtherMonster: false
 
     property alias monsterData: monsterData
-    property var core: monsterCore.getMonster(monsterName)
+    property var core: MonstersData.getMonster(monsterName)
+    property var monsterCore: MonstersData
 
     property double v: core.initVelocity
     property int interval: 10
     property double stepSize: v*interval/1200*scaleFactor
+
+    Component.onCompleted: {
+        core.curNumber++
+    }
+    Component.onDestruction: {
+        core.curNumber--
+    }
 
     onPausedChanged: {
         if(paused==true){
@@ -78,10 +87,6 @@ Image {
         origin.x: monster.width/2
         origin.y: monster.height
         xScale: 1.0; yScale: 1.0
-    }
-
-    MonsterCustomizationCore{
-        id: monsterCore
     }
 
     WeaponCustomizationCore{

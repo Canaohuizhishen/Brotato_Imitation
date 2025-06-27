@@ -22,3 +22,8 @@ function getQuadrant(angle){
 function approximatelyEqual(a, b, epsilon = 1e-6) {
     return Math.abs(a - b) < epsilon;
 }
+
+function getMirrorX(x,targetX){
+    var newX=x+(targetX-x)*2
+    return newX
+}
