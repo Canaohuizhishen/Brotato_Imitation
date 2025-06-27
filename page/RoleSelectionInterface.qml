@@ -19,6 +19,7 @@ Item {
     function init(){
         visible=false
         selectedRoleName=""
+        roleGrid.currentIndex=0
     }
 
     Rectangle {

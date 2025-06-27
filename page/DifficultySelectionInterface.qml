@@ -23,6 +23,7 @@ Item {
         selectedRoleName=""
         selectedWeaponName=""
         selectedDifficulty=""
+        difficultyRow.currentIndex=0
     }
 
     Rectangle {

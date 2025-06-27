@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import singleton.PlayerData
 import "../components"
+import "../bullets"
 import "../monsters"
 import "../weapons"
 
@@ -34,6 +35,7 @@ Item{
             player.focus=true
             player.x=gameArea.width/2
             player.y=gameArea.height/2
+            player.faceRight()
         }else {
             active=false
             monsters.disappear()

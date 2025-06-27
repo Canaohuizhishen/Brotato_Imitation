@@ -21,6 +21,7 @@ Item {
         visible=false
         selectedRoleName=""
         selectedWeaponName=""
+        weaponRow.currentIndex=0
     }
 
     Rectangle {

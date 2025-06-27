@@ -83,9 +83,7 @@ Item {
         scaleFactor: gameWindow.scaleFactor
 
         onSelected:{
-            PlayerData.init()
             weaponSelectionInterface.visible=false
-            difficultySelectionInterface.init()
             difficultySelectionInterface.selectedRoleName=selectedRoleName
             difficultySelectionInterface.selectedWeaponName=selectedWeaponName
             difficultySelectionInterface.visible=true
@@ -102,6 +100,7 @@ Item {
         visible: false
         scaleFactor: gameWindow.scaleFactor
         onSelected:{
+            PlayerData.init()
             difficultySelectionInterface.visible=false
             gameArea.player.roleName=""
             gameArea.player.roleName=selectedRoleName
@@ -310,6 +309,7 @@ Item {
         chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
         gameArea.player.roleName=""
         gameArea.player.roleName=difficultySelectionInterface.selectedRoleName
+
         PlayerData.isInCombat=true
         paused=false
     }
@@ -322,6 +322,11 @@ Item {
     }
 
     function backMainMenu(){
+        if(PlayerData.currentWaveNumber===1){
+            roleSelectionInterface.init()
+            weaponSelectionInterface.init()
+            difficultySelectionInterface.init()
+        }
         gameArea.clear()
         chestOpeningInterface.init()
         upgradeInterface.init()
@@ -340,12 +345,12 @@ Item {
     }
 
     function init(){
-        // paused=false
-        // inSelectInterface=true
-        // startInterface.init()
-        // roleSelectionInterface.init()
-        // weaponSelectionInterface.init()
-        // difficultySelectionInterface.init()
+        paused=false
+        inSelectInterface=true
+        startInterface.init()
+        roleSelectionInterface.init()
+        weaponSelectionInterface.init()
+        difficultySelectionInterface.init()
         gameArea.init()
         chestOpeningInterface.init()
         upgradeInterface.init()
