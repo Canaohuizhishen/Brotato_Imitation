@@ -1,6 +1,6 @@
 import QtQuick 2.15
 
-Weapon {
+RangedWeapon {
     id: smg
     weaponName: "smg"
 
@@ -99,7 +99,7 @@ Weapon {
         id: fireAnimation
         loops: 1
         running: false
-        property double duration: smg.core.cooldown*1000*0.8
+        property double duration: smg.core.attackTime*1000
 
         ParallelAnimation {
             id: backAnimation
@@ -115,6 +115,10 @@ Weapon {
             property double duration: fireAnimation.duration/2.5*1.5
             NumberAnimation { target: smg; property: "x"; from: smg.originPos.x-Math.cos(backAnimation.angle* (Math.PI/180))*smg.width/4; to: smg.originPos.x; duration: recoverAnimation.duration; easing.type: Easing.InOutQuad }
             NumberAnimation { target: smg; property: "y"; from: smg.originPos.y+Math.sin(backAnimation.angle* (Math.PI/180))*smg.width/4; to: smg.originPos.y; duration: recoverAnimation.duration; easing.type: Easing.InOutQuad }
+        }
+        onStopped: {
+            smg.x=smg.originPos.x
+            smg.y=smg.originPos.y
         }
         function pause(){
             if(running)paused=true

@@ -13,6 +13,7 @@ Bullet {
     canPaintBullet: false
     hitNotDestroy: true
     inHitCoolDown: true
+    canAutomaticActive: false
 
     onScaleFactorChanged: {
         width=width*scaleFactor/lastScaleFactor
@@ -46,6 +47,7 @@ Bullet {
             bullet.canPaintBullet=true
             bullet.requestPaint()
             bullet.inHitCoolDown=false
+            bullet.canAutomaticActive=true
             destroyTimer.start()
         }
     }

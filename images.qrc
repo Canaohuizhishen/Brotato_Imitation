@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>images/spear-mask-4_faceRight.png</file>
         <file>images/recording.png</file>
         <file>images/prayer_faceLeft.png</file>
         <file>images/attribute-range.png</file>
@@ -37,6 +38,7 @@
         <file>images/smg-mask-4_faceRight.png</file>
         <file>images/material7.png</file>
         <file>images/icon_smg.png</file>
+        <file>images/spear_faceLeft.png</file>
         <file>images/attribute-elementalDamage.png</file>
         <file>images/chest_green.png</file>
         <file>images/hand.png</file>
@@ -96,6 +98,7 @@
         <file>images/icon_lock.png</file>
         <file>images/brute_mask_faceRight.png</file>
         <file>images/lock3.png</file>
+        <file>images/spear-mask-2_faceRight.png</file>
         <file>images/material5.png</file>
         <file>images/chest.png</file>
         <file>images/prop-campfire.png</file>
@@ -105,6 +108,7 @@
         <file>images/icon_wellRounded.png</file>
         <file>images/eyes.png</file>
         <file>images/prop-defective_steroids.png</file>
+        <file>images/spear-mask-3_faceLeft.png</file>
         <file>images/lock.png</file>
         <file>images/red_bullet.png</file>
         <file>images/attribute-engineering.png</file>
@@ -113,9 +117,11 @@
         <file>images/helmetAlien_faceLeft.png</file>
         <file>images/prop-toolbox.png</file>
         <file>images/summoner_mask_faceLeft.png</file>
+        <file>images/icon_spear.png</file>
         <file>images/red_fork.png</file>
         <file>images/prop-duct_tape.png</file>
         <file>images/prop-butterfly.png</file>
+        <file>images/spear_faceRight.png</file>
         <file>images/chaser_mask_faceRight.png</file>
         <file>images/skull.png</file>
         <file>images/chest_white.png</file>
@@ -132,6 +138,7 @@
         <file>images/wellRounded_faceRight.png</file>
         <file>images/mutant_faceRight.png</file>
         <file>images/scavenger_faceLeft.png</file>
+        <file>images/spear-mask-2_faceLeft.png</file>
         <file>images/summoner_faceRight.png</file>
         <file>images/scavenger_faceRight.png</file>
         <file>images/prop-hedgehog.png</file>
@@ -164,6 +171,7 @@
         <file>images/finChaser_mask_faceLeft.png</file>
         <file>images/attribute-damage.png</file>
         <file>images/chaser_faceLeft.png</file>
+        <file>images/spear-mask-4_faceLeft.png</file>
         <file>images/prop-gear.png</file>
         <file>images/smg-mask-2_faceRight.png</file>
         <file>images/smg-mask-2_faceLeft.png</file>
@@ -197,6 +205,7 @@
         <file>images/helmetBrute_mask_faceRight.png</file>
         <file>images/material1.png</file>
         <file>images/material8.png</file>
+        <file>images/spear-mask-3_faceRight.png</file>
         <file>images/sprayer_faceRight.png</file>
         <file>images/stone2.png</file>
         <file>images/icon_0.png</file>

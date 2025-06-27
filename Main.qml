@@ -16,7 +16,7 @@ ApplicationWindow {
 
     GameWindow{
         id: gameWindow
-        width: window.width/window.height > 1.7777 ? gameWindow.height*1.7777 : window.width
+        width: window.width/window.height > 1.7777 ? window.height*1.7777 : window.width
         height: window.width/window.height > 1.7777 ? window.height : gameWindow.width/1.7777
     }
 }

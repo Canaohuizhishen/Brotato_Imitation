@@ -1,7 +1,9 @@
 import QtQuick 2.15
+import singleton.MonstersData
+import "../tool.js" as Tool
 import "../data"
 import "../components"
-import "../tool.js" as Tool
+import "../bullets"
 
 Item {
     id: monsters
@@ -74,10 +76,6 @@ Item {
         }
     }
 
-    MonsterCustomizationCore{
-        id: monsterCore
-    }
-
     //用来管理所有怪物生成的子弹
     Bullets{
         id: bullets
@@ -106,16 +104,20 @@ Item {
         onTriggered: {
             if(!monsters.active)return
             if(monsters.children.length<monsters.maxNum){
-                //console.log(monsterCore.children.length)
-                for(var i=0;i<monsterCore.children.length;i++){
-                    var monsterData=monsterCore.children[i]
+                for(var i=0;i<MonstersData.children.length;i++){
+                    var monsterData=MonstersData.children[i]
                     var n=Math.floor(monsterData.initCount*monsterData.countRation)
                     if(n==0)continue
-                    //console.log(n,monsterData.initCount,monsterData.countRation)
-                    monsterData.countRation*=1+monsterData.countIcreaseRation
-                    monsters.spawnMonsters(n,monsterData.objectName)
+                    else if(n+monsterData.curNumber>monsterData.maxCurNumber){
+                        monsters.spawnMonsters(monsterData.maxCurNumber-monsterData.curNumber,monsterData.objectName)
+                        monsterData.countRation/=1+monsterData.countIcreaseRation
+                    }else{
+                        monsters.spawnMonsters(n,monsterData.objectName)
+                        monsterData.countRation*=1+monsterData.countIcreaseRation
+                    }
                 }
             }
+            //console.log("怪物数量",monsters.children.length,MonstersData.babyAlien.curNumber)
         }
     }
 
@@ -271,7 +273,7 @@ Item {
 
     //在parent中动态生成一个怪物名为monsterName的怪物
     function spawnMonster(parent,monsterName) {
-        var source=monsterCore.getMonster(monsterName).source
+        var source=MonstersData.getMonster(monsterName).source
         var monsterComponent = Qt.createComponent(source)
         if (monsterComponent.status === Component.Ready) {
             var monster = monsterComponent.createObject(parent);

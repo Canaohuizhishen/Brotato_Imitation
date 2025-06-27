@@ -37,13 +37,6 @@ Item {
         }
     }
 
-    // Timer {
-    //     interval: 100; running: true; repeat: true
-    //     onTriggered: {
-    //         //console.log(gameWindow.scaleFactor)
-    //     }
-    // }
-
     StartInterface{
         id: startInterface
         visible: true
@@ -309,6 +302,7 @@ Item {
         chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
         gameArea.player.roleName=""
         gameArea.player.roleName=difficultySelectionInterface.selectedRoleName
+        PlayerData.addWeapon(difficultySelectionInterface.selectedWeaponName,1)
 
         PlayerData.isInCombat=true
         paused=false
