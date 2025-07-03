@@ -5,11 +5,11 @@ QtObject {
     id: root
     property FileManager fileManager: FileManager {}
     // 添加 shopContext 属性
-        property QtObject shopContext: QtObject {
-            property ListModel _purchasedPropsModel: ListModel {}
-            property ListModel _duplicatePropsCountModel: ListModel {}
-            property ListModel _purchasedWeaponsModel: ListModel {}
-        }
+    property QtObject shopContext: QtObject {
+        property ListModel _purchasedPropsModel: ListModel {}
+        property ListModel _duplicatePropsCountModel: ListModel {}
+        property ListModel _purchasedWeaponsModel: ListModel {}
+    }
     //主要属性
     property int curLevel: 0                 //目前等级
     property int maxXp: (curLevel<5 ? 5+10*curLevel : 50+Math.pow(curLevel,2))*expDiscountRate //最大经验
@@ -85,8 +85,8 @@ QtObject {
         // showProps()
         // showLastStoreGoods()
         shopContext._purchasedPropsModel.clear();
-                shopContext._duplicatePropsCountModel.clear();
-                shopContext._purchasedWeaponsModel.clear();
+        shopContext._duplicatePropsCountModel.clear();
+        shopContext._purchasedWeaponsModel.clear();
     }
     function saveGame() {
         try {

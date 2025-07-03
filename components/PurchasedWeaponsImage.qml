@@ -146,7 +146,15 @@ Item {
             }
 
             Text {
-                text: Controller.getSpecificWeapon().talentText
+                //不直接使用text: Controller.getSpecificWeapon().talentText是因为防止循环绑定报错
+                property var specificWeapon: {
+                    if (itemData && itemData.type !== "道具") {
+                        return weaponCore.getWeapon(itemData.objectName, wGrade)
+                    }
+                    return null
+                }
+                // text: Controller.getSpecificWeapon().talentText
+                text: specificWeapon ? specificWeapon.talentText : ""
                 font.pixelSize: 12
                 font.weight: Font.DemiBold
 
@@ -209,6 +217,20 @@ Item {
                     Layout.preferredHeight: 20
 
                     property bool isHovered: false
+                    property int recycleValue: 0
+
+                    //这样做的原因是：如果直接使用text: "回收(+" + Controller.recycledPrice(wIndex,wGrade) + ")" 会导致循环绑定的报错
+                    //当弹出框打开时更新回收值
+                    Connections {
+                        target: infoPopup
+                        function onOpened() {
+                            recycleButton.updateRecycleValue()
+                        }
+                    }
+
+                    function updateRecycleValue() {
+                        recycleValue = Controller.recycledPrice(wIndex, wGrade) || 0 //或0是因为：recycledPrice判断存在性为否时会返回空，避免一个空值赋值给recycleValue
+                    }
 
                     HoverHandler {
                         onHoveredChanged: recycleButton.isHovered = hovered
@@ -221,7 +243,8 @@ Item {
                     }
 
                     contentItem: Text {
-                        text: "回收(+" + Controller.recycledPrice(wIndex,wGrade) + ")"
+                        // text: "回收(+" + Controller.recycledPrice(wIndex,wGrade) + ")"
+                        text: "回收(+" + recycleButton.recycleValue + ")"
                         font.pixelSize: 18
                         color: recycleButton.isHovered ? "#444444" : "white"
                         horizontalAlignment: Text.AlignHCenter
