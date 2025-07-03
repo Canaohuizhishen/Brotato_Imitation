@@ -53,6 +53,7 @@ Item {
             scale: 1.2
             scaleFactor: chestOpeningInterface.scaleFactor
             anchors.verticalCenter: parent.verticalCenter
+            inLeft: false
         }
 
         PropCard{

@@ -5,11 +5,10 @@ import singleton.MonstersData
 import "../components"
 import "../data"
 
-Image {
+Item {
     id: monster
     property var target: null
     property var bulletsParent
-    source: "/images/"+monster.monsterName+"_faceRight.png"
     objectName: "Monster"
     property string monsterName
     property var owner: parent
@@ -19,6 +18,7 @@ Image {
     property int imageHeight
     width: imageWidth*scaleFactor
     height: imageHeight*scaleFactor
+    property int shadowWidth: width
     z: 2
     property bool active: owner.active
     property bool paused: owner.paused
@@ -82,6 +82,10 @@ Image {
         lastScaleFactor=scaleFactor
     }
 
+    WeaponCustomizationCore{
+        id: weaponCore
+    }
+
     transform: Scale {
         id: squashScale
         origin.x: monster.width/2
@@ -89,8 +93,36 @@ Image {
         xScale: 1.0; yScale: 1.0
     }
 
-    WeaponCustomizationCore{
-        id: weaponCore
+    Image{
+        id: monsterIcon
+        source: "/images/"+monster.monsterName+"_faceRight.png"
+        anchors.fill: parent
+        z: 1
+    }
+
+    Image {
+        id: whiteOverlay
+        anchors.fill: monsterIcon
+        source: monster.isFaceRight ? "/images/"+monster.monsterName+"_mask_faceRight.png" : "/images/"+monster.monsterName+"_mask_faceLeft.png"
+        opacity: 0
+        z: 100
+    }
+
+    Canvas {
+        id: shadow
+        width: monster.shadowWidth/1.1
+        height: width/4
+        anchors.bottom: monster.bottom
+        anchors.bottomMargin: -height/6
+        anchors.horizontalCenter: monster.horizontalCenter
+
+        onPaint: {
+            var ctx = getContext("2d");
+            ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+            ctx.beginPath();
+            ctx.ellipse(0, 0, width, height);
+            ctx.fill();
+        }
     }
 
     SequentialAnimation {
@@ -250,21 +282,13 @@ Image {
         running: false
     }
 
-    Image {
-        id: whiteOverlay
-        anchors.fill: monster
-        source: monster.isFaceRight ? "/images/"+monster.monsterName+"_mask_faceRight.png" : "/images/"+monster.monsterName+"_mask_faceLeft.png"
-        opacity: 0
-        z: 100
-    }
-
     function faceLeft(){
-        monster.source="/images/"+monster.monsterName+"_faceLeft.png"
+        monsterIcon.source="/images/"+monster.monsterName+"_faceLeft.png"
         isFaceRight=false
     }
 
     function faceRight(){
-        monster.source="/images/"+monster.monsterName+"_faceRight.png"
+        monsterIcon.source="/images/"+monster.monsterName+"_faceRight.png"
         isFaceRight=true
     }
 

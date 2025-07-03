@@ -95,26 +95,26 @@ Item {
         id: core
     }
 
+    transform: Scale {
+        id: squashScale
+        origin.x: playerIcon.width/2
+        origin.y: playerIcon.height
+        xScale: 1.0; yScale: 1.0
+    }
+
     Image{
         id: playerIcon
         source: player.roleName == "" ? "" : "/images/"+ player.roleName +"_faceRight.png"
         anchors.fill: parent
         z: 1
-
-        transform: Scale {
-            id: squashScale
-            origin.x: playerIcon.width/2
-            origin.y: playerIcon.height
-            xScale: 1.0; yScale: 1.0
-        }
     }
 
     Canvas {
         id: shadow
         width: player.width/1.1
-        height: player.height/4
+        height: width/3
         anchors.bottom: player.bottom
-        anchors.bottomMargin: -5
+        anchors.bottomMargin: -height/3
         anchors.horizontalCenter: player.horizontalCenter
 
         onPaint: {

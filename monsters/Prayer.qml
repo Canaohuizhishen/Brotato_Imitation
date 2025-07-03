@@ -7,6 +7,7 @@ Monster{
     monsterName: "prayer"
     imageWidth: 150
     imageHeight: imageWidth*1.05
+    shadowWidth: width/1.35
     property int baseSpawnBulletWidth: 300
     property int spawnR: 200 //子弹生成区域的初始半径
     property int maxSpawnR: 400 //子弹生成区域的最大半径

@@ -63,7 +63,7 @@ Item {
 
         //monsters.spawnMonsters(100,"babyAlien")
         //monsters.spawnMonsters(1,"charger")
-        //monsters.spawnMonsters(10,"sprayer")
+        //monsters.spawnMonsters(10,"chaser")
     }
 
     onPausedChanged: {
