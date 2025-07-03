@@ -1,59 +1,4 @@
-// .pragma library
 //刷新商店
-// function refreshShop() {
-//     var old = [];
-//     for (var i = 0; i < shopModel.count; ++i) {
-//         var item = shopModel.get(i)
-//         old.push({
-//                      goods: item.goods,
-//                      isLockedModel: item.isLockedModel
-//                  })
-//     }
-
-//     var lockedItemNum = 0
-//     shopModel.clear()
-//     for (var idx = 0; idx < shopView.columns; ++idx) {
-//         if (old[idx] && old[idx].isLockedModel) {
-//             // 保留旧项
-//             lockedItemNum++
-//             // console.log(old[idx].isLockedModel)
-//             shopModel.append({
-//                 goods:     old[idx].goods,
-//                 isLockedModel: true
-//             })
-//         }
-//     }
-//     // else {
-//     // for (var l = 0; l < shopView.columns; ++l) {
-//     //     // console.log(old[idx].isLockedModel)
-//     //     if (old[l] && old[l].isLockedModel) {
-//     //         // var p = core.getPropRandomly(1)[0]
-//     //         // shopModel.append({
-//     //         //                      propItem:     p,
-//     //         //                      isLockedModel: false
-//     //         //                  })
-//     //         // console.log(shopModel.get(idx).isLockedModel,"111")
-//     //     } else {
-//     //         var p = core.getPropRandomly(1)[0]
-//     //         shopModel.append({
-//     //                              propItem:     p,
-//     //                              isLockedModel: false
-//     //                          })
-//     //     }
-//     // }
-//     var randomItemNum = shopView.columns - lockedItemNum
-//     var p = propCore.getPropRandomly(randomItemNum)
-//     var w = weaponCore.getWeaponRandomly(randomItemNum)
-
-//     for(var l = 0; l < randomItemNum; ++l) {
-//         var singleItem = p[l]
-//         shopModel.append({
-//                              goods:     singleItem,
-//                              isLockedModel: false
-//                          })
-//     }
-//     // delete(p)
-// }
 function refreshShop() {
     var old = []
     //将模型里面的数据复制下来，方便在锁定商品时进行保留
@@ -144,14 +89,15 @@ function buyItem(itemIndex)
 {
     var purchasedItem = shopModel.get(itemIndex)
     if(purchasedItem.goods.type === "道具") {
-        PlayerData.shopContext._purchasedPropsModel.append({propItem: purchasedItem.goods})
+        // PlayerData.shopContext._purchasedPropsModel.append({propItem: purchasedItem.goods})
+        mergeDuplicateProps(purchasedItem) //将道具合并，并加入模型
         purchasedItem.goods.apply()
         attributeBar.upData()
-        mergeDuplicateProps(purchasedItem)
         shopItem.visible = false
+        shopModel.get(itemIndex).isLockedModel = false //确保如果购买的是锁定商品，点击刷新可以把该锁定商品刷新掉
         return true
 
-// if(shopscreen.shopContext._purchasedWeaponsModel.count <= 6)
+        // if(shopscreen.shopContext._purchasedWeaponsModel.count <= 6)
     } else {
         if (PlayerData.shopContext._purchasedWeaponsModel.count === 6 ) { //当武器栏已经满了6个，如果购买了一个和已拥有的武器相同的武器，那么两者自动合并
             for(var i = 0;i < PlayerData.shopContext._purchasedWeaponsModel.count;i++) {
@@ -163,6 +109,7 @@ function buyItem(itemIndex)
                     PlayerData.shopContext._purchasedWeaponsModel.setProperty(i, "weaponGrade", weapon.weaponGrade + 1)
                     PlayerData.shopContext._purchasedWeaponsModel.move(i, PlayerData.shopContext._purchasedWeaponsModel.count - 1, 1)
                     shopItem.visible = false //购买了该武器后商品项就该不可见
+                    shopModel.get(itemIndex).isLockedModel = false
                     PlayerData.shopContext._purchasedWeaponsModel.layoutChanged() //强制模型刷新，确保合成按钮的可见性正确
                     return true //确保商品成功购买并且加入到模型才进行扣费
                 }
@@ -170,6 +117,7 @@ function buyItem(itemIndex)
         } else if (PlayerData.shopContext._purchasedWeaponsModel.count <= 5){
             PlayerData.shopContext._purchasedWeaponsModel.append({weaponItem: purchasedItem.goods,weaponGrade: purchasedItem.weaponGrade})
             shopItem.visible = false
+            shopModel.get(itemIndex).isLockedModel = false
             return true
         }
     }
@@ -181,6 +129,7 @@ function buyItem(itemIndex)
 function mergeDuplicateProps(purchasedItem)
 {
     var exitingIndex = -1
+    //寻找模型中是否有所和购买道具相同的道具
     for( var i = 0;i < PlayerData.shopContext._duplicatePropsCountModel.count;i++) {
         if( PlayerData.shopContext._duplicatePropsCountModel.get(i).propItem.objectName === purchasedItem.goods.objectName) {
             exitingIndex = i
@@ -242,22 +191,22 @@ function compositeWeapon(wIndex)
 //武器等级<=3合成按钮才可见
 function isCompositeVisible(wIndex)
 {
-    // console.log(wIndex)
-    // console.log(purchasedWeaponsModel.count)
     var currentWeapon = PlayerData.shopContext._purchasedWeaponsModel.get(wIndex)
 
-    //等级为4的武器不能够继续
-    // if (currentWeapon.weaponGrade === 4) {
-    //     return false
-    // }
+    if (!currentWeapon || !currentWeapon.weaponItem) {
+        return false
+    }
 
-    // var isVisible = false
     for(var i = 0; i < PlayerData.shopContext._purchasedWeaponsModel.count; i++) {
         if(i === wIndex) {
             continue
         }
 
-        //因为按钮的可视性不断在计算，当合成后purchasedWeaponsModel.count减少，可能该次循环i已经超过了模型的大小导致报错
+        var weapon = PlayerData.shopContext._purchasedWeaponsModel.get(i)
+        if (!weapon || !weapon.weaponItem) {
+            continue
+        }
+
         if(PlayerData.shopContext._purchasedWeaponsModel.get(i).weaponItem.objectName === currentWeapon.weaponItem.objectName
                 && PlayerData.shopContext._purchasedWeaponsModel.get(i).weaponGrade === currentWeapon.weaponGrade
                 && currentWeapon.weaponGrade !== 4) {
@@ -283,11 +232,27 @@ function recycleWeapons(wIndex)
 //武器回收价格
 function recycledPrice(wIndex,wGrade)
 {
+    //添加这些判断的目的是：防止在武器栏并未初始化完成的时候就调用了该函数导致报错
+    if (!PlayerData.shopContext._purchasedWeaponsModel || wIndex >= PlayerData.shopContext._purchasedWeaponsModel.count) {
+        return
+    }
+    var weaponModel = PlayerData.shopContext._purchasedWeaponsModel.get(wIndex)
+    if (!weaponModel || !weaponModel.weaponItem) {
+        return
+    }
+
+    // console.log("111")
     return Math.floor(weaponCore.getWeapon(PlayerData.shopContext._purchasedWeaponsModel.get(wIndex).weaponItem.objectName,wGrade).basePrice * 0.7)
 }
 
 //全局变量存放商店刷新次数
 var refreshTimes = -1
+
+function resetRefreshTimes()
+{
+    refreshTimes = -1
+}
+
 
 //刷新的价格
 function refreshPrice(waveNum)
@@ -305,7 +270,8 @@ function refreshPrice(waveNum)
     }
 }
 
-
+//获取武器
+//一个武器需要名称和等级才能唯一标识
 function getSpecificWeapon() {
     if (itemData && itemData.type !== "道具") {
         return weaponCore.getWeapon(itemData.objectName, wGrade)
@@ -313,12 +279,66 @@ function getSpecificWeapon() {
     return null
 }
 
-//初始化道具效果
-function initPropEffects()
+//初始化道具栏
+function initPropBar()
 {
-    for(var i = 0; i < PlayerData.shopContext._purchasedPropsModel.count;i++) {
-        var prop = PlayerData.shopContext._purchasedPropsModel.get(i).propItem
-        prop.apply()
+    PlayerData.shopContext._duplicatePropsCountModel.clear()
+    for(var i = 0;i < PlayerData.props.count; i++) {
+        var propName = PlayerData.props.get(i).propName
+        for(var l = 0;l < propCore.children.length;l++) {
+            if(propCore.children[l].propName === propName) {
+                PlayerData.shopContext._duplicatePropsCountModel.append({propItem: propCore.children[l],                                count: PlayerData.props.get(i).number})
+                break
+            }
+        }
     }
 }
+
+//初始化武器栏
+function initWeaponBar()
+{
+    PlayerData.shopContext._purchasedWeaponsModel.clear()
+    for(var j = 0;j < PlayerData.weapons.count; j++) {
+        var weaponName = PlayerData.weapons.get(j).weaponName
+        // console.log(weaponName)
+        for(var h = 0;h < weaponCore.children.length;h++) {
+            if(weaponCore.children[h].weaponName === weaponName) {
+                PlayerData.shopContext._purchasedWeaponsModel.append({weaponItem: weaponCore.children[h],
+                                                                         weaponGrade: PlayerData.weapons.get(j).grade})
+                break
+            }
+        }
+    }
+}
+
+//将道具栏的道具同步到角色的道具模型中
+function setPlayerProps(PlayerData)
+{
+    //把角色移到道具栏的首位
+    for(var i = 0;i < PlayerData.shopContext._duplicatePropsCountModel.count; i++) {
+        if(PlayerData.shopContext._duplicatePropsCountModel.get(i).propItem.type === "天赋") {
+            PlayerData.shopContext._duplicatePropsCountModel.move(i, 0, 1)
+            break
+        }
+    }
+
+    PlayerData.props.clear()
+    for(var l = 0; l < PlayerData.shopContext._duplicatePropsCountModel.count;l++) {
+        var prop = PlayerData.shopContext._duplicatePropsCountModel.get(l)
+        PlayerData.addProp(prop.propItem.propName,prop.count)
+        // console.log("PlayerData prop:",PlayerData.props.get(l).propName," ",PlayerData.props.get(l).number)
+    }
+}
+
+//将武器栏的武器同步到角色的武器模型中
+function setPlayerWeapons(PlayerData)
+{
+    PlayerData.weapons.clear()
+    for(var i = 0;i < PlayerData.shopContext._purchasedWeaponsModel.count;i++) {
+        var weapon = PlayerData.shopContext._purchasedWeaponsModel.get(i)
+        PlayerData.addWeapon(weapon.weaponItem.weaponName,weapon.weaponGrade)
+        // console.log("PlayerData weapon:",PlayerData.weapons.get(i).weaponName," ",PlayerData.weapons.get(i).grade)
+    }
+}
+
 

@@ -68,7 +68,7 @@ Rectangle {
         // // 更新单例中的模型引用
         // PlayerData.shopContext._purchasedPropsModel = purchasedPropsModel
         // PlayerData.shopContext._duplicatePropsCountModel = duplicatePropsCountModel
-        Controller.initPropEffects()
+        // Controller.initPropEffects()
         updateLayout()
     }
 

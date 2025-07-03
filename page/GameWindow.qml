@@ -142,11 +142,6 @@ Item {
         anchors.fill: parent
     }
 
-
-    ShopScreen {
-        anchors.fill: parent
-    }
-
     ChestOpeningInterface{
         id: chestOpeningInterface
         visible: false
@@ -196,14 +191,19 @@ Item {
         z: 100
     }
 
-    StoreInterface{
+    // StoreInterface{
+    //     id: storeInterface
+    //     visible: false
+    //     scaleFactor: gameWindow.scaleFactor
+    //     goButton.onClicked:{
+    //         visible=false
+    //         waveCountdown.start()
+    //     }
+    // }
+
+    ShopScreen {
         id: storeInterface
-        visible: false
-        scaleFactor: gameWindow.scaleFactor
-        goButton.onClicked:{
-            visible=false
-            waveCountdown.start()
-        }
+        anchors.fill: parent
     }
 
     UpgradeNotificationBar{
