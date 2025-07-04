@@ -183,16 +183,11 @@ Item {
         id: storeInterface
         visible: false
         scaleFactor: gameWindow.scaleFactor
-        goButton.onClicked:{
+        startButton.onClicked:{
             visible=false
             waveCountdown.start()
         }
     }
-
-    // ShopScreen {
-    //     id: storeInterface
-    //     anchors.fill: parent
-    // }
 
     UpgradeNotificationBar{
         id: upgradeNotificationBar

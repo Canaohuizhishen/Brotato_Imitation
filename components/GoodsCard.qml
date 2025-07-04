@@ -7,8 +7,8 @@ import "../data"
 import singleton.PlayerData
 
 Item {
-    id:shopItem
-
+    id: shopItem
+    property double scaleFactor: 1.0
     property alias lockState: lockButton.isLocked
     property var itemData
     property string cionImage : "qrc:/images/material_icon.png"
@@ -28,7 +28,7 @@ Item {
         id: backGround
         color: itemData.type === "道具" ? Color.getBackgroundColor(itemData.grade)
                                       : Color.getBackgroundColor(wGrade)
-        radius: 8
+        radius: 8*shopItem.scaleFactor
         border.color: itemData.type === "道具" ? Color.getBorderColor(itemData.grade)
                                              : Color.getBorderColor(wGrade)
         height: shopItem.height
@@ -41,26 +41,26 @@ Item {
             id: root
             anchors.fill: parent
             // anchors.top: parent
-            anchors.margins: 8
+            anchors.margins: 8*shopItem.scaleFactor
 
             Rectangle {
                 id: goodsImageBackground
-                width: 63
-                height: 63
+                width: 63*shopItem.scaleFactor
+                height: 63*shopItem.scaleFactor
                 color: itemData.type === "道具" ? Color.getImageBackgroundColor(itemData.grade)
                                               : Color.getImageBackgroundColor(wGrade)
                 anchors.top: parent.top
-                anchors.topMargin: 3
+                anchors.topMargin: 3*shopItem.scaleFactor
                 anchors.left: parent.left
-                anchors.leftMargin: 3
-                radius: 6
+                anchors.leftMargin: 3*shopItem.scaleFactor
+                radius: 6*shopItem.scaleFactor
 
                 Image {
                     id: goodsImage
                     source: itemData.type === "道具" ? "qrc:/images/prop-" + itemData.objectName + ".png"
                                                    : "qrc:/images/weapon-" + itemData.objectName + ".png"
-                    width: 63
-                    height: 63
+                    width: 63*shopItem.scaleFactor
+                    height: 63*shopItem.scaleFactor
                     fillMode: Image.PreserveAspectFit
                     anchors.centerIn: parent
                 }
@@ -68,23 +68,24 @@ Item {
 
             Column {
                 anchors.left: goodsImageBackground.right
-                anchors.leftMargin: 5
+                anchors.leftMargin: 5*shopItem.scaleFactor
                 // anchors.top: parent.top
-                // anchors.topMargin: 5
+                // anchors.topMargin: 5*shopItem.scaleFactor
                 anchors.top: goodsImageBackground.top
 
                 Text {
                     id: goodsName
                     text: itemData.type === "道具" ? itemData.propName  : itemData.weaponName
+                    style: Text.Outline
                     color: itemData.type === "道具" ? ((itemData.grade === 1) ? "white" : Color.getBorderColor(itemData.grade))
                                                   : ((wGrade === 1) ? "white" : Color.getBorderColor(wGrade))
-                    font.pixelSize: 18
+                    font.pixelSize: 18*shopItem.scaleFactor
                 }
 
                 Text {
                     text: itemData.type
                     color: "gold"
-                    font.pixelSize: 14
+                    font.pixelSize: 14*shopItem.scaleFactor
                 }
             }
 
@@ -92,13 +93,13 @@ Item {
             //物品属性
             Text {
                 anchors.top: goodsImageBackground.bottom
-                anchors.topMargin: 5
+                anchors.topMargin: 5*shopItem.scaleFactor
                 anchors.left: goodsImageBackground.left
                 // text: itemData.type === "道具" ? itemData.talentText
                 //                              : specificWeapon.talentText
                 text: itemData.type === "道具" ? itemData.talentText
                                              : Controller.getSpecificWeapon().talentText
-                font.pixelSize: 12
+                font.pixelSize: 12*shopItem.scaleFactor
                 font.weight: Font.DemiBold
 
                 // Component.onCompleted: {
@@ -111,7 +112,7 @@ Item {
                 id: buyButton
                 anchors.horizontalCenter: root.horizontalCenter
                 anchors.bottom: root.bottom
-                anchors.bottomMargin: 5
+                anchors.bottomMargin: 5*shopItem.scaleFactor
                 width: parent.width * 0.44
                 height: width * 0.44
                 hoverEnabled: true
@@ -119,7 +120,7 @@ Item {
 
                 background: Rectangle {
                     id: buttonBg
-                    radius: 10
+                    radius: 10*shopItem.scaleFactor
                     color: buyButton.hovered ? "white" : (itemData.type === "道具"
                                                           ? Color.getButtonColor(itemData.grade)
                                                         : Color.getButtonColor(wGrade))
@@ -128,7 +129,7 @@ Item {
                 contentItem: Item {
                     anchors.fill: parent
                     Row {
-                        spacing: 8
+                        spacing: 8*shopItem.scaleFactor
                         anchors.centerIn: parent
 
                         Text {
@@ -140,14 +141,14 @@ Item {
                             color: ((Controller.getSpecificWeapon() && PlayerData.materialsNumber < Controller.getSpecificWeapon().curPrice)
                                     || PlayerData.materialsNumber < itemData.curPrice)
                                    ? "red" : (buyButton.hovered ? "black" : "white")
-                            font.pixelSize: 22
+                            font.pixelSize: 22*shopItem.scaleFactor
                             font.bold: true
                         }
 
                         Image {
                             source: cionImage
-                            width: 24
-                            height: 24
+                            width: 24*shopItem.scaleFactor
+                            height: 24*shopItem.scaleFactor
                         }
                     }
                 }
@@ -208,10 +209,10 @@ Item {
     //锁定按钮
     Button {
         id: lockButton
-        width: 67
-        height: 35
+        width: 67*shopItem.scaleFactor
+        height: 35*shopItem.scaleFactor
         anchors.top: backGround.bottom
-        anchors.topMargin: 7
+        anchors.topMargin: 7*shopItem.scaleFactor
         anchors.horizontalCenter: backGround.horizontalCenter
         hoverEnabled: true
 
@@ -227,7 +228,7 @@ Item {
                 Text {
                     id: lockTex
                     text: qsTr("锁定")
-                    font.pixelSize: 18
+                    font.pixelSize: 18*shopItem.scaleFactor
                     font.weight: Font.DemiBold
                     color: lockButton.isLocked ? "black" : (lockButton.hovered ? "black": "white")
                 }
@@ -236,7 +237,7 @@ Item {
 
         background: Rectangle {
             id: buttonBg1
-            radius: 10
+            radius: 10*shopItem.scaleFactor
             color: lockButton.isLocked ? "white" : (lockButton.hovered ? "white" : "black")
         }
 

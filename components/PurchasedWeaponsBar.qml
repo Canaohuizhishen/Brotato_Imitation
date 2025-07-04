@@ -31,19 +31,19 @@ Rectangle {
         id: weaponBar
 
         property int columns : 3
-        property int spacing : 4* scaleFactor
-        property int cellSize : 63* scaleFactor
+        property int spacing : 4*scaleFactor
+        property int cellSize : 63*scaleFactor
 
         anchors.top: weaponText.bottom
-        anchors.topMargin: 5
+        anchors.topMargin: 5* scaleFactor
         anchors.left: weaponText.left
         // anchors.right: rightPanel.left
         // anchors.rightMargin: 15
 
-        width: 3 * (cellSize + 5)
-        height: 2 * (cellSize + 5)
-        cellWidth: cellSize + 5
-        cellHeight: cellSize + 5
+        width: columns * (cellSize + 5*scaleFactor)
+        height: 2 * (cellSize + 5*scaleFactor)
+        cellWidth: cellSize + 5*scaleFactor
+        cellHeight: cellSize + 5*scaleFactor
 
         model: purchasedWeaponsModel
 
