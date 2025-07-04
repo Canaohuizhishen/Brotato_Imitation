@@ -103,7 +103,7 @@ Item {
             Image {
                 width: parent.width*(name==="question" ? 0.9 : 1)
                 height: width
-                source: "/images/icon_"+name+".png"
+                source: "qrc:/images/icon_"+name+".png"
                 anchors.centerIn: parent
             }
 

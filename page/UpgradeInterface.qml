@@ -132,7 +132,7 @@ Rectangle {
             Image {
                 width: 30*root.scaleFactor
                 height:30*root.scaleFactor
-                source: "/images/material_icon.png"
+                source: "qrc:/images/material_icon.png"
             }
 
         }

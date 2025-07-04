@@ -184,7 +184,7 @@ Monster{
                     Image {
                         id: redOverlay
                         anchors.fill: parent
-                        source: parent.isFaceRight ? "/images/sprayer_redMask_faceRight.png" : "/images/sprayer_redMask_faceLeft.png"
+                        source: parent.isFaceRight ? "qrc:/images/sprayer_redMask_faceRight.png" : "qrc:/images/sprayer_redMask_faceLeft.png"
                         z: 100
                         Component.onCompleted: {
                         }

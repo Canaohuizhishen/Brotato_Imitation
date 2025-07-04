@@ -5,7 +5,7 @@ import "../tool.js" as Tool
 Image {
     id: fruit
     objectName: "果实"
-    source:"/images/fruit"
+    source:"qrc:/images/fruit"
     property int value: 2+PlayerData.consumptiveTherapy
     property bool isGeted: false
     property bool isDestroy: false

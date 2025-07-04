@@ -41,7 +41,7 @@ Item {
 
             Image {
                 id: goodsImage
-                source: "/images/prop-" + core.objectName + ".png"
+                source: "qrc:/images/prop-" + core.objectName + ".png"
                 width: goodsImageBackground.width
                 height: goodsImageBackground.height
                 fillMode: Image.PreserveAspectFit

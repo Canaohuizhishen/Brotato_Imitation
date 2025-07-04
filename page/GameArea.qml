@@ -24,6 +24,8 @@ Item{
     property Drops drops: drops
     property ChestNotificationBar chestBar
 
+
+
     Component.onCompleted: {
     }
 
@@ -63,7 +65,9 @@ Item{
         chestBar: gameArea.chestBar
         onFaceLefted: weapons.faceLeft()
         onFaceRighted: weapons.faceRight()
+
     }
+
 
     Weapons{
         id: weapons
@@ -98,6 +102,8 @@ Item{
         active: gameArea.isInCombat && gameArea.active
         scaleFactor: gameArea.scaleFactor
     }
+
+
 
     function init(){
         visible=false

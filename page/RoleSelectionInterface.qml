@@ -108,7 +108,7 @@ Item {
             Image {
                 width: parent.width*(name==="lock"||name==="question" ? 0.9 : 1)
                 height: width
-                source: name==="lock" && (pressed || hovered || roleGrid.currentIndex===index) ? "/images/icon_lock_white.png" : "/images/icon_"+name+".png"
+                source: name==="lock" && (pressed || hovered || roleGrid.currentIndex===index) ? "qrc:/images/icon_lock_white.png" : "qrc:/images/icon_"+name+".png"
                 anchors.centerIn: parent
             }
             onClicked: {

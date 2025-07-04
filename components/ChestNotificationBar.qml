@@ -20,7 +20,7 @@ Item {
         delegate: Image{
             required property int index
             required property int grade
-            source: grade==1 ? "/images/chest_white" : (grade==2 ? "/images/chest_green" : "/images/chest_red")
+            source: grade==1 ? "qrc:/images/chest_white" : (grade==2 ? "qrc:/images/chest_green" : "qrc:/images/chest_red")
             width: chestBar.height
             height: width*0.9505
             anchors.verticalCenter: chestBar.verticalCenter

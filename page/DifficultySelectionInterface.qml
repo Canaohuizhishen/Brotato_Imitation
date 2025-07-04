@@ -115,7 +115,7 @@ Item {
             Image {
                 width: parent.width*(name==="lock" ? 0.9 : 1)
                 height: width
-                source: name==="lock" && (pressed || hovered || difficultyRow.currentIndex===index) ? "/images/icon_lock_white.png" : "/images/icon_"+name+".png"
+                source: name==="lock" && (pressed || hovered || difficultyRow.currentIndex===index) ? "qrc:/images/icon_lock_white.png" : "qrc:/images/icon_"+name+".png"
                 anchors.centerIn: parent
             }
             onClicked: {

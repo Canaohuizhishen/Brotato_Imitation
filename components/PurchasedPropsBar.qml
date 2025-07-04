@@ -1,38 +1,34 @@
 import QtQuick
 import QtQuick.Controls
-
+import "../logic/ShopLogicHandler.js" as Controller
+import singleton.PlayerData
 //道具栏
 Rectangle {
+    property double scaleFactor: 1.0
+    property var purchasedPropsModel
+    property var duplicatePropsCountModel
+    // 添加暂停界面专用属性
+    property int columns: 8// 默认值
+    function updateLayout() {
+        propBar.columns = columns
+    }
 
     Text {
         id: propText
         text: "道具"
         color: "white"
-        font.pixelSize: 32
+        font.pixelSize: 32*scaleFactor
     }
 
-    //已经购买了的道具不重复
-    ListModel {
-        id: purchasedPropsModel
-    }
 
-    //将重复道具合并
-    ListModel {
-        id: duplicatePropsCountModel
-    }
-
-    Component.onCompleted: {
-        shopscreen.shopContext._purchasedPropsModel = purchasedPropsModel
-        shopscreen.shopContext._duplicatePropsCountModel = duplicatePropsCountModel
-    }
 
     GridView {
         id: propBar
 
         // 参数配置
-        property int columns : 8
-        property int spacing : 4
-        property int cellSize : 63
+        property int columns: parent.columns
+        property int spacing : 4*scaleFactor
+        property int cellSize : 63*scaleFactor
 
         anchors.top: propText.bottom
         anchors.topMargin: 5
@@ -52,7 +48,7 @@ Rectangle {
 
         ScrollBar.vertical: ScrollBar {
             policy: ScrollBar.AsNeeded
-            width: 12
+            width: 12*scaleFactor
             anchors.top: parent.top
             anchors.bottom: parent.bottom
         }
@@ -65,6 +61,15 @@ Rectangle {
             itemData: propItem
             propNum: count
         }
+    }
+    onColumnsChanged: updateLayout()
+
+    Component.onCompleted: {
+        // // 更新单例中的模型引用
+        // PlayerData.shopContext._purchasedPropsModel = purchasedPropsModel
+        // PlayerData.shopContext._duplicatePropsCountModel = duplicatePropsCountModel
+        // Controller.initPropEffects()
+        updateLayout()
     }
 
 }
