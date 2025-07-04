@@ -4,23 +4,23 @@ import"../components"
 import singleton.PlayerData
 import "../logic/ShopLogicHandler.js" as Controller
 
-
-
 Rectangle {
     id: root
     anchors.fill: parent
     color: Qt.rgba(0,0,0,0.7)
     visible: true
     focus: true
+    z: 200
     property double scaleFactor: 1.0
-    property alias backMainMenuButton: backMainMenuButton
     property alias continueButton: continueButton
     property alias restartButton: restartButton
     property alias settingButton: settingButton
+    property alias backMainMenuButton: backMainMenuButton
+
     property bool inMain: true
 
     Item {
-        id:pause
+        id: pause
         anchors.fill: parent
 
         Column {
@@ -52,7 +52,6 @@ Rectangle {
                     restartMenu.forceActiveFocus()
                 }
             }
-
             SetButton {
                 id: settingButton
                 text: "设置"
@@ -111,8 +110,6 @@ Rectangle {
                 }
             }
         }
-
-
 
         AttributePanel{
             id: attributePanel

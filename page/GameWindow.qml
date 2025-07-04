@@ -29,12 +29,30 @@ Item {
 
     Shortcut {
         sequence: "Esc"
-        enabled: pauseInterface.inMain ? true : false
+        enabled: !inSelectInterface && pauseInterface.inMain && !settingInterface.visible ? true : false
         onActivated: {
-            if(inSelectInterface)return
             if(gameWindow.paused)gameWindow.resume()
             else gameWindow.pause()
         }
+    }
+
+    SettingInterface {
+        id: settingInterface
+        visible: false
+    }
+
+    PauseInterface{
+        id: pauseInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
+        continueButton.onClicked: gameWindow.resume()
+        restartButton.onClicked: gameWindow.restart()
+        settingButton.onClicked:  {
+            pauseInterface.visible=Qt.binding(function(){return !settingInterface.visible})
+            settingInterface.visible=true
+        }
+        backMainMenuButton.onClicked: backMainMenu()
+        z: 100
     }
 
     StartInterface{
@@ -49,6 +67,9 @@ Item {
             roleSelectionInterface.init()
             roleSelectionInterface.visible=true
         }
+        settingButton.onClicked: {
+            settingInterface.visible=true
+        }
         exitButton.onClicked: Qt.quit()
     }
 
@@ -56,33 +77,28 @@ Item {
         id: roleSelectionInterface
         visible: false
         scaleFactor: gameWindow.scaleFactor
-
         onSelected:{
             roleSelectionInterface.visible=false
             weaponSelectionInterface.init()
             weaponSelectionInterface.selectedRoleName=selectedRoleName
             weaponSelectionInterface.visible=true
         }
+        backButton.onClicked: {
+            init()
+            startInterface.visible=true
+        }
     }
-
-    //     backButton.onClicked: {
-    //         init()
-    //         startInterface.visible=true
-    //     }
-    // }
 
     WeaponSelectionInterface{
         id: weaponSelectionInterface
         visible: false
         scaleFactor: gameWindow.scaleFactor
-
         onSelected:{
             weaponSelectionInterface.visible=false
             difficultySelectionInterface.selectedRoleName=selectedRoleName
             difficultySelectionInterface.selectedWeaponName=selectedWeaponName
             difficultySelectionInterface.visible=true
         }
-
         backButton.onClicked: {
             init()
             roleSelectionInterface.visible=true
@@ -165,20 +181,6 @@ Item {
         }
     }
 
-    SettlementInterface {
-        visible: false
-    }
-
-    PauseInterface{
-        id: pauseInterface
-        visible: false
-        scaleFactor: gameWindow.scaleFactor
-        continueButton.onClicked: gameWindow.resume()
-        restartButton.onClicked: gameWindow.restart()
-        backMainMenuButton.onClicked: backMainMenu()
-        z: 100
-    }
-
     StoreInterface{
         id: storeInterface
         visible: false
@@ -187,6 +189,11 @@ Item {
             visible=false
             waveCountdown.start()
         }
+    }
+
+    SettlementInterface {
+        id: settlementInterface
+        visible: false
     }
 
     UpgradeNotificationBar{

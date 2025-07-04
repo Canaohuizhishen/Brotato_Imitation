@@ -16,6 +16,14 @@ Item {
     property string selectedRoleName
     signal selected()
 
+    onVisibleChanged: {
+        if(visible)forceActiveFocus()
+    }
+
+    Keys.onEscapePressed: {
+        backButton.click()
+    }
+
     function init(){
         visible=false
         selectedRoleName=""
