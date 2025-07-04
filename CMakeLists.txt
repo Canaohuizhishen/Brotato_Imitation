@@ -28,7 +28,6 @@ qt_add_qml_module(appBrotato
     QML_FILES page/Background.qml page/DifficultySelectionInterface.qml page/GameArea.qml page/GameWindow.qml page/RoleSelectionInterface.qml page/StartInterface.qml page/WeaponSelectionInterface.qml
     QML_FILES monsters/Player.qml
     QML_FILES data/WeaponCustomizationCore.qml data/RoleCustomizationCore.qml
-    QML_FILES page/StoreInterface.qml
     QML_FILES components/Material.qml
     QML_FILES components/Drops.qml
     QML_FILES components/MaterialsBar.qml
@@ -49,7 +48,7 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Pursuer.qml
     QML_FILES monsters/Brute.qml
     QML_FILES components/TimerCanPause.qml
-    QML_FILES page/ShopScreen.qml
+    QML_FILES page/StoreInterface.qml
     QML_FILES logic/ShopLogicHandler.js
     QML_FILES components/PurchasedPropsBar.qml
     QML_FILES components/PurchasedPropsImage.qml
