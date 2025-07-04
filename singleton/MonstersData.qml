@@ -6,6 +6,7 @@ Item {
     id: core
     property double velocityRate: 0.8
     property int waveNumber: PlayerData.currentWaveNumber
+    property alias tree: tree
     property alias babyAlien: babyAlien
     property alias chaser: chaser
     property alias charger: charger
@@ -154,6 +155,41 @@ Item {
     function init(){
         for(var i=0;i<core.children.length;i++){
             core.children[i].init()
+        }
+    }
+
+    Item{
+        id: tree
+        objectName: "tree"
+        property string monsterName: "树"
+        readonly property string source: "Tree.qml"
+        readonly property int attackRange: 0
+        readonly property int maxCurNumber: 20
+
+        readonly property int initHp: 3
+        readonly property double hpBonus: 2
+        readonly property int initVelocity: 0
+        readonly property int maxVelocity: 0
+        readonly property int initDamage: 0
+        readonly property double damageBonus: 0
+        readonly property int materialDrops: 3
+        readonly property double consumableDropRate: 1*(1+PlayerData.luck/100)
+        readonly property double chestDropRate: 0.05*(1+PlayerData.luck/100)
+
+        property int initCount: 1
+        property int curNumber: 0
+        property double countRation: 0.9
+        readonly property double countIcreaseRation: 0.05
+
+        onCountRationChanged: {
+            if(countRation>=1+countIcreaseRation){
+                countRation=0.8
+            }
+        }
+
+        function init(){
+            initCount=1
+            countRation=0.9
         }
     }
 

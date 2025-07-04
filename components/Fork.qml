@@ -24,6 +24,11 @@ Item {
         lastScaleFactor=scaleFactor
     }
 
+    onTargetMonsterNameChanged: {
+        if(targetMonsterName=="tree")fork.source="/images/green_fork.png"
+        else fork.source="/images/red_fork.png"
+    }
+
     Image {
         id: fork
         anchors.centerIn: parent

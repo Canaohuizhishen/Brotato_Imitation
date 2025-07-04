@@ -18,6 +18,7 @@
         <file>images/prop-lost_duck.png</file>
         <file>images/chest_purple.png</file>
         <file>images/material6.png</file>
+        <file>images/tree_mask_faceRight.png</file>
         <file>images/prop-toxic_sludge.png</file>
         <file>images/prop-goat_skull.png</file>
         <file>images/prop-black_belt.png</file>
@@ -26,6 +27,7 @@
         <file>images/startInterface.png</file>
         <file>images/summoner_mask_faceRight.png</file>
         <file>images/startInterface3.png</file>
+        <file>images/blue_fork.png</file>
         <file>images/material_icon.png</file>
         <file>images/back.png</file>
         <file>images/prop-fuel_tank.png</file>
@@ -35,6 +37,7 @@
         <file>images/icon_lock_white.png</file>
         <file>images/chest_blue.png</file>
         <file>images/helmetCharger_redMask_faceRight.png</file>
+        <file>images/green_fork.png</file>
         <file>images/smg-mask-4_faceRight.png</file>
         <file>images/material7.png</file>
         <file>images/icon_smg.png</file>
@@ -55,6 +58,7 @@
         <file>images/attribute-hpRegeneration.png</file>
         <file>images/smg-mask-3_faceLeft.png</file>
         <file>images/prop-alloy.png</file>
+        <file>images/tree_faceLeft.png</file>
         <file>images/prop-shmoop.png</file>
         <file>images/attribute-meleeDamage.png</file>
         <file>images/prop-cloak.png</file>
@@ -147,6 +151,7 @@
         <file>images/prop-fertilizer.png</file>
         <file>images/02.png</file>
         <file>images/sprayer_mask_faceLeft.png</file>
+        <file>images/tree_mask_faceLeft.png</file>
         <file>images/fruit.png</file>
         <file>images/brute_redMask_faceRight.png</file>
         <file>images/attribute-speed.png</file>
@@ -208,6 +213,7 @@
         <file>images/spear-mask-3_faceRight.png</file>
         <file>images/sprayer_faceRight.png</file>
         <file>images/stone2.png</file>
+        <file>images/tree_faceRight.png</file>
         <file>images/icon_0.png</file>
         <file>images/attribute-maxHp.png</file>
         <file>images/charger_faceRight.png</file>
