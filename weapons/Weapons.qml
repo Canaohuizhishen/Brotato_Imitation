@@ -91,6 +91,7 @@ Item{
         }
         isFaceRight=false
         anchors.horizontalCenterOffset=-10*scaleFactor
+        reSetZ()
     }
 
     function faceRight(){
@@ -105,6 +106,7 @@ Item{
         }
         isFaceRight=true
         anchors.horizontalCenterOffset=10*scaleFactor
+        reSetZ()
     }
 
     function clear(){
@@ -211,6 +213,23 @@ Item{
                 }
                 child.y=(targetPoint.y-weapon.handY+weapon.yOffset)*scaleFactor
                 child.originPos=Qt.point(child.x,child.y)
+                n++
+            }
+        }
+    }
+
+    function reSetZ(){
+        var n=1
+        for(var i=0;i<weapons.children.length;i++){
+            var child=weapons.children[i]
+            if(child.objectName==="Weapon" && !child.isDestroy){
+                if(isFaceRight){
+                    if(n%2==0)child.z=1
+                    else child.z=0
+                }else{
+                    if(n%2==0)child.z=0
+                    else child.z=1
+                }
                 n++
             }
         }
