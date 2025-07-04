@@ -1,52 +1,75 @@
 import QtQuick
 import QtQuick.Controls
 import"../components"
+
 Item {
-    property alias settingsPopup: settingsPopup
+    id: settingsInterface
+    z: 150
+    anchors.fill: parent
+    focus: true
+    property alias backButton: backButton
+
+    onVisibleChanged: {
+        if (visible) {
+            backOriginInterface()
+            forceActiveFocus()
+        }
+    }
+
+    Keys.onEscapePressed: {
+        backButton.click()
+    }
+
+    function backOriginInterface(){
+        settingsPopup.visible=true
+        general.visible = false
+        gameControls.visible = false
+    }
+
     TextMetrics {
         id: textMetrics
         font: backgroundComboBox.font
     }
 
-    Item {
+    Rectangle {
+        anchors.fill: parent
+        color: Qt.rgba(0,0,0,0.7)
+    }
+
+    Column {
         id: settingsPopup
         width: 300
         height: 200
-        visible: false
+        visible: true
         anchors.centerIn: parent
+        spacing: 15
 
-        Column {
-            anchors.fill: parent
-            anchors.margins: 20
-            spacing: 15
-
-            SetButton {
-                text: "一般设定"
-                width: parent.width
-                onClicked: {
-                    general.visible = true
-                    settingsPopup.visible = false
-                    console.log("一般设定被点击")
-                }
+        SetButton {
+            text: "一般设定"
+            width: parent.width
+            onClicked: {
+                general.visible = true
+                settingsPopup.visible = false
+                console.log("一般设定被点击")
             }
+        }
 
-            SetButton {
-                text: "游戏操作"
-                width: parent.width
-                onClicked: {
-                    gameControls.visible = true
-                    settingsPopup.visible = false
-                    console.log("游戏操作被点击")
-                }
+        SetButton {
+            text: "游戏操作"
+            width: parent.width
+            onClicked: {
+                gameControls.visible = true
+                settingsPopup.visible = false
+                console.log("游戏操作被点击")
             }
+        }
 
-            SetButton {
-                text: "返回"
-                width: parent.width
-                onClicked:{
-                    settingsPopup.visible = false
-                    pause.visible = true
-                }
+        SetButton {
+            id: backButton
+            text: "返回"
+            width: parent.width
+            onClicked:{
+                settingsInterface.visible = false
             }
         }
     }
