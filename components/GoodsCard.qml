@@ -57,8 +57,8 @@ Item {
 
                 Image {
                     id: goodsImage
-                    source: itemData.type === "道具" ? "/images/prop-" + itemData.objectName + ".png"
-                                                   : "/images/weapon-" + itemData.objectName + ".png"
+                    source: itemData.type === "道具" ? "qrc:/images/prop-" + itemData.objectName + ".png"
+                                                   : "qrc:/images/weapon-" + itemData.objectName + ".png"
                     width: 63
                     height: 63
                     fillMode: Image.PreserveAspectFit
@@ -76,7 +76,8 @@ Item {
                 Text {
                     id: goodsName
                     text: itemData.type === "道具" ? itemData.propName  : itemData.weaponName
-                    color: (itemData.grade === 1 || wGrade === 1) ? "white": (itemData.type === "道具" ? Color.getBorderColor(itemData.grade) : Color.getBorderColor(wGrade))
+                    color: itemData.type === "道具" ? ((itemData.grade === 1) ? "white" : Color.getBorderColor(itemData.grade))
+                                                  : ((wGrade === 1) ? "white" : Color.getBorderColor(wGrade))
                     font.pixelSize: 18
                 }
 

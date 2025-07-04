@@ -25,8 +25,8 @@ Item {
     }
 
     onTargetMonsterNameChanged: {
-        if(targetMonsterName=="tree")fork.source="/images/green_fork.png"
-        else fork.source="/images/red_fork.png"
+        if(targetMonsterName=="tree")fork.source="qrc:/images/green_fork.png"
+        else fork.source="qrc:/images/red_fork.png"
     }
 
     Image {
@@ -34,7 +34,7 @@ Item {
         anchors.centerIn: parent
         width: root.width
         height: root.height
-        source: "/images/red_fork.png"
+        source: "qrc:/images/red_fork.png"
     }
 
     SequentialAnimation on opacity {

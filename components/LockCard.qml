@@ -11,7 +11,7 @@ Rectangle {
     radius: 4
 
     Image {
-        source: "/images/lock3.png"
+        source: "qrc:/images/lock3.png"
         width: 45*lockCard.scaleFactor
         height: width*1.3
         anchors.horizontalCenter: parent.horizontalCenter

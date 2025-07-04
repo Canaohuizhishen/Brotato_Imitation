@@ -109,7 +109,7 @@ Rectangle {
             scaleFactor: root.scaleFactor
             attribute: "目前等级"
             attributeValue: PlayerData.curLevel
-            iconSource: "/images/upgrade_icon.png"
+            iconSource: "qrc:/images/upgrade_icon.png"
         }
 
         ListView{

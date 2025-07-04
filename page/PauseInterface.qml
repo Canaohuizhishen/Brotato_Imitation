@@ -1,6 +1,10 @@
 import QtQuick
 import QtQuick.Controls
 import"../components"
+import singleton.PlayerData
+import "../logic/ShopLogicHandler.js" as Controller
+
+
 
 Rectangle {
     id: root
@@ -20,6 +24,7 @@ Rectangle {
         anchors.fill: parent
 
         Column {
+            id:set
             anchors.left: parent.left
             anchors.leftMargin: 100*root.scaleFactor
             anchors.top: parent.top
@@ -65,7 +70,49 @@ Rectangle {
                     backMenu.forceActiveFocus()
                 }
             }
+            SetButton {
+                text: "测试濒死"
+                width: parent.width
+                height: width/8
+                onClicked: {
+                    PlayerData.curHp = 1
+                }
+            }
         }
+
+        Item {
+            anchors.left:set.right
+            anchors.leftMargin: 80*root.scaleFactor
+            height: 230*root.scaleFactor
+            anchors.right:attributePanel.left
+            anchors.top: parent.top
+            anchors.topMargin: 50*root.scaleFactor
+            //武器栏
+            PurchasedWeaponsBar {
+                id:weapon
+                anchors.verticalCenter: parent.verticalCenter
+                scaleFactor: root.scaleFactor
+                purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
+
+            }
+
+            //道具栏
+            PurchasedPropsBar {
+                anchors.top: weapon.bottom
+                anchors.topMargin: 200*root.scaleFactor
+                scaleFactor: root.scaleFactor
+                purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
+                duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
+                columns: 5
+                Component.onCompleted: {
+                    //console.log("暂停界面道具栏 - 列数:", columns)
+                    // 强制更新布局
+                    updateLayout()
+                }
+            }
+        }
+
+
 
         AttributePanel{
             id: attributePanel

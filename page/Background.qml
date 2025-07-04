@@ -32,7 +32,7 @@ Rectangle {
             var edgeUp = Qt.createQmlObject(
                         `import QtQuick 2.15;
                         Image {
-                        source: "/images/edge.png";
+                        source: "qrc:/images/edge.png";
                         width: ${edgeWidth}*parent.scaleFactor;
                         height: ${edgeHeight}*parent.scaleFactor;
                         objectName: "edge"
@@ -46,7 +46,7 @@ Rectangle {
             var edgeDown = Qt.createQmlObject(
                         `import QtQuick 2.15;
                         Image {
-                        source: "/images/edge.png";
+                        source: "qrc:/images/edge.png";
                         width: ${edgeWidth}*parent.scaleFactor;
                         height: ${edgeHeight}*parent.scaleFactor;
                         objectName: "edge"
@@ -63,7 +63,7 @@ Rectangle {
             var edgeLeft = Qt.createQmlObject(
                         `import QtQuick 2.15;
                         Image {
-                        source: "/images/edge.png";
+                        source: "qrc:/images/edge.png";
                         width: ${edgeWidth}*parent.scaleFactor;
                         height: ${edgeHeight}*parent.scaleFactor;
                         objectName: "edge"
@@ -78,7 +78,7 @@ Rectangle {
             var edgeRight = Qt.createQmlObject(
                         `import QtQuick 2.15;
                         Image {
-                        source: "/images/edge.png";
+                        source: "qrc:/images/edge.png";
                         width: ${edgeWidth}*parent.scaleFactor;
                         height: ${edgeHeight}*parent.scaleFactor;
                         objectName: "edge"
@@ -125,7 +125,7 @@ Rectangle {
                         var stone = Qt.createQmlObject(
                                     `import QtQuick 2.15;
                                     Image {
-                                    source: "/images/stone4.png";
+                                    source: "qrc:/images/stone4.png";
                                     width: ${stoneWidth}*parent.scaleFactor;
                                     height: ${stoneHeight}*parent.scaleFactor;
                                     objectName: "stone"
@@ -140,7 +140,7 @@ Rectangle {
                         var stone = Qt.createQmlObject(
                                     `import QtQuick 2.15;
                                     Image {
-                                    source: "/images/stone3.png";
+                                    source: "qrc:/images/stone3.png";
                                     width: ${stoneWidth}*parent.scaleFactor;
                                     height: ${stoneHeight}*parent.scaleFactor;
                                     objectName: "stone"
@@ -155,7 +155,7 @@ Rectangle {
                         var stone = Qt.createQmlObject(
                                     `import QtQuick 2.15;
                                     Image {
-                                    source: "/images/stone2.png";
+                                    source: "qrc:/images/stone2.png";
                                     width: ${stoneWidth}*parent.scaleFactor;
                                     height: ${stoneHeight}*parent.scaleFactor;
                                     objectName: "stone"
@@ -170,7 +170,7 @@ Rectangle {
                         var stone = Qt.createQmlObject(
                                     `import QtQuick 2.15;
                                     Image {
-                                    source: "/images/stone1.png";
+                                    source: "qrc:/images/stone1.png";
                                     width: ${stoneWidth}*parent.scaleFactor;
                                     height: ${stoneHeight}*parent.scaleFactor;
                                     objectName: "stone"

@@ -47,7 +47,7 @@ Monster{
                     Image {
                         id: redOverlay
                         anchors.fill: parent
-                        source: parent.isFaceRight ? "/images/${monsterName}_redMask_faceRight.png" : "/images/${monsterName}_redMask_faceLeft.png"
+                        source: parent.isFaceRight ? "qrc:/images/${monsterName}_redMask_faceRight.png" : "qrc:/images/${monsterName}_redMask_faceLeft.png"
                         z: 100
                         Component.onCompleted: {
                         }
@@ -126,8 +126,8 @@ Monster{
         ParallelAnimation {
             NumberAnimation { target: squashScale; property: "xScale"; to: 1; duration: 100; easing.type: Easing.OutQuad }
             NumberAnimation { target: squashScale; property: "yScale"; to: 1; duration: 100; easing.type: Easing.OutQuad }
-            NumberAnimation { target: charger; property: "x"; to: chargeAnimation.targetPoint.x; duration: chargeAnimation.targetPoint.x==0||chargeAnimation.targetPoint.x==charger.parent.width-charger.width ? Math.abs(charger.x-chargeAnimation.targetPoint.x) : charger.chargeRange; easing.type: Easing.Linear }
-            NumberAnimation { target: charger; property: "y"; to: chargeAnimation.targetPoint.y; duration: chargeAnimation.targetPoint.y==0||chargeAnimation.targetPoint.y==charger.parent.height-charger.height ? Math.abs(charger.y-chargeAnimation.targetPoint.y) : charger.chargeRange; easing.type: Easing.Linear }
+            NumberAnimation { target: charger; property: "x"; to: chargeAnimation.targetPoint.x; duration: chargeAnimation.targetPoint.x===0||chargeAnimation.targetPoint.x===charger.parent.width-charger.width ? Math.abs(charger.x-chargeAnimation.targetPoint.x) : charger.chargeRange; easing.type: Easing.Linear }
+            NumberAnimation { target: charger; property: "y"; to: chargeAnimation.targetPoint.y; duration: chargeAnimation.targetPoint.y===0||chargeAnimation.targetPoint.y===charger.parent.height-charger.height ? Math.abs(charger.y-chargeAnimation.targetPoint.y) : charger.chargeRange; easing.type: Easing.Linear }
         }
 
         onStopped: {

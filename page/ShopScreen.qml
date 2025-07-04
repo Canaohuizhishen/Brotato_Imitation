@@ -11,11 +11,38 @@ Item {
     id: shopscreen
 
     property string cionImage : "qrc:/images/material_icon.png"
-    property var shopContext: QtObject {
-        property var _purchasedPropsModel
-        property var _duplicatePropsCountModel
-        property var _purchasedWeaponsModel
-    } //实现向js文件传递模型数据
+    property var startButton : startButton
+    // property var shopContext: QtObject {
+    //     property var _purchasedPropsModel: ListModel {}
+    //     property var _duplicatePropsCountModel: ListModel {}
+    //     property var _purchasedWeaponsModel: ListModel {}
+    // }//实现向js文件传递模型数据
+
+    function init()
+    {
+        visible = false
+    }
+
+    //重新加载整个商店界面的各个组件
+    function reload() {
+        Controller.initPropBar()
+
+        Controller.initWeaponBar()
+
+        Controller.refreshShop()
+
+        attributeBar.upData()
+
+        Controller.resetRefreshTimes()
+
+        refreshButton.currentRefreshPrice = Controller.refreshPrice(PlayerData.currentWaveNumber)
+    }
+
+    onVisibleChanged: {
+        if (visible) {
+               reload()
+           }
+    }
 
 
     //主背景
@@ -33,7 +60,7 @@ Item {
 
         Text {
             id: shopTitle
-            text: qsTr("商店(第") + waveNumberText.text + qsTr("波)")
+            text: qsTr("商店(第") + PlayerData.currentWaveNumber + qsTr("波)")
             color: "white"
             font.pixelSize: 30
             anchors.top: parent.top
@@ -76,7 +103,7 @@ Item {
             height: 55
 
             property bool isHovered: false
-            property int currentRefreshPrice: Controller.refreshPrice(waveNumberText.text)
+            property int currentRefreshPrice: Controller.refreshPrice(PlayerData.currentWaveNumber)
 
             anchors.top: parent.top
             anchors.topMargin: 17
@@ -101,7 +128,7 @@ Item {
                 // if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
                 Controller.refreshShop()
                 PlayerData.materialsNumber -= currentRefreshPrice
-                currentRefreshPrice = Controller.refreshPrice(waveNumberText.text)
+                currentRefreshPrice = Controller.refreshPrice(PlayerData.currentWaveNumber)
                 // }
             }
 
@@ -117,8 +144,8 @@ Item {
                         text: "刷新-" + refreshButton.currentRefreshPrice
                         font.pixelSize: 24
                         color: PlayerData.materialsNumber >= refreshButton.currentRefreshPrice
-                                ? (refreshButton.isHovered ? "black" : "white")
-                                : "red"
+                               ? (refreshButton.isHovered ? "black" : "white")
+                               : "red"
                     }
 
                     Image {
@@ -248,6 +275,7 @@ Item {
         }
     }
 
+
     //道具和武器栏
     Item {
         anchors.bottom: shopscreen.bottom
@@ -262,14 +290,18 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 15
-        }
+            purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
+                    duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
 
+        }
 
         //武器栏
         PurchasedWeaponsBar {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             anchors.rightMargin: 215
+            purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
+
         }
     }
 
@@ -315,7 +347,11 @@ Item {
             }
 
             onClicked: {
-                Controller.startNextWave()
+                Controller.setPlayerProps(PlayerData)
+                Controller.setPlayerWeapons(PlayerData)
+                // Controller.startNextWave()
+                shopscreen.visible = false
+                waveCountdown.start()
             }
 
             property bool isHovered: false
@@ -330,7 +366,7 @@ Item {
 
                 Text {
                     anchors.centerIn: parent
-                    text: qsTr("出发(第%1波)") //需要完善下一波的计数
+                    text: "出发(第" + (PlayerData.currentWaveNumber + 1) + "波)"
                     color: startButton.isHovered ? "black" : "white"
                     font.pixelSize: 32
                     font.bold: true
