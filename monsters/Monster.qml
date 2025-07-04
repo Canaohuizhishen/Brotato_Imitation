@@ -40,6 +40,9 @@ Item {
     property int interval: 10
     property double stepSize: v*interval/1200*scaleFactor
 
+    property var bulletImmunityList: [] //用来记录免疫的子弹，模拟近战武器攻击时的冷却
+    property int immuneTime: 250
+
     Component.onCompleted: {
         core.curNumber++
     }
@@ -328,7 +331,27 @@ Item {
         hitingTimer.start()
     }
 
+    function addImmuneBullet(bullet){
+        bulletImmunityList.push(bullet)
+        var timer = Qt.createQmlObject(`
+                    import QtQuick 2.15
+                    Timer {
+                        interval: ${immuneTime}
+                        running: true
+                        repeat: false
+                        onTriggered: {
+                            monster.bulletImmunityList.shift()
+                            destroy();
+                        }
+                    }
+                `, monster, "dynamicTimer");
+    }
+
     function onHit(bullet) {
+        //在免疫子弹列表中直接返回
+        if(bulletImmunityList.indexOf(bullet)!=-1)return
+        else addImmuneBullet(bullet)
+
         //设置击飞角度
         deadAnimation.angle=bullet.rotation
 
