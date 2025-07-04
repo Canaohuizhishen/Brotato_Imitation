@@ -83,6 +83,7 @@ qt_add_qml_module(appBrotato
     QML_FILES bullets/MeleeBullet.qml
     QML_FILES weapons/RangedWeapon.qml
     QML_FILES weapons/MeleeWeapon.qml
+    QML_FILES monsters/Tree.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

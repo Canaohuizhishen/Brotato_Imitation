@@ -107,8 +107,9 @@ Item {
                 for(var i=0;i<MonstersData.children.length;i++){
                     var monsterData=MonstersData.children[i]
                     var n=Math.floor(monsterData.initCount*monsterData.countRation)
-                    if(n==0)continue
-                    else if(n+monsterData.curNumber>monsterData.maxCurNumber){
+                    if(n==0){
+                        monsterData.countRation*=1+monsterData.countIcreaseRation
+                    }else if(n+monsterData.curNumber>monsterData.maxCurNumber){
                         monsters.spawnMonsters(monsterData.maxCurNumber-monsterData.curNumber,monsterData.objectName)
                         monsterData.countRation/=1+monsterData.countIcreaseRation
                     }else{
