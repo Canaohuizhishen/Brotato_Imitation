@@ -26,6 +26,16 @@ Item {
         gameControls.visible = false
     }
 
+    //拦截点击事件，防止点击穿透
+    TapHandler{
+        onTapped: {}
+    }
+
+    //拦截悬停事件，防止悬停穿透
+    HoverHandler {
+        onHoveredChanged: {}
+    }
+
     TextMetrics {
         id: textMetrics
         font: backgroundComboBox.font

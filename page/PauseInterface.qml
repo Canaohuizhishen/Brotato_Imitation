@@ -19,6 +19,16 @@ Rectangle {
 
     property bool inMain: true
 
+    //拦截点击事件，防止点击穿透
+    TapHandler{
+        onTapped: {}
+    }
+
+    //拦截悬停事件，防止悬停穿透
+    HoverHandler {
+        onHoveredChanged: {}
+    }
+
     Item {
         id: pause
         anchors.fill: parent
