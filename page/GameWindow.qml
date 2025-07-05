@@ -52,7 +52,6 @@ Item {
             settingInterface.visible=true
         }
         backMainMenuButton.onClicked: backMainMenu()
-        z: 100
     }
 
     StartInterface{
@@ -188,6 +187,13 @@ Item {
         startButton.onClicked:{
             visible=false
             waveCountdown.start()
+        }
+        Connections {
+            target: pauseInterface
+            function onVisibleChanged() {
+                if(pauseInterface.visible)storeInterface.hideComponents()
+                else storeInterface.unhideComponents()
+            }
         }
     }
 

@@ -25,6 +25,20 @@ Item {
         visible = false
     }
 
+    function hideComponents(){
+        topBar.visible=false
+        shopArea.visible=false
+        bars.visible=false
+        rightPanel.visible=false
+    }
+
+    function unhideComponents(){
+        topBar.visible=true
+        shopArea.visible=true
+        bars.visible=true
+        rightPanel.visible=true
+    }
+
     //重新加载整个商店界面的各个组件
     function reload() {
         Controller.initPropBar()
@@ -269,6 +283,7 @@ Item {
 
     //道具和武器栏
     Item {
+        id: bars
         anchors.bottom: storeInterface.bottom
         anchors.bottomMargin: 185*storeInterface.scaleFactor
         anchors.left: topBar.left
