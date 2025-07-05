@@ -40,7 +40,7 @@ Item {
     }
 
     Image {
-        id:attributeImage
+        id: attributeImage
         source: root.iconSource
         width: 20*root.scaleFactor
         height: 20*root.scaleFactor
@@ -55,7 +55,7 @@ Item {
         color: root.getValueColor(root.attributeValue)
         font.pixelSize: root.fontSize
         anchors.left: parent.left
-        anchors.leftMargin: root.iconSource=="" ? 0 : 30*root.scaleFactor
+        anchors.leftMargin: root.iconSource=="" ? 0 : attributeImage.width+10*root.scaleFactor
         anchors.verticalCenter: parent.verticalCenter
     }
 
@@ -64,9 +64,9 @@ Item {
         color: root.getValueColor(root.attributeValue)
         font.pixelSize: root.fontSize
         anchors.right: parent.right
-        anchors.rightMargin: 10*root.scaleFactor
         anchors.verticalCenter: parent.verticalCenter
     }
+
     Popup {
         id: detailPopup
         width: 350*root.scaleFactor

@@ -68,9 +68,7 @@ Item {
 
             Column {
                 anchors.left: goodsImageBackground.right
-                anchors.leftMargin: 5*shopItem.scaleFactor
-                // anchors.top: parent.top
-                // anchors.topMargin: 5*shopItem.scaleFactor
+                anchors.leftMargin: 10*shopItem.scaleFactor
                 anchors.top: goodsImageBackground.top
 
                 Text {
@@ -84,8 +82,8 @@ Item {
 
                 Text {
                     text: itemData.type
-                    color: "gold"
-                    font.pixelSize: 14*shopItem.scaleFactor
+                    color: "#ffffc0"
+                    font.pixelSize: 16*shopItem.scaleFactor
                 }
             }
 
@@ -93,18 +91,11 @@ Item {
             //物品属性
             Text {
                 anchors.top: goodsImageBackground.bottom
-                anchors.topMargin: 5*shopItem.scaleFactor
+                anchors.topMargin: 10*shopItem.scaleFactor
                 anchors.left: goodsImageBackground.left
-                // text: itemData.type === "道具" ? itemData.talentText
-                //                              : specificWeapon.talentText
                 text: itemData.type === "道具" ? itemData.talentText
                                              : Controller.getSpecificWeapon().talentText
-                font.pixelSize: 12*shopItem.scaleFactor
-                font.weight: Font.DemiBold
-
-                // Component.onCompleted: {
-                //     console.log(specificWeapon,"111111111111111111")
-                // }
+                font.pixelSize: 15*shopItem.scaleFactor
             }
 
 
@@ -209,7 +200,7 @@ Item {
     //锁定按钮
     Button {
         id: lockButton
-        width: 67*shopItem.scaleFactor
+        width: 55*shopItem.scaleFactor
         height: 35*shopItem.scaleFactor
         anchors.top: backGround.bottom
         anchors.topMargin: 7*shopItem.scaleFactor

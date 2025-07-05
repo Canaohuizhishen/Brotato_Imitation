@@ -5,13 +5,13 @@ import singleton.PlayerData
 Rectangle {
     id: root
     property double scaleFactor: 1.0
-    property bool isMain: true
-    property bool inLeft: true
     width: 255*root.scaleFactor
-    height: isMain ? 490*root.scaleFactor : 520*root.scaleFactor
+    height: autoChangeHight && isMain ? 490*root.scaleFactor : 520*root.scaleFactor
     color: Qt.rgba(0,0,0,0.4)
     radius: 7*root.scaleFactor
-
+    property bool isMain: true
+    property bool inLeft: true
+    property bool autoChangeHight: false
 
     Component.onCompleted: {
         mainAttributes.addAttributes()
@@ -96,14 +96,15 @@ Rectangle {
 
     Item{
         id: mainAttributes
+        width: root.width*0.9
         anchors.top: root.top
         anchors.topMargin: 108*root.scaleFactor
         anchors.bottom: root.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
+        anchors.horizontalCenter: root.horizontalCenter
 
         Attribute{
             id: levelAttribute
+            width: parent.width
             anchors.top: mainAttributes.top
             anchors.horizontalCenter: mainAttributes.horizontalCenter
             scaleFactor: root.scaleFactor
@@ -114,7 +115,7 @@ Rectangle {
 
         ListView{
             id: mainAttributesList
-            width: levelAttribute.width
+            width: mainAttributes.width
             height: root.height-20*root.scaleFactor
             interactive: false
             anchors.top: mainAttributes.top
@@ -124,7 +125,7 @@ Rectangle {
             model: ListModel {
                 id: mainattributesModel
             }
-            delegate:Attribute{
+            delegate: Attribute{
                 required property string name
                 required property string value
                 required property string imageSource
@@ -132,6 +133,7 @@ Rectangle {
                 required property string detail
                 required property int index
 
+                width: mainAttributes.width
                 scaleFactor: root.scaleFactor
                 attribute: name
                 attributeValue: value
@@ -170,13 +172,12 @@ Rectangle {
 
     ListView{
         id: secondaryAttributes
+        width: root.width*0.9
         interactive: false
         anchors.top: root.top
         anchors.bottom: root.bottom
         anchors.topMargin: 108*root.scaleFactor
-        anchors.left: root.left
-        anchors.leftMargin: 10*root.scaleFactor
-        anchors.right: root.right
+        anchors.horizontalCenter: root.horizontalCenter
         spacing: 4*root.scaleFactor
         visible: false
         model: ListModel{
@@ -187,6 +188,7 @@ Rectangle {
             required property string name
             required property string value
 
+            width: secondaryAttributes.width
             scaleFactor: root.scaleFactor
             attribute: name
             attributeValue: value

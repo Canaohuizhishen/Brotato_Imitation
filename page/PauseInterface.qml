@@ -7,7 +7,7 @@ import "../logic/ShopLogicHandler.js" as Controller
 Rectangle {
     id: root
     anchors.fill: parent
-    color: Qt.rgba(0,0,0,0.7)
+    color: Qt.rgba(0,0,0,0.85)
     visible: true
     focus: true
     z: 200
@@ -29,16 +29,14 @@ Rectangle {
         onHoveredChanged: {}
     }
 
-    Item {
+    Row {
         id: pause
-        anchors.fill: parent
+        anchors.centerIn: root
+        spacing: 80*root.scaleFactor
 
         Column {
             id:set
-            anchors.left: parent.left
-            anchors.leftMargin: 100*root.scaleFactor
-            anchors.top: parent.top
-            anchors.topMargin: 260*root.scaleFactor
+            anchors.verticalCenter: parent.verticalCenter
             width: 380*root.scaleFactor
             height: 230*root.scaleFactor
             spacing: 10*root.scaleFactor
@@ -89,17 +87,16 @@ Rectangle {
             }
         }
 
-        Item {
-            anchors.left:set.right
-            anchors.leftMargin: 80*root.scaleFactor
-            height: 230*root.scaleFactor
-            anchors.right:attributePanel.left
+        Column {
+            width: Math.max(weaponBar.width,propBar.width)
+            height: weaponBar.height+spacing+propBar.height
             anchors.top: parent.top
             anchors.topMargin: 50*root.scaleFactor
+            spacing: 40*root.scaleFactor
+
             //武器栏
             PurchasedWeaponsBar {
-                id:weapon
-                anchors.verticalCenter: parent.verticalCenter
+                id: weaponBar
                 scaleFactor: root.scaleFactor
                 purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
 
@@ -107,8 +104,7 @@ Rectangle {
 
             //道具栏
             PurchasedPropsBar {
-                anchors.top: weapon.bottom
-                anchors.topMargin: 200*root.scaleFactor
+                id: propBar
                 scaleFactor: root.scaleFactor
                 purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
                 duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
@@ -125,8 +121,6 @@ Rectangle {
             id: attributePanel
             inLeft: true
             scaleFactor: root.scaleFactor
-            anchors.right: parent.right
-            anchors.rightMargin: 100*root.scaleFactor
             anchors.verticalCenter: parent.verticalCenter
         }
     }

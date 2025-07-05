@@ -120,7 +120,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+2</font><font color='white'>生命窃取</font><br>
+        <font color='lime'>+2</font><font color='white'>生命窃取</font><br>
         <font color='red'>-2</font><font color='white'>收获</font><br>
         `
         function apply(){
@@ -138,8 +138,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+2</font><font color='white'>近战伤害</font><br>
-        <font color='green'>+1</font><font color='white'>远程伤害</font><br>
+        <font color='lime'>+2</font><font color='white'>近战伤害</font><br>
+        <font color='lime'>+1</font><font color='white'>远程伤害</font><br>
         <font color='red'>-1</font><font color='white'>生命恢复</font><br>
         `
         function apply(){
@@ -158,7 +158,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+1</font><font color='white'>护甲</font><br>
+        <font color='lime'>+1</font><font color='white'>护甲</font><br>
         <font color='red'>-2</font><font color='white'>速度</font><br>
         `
         function apply(){
@@ -176,8 +176,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+5</font><font color='white'> 攻击速度</font><br>
-        <font color='green'>+15</font><font color='white'>射程</font><br>
+        <font color='lime'>+5</font><font color='white'> 攻击速度</font><br>
+        <font color='lime'>+15</font><font color='white'>射程</font><br>
         <font color='red'>-1</font><font color='white'>护甲</font><br>
         `
         function apply(){
@@ -195,7 +195,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+6</font><font color='white'>伤害</font><br>
+        <font color='lime'>+6</font><font color='white'>伤害</font><br>
         <font color='red'>-8</font><font color='white'>射程</font><br>
         `
         function apply(){
@@ -213,7 +213,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+10</font><font color='white'>攻速</font><br>
+        <font color='lime'>+10</font><font color='white'>攻速</font><br>
         <font color='red'>-2</font><font color='white'>伤害</font><br>
         `
         function apply(){
@@ -231,8 +231,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+1</font><font color='white'>近战伤害</font><br>
-        <font color='green'>+3</font><font color='white'>暴击率</font><br>
+        <font color='lime'>+1</font><font color='white'>近战伤害</font><br>
+        <font color='lime'>+3</font><font color='white'>暴击率</font><br>
         <font color='red'>-1</font><font color='white'>最大生命值</font><br>
         `
         function apply(){
@@ -252,7 +252,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+2</font><font color='white'>元素伤害</font><br>
+        <font color='lime'>+2</font><font color='white'>元素伤害</font><br>
         <font color='red'>-1</font><font color='white'>最大生命值</font><br>
         `
         function apply(){
@@ -271,7 +271,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+1</font><font color='white'>工程</font><br>
+        <font color='lime'>+1</font><font color='white'>工程</font><br>
         `
         function apply(){
             PlayerData.engineering+=1
@@ -287,7 +287,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+5</font><font color='white'>最大生命值</font><br>
+        <font color='lime'>+5</font><font color='white'>最大生命值</font><br>
         <font color='red'>-1</font><font color='white'>生命恢复</font><br>
         `
         function apply(){
@@ -305,7 +305,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+2</font><font color='white'>生命偷取</font><br>
+        <font color='lime'>+2</font><font color='white'>生命偷取</font><br>
         <font color='red'>-1</font><font color='white'>元素伤害</font><br>
         `
         function apply(){
@@ -323,8 +323,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+2</font><font color='white'>近战伤害</font><br>
-        <font color='green'>+2</font><font color='white'>最大生命值</font><br>
+        <font color='lime'>+2</font><font color='white'>近战伤害</font><br>
+        <font color='lime'>+2</font><font color='white'>最大生命值</font><br>
         <font color='red'>-3</font><font color='white'>攻击速度</font><br>
         `
         function apply(){
@@ -343,8 +343,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+1</font><font color='white'>护甲</font><br>
-        <font color='green'>+1</font><font color='white'>工程</font><br>
+        <font color='lime'>+1</font><font color='white'>护甲</font><br>
+        <font color='lime'>+1</font><font color='white'>工程</font><br>
         <font color='red'>-2</font><font color='white'>最大生命</font><br>
         `
         function apply(){
@@ -365,7 +365,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+3</font><font color='white'>最大生命</font><br>
+        <font color='lime'>+3</font><font color='white'>最大生命</font><br>
         <font color='red'>-1</font><font color='white'>伤害</font><br>
         `
         function apply(){
@@ -383,7 +383,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+20</font><font color='white'>射程</font><br>
+        <font color='lime'>+20</font><font color='white'>射程</font><br>
         `
         function apply(){
             PlayerData.range+=20
@@ -399,7 +399,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+3</font><font color='white'>近战伤害</font><br>
+        <font color='lime'>+3</font><font color='white'>近战伤害</font><br>
         <font color='red'>-2</font><font color='white'>暴击率</font><br>
         `
         function apply(){
@@ -418,7 +418,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+4</font><font color='white'>速度</font><br>
+        <font color='lime'>+4</font><font color='white'>速度</font><br>
         <font color='red'>-6</font><font color='white'>射程</font><br>
         `
         function apply(){
@@ -437,7 +437,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+7</font><font color='white'>伤害</font><br>
+        <font color='lime'>+7</font><font color='white'>伤害</font><br>
         <font color='red'>-2</font><font color='white'>最大生命</font><br>
         `
         function apply(){
@@ -456,7 +456,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+6</font><font color='white'>暴击率</font><br>
+        <font color='lime'>+6</font><font color='white'>暴击率</font><br>
         <font color='red'>-3</font><font color='white'>伤害</font><br>
         `
         function apply(){
@@ -474,7 +474,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+1</font><font color='white'>远程伤害</font><br>
+        <font color='lime'>+1</font><font color='white'>远程伤害</font><br>
         <font color='red'>-5</font><font color='white'>射程</font><br>
         `
         function apply(){
@@ -492,7 +492,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+10</font><font color='white'>运气</font><br>
+        <font color='lime'>+10</font><font color='white'>运气</font><br>
         <font color='red'>-1</font><font color='white'>元素伤害</font><br>
         `
         function apply(){
@@ -510,7 +510,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+10</font><font color='white'>运气</font><br>
+        <font color='lime'>+10</font><font color='white'>运气</font><br>
         <font color='red'>-2</font><font color='white'>伤害</font><br>
         `
         function apply(){
@@ -528,7 +528,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+4</font><font color='white'>速度</font><br>
+        <font color='lime'>+4</font><font color='white'>速度</font><br>
         <font color='red'>-6</font><font color='white'>运气</font><br>
         `
         function apply(){
@@ -546,7 +546,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+2</font><font color='white'>元素伤害</font><br>
+        <font color='lime'>+2</font><font color='white'>元素伤害</font><br>
         <font color='red'>-2</font><font color='white'>闪避</font><br>
         `
         function apply(){
@@ -564,8 +564,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+1</font><font color='white'>元素伤害</font><br>
-        <font color='green'>+2</font><font color='white'>近战伤害</font><br>
+        <font color='lime'>+1</font><font color='white'>元素伤害</font><br>
+        <font color='lime'>+2</font><font color='white'>近战伤害</font><br>
         <font color='red'>-2</font><font color='white'>收获</font><br>
         `
         function apply(){
@@ -584,7 +584,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+8</font><font color='white'>收获</font><br>
+        <font color='lime'>+8</font><font color='white'>收获</font><br>
         <font color='red'>-1</font><font color='white'>近战伤害</font><br>
         `
         function apply(){
@@ -605,7 +605,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+8</font><font color='white'>最大生命值</font><br>
+        <font color='lime'>+8</font><font color='white'>最大生命值</font><br>
         <font color='red'>-4</font><font color='white'>闪避</font><br>
         `
         function apply(){
@@ -623,8 +623,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+4</font><font color='white'>暴击率</font><br>
-        <font color='green'>+2</font><font color='white'>元素伤害</font><br>
+        <font color='lime'>+4</font><font color='white'>暴击率</font><br>
+        <font color='lime'>+2</font><font color='white'>元素伤害</font><br>
         <font color='red'>-2</font><font color='white'>远程伤害</font><br>
         `
         function apply(){
@@ -644,7 +644,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+4</font><font color='white'>工程</font><br>
+        <font color='lime'>+4</font><font color='white'>工程</font><br>
         <font color='red'>-4</font><font color='white'>伤害</font><br>
         `
         function apply(){
@@ -662,7 +662,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+12</font><font color='white'>伤害</font><br>
+        <font color='lime'>+12</font><font color='white'>伤害</font><br>
         <font color='red'>-12</font><font color='white'>射程</font><br>
         `
         function apply(){
@@ -680,7 +680,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+4</font><font color='white'>元素伤害</font><br>
+        <font color='lime'>+4</font><font color='white'>元素伤害</font><br>
         <font color='red'>-1</font><font color='white'>近战伤害</font><br>
         <font color='red'>-1</font><font color='white'>远程伤害</font><br>
         `
@@ -700,7 +700,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+8</font><font color='white'>闪避</font><br>
+        <font color='lime'>+8</font><font color='white'>闪避</font><br>
         <font color='red'>-1</font><font color='white'>护甲</font><br>
         `
         function apply(){
@@ -719,8 +719,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+2</font><font color='white'>元素伤害</font><br>
-        <font color='green'>+2</font><font color='white'>生命恢复</font><br>
+        <font color='lime'>+2</font><font color='white'>元素伤害</font><br>
+        <font color='lime'>+2</font><font color='white'>生命恢复</font><br>
         <font color='red'>-2</font><font color='white'>速度</font><br>
         `
         function apply(){
@@ -740,8 +740,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+25</font><font color='white'>经验获取</font><br>
-        <font color='green'>+3</font><font color='white'>近战伤害</font><br>
+        <font color='lime'>+25</font><font color='white'>经验获取</font><br>
+        <font color='lime'>+3</font><font color='white'>近战伤害</font><br>
         <font color='red'>-8</font><font color='white'>运气</font><br>
         `
         function apply(){
@@ -761,8 +761,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+5</font><font color='white'>暴击率</font><br>
-        <font color='green'>+5</font><font color='white'>闪避</font><br>
+        <font color='lime'>+5</font><font color='white'>暴击率</font><br>
+        <font color='lime'>+5</font><font color='white'>闪避</font><br>
         <font color='red'>-15</font><font color='white'>射程</font><br>
         `
         function apply(){
@@ -782,8 +782,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+20</font><font color='white'>射程</font><br>
-        <font color='green'>+10</font><font color='white'>攻击速度</font><br>
+        <font color='lime'>+20</font><font color='white'>射程</font><br>
+        <font color='lime'>+10</font><font color='white'>攻击速度</font><br>
         <font color='red'>-2</font><font color='white'>生命窃取</font><br>
         `
         function apply(){
@@ -803,8 +803,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+2</font><font color='white'>护甲</font><br>
-        <font color='green'>+6</font><font color='white'>闪避</font><br>
+        <font color='lime'>+2</font><font color='white'>护甲</font><br>
+        <font color='lime'>+6</font><font color='white'>闪避</font><br>
         <font color='red'>-3</font><font color='white'>最大生命</font><br>
         `
         function apply(){
@@ -823,8 +823,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+3</font><font color='white'>近战伤害</font><br>
-        <font color='green'>+5</font><font color='white'>最大生命</font><br>
+        <font color='lime'>+3</font><font color='white'>近战伤害</font><br>
+        <font color='lime'>+5</font><font color='white'>最大生命</font><br>
         <font color='red'>-15</font><font color='white'>射程</font><br>
         `
         function apply(){
@@ -843,7 +843,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+6</font><font color='white'>近战伤害</font><br>
+        <font color='lime'>+6</font><font color='white'>近战伤害</font><br>
         <font color='red'>-3</font><font color='white'>远程伤害</font><br>
         `
         function apply(){
@@ -861,10 +861,10 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+3</font><font color='white'>伤害</font><br>
-        <font color='green'>+3</font><font color='white'>速度</font><br>
-        <font color='green'>+1</font><font color='white'>护甲</font><br>
-        <font color='green'>+3</font><font color='white'>最大生命</font><br>
+        <font color='lime'>+3</font><font color='white'>伤害</font><br>
+        <font color='lime'>+3</font><font color='white'>速度</font><br>
+        <font color='lime'>+1</font><font color='white'>护甲</font><br>
+        <font color='lime'>+3</font><font color='white'>最大生命</font><br>
         <font color='red'>-4</font><font color='white'>暴击率</font><br>
         `
         function apply(){
@@ -887,8 +887,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+15</font><font color='white'>最大生命值</font><br>
-        <font color='green'>+8</font><font color='white'>敌人移动速度</font><br>
+        <font color='lime'>+15</font><font color='white'>最大生命值</font><br>
+        <font color='lime'>+8</font><font color='white'>敌人移动速度</font><br>
         `
         function apply(){
             PlayerData.maxHp+=15
@@ -905,8 +905,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+8</font><font color='white'>最大生命值</font><br>
-        <font color='green'>+3</font><font color='white'>生命恢复</font><br>
+        <font color='lime'>+8</font><font color='white'>最大生命值</font><br>
+        <font color='lime'>+3</font><font color='white'>生命恢复</font><br>
         <font color='red'>-8</font><font color='white'>运气</font><br>
         `
         function apply(){
@@ -925,8 +925,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+20</font><font color='white'>运气</font><br>
-        <font color='green'>+6</font><font color='white'>闪避</font><br>
+        <font color='lime'>+20</font><font color='white'>运气</font><br>
+        <font color='lime'>+6</font><font color='white'>闪避</font><br>
         <font color='red'>-2</font><font color='white'>生命偷取</font><br>
         `
         function apply(){
@@ -945,11 +945,11 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+3</font><font color='white'>近战伤害</font><br>
-        <font color='green'>+3</font><font color='white'>远程伤害</font><br>
-        <font color='green'>+3</font><font color='white'>元素伤害</font><br>
-        <font color='green'>+3</font><font color='white'>工程</font><br>
-        <font color='green'>+5</font><font color='white'>暴击率</font><br>
+        <font color='lime'>+3</font><font color='white'>近战伤害</font><br>
+        <font color='lime'>+3</font><font color='white'>远程伤害</font><br>
+        <font color='lime'>+3</font><font color='white'>元素伤害</font><br>
+        <font color='lime'>+3</font><font color='white'>工程</font><br>
+        <font color='lime'>+5</font><font color='white'>暴击率</font><br>
         <font color='red'>-6</font><font color='white'>闪避</font><br>
         `
         function apply(){
@@ -971,9 +971,9 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+10</font><font color='white'>攻速</font><br>
-        <font color='green'>+5</font><font color='white'>暴击率</font><br>
-        <font color='green'>+15</font><font color='white'>射程</font><br>
+        <font color='lime'>+10</font><font color='white'>攻速</font><br>
+        <font color='lime'>+5</font><font color='white'>暴击率</font><br>
+        <font color='lime'>+15</font><font color='white'>射程</font><br>
         <font color='red'>-2</font><font color='white'>生命恢复</font><br>
         `
         function apply(){
@@ -993,8 +993,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+6</font><font color='white'>最大生命</font><br>
-        <font color='green'>+2</font><font color='white'>生命恢复</font><br>
+        <font color='lime'>+6</font><font color='white'>最大生命</font><br>
+        <font color='lime'>+2</font><font color='white'>生命恢复</font><br>
         <font color='red'>-2</font><font color='white'>近战伤害</font><br>
         <font color='red'>-1</font><font color='white'>远程伤害</font><br>
         `
@@ -1016,7 +1016,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+6</font><font color='white'>工程</font><br>
+        <font color='lime'>+6</font><font color='white'>工程</font><br>
         <font color='red'>-8</font><font color='white'>攻击速度</font><br>
         `
         function apply(){
@@ -1034,8 +1034,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+3</font><font color='white'>护甲</font><br>
-        <font color='green'>+5</font><font color='white'>最大生命</font><br>
+        <font color='lime'>+3</font><font color='white'>护甲</font><br>
+        <font color='lime'>+5</font><font color='white'>最大生命</font><br>
         <font color='red'>-5</font><font color='white'>速度</font><br>
         `
         function apply(){
@@ -1054,7 +1054,7 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+25</font><font color='white'>伤害</font><br>
+        <font color='lime'>+25</font><font color='white'>伤害</font><br>
         <font color='red'>-3</font><font color='white'>护甲</font><br>
         `
         function apply(){
@@ -1074,8 +1074,8 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+5</font><font color='white'>生命偷取</font><br>
-        <font color='green'>+20</font><font color='white'>闪避</font><br>
+        <font color='lime'>+5</font><font color='white'>生命偷取</font><br>
+        <font color='lime'>+20</font><font color='white'>闪避</font><br>
         <font color='red'>-2</font><font color='white'>近战伤害</font><br>
         <font color='red'>-2</font><font color='white'>远程伤害</font><br>
         <font color='red'>-2</font><font color='white'>元素伤害</font><br>
@@ -1098,10 +1098,10 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+5</font><font color='white'>护甲</font><br>
-        <font color='green'>+5</font><font color='white'>暴击率</font><br>
-        <font color='green'>+5</font><font color='white'>工程</font><br>
-        <font color='green'>+5</font><font color='white'>闪避</font><br>
+        <font color='lime'>+5</font><font color='white'>护甲</font><br>
+        <font color='lime'>+5</font><font color='white'>暴击率</font><br>
+        <font color='lime'>+5</font><font color='white'>工程</font><br>
+        <font color='lime'>+5</font><font color='white'>闪避</font><br>
         <font color='red'>-2</font><font color='white'>生命恢复</font><br>
         <font color='red'>-2</font><font color='white'>生命偷取</font><br>
         `
@@ -1124,9 +1124,9 @@ Item {
         property int curPrice: Math.ceil(basePrice*Math.pow(1.1,PlayerData.currentWaveNumber)*PlayerData.goodsDiscountRate)
         readonly property string type: "道具"
         readonly property string talentText: `
-        <font color='green'>+5</font><font color='white'>远程伤害</font><br>
-        <font color='green'>+10</font><font color='white'>伤害</font><br>
-        <font color='green'>+10</font><font color='white'>射程</font><br>
+        <font color='lime'>+5</font><font color='white'>远程伤害</font><br>
+        <font color='lime'>+10</font><font color='white'>伤害</font><br>
+        <font color='lime'>+10</font><font color='white'>射程</font><br>
         <font color='red'>-5</font><font color='white'>攻击速度</font><br>
         <font color='red'>-5</font><font color='white'>暴击率</font><br>
         `
