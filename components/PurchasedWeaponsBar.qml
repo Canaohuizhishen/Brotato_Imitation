@@ -24,7 +24,7 @@ Item{
             id: weaponText
             text: "武器" + (root.showNumber ? "(" + Controller.getPurchasedWNum() + "/6)" : "")
             color: "white"
-            height: 32* scaleFactor
+            height: 30* scaleFactor
             font.pixelSize: height
         }
 

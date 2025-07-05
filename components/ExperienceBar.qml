@@ -39,22 +39,13 @@ Item {
         Text {
             id: xpText
             text: "LV."+experienceBar.level
-            color: "black"
+            color: "white"
             font.pixelSize: 18*experienceBar.scaleFactor
             style: Text.Outline
             styleColor: "black"
             anchors.right: parent.right
             anchors.rightMargin: maxXp.border.width
             anchors.verticalCenter: maxXp.verticalCenter
-        }
-
-        Text {
-            text: xpText.text
-            color: "white"
-            font.pixelSize: xpText.font.pixelSize
-            anchors.right: xpText.anchors.right
-            anchors.rightMargin: xpText.anchors.rightMargin
-            anchors.verticalCenter: xpText.anchors.verticalCenter
         }
     }
 }

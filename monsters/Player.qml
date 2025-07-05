@@ -432,6 +432,7 @@ Item {
 
     function getMaterial(material){
         PlayerData.materialsNumber+=material.value
+        PlayerData.curWaveMaterialsNumber+=material.value
         PlayerData.curXp+=material.value
     }
 

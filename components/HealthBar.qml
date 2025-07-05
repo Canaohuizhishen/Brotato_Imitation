@@ -37,18 +37,11 @@ Item {
         Text {
             id: hpText
             text: healthBar.hp+"/"+healthBar.maxHp
-            color: "black"
+            color: "white"
             font.pixelSize: 18*healthBar.scaleFactor
             style: Text.Outline
             styleColor: "black"
             anchors.centerIn: parent
-        }
-
-        Text {
-            text: hpText.text
-            color: "white"
-            font.pixelSize: hpText.font.pixelSize
-            anchors.centerIn: hpText.anchors.centerIn
         }
     }
 }

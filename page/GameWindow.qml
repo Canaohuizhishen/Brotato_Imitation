@@ -53,7 +53,7 @@ Item {
             pauseInterface.visible=Qt.binding(function(){return !settingInterface.visible})
             settingInterface.visible=true
         }
-        backMainMenuButton.onClicked: backMainMenu()
+        backMainMenuButton.onClicked: gameWindow.backMainMenu()
     }
 
     StartInterface{
@@ -61,7 +61,7 @@ Item {
         visible: true
         scaleFactor: gameWindow.scaleFactor
         z:100
-        resumeButton.visible: PlayerData.currentWaveNumber ? true : false
+        resumeButton.visible: PlayerData.currentWaveNumber>1 ? true : false
         resumeButton.onClicked: continueGame()
         startButton.onClicked:{
             startInterface.visible=false
@@ -190,6 +190,9 @@ Item {
             visible=false
             waveCountdown.start()
         }
+        onVisibleChanged: {
+            if(visible)PlayerData.currentWaveNumber++
+        }
         Connections {
             target: pauseInterface
             function onVisibleChanged() {
@@ -201,7 +204,29 @@ Item {
 
     SettlementInterface {
         id: settlementInterface
+        scaleFactor: gameWindow.scaleFactor
         visible: false
+        retryButton.onClicked: gameWindow.restart()
+        newGameButton.onClicked: gameWindow.newGame()
+        backMainMenuButton.onClicked: gameWindow.backMainMenuFromSettlement()
+        Connections {
+            target: PlayerData
+            function onCurHpChanged() {
+                if(PlayerData.curHp<=0){
+                    gameArea.active=false
+                    gameArea.paused=true
+                    delayDietimer.start()
+                }
+            }
+        }
+        TimerCanPause {
+            id: delayDietimer
+            interval: 2000; running: false; repeat: false
+            onTriggered: {
+                gameArea.visible=false
+                settlementInterface.visible=true
+            }
+        }
     }
 
     UpgradeNotificationBar{
@@ -225,7 +250,7 @@ Item {
         states: [
             State {
                 name: "notInCombat"; when: (!PlayerData.isInCombat && !gameWindow.inSelectInterface)
-                PropertyChanges { delaytimer.running: true }
+                PropertyChanges { delayOvertimer.running: true }
             },
             State {
                 name: "inCombat"; when: (PlayerData.isInCombat)
@@ -234,13 +259,15 @@ Item {
         ]
         onPausedChanged: {
             if(paused==true){
-                delaytimer.pause()
+                delayOvertimer.pause()
+                delayDietimer.pause()
             }else{
-                delaytimer.resume()
+                delayOvertimer.resume()
+                delayDietimer.resume()
             }
         }
         TimerCanPause {
-            id: delaytimer
+            id: delayOvertimer
             interval: 2000; running: false; repeat: false
             onTriggered: {
                 if(chestNotificationBar.number){
@@ -304,11 +331,13 @@ Item {
     }
 
     function restart(){
+        settingInterface.init()
+        pauseInterface.init()
         gameArea.init()
         chestOpeningInterface.init()
         upgradeInterface.init()
-        pauseInterface.init()
         storeInterface.init()
+        settlementInterface.init()
         upgradeNotificationBar.init()
         chestNotificationBar.init()
         PlayerData.init()
@@ -325,6 +354,7 @@ Item {
     }
 
     function continueGame(){
+        PlayerData.currentWaveNumber--
         startInterface.visible=false
         storeInterface.visible=true
         paused=false
@@ -337,16 +367,25 @@ Item {
             weaponSelectionInterface.init()
             difficultySelectionInterface.init()
         }
+        if(!storeInterface.visible){
+            PlayerData.harvesting-=Math.max(PlayerData.harvesting*0.05,1)
+            PlayerData.materialsNumber-=PlayerData.harvesting
+            PlayerData.curXp-=PlayerData.harvesting
+        }
+        PlayerData.materialsNumber-=PlayerData.curWaveMaterialsNumber
+        PlayerData.curXp-=PlayerData.curWaveMaterialsNumber
+        PlayerData.curWaveMaterialsNumber=0
+        PlayerData.remainingMaterialsNumber=0
+        PlayerData.isInCombat=false
         gameArea.clear()
+        settingInterface.init()
+        pauseInterface.init()
         chestOpeningInterface.init()
         upgradeInterface.init()
-        pauseInterface.init()
         storeInterface.init()
         upgradeNotificationBar.init()
         chestNotificationBar.init()
 
-        PlayerData.isInCombat=false
-        PlayerData.currentWaveNumber--
         inSelectInterface=true
         gameArea.paused=Qt.binding(function(){return paused})
         upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
@@ -354,9 +393,21 @@ Item {
         startInterface.visible=true
     }
 
+    function backMainMenuFromSettlement(){
+        init()
+        startInterface.visible=true
+    }
+
+    function newGame(){
+        init()
+        roleSelectionInterface.visible=true
+    }
+
     function init(){
         paused=false
         inSelectInterface=true
+        settingInterface.init()
+        pauseInterface.init()
         startInterface.init()
         roleSelectionInterface.init()
         weaponSelectionInterface.init()
@@ -364,8 +415,8 @@ Item {
         gameArea.init()
         chestOpeningInterface.init()
         upgradeInterface.init()
-        pauseInterface.init()
         storeInterface.init()
+        settlementInterface.init()
         upgradeNotificationBar.init()
         chestNotificationBar.init()
         PlayerData.init()
