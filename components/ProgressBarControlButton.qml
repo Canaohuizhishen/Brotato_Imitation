@@ -4,8 +4,9 @@ import QtQuick.Controls
 
 Item {
     id: root
+    property double scaleFactor: 1.0
     width: parent.width
-    height: 40
+    height: 40*root.scaleFactor
 
     property string labelText: ""
     property int initialValue: 50
@@ -14,7 +15,7 @@ Item {
     property bool linkFontSize: false  // 控制字体大小关联
 
     function mapFontSize(sliderValue) {
-        return 16 * (sliderValue / 100)
+        return 25 * (sliderValue / 100)
     }
 
     // 文本标签（左对齐）
@@ -22,12 +23,12 @@ Item {
         id: label
         text: root.labelText
         color: "white"
-        font.pixelSize: root.linkFontSize ? mapFontSize(slider.value) : 25
+        font.pixelSize: root.linkFontSize ? mapFontSize(slider.value)*root.scaleFactor : 25*root.scaleFactor
         anchors {
             left: parent.left
             verticalCenter: parent.verticalCenter
         }
-        width: 80
+        width: 80*root.scaleFactor
         horizontalAlignment: Text.AlignLeft
     }
 
@@ -38,14 +39,14 @@ Item {
             left: label.right
             right: percent.left
             verticalCenter: parent.verticalCenter
-            leftMargin: 50
-            rightMargin: 15
+            leftMargin: 50*root.scaleFactor
+            rightMargin: 15*root.scaleFactor
         }
-        height: 25  // 默认高度
-        from: root.linkFontSize ? 80 : 0  // 动态范围
+        height: 25*root.scaleFactor  // 默认高度
+        from: root.linkFontSize ? 50 : 0  // 动态范围
         to: root.linkFontSize ? 125 : 100
         value: root.linkFontSize ? 100 : root.initialValue
-        stepSize: root.linkFontSize ? 1 : 3
+        stepSize: root.linkFontSize ? 1*root.scaleFactor : 3*root.scaleFactor
         handle: Item { visible: false }
 
 
@@ -85,9 +86,9 @@ Item {
                 id: progressBar
                 width: slider.visualPosition * parent.width
                 height: {
-                    if (root.isActive) return 30
-                    if (hoverHandler.hovered) return 30
-                    return 25
+                    if (root.isActive) return 30*root.scaleFactor
+                    if (hoverHandler.hovered) return 30*root.scaleFactor
+                    return 25*root.scaleFactor
                 }
                 color: (root.isActive || hoverHandler.hovered) ? "white" : "#afafaf"
                 radius: 0
@@ -102,11 +103,11 @@ Item {
         states: [
             State {
                 when: root.isActive
-                PropertyChanges { target: slider; height: 30 }
+                PropertyChanges { target: slider; height: 30*root.scaleFactor }
             },
             State {
                 when: hoverHandler.hovered && !root.isActive
-                PropertyChanges { target: slider; height: 30 }
+                PropertyChanges { target: slider; height: 30*root.scaleFactor }
             }
         ]
         transitions: Transition {
@@ -131,21 +132,21 @@ Item {
             return Math.round(slider.value) + "%"
         }
         color: "white"
-        font.pixelSize: 24
+        font.pixelSize: 24*root.scaleFactor
         anchors {
             right: parent.right
             verticalCenter: parent.verticalCenter
         }
-        width: 60
+        width: 60*root.scaleFactor
         horizontalAlignment: Text.AlignRight
     }
     onLinkFontSizeChanged: {
         if (linkFontSize) {
             slider.value = 100
-            label.font.pixelSize = mapFontSize(100)
+            label.font.pixelSize = mapFontSize(100)*root.scaleFactor
         } else {
             slider.value = initialValue
-            label.font.pixelSize = 25
+            label.font.pixelSize = 25*root.scaleFactor
         }
     }
 
