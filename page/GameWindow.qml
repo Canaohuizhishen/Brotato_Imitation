@@ -39,6 +39,8 @@ Item {
     SettingInterface {
         id: settingInterface
         visible: false
+        scaleFactor: gameWindow.scaleFactor
+        showModifier: inSelectInterface
     }
 
     PauseInterface{

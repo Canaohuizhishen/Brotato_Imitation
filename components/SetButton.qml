@@ -3,7 +3,8 @@ import QtQuick.Controls
 
 Button {
     id: root
-    height: 50
+    property double scaleFactor: 1.0
+    height: 50*root.scaleFactor
 
     property color normalColor: "#000000"
     property color hoverColor: "white"
@@ -13,7 +14,7 @@ Button {
 
     background: Rectangle {
         id: buttonBg
-        radius: 10
+        radius: 10*root.scaleFactor
         color: root.hovered ? root.hoverColor : root.normalColor
         Behavior on color { ColorAnimation { duration: 100 } }
     }

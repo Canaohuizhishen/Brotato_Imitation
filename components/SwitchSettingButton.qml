@@ -3,13 +3,14 @@ import QtQuick.Controls
 
 Item {
     id: root
-    width:420
-    height: 45
+    property double scaleFactor: 1.0
+    width:420*root.scaleFactor
+    height: 45*root.scaleFactor
 
     // 可配置属性
     property string label: "Label"
     property bool checked: false
-    property int fontSize: 30
+    property int fontSize: 30*root.scaleFactor
 
     // 信号
     signal toggled(bool checked)
@@ -18,7 +19,7 @@ Item {
         width: parent.width
         height: parent.height
         color: root.checked ? "#000000" : (hoverHandler.hovered ? "white" : "#000000")
-        radius: 5
+        radius: 5*root.scaleFactor
 
         // 悬停检测
         HoverHandler {
@@ -32,9 +33,9 @@ Item {
 
         Row {
             anchors.verticalCenter:  parent.verticalCenter
-            anchors.leftMargin: 10
+            anchors.leftMargin: 10*root.scaleFactor
             anchors.left: parent.left
-            spacing: parent.width - labelText.implicitWidth - switchControl.width-5
+            spacing: parent.width - labelText.implicitWidth - switchControl.width-5*root.scaleFactor
 
             Text {
                 id: labelText
@@ -48,23 +49,23 @@ Item {
                 id: switchControl
                 checked: root.checked
                 indicator: Rectangle {
-                    implicitWidth: 50
-                    implicitHeight: 20
+                    implicitWidth: 50*root.scaleFactor
+                    implicitHeight: 20*root.scaleFactor
                     y: parent.height/2 - height/2
                     radius: 0
                     color: switchControl.checked ? "#afafaf" : "#252525"
                     border.color: "#000000"
-                    border.width: 3
+                    border.width: 3*root.scaleFactor
 
                     Rectangle {
                         x: switchControl.checked ? parent.width - width : 0
                         y: parent.height/2 - height/2
-                        width: 20
-                        height: 26
+                        width: 20*root.scaleFactor
+                        height: 26*root.scaleFactor
                         radius: 0
                         color: switchControl.checked ? "#dbdbdb" : "#656565"
                         border.color: "#000000"
-                        border.width: 3
+                        border.width: 3*root.scaleFactor
                     }
                 }
 
