@@ -3,8 +3,10 @@ import QtQuick.Controls
 import "../logic/ShopLogicHandler.js" as Controller
 import singleton.PlayerData
 //道具栏
-Rectangle {
+Item {
     id: propsBar
+    width: propBar.width
+    height: propBar.height
     property double scaleFactor: 1.0
     property var purchasedPropsModel
     property var duplicatePropsCountModel
@@ -22,54 +24,52 @@ Rectangle {
     }
 
     function updateLayout() {
-        propBar.columns = columns
+        propView.columns = columns
     }
 
-    Text {
-        id: propText
-        text: "道具"
-        color: "white"
-        font.pixelSize: 32*scaleFactor
-    }
-
-    GridView {
+    Column{
         id: propBar
+        width: propView.width
+        height: propText.height+spacing+propView.height
+        spacing: 20
 
-        // 参数配置
-        property int columns: parent.columns
-        property int spacing : 4*propsBar.scaleFactor
-        property int cellSize : 63*propsBar.scaleFactor
-
-        anchors.top: propText.bottom
-        anchors.topMargin: 5*propsBar.scaleFactor
-        anchors.left: propText.left
-
-        width:  columns* (cellSize + 5*propsBar.scaleFactor) + 10*propsBar.scaleFactor
-        height: 2 * (cellSize + 5*propsBar.scaleFactor)
-        cellWidth: cellSize + 5*propsBar.scaleFactor
-        cellHeight: cellSize + 5*propsBar.scaleFactor
-
-        model: duplicatePropsCountModel
-
-        interactive: true
-        flickableDirection: Flickable.VerticalFlick
-        boundsBehavior: Flickable.StopAtBounds
-        clip: true
-
-        ScrollBar.vertical: ScrollBar {
-            policy: ScrollBar.AsNeeded
-            width: 11*propsBar.scaleFactor
-            height: propBar.height
-            anchors.top: propBar.top
-            anchors.right: propBar.right
+        Text {
+            id: propText
+            text: "道具"
+            color: "white"
+            height: 32* scaleFactor
+            font.pixelSize: height
         }
 
-        delegate: PurchasedPropsImage {
-            id: propCard
-            width: propBar.cellSize
-            height: propBar.cellSize
-            itemData: propItem
-            propNum: count
+        GridView {
+            id: propView
+            property int columns: parent.columns
+            property int spacing : 4*propsBar.scaleFactor
+            property int cellSize : 65*propsBar.scaleFactor
+            anchors.left: propText.left
+            width:  columns* (cellSize + 5*propsBar.scaleFactor) + 10*propsBar.scaleFactor
+            height: 2 * (cellSize + 5*propsBar.scaleFactor)
+            cellWidth: cellSize + 5*propsBar.scaleFactor
+            cellHeight: cellSize + 5*propsBar.scaleFactor
+            model: duplicatePropsCountModel
+            interactive: true
+            flickableDirection: Flickable.VerticalFlick
+            boundsBehavior: Flickable.StopAtBounds
+            clip: true
+            delegate: PurchasedPropsImage {
+                id: propCard
+                width: propView.cellSize
+                height: propView.cellSize
+                itemData: propItem
+                propNum: count
+            }
+            ScrollBar.vertical: ScrollBar {
+                policy: ScrollBar.AsNeeded
+                width: 11*propsBar.scaleFactor
+                height: propView.height
+                anchors.top: propView.top
+                anchors.right: propView.right
+            }
         }
     }
 }

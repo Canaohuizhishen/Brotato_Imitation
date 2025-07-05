@@ -105,7 +105,7 @@ Item {
         readonly property string talentText: `
         <font color='#ffffc0'>伤害 : </font><font color='white'>`+damage+`(+100%近战伤害)</font><br>
         <font color='#ffffc0'>暴击 : </font><font color='white'>x2(`+critical+`%概率)</font><br>
-        <font color='#ffffc0'>冷却 : </font><font color='white'>`+cooldown+`</font><br>
+        <font color='#ffffc0'>冷却 : </font><font color='white'>`+cooldown.toFixed(2)+`</font><br>
         <font color='#ffffc0'>范围 : </font><font color='white'>`+range+`(近战)</font><br>
         `
         onGradeChanged: {
@@ -166,7 +166,7 @@ Item {
         readonly property string talentText: `
         <font color='#ffffc0'>伤害 : </font><font color='white'>`+damage+`(+50%远程伤害)</font><br>
         <font color='#ffffc0'>暴击 : </font><font color='white'>x1.5(`+critical+`%概率)</font><br>
-        <font color='#ffffc0'>冷却 : </font><font color='white'>`+cooldown+`</font><br>
+        <font color='#ffffc0'>冷却 : </font><font color='white'>`+cooldown.toFixed(2)+`</font><br>
         <font color='#ffffc0'>范围 : </font><font color='white'>`+range+`(远战)</font><br>
         `
         onGradeChanged: {

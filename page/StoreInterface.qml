@@ -27,14 +27,14 @@ Item {
 
     function hideComponents(){
         topBar.visible=false
-        shopArea.visible=false
+        shopView.visible=false
         bars.visible=false
         rightPanel.visible=false
     }
 
     function unhideComponents(){
         topBar.visible=true
-        shopArea.visible=true
+        shopView.visible=true
         bars.visible=true
         rightPanel.visible=true
     }
@@ -55,6 +55,10 @@ Item {
            }
     }
 
+    Component.onCompleted: {
+        Controller.refreshShop()
+    }
+
     //主背景
     Rectangle {
         id: background
@@ -67,87 +71,50 @@ Item {
         }
     }
 
+    PropCustomizationCore {
+        id: propCore
+    }
+
+    WeaponCustomizationCore {
+        id: weaponCore
+    }
+
     //商店+波数+货币数量+刷新
     Item {
         id: topBar
+        width: shopView.width-shopView.spacing
+        height: refreshButton.height
         anchors.top: parent.top
-        width: parent.width * 0.77
-        height: 50*storeInterface.scaleFactor
+        anchors.topMargin: 20
+        anchors.left: shopView.left
 
         Text {
             id: shopTitle
             text: qsTr("商店(第") + PlayerData.currentWaveNumber + qsTr("波)")
             color: "white"
             font.pixelSize: 30*storeInterface.scaleFactor
-            anchors.top: parent.top
-            anchors.topMargin: 28*storeInterface.scaleFactor
-            anchors.left: parent.left
-            anchors.leftMargin: 15*storeInterface.scaleFactor
+            anchors.left: topBar.left
+            anchors.verticalCenter: topBar.verticalCenter
         }
 
         //货币数量
-        Rectangle {
-            id: currencyRow
-
-            anchors.left: shopTitle.right
-            anchors.leftMargin: (parent.width - 30*storeInterface.scaleFactor - shopTitle.width - refreshButton.width) / 2 - 30*storeInterface.scaleFactor
-            anchors.top: parent.top
-            anchors.topMargin: 30*storeInterface.scaleFactor
-
-            Image {
-                id: coinimage
-                width: 30*storeInterface.scaleFactor
-                height: 30*storeInterface.scaleFactor
-                source: cionImage
-                // anchors.top: parent.top
-                // anchors.topMargin: 1*storeInterface.scaleFactor
-            }
-
-            Text {
-                anchors.left: coinimage.right
-                anchors.leftMargin: 3*storeInterface.scaleFactor
-                text: PlayerData.materialsNumber
-                font.pixelSize: 24*storeInterface.scaleFactor
-                color: "white"
-                font.weight: 650
-            }
+        MaterialsBar{
+            id: materialsBar
+            scaleFactor: storeInterface.scaleFactor
+            height: 30*storeInterface.scaleFactor
+            number: PlayerData.materialsNumber
+            anchors.centerIn: topBar
         }
 
         Button {
             id: refreshButton
             width: 170*storeInterface.scaleFactor
             height: 55*storeInterface.scaleFactor
-
             property bool isHovered: false
             property int currentRefreshPrice: Controller.refreshPrice(PlayerData.currentWaveNumber)
-
-            anchors.top: parent.top
-            anchors.topMargin: 17*storeInterface.scaleFactor
-            anchors.right: parent.right
-            anchors.rightMargin: 9*storeInterface.scaleFactor
-
             hoverEnabled: true
-
-            onHoveredChanged: {
-                isHovered = hovered
-            }
-
-            onPressedChanged: {
-                if (pressed) {
-                    shrinkAnimation.start()
-                } else {
-                    restoreAnimation.start()
-                }
-            }
-
-            onClicked: {
-                // if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
-                Controller.refreshShop()
-                PlayerData.materialsNumber -= currentRefreshPrice
-                currentRefreshPrice = Controller.refreshPrice(PlayerData.currentWaveNumber)
-                // }
-            }
-
+            anchors.right: topBar.right
+            anchors.verticalCenter: topBar.verticalCenter
             contentItem: Item {
                 anchors.fill: parent
 
@@ -172,19 +139,37 @@ Item {
                     }
                 }
             }
-
             background: Rectangle {
                 id: buttonBg
                 radius: 10*storeInterface.scaleFactor
                 color: refreshButton.isHovered ? "white" : "black"
             }
-
             transform: Scale {
                 id: buttonScale
                 origin {
                     x: refreshButton.width / 2
                     y: refreshButton.height / 2
                 }
+            }
+
+            onHoveredChanged: {
+                isHovered = hovered
+            }
+
+            onPressedChanged: {
+                if (pressed) {
+                    shrinkAnimation.start()
+                } else {
+                    restoreAnimation.start()
+                }
+            }
+
+            onClicked: {
+                // if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
+                Controller.refreshShop()
+                PlayerData.materialsNumber -= currentRefreshPrice
+                currentRefreshPrice = Controller.refreshPrice(PlayerData.currentWaveNumber)
+                // }
             }
 
             PropertyAnimation {
@@ -209,94 +194,61 @@ Item {
     }
 
     // 商品列表
-    Item {
-        id: shopArea
-        anchors.top: topBar.bottom
-        // anchors.topMargin: 30
-        anchors.left: topBar.left
-
-        ListModel {
+    GridView {
+        id: shopView
+        anchors.top: storeInterface.top
+        anchors.topMargin: 105*storeInterface.scaleFactor
+        anchors.left: storeInterface.left
+        anchors.leftMargin: 20*storeInterface.scaleFactor
+        property int columns : 4
+        property int cellW: 235*storeInterface.scaleFactor
+        property int cellH: 320*storeInterface.scaleFactor
+        property int spacing: 8*storeInterface.scaleFactor
+        width:  4*(cellW+spacing)
+        height: cellH + 45*storeInterface.scaleFactor
+        cellWidth: cellW + spacing
+        cellHeight: cellH
+        interactive: false
+        flickableDirection: Flickable.AutoFlickDirection
+        boundsBehavior: Flickable.StopAtBounds
+        clip: true
+        flow: GridView.FlowLeftToRight
+        model: ListModel {
             id: shopModel
         }
-
-        GridView {
-            id: shopView
-            anchors.top: parent.top
-            anchors.topMargin: 55*storeInterface.scaleFactor
-            anchors.left: parent.left
-            anchors.leftMargin: 15*storeInterface.scaleFactor
-            property int columns : 4
-            property int cellW: 235*storeInterface.scaleFactor
-            property int cellH: 315*storeInterface.scaleFactor
-            width:  4 * (cellW + 8)*storeInterface.scaleFactor
-            height: cellH + 45*storeInterface.scaleFactor
-            cellWidth: cellW + 7*storeInterface.scaleFactor
-            cellHeight: cellH
-            interactive: false
-            flickableDirection: Flickable.AutoFlickDirection
-            boundsBehavior: Flickable.StopAtBounds
-            clip: true
-            flow: GridView.FlowLeftToRight
-            model: shopModel
-            delegate: GoodsCard {
-                id: card
-                scaleFactor: storeInterface.scaleFactor
-                Component.onCompleted: {
-                    card.lockState = isLockedModel
-                }
-                onLockStateChanged: {
-                    if (index >= 0 && index < shopModel.count) {
-                        shopModel.setProperty(index, "isLockedModel", lockState)
-
-                    }
-                }
-                itemData: goods
-                itemIndex: index
-                wGrade: weaponGrade
-                visible: index < shopView.columns
-                width: shopView.cellW
-                height: shopView.cellH
+        delegate: GoodsCard {
+            id: card
+            scaleFactor: storeInterface.scaleFactor
+            Component.onCompleted: {
+                card.lockState = isLockedModel
             }
-        }
+            onLockStateChanged: {
+                if (index >= 0 && index < shopModel.count) {
+                    shopModel.setProperty(index, "isLockedModel", lockState)
 
-        // 网格背景
-        Rectangle {
-            anchors.fill: parent
-            color: "#222222"
-            radius: 8*storeInterface.scaleFactor
-            z: -1
-        }
-
-        PropCustomizationCore {
-            id: propCore
-        }
-
-        WeaponCustomizationCore {
-            id: weaponCore
-        }
-
-        Component.onCompleted: {
-            Controller.refreshShop()
+                }
+            }
+            itemData: goods
+            itemIndex: index
+            wGrade: weaponGrade
+            visible: index < shopView.columns
+            width: shopView.cellW
+            height: shopView.cellH
         }
     }
-
 
     //道具和武器栏
     Item {
         id: bars
-        anchors.bottom: storeInterface.bottom
-        anchors.bottomMargin: 185*storeInterface.scaleFactor
-        anchors.left: topBar.left
-        // anchors.leftMargin: 15*storeInterface.scaleFactor
-        anchors.right: topBar.right
-        // anchors.rightMargin: 15*storeInterface.scaleFactor
+        width: shopView.width-shopView.spacing
+        anchors.top: shopView.bottom
+        anchors.topMargin: 40*storeInterface.scaleFactor
+        anchors.left: shopView.left
 
         //道具栏
         PurchasedPropsBar {
             scaleFactor: storeInterface.scaleFactor
-            anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            anchors.leftMargin: 15*storeInterface.scaleFactor
             purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
             duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
 
@@ -305,9 +257,7 @@ Item {
         //武器栏
         PurchasedWeaponsBar {
             scaleFactor: storeInterface.scaleFactor
-            anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            anchors.rightMargin: 215*storeInterface.scaleFactor
             purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
 
         }
@@ -316,18 +266,20 @@ Item {
     //最右边的一栏 属性面板 + 出发按钮
     Item {
         id: rightPanel
+        width: attributeBar.width
         anchors.top: storeInterface.top
-        anchors.left: topBar.right
-        anchors.right: storeInterface.right
+        anchors.topMargin: 20*storeInterface.scaleFactor
         anchors.bottom: storeInterface.bottom
+        anchors.bottomMargin: 20*storeInterface.scaleFactor
+        anchors.right: storeInterface.right
+        anchors.rightMargin: 15*storeInterface.scaleFactor
 
         AttributePanel {
             id: attributeBar
+            width: 270*storeInterface.scaleFactor
             scaleFactor: storeInterface.scaleFactor
+            autoChangeHight: true
             anchors.top: parent.top
-            anchors.topMargin: 15*storeInterface.scaleFactor
-            anchors.right: parent.right
-            anchors.rightMargin: 15*storeInterface.scaleFactor
         }
 
         Button {
@@ -335,7 +287,6 @@ Item {
             height: 50*storeInterface.scaleFactor
             width: attributeBar.width
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20*storeInterface.scaleFactor
             anchors.horizontalCenter: parent.horizontalCenter
 
             hoverEnabled: true

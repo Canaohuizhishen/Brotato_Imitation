@@ -2,7 +2,6 @@ import QtQuick 2.15
 
 Item {
     id: materialBar
-    width: 215*materialBar.scaleFactor
     height: 32*materialBar.scaleFactor
     property double scaleFactor: 1.0
     property double number: 0
