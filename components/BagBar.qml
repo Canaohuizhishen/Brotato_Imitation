@@ -26,18 +26,11 @@ Item {
     Text {
         id: numberText
         text: bagBar.number
-        color: "black"
+        color: "white"
         font.pixelSize: bagBar.height
         style: Text.Outline
         styleColor: "black"
         anchors.left: parent.left
         anchors.leftMargin: image.width+12*bagBar.scaleFactor
-    }
-
-    Text {
-        text: numberText.text
-        color: "white"
-        font.pixelSize: numberText.font.pixelSize
-        anchors.centerIn: numberText
     }
 }

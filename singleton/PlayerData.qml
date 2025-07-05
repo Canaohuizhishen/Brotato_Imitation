@@ -48,11 +48,16 @@ QtObject {
     property int enemy:0                     //敌人
     property int enemySpeed:0                //敌人速度
 
+    property string roleName: ""             //当前角色名
+    property string originWeaponName: ""     //当前初始武器名
+    property int difficulty: 0               //当前难度
     property int totalWaveNumber: 20         //通关波数
-    property int currentWaveNumber: 0        //当前波次
+    property int currentWaveNumber: 1        //当前波次
     property int lastWaveNumber: 0           //上一次的波次，用来判断波次改变时的增减
+
     property int materialsNumber: 0          //当前材料数
     property int remainingMaterialsNumber: 0 //存储材料数
+    property int curWaveMaterialsNumber: 0   //当前波次获得的材料数，便于中途返回主菜单时回退材料数和经验及等级
     property int pickupRange: 150            //拾取范围
     property double goodsDiscountRate: 1     //商品价格倍率
     property double expDiscountRate: 1       //升级所需经验值倍率
@@ -113,9 +118,18 @@ QtObject {
     }
 
     onCurXpChanged: {
-        if(curXp>=maxXp){
+        while(curXp>=maxXp){
             curXp-=maxXp
             curLevel++
+        }
+        while(curXp<0){
+            if(curLevel<=0){
+                curXp=0
+                break
+            }
+            curLevel--
+            curXp+=maxXp
+            maxHp-=2 //多减1抵消等级变化时的自动加一
         }
     }
 
@@ -124,13 +138,7 @@ QtObject {
     }
 
     onCurrentWaveNumberChanged: {
-        //console.log(PlayerData.lastWaveNumber,PlayerData.currentWaveNumber)
-        // if(currentWaveNumber>1 && PlayerData.lastWaveNumber<PlayerData.currentWaveNumber){
-        //     curXp+=harvesting
-        //     materialsNumber+=harvesting
-        //     harvesting=Math.ceil(harvesting*1.05)
-        //     lastWaveNumber=currentWaveNumber
-        // }
+        PlayerData.curWaveMaterialsNumber=0
     }
 
     function init(){
@@ -175,7 +183,7 @@ QtObject {
         enemy = 0
         enemySpeed = 0
 
-        currentWaveNumber = 0
+        currentWaveNumber = 1
         materialsNumber = 0
         remainingMaterialsNumber = 0
         pickupRange = 150

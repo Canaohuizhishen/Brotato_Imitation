@@ -13,17 +13,10 @@ Item {
     Text {
         id: text
         text: "第"+waveNumberText.text+"波"
-        color: "black"
+        color: "white"
         font.pixelSize: waveNumberText.height
         style: Text.Outline
         styleColor: "black"
         anchors.centerIn: parent
-    }
-
-    Text {
-        text: text.text
-        color: "white"
-        font.pixelSize: text.font.pixelSize
-        anchors.centerIn: text.anchors.centerIn
     }
 }

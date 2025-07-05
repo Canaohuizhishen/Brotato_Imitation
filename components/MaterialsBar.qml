@@ -24,18 +24,11 @@ Item {
     Text {
         id: numberText
         text: materialBar.number
-        color: "black"
+        color: "white"
         font.pixelSize: materialBar.height
         style: Text.Outline
         styleColor: "black"
         anchors.left: parent.left
         anchors.leftMargin: image.width+12*materialBar.scaleFactor
-    }
-
-    Text {
-        text: numberText.text
-        color: "white"
-        font.pixelSize: numberText.font.pixelSize
-        anchors.centerIn: numberText
     }
 }

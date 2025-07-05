@@ -22,6 +22,10 @@ Item {
         backButton.click()
     }
 
+    function init(){
+        visible=false
+    }
+
     function backOriginInterface(){
         settingsPopup.visible=true
         general.visible = false

@@ -22,15 +22,12 @@ Item {
     }
     onRunningChanged: {
         if(running==true){
-            PlayerData.currentWaveNumber++
             remainingTime=totalTime
         }else{
-            if(PlayerData.currentWaveNumber>1 && PlayerData.lastWaveNumber<PlayerData.currentWaveNumber){
-                PlayerData.curXp+=PlayerData.harvesting
-                PlayerData.materialsNumber+=PlayerData.harvesting
-                PlayerData.harvesting=Math.ceil(PlayerData.harvesting*1.05)
-                PlayerData.lastWaveNumber=PlayerData.currentWaveNumber
-            }
+            PlayerData.curXp+=PlayerData.harvesting
+            PlayerData.materialsNumber+=PlayerData.harvesting
+            PlayerData.harvesting=Math.ceil(PlayerData.harvesting*1.05)
+            PlayerData.lastWaveNumber=PlayerData.currentWaveNumber
         }
     }
 
@@ -61,17 +58,10 @@ Item {
     Text {
         id: text
         text: waveCountdown.remainingTime
-        color: "black"
+        color: waveCountdown.remainingTime<=5 ? "red" : "white"
         font.pixelSize: waveCountdown.height
         style: Text.Outline
         styleColor: "black"
         anchors.centerIn: parent
-    }
-
-    Text {
-        text: text.text
-        color: waveCountdown.remainingTime<=5 ? "red" : "white"
-        font.pixelSize: text.font.pixelSize
-        anchors.centerIn: text.anchors.centerIn
     }
 }

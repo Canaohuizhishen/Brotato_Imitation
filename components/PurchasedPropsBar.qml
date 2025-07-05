@@ -37,7 +37,7 @@ Item {
             id: propText
             text: "道具"
             color: "white"
-            height: 32* scaleFactor
+            height: 30* scaleFactor
             font.pixelSize: height
         }
 
