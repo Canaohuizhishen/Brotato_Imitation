@@ -139,6 +139,7 @@ RangedWeapon {
             bullet.scaleFactor=Qt.binding(function(){return smg.scaleFactor})
             bullet.paused=Qt.binding(function(){return smg.paused})
             bullet.critical=core.critical
+            bullet.criticalDamageRate=core.criticalDamageRate
             bullet.width=smg.width*1.2
             bullet.height=bullet.width*0.28
             bullet.x=x - bullet.width / 2

@@ -4,6 +4,14 @@ import "../components"
 Weapon {
     id: rangedWeapon
 
+    onPausedChanged: {
+        if(paused==true){
+            fireTimer.pause()
+        }else{
+            fireTimer.resume()
+        }
+    }
+
     TimerCanPause {
         id: fireTimer
         interval: rangedWeapon.core.cooldown*1000

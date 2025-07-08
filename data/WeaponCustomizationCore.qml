@@ -84,7 +84,8 @@ Item {
         property int baseDamage: 15
         property double meleeDamageMultiplier: 1
         property int damage: Math.max((baseDamage+PlayerData.meleeDamage*meleeDamageMultiplier)*(1+PlayerData.damage/100),1)
-        property double critical:  2* PlayerData.critChance/100
+        property int critical:  3+PlayerData.critChance
+        readonly property double criticalDamageRate: 2
         property double baseCooldown: 1.52
         property double cooldown: baseCooldown/(1+PlayerData.attackSpeed/100)
         property double attackTime: Math.min(0.75,cooldown)
@@ -104,32 +105,32 @@ Item {
         readonly property string type: "原始"
         readonly property string talentText: `
         <font color='#ffffc0'>伤害 : </font><font color='white'>`+damage+`(+100%近战伤害)</font><br>
-        <font color='#ffffc0'>暴击 : </font><font color='white'>x2(`+critical+`%概率)</font><br>
+        <font color='#ffffc0'>暴击 : </font><font color='white'>x`+criticalDamageRate+`(`+critical+`%概率)</font><br>
         <font color='#ffffc0'>冷却 : </font><font color='white'>`+cooldown.toFixed(2)+`</font><br>
         <font color='#ffffc0'>范围 : </font><font color='white'>`+range+`(近战)</font><br>
         `
         onGradeChanged: {
             switch(grade){
             case 1:{
-                baseDamage=3
+                baseDamage=15
                 baseCooldown=1.52
                 baseRange=350
                 basePrice=20
             }break
             case 2:{
-                baseDamage=4
+                baseDamage=25
                 baseCooldown=1.4
                 baseRange=375
                 basePrice=39
             }break
             case 3:{
-                baseDamage=5
+                baseDamage=40
                 baseCooldown=1.28
                 baseRange=400
                 basePrice=74
             }break
             case 4:{
-                baseDamage=8
+                baseDamage=60
                 baseCooldown=1.24
                 baseRange=500
                 basePrice=149
@@ -147,7 +148,8 @@ Item {
         property int baseDamage: 3
         property double rangedDamageMultiplier: 0.5
         property int damage: Math.max((baseDamage+PlayerData.rangedDamage*rangedDamageMultiplier)*(1+PlayerData.damage/100),1)
-        property double critical:  1.5* PlayerData.critChance/100
+        property int critical: 1+PlayerData.critChance
+        readonly property double criticalDamageRate: 1.5
         property double cooldown: 0.17/(1+PlayerData.attackSpeed/100)
         property double attackTime: Math.min(0.1,cooldown)
         property int baseRange: 400
@@ -165,7 +167,7 @@ Item {
         readonly property string type: "枪械"
         readonly property string talentText: `
         <font color='#ffffc0'>伤害 : </font><font color='white'>`+damage+`(+50%远程伤害)</font><br>
-        <font color='#ffffc0'>暴击 : </font><font color='white'>x1.5(`+critical+`%概率)</font><br>
+        <font color='#ffffc0'>暴击 : </font><font color='white'>x`+criticalDamageRate+`(`+critical+`%概率)</font><br>
         <font color='#ffffc0'>冷却 : </font><font color='white'>`+cooldown.toFixed(2)+`</font><br>
         <font color='#ffffc0'>范围 : </font><font color='white'>`+range+`(远战)</font><br>
         `

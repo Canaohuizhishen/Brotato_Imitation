@@ -112,12 +112,12 @@ Rectangle {
         property int value: 3+count
         property int count: 0
         onClicked: {
-            //if(PlayerData.materialsNumber>=value){
+            if(PlayerData.materialsNumber>=value){
                 PlayerData.materialsNumber-=value
                 count++
                 upgradeOptionsRow.model.clear()
                 upgradeOptionsRow.addOptions()
-            //}
+            }
         }
         Row{
             spacing: 2*root.scaleFactor

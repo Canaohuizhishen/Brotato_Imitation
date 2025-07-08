@@ -91,6 +91,7 @@ MeleeWeapon {
             var bullet = bulletComponent.createObject(bulletsParent);
             bullet.target=spear
             bullet.critical=core.critical
+            bullet.criticalDamageRate=core.criticalDamageRate
             bullet.damage=core.damage
         }else console.error("Error loading component:", bulletComponent.errorString())
         return bullet

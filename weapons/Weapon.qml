@@ -9,7 +9,6 @@ Item {
     property string weaponName
     property int grade: 1
     property double scaleFactor: 1
-    property double lastScaleFactor: 1
     //transformOrigin: Item.Left
     property var bulletsParent: parent
     property var originPos: Qt.point(weapon.x,weapon.y)
@@ -27,22 +26,6 @@ Item {
     height: width*core.aspectRatio
     z: 2
     rotation: 0
-
-    onScaleFactorChanged: {
-        originPos.x=originPos.x*scaleFactor/lastScaleFactor
-        originPos.y=originPos.y*scaleFactor/lastScaleFactor
-        x=originPos.x
-        y=originPos.y
-        lastScaleFactor=scaleFactor
-    }
-
-    onPausedChanged: {
-        if(paused==true){
-            fireTimer.pause()
-        }else{
-            fireTimer.resume()
-        }
-    }
 
     onActiveChanged: {
         if(active==false)rotationReset()

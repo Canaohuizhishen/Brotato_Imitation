@@ -39,6 +39,10 @@ Item {
         }
     }
 
+    function init(){
+        visible=true
+    }
+
     function start(){
         PlayerData.isInCombat=true
     }
