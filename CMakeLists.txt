@@ -50,10 +50,10 @@ qt_add_qml_module(appBrotato
     QML_FILES components/TimerCanPause.qml
     QML_FILES page/StoreInterface.qml
     QML_FILES logic/ShopLogicHandler.js
-    QML_FILES components/PurchasedPropsBar.qml
-    QML_FILES components/PurchasedPropsImage.qml
-    QML_FILES components/PurchasedWeaponsBar.qml
-    QML_FILES components/PurchasedWeaponsImage.qml
+    QML_FILES components/PropsBar.qml
+    QML_FILES components/PropItem.qml
+    QML_FILES components/WeaponsBar.qml
+    QML_FILES components/WeaponItem.qml
     QML_FILES color.js
     QML_FILES page/PauseInterface.qml
     QML_FILES components/SetButton.qml

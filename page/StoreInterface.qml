@@ -244,20 +244,22 @@ Item {
         anchors.left: shopView.left
 
         //道具栏
-        PurchasedPropsBar {
+        PropsBar {
             scaleFactor: storeInterface.scaleFactor
             anchors.left: parent.left
             purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
             duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
-
+            inUp: true
+            inLeft: false
         }
 
         //武器栏
-        PurchasedWeaponsBar {
+        WeaponsBar {
             scaleFactor: storeInterface.scaleFactor
             anchors.right: parent.right
             purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
-
+            inUp: true
+            inLeft: true
         }
     }
 

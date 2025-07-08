@@ -69,21 +69,27 @@ Item {
                 anchors.top: back.top
                 anchors.topMargin: 20*settlementInterface.scaleFactor
                 //武器栏
-                PurchasedWeaponsBar {
+                WeaponsBar {
                     id: weaponBar
+                    columns: 6
                     scaleFactor: settlementInterface.scaleFactor
                     showNumber: false
                     purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
-
+                    showButton: false
+                    inUp: false
+                    inLeft: false
                 }
                 //道具栏
-                PurchasedPropsBar {
+                PropsBar {
                     id: propBar
+                    columns: 8
                     scaleFactor: settlementInterface.scaleFactor
                     anchors.top: weaponBar.bottom
-                    anchors.topMargin: 40*settlementInterface.scaleFactor
+                    anchors.topMargin: 30*settlementInterface.scaleFactor
                     purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
                     duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
+                    inUp: true
+                    inLeft: false
                 }
             }
         }

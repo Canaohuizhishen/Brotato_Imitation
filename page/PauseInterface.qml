@@ -77,14 +77,14 @@ Rectangle {
                     backMenu.forceActiveFocus()
                 }
             }
-            SetButton {
-                text: "测试濒死"
-                width: parent.width
-                height: width/8
-                onClicked: {
-                    PlayerData.curHp = 1
-                }
-            }
+            // SetButton {
+            //     text: "测试濒死"
+            //     width: parent.width
+            //     height: width/8
+            //     onClicked: {
+            //         PlayerData.curHp = 1
+            //     }
+            // }
         }
 
         Column {
@@ -92,28 +92,28 @@ Rectangle {
             height: weaponBar.height+spacing+propBar.height
             anchors.top: parent.top
             anchors.topMargin: 50*root.scaleFactor
-            spacing: 40*root.scaleFactor
+            spacing: 30*root.scaleFactor
 
             //武器栏
-            PurchasedWeaponsBar {
+            WeaponsBar {
                 id: weaponBar
+                columns: 6
                 scaleFactor: root.scaleFactor
                 purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
-
+                showButton: false
+                inUp: false
+                inLeft: false
             }
 
             //道具栏
-            PurchasedPropsBar {
+            PropsBar {
                 id: propBar
                 scaleFactor: root.scaleFactor
                 purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
                 duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
-                columns: 5
-                Component.onCompleted: {
-                    //console.log("暂停界面道具栏 - 列数:", columns)
-                    // 强制更新布局
-                    updateLayout()
-                }
+                columns: 6
+                inUp: true
+                inLeft: false
             }
         }
 

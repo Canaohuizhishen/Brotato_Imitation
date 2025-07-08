@@ -10,21 +10,15 @@ Item {
     property double scaleFactor: 1.0
     property var purchasedPropsModel
     property var duplicatePropsCountModel
-    // 添加暂停界面专用属性
     property int columns: 8 // 默认值
-
-    onColumnsChanged: updateLayout()
+    property bool inUp: true
+    property bool inLeft: true
 
     Component.onCompleted: {
         // // 更新单例中的模型引用
         // PlayerData.shopContext._purchasedPropsModel = purchasedPropsModel
         // PlayerData.shopContext._duplicatePropsCountModel = duplicatePropsCountModel
         // Controller.initPropEffects()
-        updateLayout()
-    }
-
-    function updateLayout() {
-        propView.columns = columns
     }
 
     Column{
@@ -43,7 +37,7 @@ Item {
 
         GridView {
             id: propView
-            property int columns: parent.columns
+            property int columns: propsBar.columns
             property int spacing : 4*propsBar.scaleFactor
             property int cellSize : 65*propsBar.scaleFactor
             anchors.left: propText.left
@@ -56,12 +50,15 @@ Item {
             flickableDirection: Flickable.VerticalFlick
             boundsBehavior: Flickable.StopAtBounds
             clip: true
-            delegate: PurchasedPropsImage {
+            delegate: PropItem {
                 id: propCard
+                scaleFactor: propsBar.scaleFactor
                 width: propView.cellSize
                 height: propView.cellSize
                 itemData: propItem
                 propNum: count
+                inUp: propsBar.inUp
+                inLeft: propsBar.inLeft
             }
             ScrollBar.vertical: ScrollBar {
                 policy: ScrollBar.AsNeeded

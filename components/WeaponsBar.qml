@@ -8,7 +8,11 @@ Item{
     height: weaponBar.height
     property double scaleFactor: 1.0
     property var purchasedWeaponsModel
+    property int columns: 3
     property bool showNumber: true
+    property bool showButton: true
+    property bool inUp: true
+    property bool inLeft: true
 
     Component.onCompleted: {
          // PlayerData.shopContext._purchasedWeaponsModel = purchasedWeaponsModel
@@ -30,23 +34,26 @@ Item{
 
         GridView {
             id: weaponView
-            property int columns : 3
-            property int spacing : 4*scaleFactor
-            property int cellSize : 65*scaleFactor
+            property int columns: root.columns
+            property int spacing: 4*scaleFactor
+            property int cellSize: 65*scaleFactor
             anchors.left: weaponText.left
             width: columns * (cellSize + 5*scaleFactor)
-            height: 2 * (cellSize + 5*scaleFactor)
+            height: Math.max(Math.ceil(model.count/columns),1) * (cellSize + 5*scaleFactor)
             cellWidth: cellSize + 5*scaleFactor
             cellHeight: cellSize + 5*scaleFactor
             model: purchasedWeaponsModel
             interactive: false
-            delegate: PurchasedWeaponsImage {
+            delegate: WeaponItem {
+                scaleFactor: root.scaleFactor
                 width: weaponView.cellSize
                 height: weaponView.cellSize
-
                 itemData: weaponItem
                 wIndex: index
                 wGrade: weaponGrade
+                showButton: root.showButton
+                inUp: root.inUp
+                inLeft: root.inLeft
             }
         }
     }
