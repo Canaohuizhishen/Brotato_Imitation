@@ -4,6 +4,7 @@ import singleton.PlayerData
 import singleton.MonstersData
 import "../components"
 import "../data"
+import "../tool.js" as Tool
 
 Item {
     id: monster
@@ -327,7 +328,12 @@ Item {
         if(inHitCoolDown)return
         else inHitCoolDown=true
 
-        PlayerData.curHp-=monster.monsterData.damage
+        //模拟角色被子弹击中
+        var _x=(x+width/2+target.x+target.width/2)/2
+        var _y=(y+height/2+target.y+target.height/2)/2
+        var bullet={damage: monster.monsterData.damage, x: _x, y: _y}
+        target.onHit(bullet)
+
         hitingTimer.start()
     }
 
@@ -360,7 +366,6 @@ Item {
 
         // 白色遮罩动画
         whiteOverlayAnimator.start()
-        //makeMask(monster)
 
         // 飙血动画
         for (var i = 0; i < 5; i++) {
@@ -370,47 +375,21 @@ Item {
             makeBlood(monster.x+monster.width/2,monster.y+monster.height/2,dx,dy, radius,gameArea);
         }
 
-        //掉血
-        monsterData.hp-=bullet.damage
-
         //可能的暴击
-        if(Math.random()<bullet.critical){
+        if(Math.random()<bullet.critical/100){
+            monsterData.hp-=bullet.damage*bullet.criticalDamageRate
+            Tool.createText(owner,bullet.damage*2,27*scaleFactor,"yellow",bullet.x,bullet.y)
+        }else{
             monsterData.hp-=bullet.damage
+            Tool.createText(owner,bullet.damage,27*scaleFactor,"white",bullet.x,bullet.y)
         }
 
         //可能的生命窃取
         if(Math.random()<PlayerData.lifeSteal/100){
             PlayerData.curHp++
+            Tool.createText(owner,"+1",24*scaleFactor,"lime",target.x,target.y-24*scaleFactor)
         }
     }
-
-    // function makeMask(parent){
-    //     var mask = Qt.createQmlObject(
-    //                 `import QtQuick 2.15;
-    //                 Image {
-    //                     id: whiteOverlay
-    //                     anchors.fill: parent
-    //                     source: parent.isFaceRight ? "/images/"+monster.monsterName+"_mask_faceRight.png" : "/images/"+monster.monsterName+"_mask_faceLeft.png"
-    //                     z: 100
-    //                     Component.onCompleted: {
-    //                     }
-
-    //                     OpacityAnimator {
-    //                         id: whiteOverlayAnimator
-    //                         target: whiteOverlay
-    //                         from: 1
-    //                         to: 0
-    //                         duration: 200
-    //                         running: true
-    //                         onStopped: {
-    //                             whiteOverlay.destroy()
-    //                         }
-    //                     }
-    //                 }`,
-    //                 parent,
-    //                 "dynamicImage"
-    //                 );
-    // }
 
     function makeBlood(x,y,dx,dy, width, parent){
         var blood = Qt.createQmlObject(

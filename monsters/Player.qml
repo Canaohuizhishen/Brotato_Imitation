@@ -4,6 +4,7 @@ import singleton.PlayerData
 import Brotato
 import "../components"
 import "../data"
+import "../tool.js" as Tool
 
 Item {
     id: player
@@ -63,23 +64,6 @@ Item {
             playerAnimation.resume()
         }
     }
-
-    // Timer {
-    //     interval: 100; running: true; repeat: true
-    //     onTriggered: {
-    //         console.log(player.wPressed)
-    //         console.log(player.aPressed)
-    //         console.log(player.sPressed)
-    //         console.log(player.dPressed)
-    //         console.log(player.state)
-    //         console.log("Current speed:", playerAnimation.duration)
-    //         console.log("v: ", player.v)
-    //         console.log("x: ", player.x)
-    //         console.log("y: ", player.y)
-    //         console.log("focus: ", player.focus)
-    //         console.log("active: ", player.active)
-    //     }
-    // }
 
     TimerCanPause {
         id: hpRegenerationTimer
@@ -432,10 +416,14 @@ Item {
         PlayerData.materialsNumber+=material.value
         PlayerData.curWaveMaterialsNumber+=material.value
         PlayerData.curXp+=material.value
+        var text=material.value===1 ? "+1" : "X"+material.value
+        var size=material.value===1 ? 24*player.scaleFactor : 27*player.scaleFactor
+        Tool.createText(ground,text,size,"lime",material.x,material.y)
     }
 
     function getFruit(fruit){
         PlayerData.curHp+=fruit.value
+        Tool.createText(ground,"+"+fruit.value,24*player.scaleFactor,"lime",fruit.x,fruit.y)
     }
 
     function getChest(chest){
@@ -446,8 +434,11 @@ Item {
         //当闪避失败时造成伤害
         if(Math.random()>PlayerData.dodge/100){
             //护甲减伤
-            var damage=bullet.damage*(1-PlayerData.damageReduction())
+            var damage=Math.ceil(bullet.damage*(1-PlayerData.damageReduction()))
             PlayerData.curHp-=damage
+            Tool.createText(ground,"-"+damage,29*player.scaleFactor,"red",bullet.x,bullet.y)
+        }else{//闪避成功
+            Tool.createText(ground,"闪避",20*player.scaleFactor,"white",bullet.x,bullet.y,600,"blue")
         }
     }
 }

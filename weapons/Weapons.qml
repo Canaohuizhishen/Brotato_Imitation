@@ -20,6 +20,10 @@ Item{
     z: 3
     property bool isFaceRight: true
 
+    onScaleFactorChanged: {
+        relocation()
+    }
+
     onActiveChanged: {
         if(active==false){
             owner.isFaceRight ? faceRight() : faceLeft()
@@ -143,7 +147,7 @@ Item{
         }
     }
 
-    function getPosition(n1,n2,isFaceRight){
+    function getPosition(n1,n2){
         var point
         switch(n1){
         case 1: {
@@ -205,14 +209,13 @@ Item{
             var child=weapons.children[i]
             if(child.objectName==="Weapon" && !child.isDestroy){
                 var weapon = weaponCore.getWeapon(child.weaponName)
-                var targetPoint=weapons.getPosition(PlayerData.weapons.count,n,child.isFaceRight)
-                if(child.isFaceRight){
-                    child.x=(targetPoint.x-weapon.handX+weapon.xOffset)*scaleFactor
-                }else{
-                    child.x=(targetPoint.x-child.baseWidth+weapon.handX-weapon.xOffset)*scaleFactor
-                }
-                child.y=(targetPoint.y-weapon.handY+weapon.yOffset)*scaleFactor
-                child.originPos=Qt.point(child.x,child.y)
+                var targetPoint=weapons.getPosition(PlayerData.weapons.count,n)
+                var originX,originY
+                originX=(targetPoint.x-weapon.handX+weapon.xOffset)*scaleFactor
+                originY=(targetPoint.y-weapon.handY+weapon.yOffset)*scaleFactor
+                child.originPos=Qt.point(originX,originY)
+                child.x=originX
+                child.y=originY
                 n++
             }
         }

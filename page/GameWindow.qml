@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import singleton.PlayerData
 import "../components"
+import "../tool.js" as Tool
 
 Item {
     id: gameWindow
@@ -222,6 +223,7 @@ Item {
                     gameArea.active=false
                     gameArea.paused=true
                     delayDietimer.start()
+                    Tool.createText(gameWindow,"战败",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
                 }
             }
         }
@@ -257,6 +259,14 @@ Item {
             State {
                 name: "notInCombat"; when: (!PlayerData.isInCombat && !gameWindow.inSelectInterface)
                 PropertyChanges { delayOvertimer.running: true }
+                StateChangeScript {
+                    script: {
+                        if(!waveCountdown.remainingTime){
+                            if(PlayerData.currentWaveNumber<20)Tool.createText(gameWindow,"通过!",40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
+                            else Tool.createText(gameWindow,"胜利!",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
+                        }
+                    }
+                }
             },
             State {
                 name: "inCombat"; when: (PlayerData.isInCombat)
@@ -272,11 +282,14 @@ Item {
                 delayDietimer.resume()
             }
         }
+
         TimerCanPause {
             id: delayOvertimer
             interval: 2000; running: false; repeat: false
             onTriggered: {
-                if(chestNotificationBar.number){
+                if(PlayerData.currentWaveNumber===20){
+                    settlementInterface.visible=true
+                }else if(chestNotificationBar.number){
                     chestOpeningInterface.visible=true
                 }else if(upgradeNotificationBar.number){
                     upgradeInterface.visible=true
@@ -346,6 +359,7 @@ Item {
         settlementInterface.init()
         upgradeNotificationBar.init()
         chestNotificationBar.init()
+        waveCountdown.init()
         PlayerData.init()
 
         gameArea.paused=Qt.binding(function(){return paused})
@@ -393,6 +407,7 @@ Item {
         storeInterface.init()
         upgradeNotificationBar.init()
         chestNotificationBar.init()
+        waveCountdown.init()
 
         inSelectInterface=true
         gameArea.paused=Qt.binding(function(){return paused})
@@ -427,6 +442,7 @@ Item {
         settlementInterface.init()
         upgradeNotificationBar.init()
         chestNotificationBar.init()
+        waveCountdown.init()
         PlayerData.init()
 
         gameArea.paused=Qt.binding(function(){return paused})

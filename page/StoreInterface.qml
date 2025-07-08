@@ -165,11 +165,11 @@ Item {
             }
 
             onClicked: {
-                // if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
-                Controller.refreshShop()
-                PlayerData.materialsNumber -= currentRefreshPrice
-                currentRefreshPrice = Controller.refreshPrice(PlayerData.currentWaveNumber)
-                // }
+                if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
+                    Controller.refreshShop()
+                    PlayerData.materialsNumber -= currentRefreshPrice
+                    currentRefreshPrice = Controller.refreshPrice(PlayerData.currentWaveNumber)
+                }
             }
 
             PropertyAnimation {
@@ -188,8 +188,6 @@ Item {
                 duration: 150
                 easing.type: Easing.OutBack
             }
-
-            // enabled: 需要完善判断：剩余的货币数>=本次刷新所需的货币数
         }
     }
 

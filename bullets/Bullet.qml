@@ -14,6 +14,7 @@ Canvas {
     property color color: Qt.rgba(1, 0, 0, 1)
     property double damage: 0
     property double critical: 0
+    property double criticalDamageRate: 1
     property bool isDestroy: false     //子弹已被销毁的布尔值
     property bool canPaintBullet: true //可以画出子弹的布尔值
     property bool hitNotDestroy: false //击中目标后不会销毁的布尔值
