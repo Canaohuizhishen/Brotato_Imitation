@@ -102,7 +102,7 @@ Item {
         id: beGetedAnimation
         loops: 1
         running: false
-        property var target: material
+        property var target: Qt.point(0,0)
 
         PropertyAnimation {
             id: xbeGetedAnimation

@@ -14,10 +14,6 @@ Image {
     height: width*1.209
     z: y+height
 
-    Component.onCompleted: {
-
-    }
-
     function beGetedTo(target){
         fruit.isGeted=true
         beGetedAnimation.target=target

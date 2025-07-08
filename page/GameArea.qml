@@ -4,6 +4,7 @@ import "../components"
 import "../bullets"
 import "../monsters"
 import "../weapons"
+import "../drops"
 
 Item{
     id: gameArea
