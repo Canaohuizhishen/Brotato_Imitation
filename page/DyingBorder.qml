@@ -32,7 +32,7 @@ Item {
             from: 0
             to: 0.5
             duration: 1000
-            running: true
+            running: false
         }
     }
 

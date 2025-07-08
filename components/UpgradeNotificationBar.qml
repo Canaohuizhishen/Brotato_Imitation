@@ -4,7 +4,6 @@ import singleton.PlayerData
 
 Item {
     id: upgradeBar
-    property int curLevel: PlayerData.curLevel
     property double scaleFactor: 1.0
     width: parent.width
     height: 50*scaleFactor
@@ -14,8 +13,11 @@ Item {
     anchors.rightMargin: 20*scaleFactor
     property alias number: repeater.model
 
-    onCurLevelChanged: {
-        if(curLevel!=0)addOne()
+    Connections {
+        target: PlayerData
+        function onUpgrad() {
+            addOne()
+        }
     }
 
     Repeater{
