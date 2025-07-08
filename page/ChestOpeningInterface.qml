@@ -84,6 +84,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
+                    PlayerData.addProp(propCard.propName)
                     propCard.core.apply()
                     attributePanel.upData()
                     chestNotificationBar.reduceChest()

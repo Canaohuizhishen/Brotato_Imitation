@@ -128,6 +128,7 @@ Item {
             inSelectInterface=false
             paused=false
             //PlayerData.currentWaveNumber=20
+            //PlayerData.materialsNumber=10000
         }
         backButton.onClicked: {
             init()

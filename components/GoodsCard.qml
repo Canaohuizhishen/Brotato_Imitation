@@ -159,7 +159,7 @@ Item {
 
                 onReleased: {
                     restoreAnimation.start()
-                    if(PlayerData.materialsNumber > itemData.curPrice) {
+                    if(PlayerData.materialsNumber >= itemData.curPrice) {
                         // Controller.buyItem(itemIndex)
 
                     if(itemData.type === "道具") {
