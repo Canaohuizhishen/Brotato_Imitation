@@ -8,12 +8,12 @@ import "../data"
 Item {
     id: player
     width: 46*scaleFactor
-    height: width
+    height: width*1.17
     focus: true
     z: 1
     objectName: "Player"
-    property string roleName
-    property string weaponName
+    property string roleName: PlayerData.roleName
+    property string weaponName: PlayerData.originWeaponName
     property var ground: parent
     property ChestNotificationBar chestBar: chestBar
     property double scaleFactor: 1.0
@@ -49,10 +49,8 @@ Item {
 
     onRoleNameChanged: {
         if(roleName==="")return
-        PlayerData.init()
         var roleData=core.getRole(roleName)
         roleData.setInitRoleAttributes()
-        height=Qt.binding(function (){return width*roleData.aspectRatio})
         faceRight()
     }
 

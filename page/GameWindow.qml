@@ -27,6 +27,10 @@ Item {
         // inSelectInterface=false
     }
 
+    Component.onDestruction: {
+        backMainMenu()
+    }
+
     Shortcut {
         sequence: "Esc"
         enabled: !inSelectInterface && pauseInterface.inMain && !settingInterface.visible ? true : false
@@ -113,10 +117,12 @@ Item {
         onSelected:{
             PlayerData.init()
             difficultySelectionInterface.visible=false
-            gameArea.player.roleName=""
-            gameArea.player.roleName=selectedRoleName
             for(var i=0;i<1;i++)PlayerData.addWeapon(selectedWeaponName,1)
-            PlayerData.curDifficulty=selectedDifficulty
+            PlayerData.roleName=""
+            PlayerData.roleName=selectedRoleName
+            PlayerData.originWeaponName=""
+            PlayerData.originWeaponName=selectedWeaponName
+            PlayerData.difficulty=selectedDifficulty
             PlayerData.isInCombat=true
             inSelectInterface=false
             paused=false
@@ -345,9 +351,10 @@ Item {
         gameArea.paused=Qt.binding(function(){return paused})
         upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
         chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
-        gameArea.player.roleName=""
-        gameArea.player.roleName=difficultySelectionInterface.selectedRoleName
-        PlayerData.addWeapon(difficultySelectionInterface.selectedWeaponName,1)
+        var roleName=PlayerData.roleName
+        PlayerData.roleName=""
+        PlayerData.roleName=roleName
+        PlayerData.addWeapon(PlayerData.originWeaponName,1)
 
         PlayerData.isInCombat=true
         paused=false
@@ -366,6 +373,7 @@ Item {
             roleSelectionInterface.init()
             weaponSelectionInterface.init()
             difficultySelectionInterface.init()
+            PlayerData.init()
         }
         if(!storeInterface.visible){
             PlayerData.harvesting-=Math.max(PlayerData.harvesting*0.05,1)

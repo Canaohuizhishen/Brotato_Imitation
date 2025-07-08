@@ -51,14 +51,13 @@ QtObject {
     property string roleName: ""             //当前角色名
     property string originWeaponName: ""     //当前初始武器名
     property int difficulty: 0               //当前难度
-    property int totalWaveNumber: 20         //通关波数
+    readonly property int totalWaveNumber: 20//通关波数
     property int currentWaveNumber: 1        //当前波次
-    property int lastWaveNumber: 0           //上一次的波次，用来判断波次改变时的增减
 
     property int materialsNumber: 0          //当前材料数
     property int remainingMaterialsNumber: 0 //存储材料数
     property int curWaveMaterialsNumber: 0   //当前波次获得的材料数，便于中途返回主菜单时回退材料数和经验及等级
-    property int pickupRange: 150            //拾取范围
+    readonly property int pickupRange: 150   //拾取范围
     property double goodsDiscountRate: 1     //商品价格倍率
     property double expDiscountRate: 1       //升级所需经验值倍率
 
@@ -66,7 +65,6 @@ QtObject {
     property var props: ListModel{}
     property var lastStoreGoods: ListModel{} //上次游戏退出时商店的商品项
     property int lastStoreRefreshTimes: 0    //上次游戏退出时商店的刷新次数
-    property int curDifficulty: 0            //当前难度
     property int maxDifficultyCompleted: -1  //已通关的最高难度
 
     property bool isInCombat: false //正在战斗状态的布尔值
@@ -80,21 +78,17 @@ QtObject {
     property FileManager fileManager: FileManager {}
 
     signal weaponsListChanged()
-    signal hpChanged()
+    signal upgrad()
 
     Component.onCompleted: {
-        //for(var i=0;i<1;i++)addWeapon("smg",1)
-        // addWeapon("smg",4)
-        // addProp("bat",12)
-        // addProp("flag",101)
-        // addGood("bat",2)
-        // addGood("smg",3)
-        // showWeapons()
-        // showProps()
-        // showLastStoreGoods()
+        loadGame()
         shopContext._purchasedPropsModel.clear();
         shopContext._duplicatePropsCountModel.clear();
         shopContext._purchasedWeaponsModel.clear();
+    }
+
+    Component.onDestruction: {
+        saveGame()
     }
 
     onCurLevelChanged: {
@@ -109,7 +103,6 @@ QtObject {
     }
 
     onCurHpChanged: {
-        hpChanged()
         if(curHp>=maxHp){
             curHp=maxHp
         }else if(curHp<0){
@@ -121,6 +114,7 @@ QtObject {
         while(curXp>=maxXp){
             curXp-=maxXp
             curLevel++
+            upgrad()
         }
         while(curXp<0){
             if(curLevel<=0){
@@ -183,16 +177,23 @@ QtObject {
         enemy = 0
         enemySpeed = 0
 
+        // roleName=""
+        // originWeaponName=""
+        // difficulty=0
         currentWaveNumber = 1
+
         materialsNumber = 0
         remainingMaterialsNumber = 0
-        pickupRange = 150
+        curWaveMaterialsNumber=0
         goodsDiscountRate = 1
         expDiscountRate = 1
+
         weapons.clear()
         props.clear()
         lastStoreGoods.clear()
         lastStoreRefreshTimes = 0
+        maxDifficultyCompleted=-1
+
         isInCombat = false
     }
 
@@ -235,7 +236,8 @@ QtObject {
     function weaponsToArray(weaponsModel) {
         const arr = []
         for (let i = 0; i < weaponsModel.count; ++i) {
-            arr.push(weaponsModel.get(i))
+            const item = weaponsModel.get(i)
+            arr.push({weaponName: item.weaponName,grade: item.grade})
         }
         return arr
     }
@@ -243,7 +245,8 @@ QtObject {
     function propsToArray(propsModel) {
         const arr = []
         for (let i = 0; i < propsModel.count; ++i) {
-            arr.push(propsModel.get(i))
+            const item = propsModel.get(i)
+            arr.push({propName: item.propName,number: item.number})
         }
         return arr
     }
@@ -252,7 +255,6 @@ QtObject {
         try {
             const saveData = {
                 "curLevel": curLevel,
-                "maxXp": maxXp,
                 "curXp": curXp,
                 "maxHp": maxHp,
                 "curHp": curHp,
@@ -270,6 +272,8 @@ QtObject {
                 "dodge": dodge,
                 "speed": speed,
                 "luck": luck,
+                "harvesting": harvesting,
+
                 "consumptiveTherapy": consumptiveTherapy,
                 "materialTherapy": materialTherapy,
                 "gainExperience": gainExperience,
@@ -291,21 +295,22 @@ QtObject {
                 "enemy": enemy,
                 "enemySpeed": enemySpeed,
 
-                "totalWaveNumber": totalWaveNumber,
-                "lastWaveNumber": lastWaveNumber,
+                "roleName": roleName,
+                "originWeaponName": originWeaponName,
+                "difficulty": difficulty,
+                "currentWaveNumber": currentWaveNumber,
+
                 "materialsNumber": materialsNumber,
                 "remainingMaterialsNumber": remainingMaterialsNumber,
                 "goodsDiscountRate": goodsDiscountRate,
-                "pickupRange": pickupRange,
                 "expDiscountRate": expDiscountRate,
-                "currentWaveNumber": currentWaveNumber,
 
                 "weapons": weaponsToArray(weapons),
                 "props": propsToArray(props),
+                "lastStoreGoods": weaponsToArray(lastStoreGoods),
                 "lastStoreRefreshTimes": lastStoreRefreshTimes,
+                "maxDifficultyCompleted": maxDifficultyCompleted,
 
-                "lastStoreGoods": propsToArray(lastStoreGoods),
-                // ...其他需要保存的属性...
                 "isInCombat": isInCombat
             }
 
@@ -336,7 +341,6 @@ QtObject {
 
             // 核心属性恢复（使用空值合并运算符??提供默认值）
             curLevel = saveData.curLevel ?? 0
-            maxXp = saveData.maxXp ?? 0
             curXp = saveData.curXp ?? 0
             maxHp = saveData.maxHp ?? 10
             curHp = saveData.curHp ?? maxHp
@@ -355,17 +359,6 @@ QtObject {
             speed = saveData.speed ?? 0
             luck = saveData.luck ?? 0
             harvesting = saveData.harvesting ?? 0
-
-            // 游戏状态恢复
-            currentWaveNumber = saveData.currentWaveNumber ?? 0
-            materialsNumber = saveData.materialsNumber ?? 0
-            remainingMaterialsNumber = saveData.remainingMaterialsNumber ?? 0
-            lastWaveNumber = saveData.lastWaveNumber ?? 0
-            totalWaveNumber = saveData.totalWaveNumber ?? 20
-            goodsDiscountRate = saveData.goodsDiscountRate ?? 1.0
-            pickupRange = saveData.pickupRange ?? 150
-            expDiscountRate = saveData.expDiscountRate ?? 1.0
-            isInCombat = saveData.isInCombat ?? false
 
             //次要属性
             consumptiveTherapy = saveData.consumptiveTherapy ?? 0
@@ -388,16 +381,29 @@ QtObject {
             enemy = saveData.enemy ?? 0
             enemySpeed = saveData.enemySpeed ?? 0
 
+            // 游戏状态恢复
+            roleName=saveData.roleName ?? ""
+            originWeaponName=saveData.originWeaponName ?? ""
+            difficulty=saveData.difficulty ?? 0
+            currentWaveNumber = saveData.currentWaveNumber ?? 0
+
+            materialsNumber = saveData.materialsNumber ?? 0
+            remainingMaterialsNumber = saveData.remainingMaterialsNumber ?? 0
+            curWaveMaterialsNumber = saveData.curWaveMaterialsNumber ?? 1
+            goodsDiscountRate = saveData.goodsDiscountRate ?? 1.0
+            expDiscountRate = saveData.expDiscountRate ?? 1.0
+
+            isInCombat = saveData.isInCombat ?? false
+
             // 武器列表恢复
             weapons.clear()
             if (saveData.weapons && Array.isArray(saveData.weapons)) {
-                saveData.weapons.forEach(weapon => weapons.append(weapon))
+                saveData.weapons.forEach(weapon => weapons.append({weaponName: weapon.weaponName,grade: weapon.grade}))
             }
-
             // 道具列表恢复
             props.clear()
             if (saveData.props && Array.isArray(saveData.props)) {
-                saveData.props.forEach(prop => props.append(prop))
+                saveData.props.forEach(prop => props.append({propName: prop.propName,number: prop.number}))
             }
             // 商店商品项恢复
             lastStoreGoods.clear();
@@ -405,7 +411,7 @@ QtObject {
                 saveData.lastStoreGoods.forEach(item => lastStoreGoods.append(item));
             }
 
-            console.log("游戏加载成功，当前等级：" + curLevel)
+            console.log("游戏加载成功")
         } catch (e) {
             console.error("加载异常：" + e)
         }
