@@ -28,8 +28,8 @@ qt_add_qml_module(appBrotato
     QML_FILES page/Background.qml page/DifficultySelectionInterface.qml page/GameArea.qml page/GameWindow.qml page/RoleSelectionInterface.qml page/StartInterface.qml page/WeaponSelectionInterface.qml
     QML_FILES monsters/Player.qml
     QML_FILES data/WeaponCustomizationCore.qml data/RoleCustomizationCore.qml
-    QML_FILES components/Material.qml
-    QML_FILES components/Drops.qml
+    QML_FILES
+    QML_FILES
     QML_FILES components/MaterialsBar.qml
     QML_FILES components/BagBar.qml
     QML_FILES monsters/BabyAlien.qml
@@ -59,8 +59,8 @@ qt_add_qml_module(appBrotato
     QML_FILES components/SetButton.qml
     QML_FILES components/SwitchSettingButton.qml
     QML_FILES components/ProgressBarControlButton.qml
-    QML_FILES components/Fruit.qml
-    QML_FILES components/Chest.qml
+    QML_FILES
+    QML_FILES
     QML_FILES components/ChestNotificationBar.qml
     QML_FILES page/ChestOpeningInterface.qml
     QML_FILES components/PropCard.qml
@@ -85,6 +85,7 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Tree.qml
     SOURCES Filemanager.h
     QML_FILES page/DyingBorder.qml
+    QML_FILES drops/Material.qml drops/Fruit.qml drops/Drops.qml drops/Chest.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

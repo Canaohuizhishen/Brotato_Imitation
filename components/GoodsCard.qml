@@ -129,8 +129,7 @@ Item {
                                   ? itemData.curPrice
                                 : Controller.getSpecificWeapon().curPrice
                             // color:  //需要完善 当剩余的钱币<当前商品的价格 颜色为红色 反之为白色
-                            color: ((Controller.getSpecificWeapon() && PlayerData.materialsNumber < Controller.getSpecificWeapon().curPrice)
-                                    || PlayerData.materialsNumber < itemData.curPrice)
+                            color: PlayerData.materialsNumber < (itemData.type === "道具" ? itemData.curPrice : Controller.getSpecificWeapon().curPrice)
                                    ? "red" : (buyButton.hovered ? "black" : "white")
                             font.pixelSize: 22*shopItem.scaleFactor
                             font.bold: true
@@ -159,7 +158,7 @@ Item {
 
                 onReleased: {
                     restoreAnimation.start()
-                    if(PlayerData.materialsNumber >= itemData.curPrice) {
+                    if(PlayerData.materialsNumber >= (itemData.type === "道具" ? itemData.curPrice : Controller.getSpecificWeapon().curPrice)) {
                         // Controller.buyItem(itemIndex)
 
                     if(itemData.type === "道具") {

@@ -285,7 +285,7 @@ Item {
     //在dropsParent中怪物monster的当前位置附近生成其死亡时应掉落数量个材料
     function dropMaterial(monster){
         if(monster.isDestroy)return
-        var materialComponent=Qt.createComponent("../components/Material.qml")
+        var materialComponent=Qt.createComponent("../drops/Material.qml")
         if (materialComponent.status === Component.Ready){
             for(var i=0;i<monster.monsterData.materialDrops;i++){
                 var material=materialComponent.createObject(dropsParent)
@@ -304,7 +304,7 @@ Item {
     //在dropsParent中怪物monster的当前位置附近生成一个果实
     function dropFruit(monster){
         if(monster.isDestroy)return
-        var fruitComponent=Qt.createComponent("../components/Fruit.qml")
+        var fruitComponent=Qt.createComponent("../drops/Fruit.qml")
         if (fruitComponent.status === Component.Ready){
             var fruit=fruitComponent.createObject(dropsParent)
             fruit.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
@@ -316,7 +316,7 @@ Item {
     //在dropsParent中怪物monster的当前位置附近生成一个宝箱
     function dropChest(monster){
         if(monster.isDestroy)return
-        var chestComponent=Qt.createComponent("../components/Chest.qml")
+        var chestComponent=Qt.createComponent("../drops/Chest.qml")
         if (chestComponent.status === Component.Ready){
             var chest=chestComponent.createObject(dropsParent)
             chest.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
