@@ -98,7 +98,7 @@ Item {
         cellWidth: 68*difficultySelectionInterface.scaleFactor
         cellHeight: cellWidth
         interactive: false
-        property int canUsedDifficultyNumber: PlayerData.maxDifficultyCompleted+2
+        property int canUsedDifficultyNumber: Math.min(PlayerData.maxDifficultyCompleted+2,PlayerData.maxDifficulty+1)
         property bool currentItemIsDifficulty: currentItem===null ? false : currentItem.name!=="lock"
         model: ListModel{
             Component.onCompleted: {
