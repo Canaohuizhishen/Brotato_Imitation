@@ -1,13 +1,14 @@
 import QtQuick 2.15
 import "../logic/ShopLogicHandler.js" as Controller
 import singleton.PlayerData
+import "../data"
 
 Item{
     id: root
     width: weaponBar.width
     height: weaponBar.height
     property double scaleFactor: 1.0
-    property var purchasedWeaponsModel
+    // property var purchasedWeaponsModel
     property int columns: 3
     property bool showNumber: true
     property bool showButton: true
@@ -32,6 +33,10 @@ Item{
             font.pixelSize: height
         }
 
+        WeaponCustomizationCore {
+            id: weaponCore
+        }
+
         GridView {
             id: weaponView
             property int columns: root.columns
@@ -42,15 +47,17 @@ Item{
             height: Math.max(Math.ceil(model.count/columns),1) * (cellSize + 5*scaleFactor)
             cellWidth: cellSize + 5*scaleFactor
             cellHeight: cellSize + 5*scaleFactor
-            model: purchasedWeaponsModel
+            // model: purchasedWeaponsModel
+            model: PlayerData.weapons
             interactive: false
             delegate: WeaponItem {
                 scaleFactor: root.scaleFactor
                 width: weaponView.cellSize
                 height: weaponView.cellSize
-                itemData: weaponItem
+                itemData: weaponCore.getWeapon(itemName,grade)
+                itemName: weaponName
                 wIndex: index
-                wGrade: weaponGrade
+                wGrade: grade
                 showButton: root.showButton
                 inUp: root.inUp
                 inLeft: root.inLeft

@@ -69,12 +69,12 @@ QtObject {
 
     property bool isInCombat: false //正在战斗状态的布尔值
 
-    // 添加 shopContext 属性
-    property QtObject shopContext: QtObject {
-        property ListModel _purchasedPropsModel: ListModel {}
-        property ListModel _duplicatePropsCountModel: ListModel {}
-        property ListModel _purchasedWeaponsModel: ListModel {}
-    }
+    // // 添加 shopContext 属性
+    // property QtObject shopContext: QtObject {
+    //     property ListModel _purchasedPropsModel: ListModel {}
+    //     property ListModel _duplicatePropsCountModel: ListModel {}
+    //     property ListModel _purchasedWeaponsModel: ListModel {}
+    // }
     property FileManager fileManager: FileManager {}
 
     signal weaponsListChanged()
@@ -82,9 +82,9 @@ QtObject {
 
     Component.onCompleted: {
         loadGame()
-        shopContext._purchasedPropsModel.clear();
-        shopContext._duplicatePropsCountModel.clear();
-        shopContext._purchasedWeaponsModel.clear();
+        // shopContext._purchasedPropsModel.clear();
+        // shopContext._duplicatePropsCountModel.clear();
+        // shopContext._purchasedWeaponsModel.clear();
     }
 
     Component.onDestruction: {

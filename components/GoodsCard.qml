@@ -128,7 +128,6 @@ Item {
                             text: itemData.type === "道具"
                                   ? itemData.curPrice
                                 : Controller.getSpecificWeapon().curPrice
-                            // color:  //需要完善 当剩余的钱币<当前商品的价格 颜色为红色 反之为白色
                             color: PlayerData.materialsNumber < (itemData.type === "道具" ? itemData.curPrice : Controller.getSpecificWeapon().curPrice)
                                    ? "red" : (buyButton.hovered ? "black" : "white")
                             font.pixelSize: 22*shopItem.scaleFactor
@@ -143,22 +142,8 @@ Item {
                     }
                 }
 
-                transform: Scale {
-                    id: buttonScale
-                    origin {
-                        x: buyButton.width / 2
-                        y: buyButton.height / 2
-                    }
-                }
-
-                onPressed: {
-                    shrinkAnimation.start()
-
-                }
-
                 onReleased: {
-                    restoreAnimation.start()
-                    if(PlayerData.materialsNumber >= (itemData.type === "道具" ? itemData.curPrice : Controller.getSpecificWeapon().curPrice)) {
+                    // if(PlayerData.materialsNumber >= (itemData.type === "道具" ? itemData.curPrice : Controller.getSpecificWeapon().curPrice)) {
                         // Controller.buyItem(itemIndex)
 
                     if(itemData.type === "道具") {
@@ -171,25 +156,17 @@ Item {
                         }
                     }
                         // shopItem.visible = false
+                    // }
+
+                }
+
+                onHoveredChanged: {
+                    if(hovered) {
+                        sound.playHoverSound1()
                     }
-
                 }
-
-                PropertyAnimation {
-                    id: shrinkAnimation
-                    target: buttonScale
-                    properties: "xScale, yScale"
-                    to: 0.95
-                    duration: 100
-                }
-
-                PropertyAnimation {
-                    id: restoreAnimation
-                    target: buttonScale
-                    properties: "xScale, yScale"
-                    to: 1.0
-                    duration: 150
-                    easing.type: Easing.OutBack
+                onClicked: {
+                    sound.playClickSound()
                 }
             }
         }
@@ -230,59 +207,15 @@ Item {
             color: lockButton.isLocked ? "white" : (lockButton.hovered ? "white" : "black")
         }
 
-        transform: Scale {
-            id: buttonScale1
-            origin {
-                x: lockButton.width / 2
-                y: lockButton.height / 2
-            }
-        }
-
-        onPressed: {
-            shrinkAnimation1.start()
-        }
-
-        onReleased: {
-            restoreAnimation1.start()
-        }
-
         onClicked: {
             lockButton.isLocked = !lockButton.isLocked
+            sound.playClickSound()
             // console.log("第" + itemData.index + "项锁定:", lockButton.isLocked)
         }
 
-        PropertyAnimation {
-            id: shrinkAnimation1
-            target: buttonScale1
-            properties: "xScale, yScale"
-            to: 0.95
-            duration: 100
-        }
-
-        PropertyAnimation {
-            id: restoreAnimation1
-            target: buttonScale1
-            properties: "xScale, yScale"
-            to: 1.0
-            duration: 150
-            easing.type: Easing.OutBack
-        }
-
-        SequentialAnimation {
-            id: stateChangeAnimation1
-            running: false
-            PropertyAnimation {
-                target: buttonScale1
-                properties: "xScale, yScale"
-                to: 1.1
-                duration: 100
-            }
-            PropertyAnimation {
-                target: buttonScale1
-                properties: "xScale, yScale"
-                to: 1.0
-                duration: 150
-                easing.type: Easing.OutBack
+        onHoveredChanged: {
+            if(hovered) {
+                sound.playHoverSound1()
             }
         }
     }

@@ -26,4 +26,13 @@ Button {
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
+
+    onHoveredChanged: {
+        if(hovered) {
+            sound.playHoverSound1()
+        }
+    }
+    onClicked: {
+        sound.playClickSound()
+    }
 }

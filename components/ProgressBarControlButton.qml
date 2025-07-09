@@ -49,6 +49,15 @@ Item {
         stepSize: root.linkFontSize ? 1*root.scaleFactor : 3*root.scaleFactor
         handle: Item { visible: false }
 
+        Component.onCompleted: {
+            if(labelText === "主音效") {
+                sound.setMasterVolume(value * 0.01)
+            } else if(labelText === "音效") {
+                sound.setSfxVolume(value * 0.01)
+            } else {
+                sound.setMusicVolume(value * 0.01)
+            }
+        }
 
         // 悬停检测
         HoverHandler {
@@ -119,6 +128,13 @@ Item {
                 label.font.pixelSize = mapFontSize(value)
             }
             root.valueChanged(Math.round(value))
+            if(labelText === "主音效") {
+                sound.setMasterVolume(value * 0.01)
+            } else if(labelText === "音效") {
+                sound.setSfxVolume(value * 0.01)
+            } else {
+                sound.setMusicVolume(value * 0.01)
+            }
         }
     }
 
@@ -149,7 +165,6 @@ Item {
             label.font.pixelSize = 25*root.scaleFactor
         }
     }
-
 
     // 提供给父组件调用的方法
     function deselect() {
