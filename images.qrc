@@ -6,6 +6,7 @@
         <file>images/attribute-range.png</file>
         <file>images/triceps.png</file>
         <file>images/helmetCharger_mask_faceLeft.png</file>
+        <file>images/prop-mutant.png</file>
         <file>images/summoner_faceLeft.png</file>
         <file>images/smg_faceLeft.png</file>
         <file>images/helmetBrute_mask_faceLeft.png</file>
@@ -170,6 +171,7 @@
         <file>images/helmetBrute_faceRight.png</file>
         <file>images/material2.png</file>
         <file>images/prop-helmet.png</file>
+        <file>images/prop-wellRounded.png</file>
         <file>images/prop-small_muscle_man.png</file>
         <file>images/finChaser_mask_faceLeft.png</file>
         <file>images/attribute-damage.png</file>

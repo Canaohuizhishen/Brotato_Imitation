@@ -32,6 +32,7 @@ Item {
             case 2: grade_two_prop_number++;break;
             case 3: grade_three_prop_number++;break;
             case 4: grade_four_prop_number++;break;
+            case 5: break;
             default: console.log("无效的等级:",prop.objectName,":",prop.grade)
             }
         }
@@ -108,6 +109,39 @@ Item {
             if(core.children[i].objectName===propName || core.children[i].propName===propName)break
         }
         return core.children[i]
+    }
+
+    Item{
+        //全能者
+        id: wellRounded
+        objectName: "wellRounded"
+        readonly property string propName: "全能者"
+        readonly property int grade: 5
+        readonly property string type: "角色"
+        readonly property string talentText: `
+        <font color='lime'>+5</font><font color='white'> 最大生命值</font><br>
+        <font color='lime'>+5</font><font color='white'> %速度</font><br>
+        <font color='lime'>+8</font><font color='white'> 收获</font>
+        `
+        function apply(){
+            PlayerData.wellRounded.setInitRoleAttributes()
+        }
+    }
+
+    Item{
+        //异变体
+        id: mutant
+        objectName: "mutant"
+        readonly property string propName: "异变体"
+        readonly property int grade: 5
+        readonly property string type: "角色"
+        readonly property string talentText: `
+        <font color='white'>升级需要</font><font color='lime'>-66%</font><font color='white'>经验值</font><br>
+        <font color='red'>+50</font><font color='white'> %道具价格</font>
+        `
+        function apply(){
+            PlayerData.mutant.setInitRoleAttributes()
+        }
     }
 
     Item{

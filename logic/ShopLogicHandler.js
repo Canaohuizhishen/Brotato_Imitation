@@ -136,7 +136,7 @@ function mergeDuplicateProps(purchasedItem)
         }
     }
     if(exitingIndex === -1) {
-        PlayerData.shopContext._duplicatePropsCountModel.insert(0,{propItem: purchasedItem.goods, count: 1})
+        PlayerData.shopContext._duplicatePropsCountModel.append({propItem: purchasedItem.goods, count: 1})
     } else {
         for(var l = 0;l < PlayerData.shopContext._duplicatePropsCountModel.count; l++) {
             if(PlayerData.shopContext._duplicatePropsCountModel.get(l).propItem.objectName === purchasedItem.goods.objectName) {
@@ -285,12 +285,7 @@ function initPropBar()
     PlayerData.shopContext._duplicatePropsCountModel.clear()
     for(var i = 0;i < PlayerData.props.count; i++) {
         var propName = PlayerData.props.get(i).propName
-        for(var l = 0;l < propCore.children.length;l++) {
-            if(propCore.children[l].propName === propName) {
-                PlayerData.shopContext._duplicatePropsCountModel.append({propItem: propCore.children[l],                                count: PlayerData.props.get(i).number})
-                break
-            }
-        }
+        PlayerData.shopContext._duplicatePropsCountModel.append({propItem: propCore.getProp(propName),                                count: PlayerData.props.get(i).number})
     }
 }
 
@@ -300,28 +295,13 @@ function initWeaponBar()
     PlayerData.shopContext._purchasedWeaponsModel.clear()
     for(var j = 0;j < PlayerData.weapons.count; j++) {
         var weaponName = PlayerData.weapons.get(j).weaponName
-        // console.log(weaponName)
-        for(var h = 0;h < weaponCore.children.length;h++) {
-            if(weaponCore.children[h].weaponName === weaponName) {
-                PlayerData.shopContext._purchasedWeaponsModel.append({weaponItem: weaponCore.children[h],
-                                                                         weaponGrade: PlayerData.weapons.get(j).grade})
-                break
-            }
-        }
+        PlayerData.shopContext._purchasedWeaponsModel.append({weaponItem: weaponCore.getWeapon(weaponName), weaponGrade: PlayerData.weapons.get(j).grade})
     }
 }
 
 //将道具栏的道具同步到角色的道具模型中
 function setPlayerProps(PlayerData)
 {
-    //把角色移到道具栏的首位
-    for(var i = 0;i < PlayerData.shopContext._duplicatePropsCountModel.count; i++) {
-        if(PlayerData.shopContext._duplicatePropsCountModel.get(i).propItem.type === "天赋") {
-            PlayerData.shopContext._duplicatePropsCountModel.move(i, 0, 1)
-            break
-        }
-    }
-
     PlayerData.props.clear()
     for(var l = 0; l < PlayerData.shopContext._duplicatePropsCountModel.count;l++) {
         var prop = PlayerData.shopContext._duplicatePropsCountModel.get(l)

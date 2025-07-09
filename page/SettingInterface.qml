@@ -5,7 +5,7 @@ import"../components"
 Item {
     id: settingsInterface
     property double scaleFactor: 1.0
-    z: 150
+    z: 200
     anchors.fill: parent
     focus: true
     property bool showModifier: true

@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import "../logic/ShopLogicHandler.js" as Controller
 import singleton.PlayerData
+import "../data"
 
 Item{
     id: root
@@ -16,6 +17,14 @@ Item{
 
     Component.onCompleted: {
          // PlayerData.shopContext._purchasedWeaponsModel = purchasedWeaponsModel
+    }
+
+    onVisibleChanged: {
+        Controller.initWeaponBar()
+    }
+
+    WeaponCustomizationCore{
+        id: weaponCore
     }
 
     Column{
