@@ -50,6 +50,7 @@ Rectangle {
             root.isMain = true
             mainAttributes.visible = true
             secondaryAttributes.visible = false
+            sound.playClickSound()
         }
         background: Rectangle{
             radius: 5*root.scaleFactor
@@ -65,6 +66,11 @@ Rectangle {
 
         }
 
+        onHoveredChanged: {
+            if(hovered) {
+                sound.playHoverSound1()
+            }
+        }
     }
 
     Button {
@@ -79,6 +85,7 @@ Rectangle {
             root.isMain = false
             mainAttributes.visible = false
             secondaryAttributes.visible = true
+            sound.playClickSound()
         }
         background: Rectangle{
             radius: 5*root.scaleFactor
@@ -91,6 +98,12 @@ Rectangle {
             color: minorButton.hovered&&root.isMain ? "black" : "white"
             font.pixelSize: 20*root.scaleFactor
             horizontalAlignment: Text.AlignHCenter
+        }
+
+        onHoveredChanged: {
+            if(hovered) {
+                sound.playHoverSound1()
+            }
         }
     }
 

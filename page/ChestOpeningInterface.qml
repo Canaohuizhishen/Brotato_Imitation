@@ -2,6 +2,8 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import singleton.PlayerData
 import "../components"
+import "../logic/ShopLogicHandler.js" as Controller
+import "../data"
 
 Item {
     id: chestOpeningInterface
@@ -84,11 +86,19 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                 }
                 onClicked: {
-                    PlayerData.addProp(propCard.propName)
+                    // PlayerData.addProp(propCard.propName)
+                    Controller.mergeDuplicateProps(propCard.propName)
+                    // console.log(propCard.propName)
                     propCard.core.apply()
                     attributePanel.upData()
                     chestNotificationBar.reduceChest()
                     processedOne()
+                    sound.playClickSound()
+                }
+                onHoveredChanged: {
+                    if(hovered) {
+                        sound.playHoverSound1()
+                    }
                 }
             }
 
@@ -127,6 +137,13 @@ Item {
                     PlayerData.materialsNumber+=propCard.core.basePrice
                     chestNotificationBar.reduceChest()
                     processedOne()
+                    sound.playClickSound()
+                }
+
+                onHoveredChanged: {
+                    if(hovered) {
+                        sound.playHoverSound1()
+                    }
                 }
             }
         }

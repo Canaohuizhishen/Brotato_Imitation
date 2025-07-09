@@ -2,6 +2,8 @@ import QtQuick 2.15
 import singleton.PlayerData
 import "../components"
 import "../tool.js" as Tool
+import "../data"
+import "../sound"
 
 Item {
     id: gameWindow
@@ -30,6 +32,10 @@ Item {
 
     Component.onDestruction: {
         backMainMenu()
+    }
+
+    Sound {
+        id: sound
     }
 
     Shortcut {
@@ -111,6 +117,10 @@ Item {
         }
     }
 
+    WeaponCustomizationCore {
+        id: weaponCore
+    }
+
     DifficultySelectionInterface{
         id: difficultySelectionInterface
         visible: false
@@ -118,7 +128,8 @@ Item {
         onSelected:{
             PlayerData.init()
             difficultySelectionInterface.visible=false
-            for(var i=0;i<1;i++)PlayerData.addWeapon(selectedWeaponName,1)
+            // for(var i=0;i<1;i++)PlayerData.addWeapon(selectedWeaponName,1)
+            for(var i=0;i<1;i++)PlayerData.addWeapon(weaponCore.getWeapon(selectedWeaponName,1).weaponName,1)
             PlayerData.roleName=""
             PlayerData.roleName=selectedRoleName
             PlayerData.addProp(selectedRoleName)
@@ -129,7 +140,7 @@ Item {
             inSelectInterface=false
             paused=false
             //PlayerData.currentWaveNumber=20
-            //PlayerData.materialsNumber=10000
+            PlayerData.materialsNumber=10000
         }
         backButton.onClicked: {
             init()
@@ -175,6 +186,11 @@ Item {
                 }
             }
         }
+        onVisibleChanged: {
+            if(visible) {
+                sound.fadeOut()
+            }
+        }
     }
 
     UpgradeInterface{
@@ -189,6 +205,11 @@ Item {
                 storeInterface.visible=true
             }
         }
+        onVisibleChanged: {
+            if(visible) {
+                sound.fadeOut()
+            }
+        }
     }
 
     StoreInterface{
@@ -200,7 +221,12 @@ Item {
             waveCountdown.start()
         }
         onVisibleChanged: {
-            if(visible)PlayerData.currentWaveNumber++
+            if(visible) {
+                PlayerData.currentWaveNumber++
+                sound.fadeOut()
+            } else {
+                sound.fadeIn()
+            }
         }
         Connections {
             target: pauseInterface
@@ -209,6 +235,7 @@ Item {
                 else storeInterface.unhideComponents()
             }
         }
+
     }
 
     SettlementInterface {
@@ -378,6 +405,7 @@ Item {
 
     function continueGame(){
         PlayerData.currentWaveNumber--
+        storeInterface.isContinue = true
         startInterface.visible=false
         storeInterface.visible=true
         paused=false

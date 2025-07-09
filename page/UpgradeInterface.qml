@@ -118,6 +118,7 @@ Rectangle {
                 upgradeOptionsRow.model.clear()
                 upgradeOptionsRow.addOptions()
             }
+            sound.playClickSound()
         }
         Row{
             spacing: 2*root.scaleFactor
@@ -135,6 +136,12 @@ Rectangle {
                 source: "qrc:/images/material_icon.png"
             }
 
+        }
+
+        onHoveredChanged: {
+            if(hovered) {
+                sound.playHoverSound1()
+            }
         }
     }
 

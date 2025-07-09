@@ -9,6 +9,7 @@ import singleton.PlayerData
 Item {
     id: root
     property double scaleFactor: 1.0
+    property var itemName
     property var itemData
     property int wIndex
     property int wGrade
@@ -49,6 +50,7 @@ Item {
                 if (popupActive) return
                 if (hovered) {
                     infoPopup.open()
+                    sound.playHoverSound()
                 } else {
                     infoPopup.close()
                 }
@@ -61,6 +63,7 @@ Item {
                 popupActive = true
                 infoPopup.modal = true
                 infoPopup.open()
+                sound.playClickSound()
             }
         }
     }
@@ -185,11 +188,15 @@ Item {
                     property bool isHovered: false
 
                     HoverHandler {
-                        onHoveredChanged: compositeButton.isHovered = hovered
+                        onHoveredChanged: {
+                            compositeButton.isHovered = hovered
+                            sound.playHoverSound1()
+                        }
                     }
 
                     onClicked: {
                         infoPopup.close()
+                        sound.playSynthesizeSound()
                         Controller.compositeWeapon(wIndex)
                     }
 
@@ -231,13 +238,17 @@ Item {
                     }
 
                     HoverHandler {
-                        onHoveredChanged: recycleButton.isHovered = hovered
+                        onHoveredChanged: {
+                            recycleButton.isHovered = hovered
+                            sound.playHoverSound1()
+                        }
                     }
 
                     onClicked:  {
                         infoPopup.close()
                         PlayerData.materialsNumber += Controller.recycledPrice(wIndex,wGrade)
                         Controller.recycleWeapons(wIndex)
+                        sound.playSynthesizeSound()
                     }
 
                     contentItem: Text {
@@ -265,10 +276,17 @@ Item {
                     property bool isHovered: false
 
                     HoverHandler {
-                        onHoveredChanged: cancelButton.isHovered = hovered
+                        onHoveredChanged: {
+                            cancelButton.isHovered = hovered
+                            sound.playHoverSound1()
+                        }
+
                     }
 
-                    onClicked: infoPopup.close()
+                    onClicked: {
+                        infoPopup.close()
+                        sound.playClickSound()
+                    }
 
                     contentItem: Text {
                         text: "取消"
