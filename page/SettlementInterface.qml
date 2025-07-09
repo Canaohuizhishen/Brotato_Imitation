@@ -12,8 +12,14 @@ Item {
     property alias newGameButton: newGameButton
     property alias backMainMenuButton: backMainMenuButton
 
-    Component.onDestruction: {
-        if(visible)PlayerData.currentWaveNumber=1
+    Component.onDestruction: {//在结算界面退出游戏时清空数据,防止用户在结算界面大退再重启后可以点击继续重打最后一波
+        if(visible)PlayerData.init()
+    }
+
+    onVisibleChanged: {//在结算界面出现时更新最高通关难度数据
+        if(visible && PlayerData.currentWaveNumber>=20){
+            if(PlayerData.maxDifficultyCompleted<PlayerData.difficulty)PlayerData.maxDifficultyCompleted=PlayerData.difficulty
+        }
     }
 
     function init(){

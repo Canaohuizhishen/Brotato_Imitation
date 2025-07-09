@@ -64,7 +64,6 @@
         <file>images/prop-cloak.png</file>
         <file>images/stone4.png</file>
         <file>images/lock2.png</file>
-        <file>images/03.png</file>
         <file>images/nose.png</file>
         <file>images/weapon-spear.png</file>
         <file>images/helmetBrute_faceLeft.png</file>
@@ -94,7 +93,6 @@
         <file>images/attribute-attackSpeed.png</file>
         <file>images/pursuer_mask_faceLeft.png</file>
         <file>images/sprayer_redMask_faceLeft.png</file>
-        <file>images/0.png</file>
         <file>images/brute_faceRight.png</file>
         <file>images/brute_faceLeft.png</file>
         <file>images/prayer_faceRight.png</file>
@@ -150,7 +148,6 @@
         <file>images/prayer_redMask_faceRight.png</file>
         <file>images/attribute-luck.png</file>
         <file>images/prop-fertilizer.png</file>
-        <file>images/02.png</file>
         <file>images/sprayer_mask_faceLeft.png</file>
         <file>images/tree_mask_faceLeft.png</file>
         <file>images/fruit.png</file>
