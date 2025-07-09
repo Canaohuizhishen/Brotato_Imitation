@@ -159,20 +159,18 @@ Item {
                 onReleased: {
                     restoreAnimation.start()
                     if(PlayerData.materialsNumber >= (itemData.type === "道具" ? itemData.curPrice : Controller.getSpecificWeapon().curPrice)) {
-                        // Controller.buyItem(itemIndex)
-
-                    if(itemData.type === "道具") {
-                        if(Controller.buyItem(itemIndex)) {
-                            PlayerData.materialsNumber -= itemData.curPrice
+                        if(itemData.type === "道具") {
+                            if(Controller.buyItem(itemIndex)) {
+                                PlayerData.materialsNumber -= itemData.curPrice
+                            }
+                        } else {
+                            if(Controller.buyItem(itemIndex)) {
+                                PlayerData.materialsNumber -= Controller.getSpecificWeapon().curPrice
+                            }
                         }
-                    } else {
-                        if(Controller.buyItem(itemIndex)) {
-                            PlayerData.materialsNumber -= Controller.getSpecificWeapon().curPrice
-                        }
+                        Controller.setPlayerProps(PlayerData)
+                        Controller.setPlayerWeapons(PlayerData)
                     }
-                        // shopItem.visible = false
-                    }
-
                 }
 
                 PropertyAnimation {

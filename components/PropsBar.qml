@@ -2,6 +2,8 @@ import QtQuick
 import QtQuick.Controls
 import "../logic/ShopLogicHandler.js" as Controller
 import singleton.PlayerData
+import "../data"
+
 //道具栏
 Item {
     id: propsBar
@@ -19,6 +21,14 @@ Item {
         // PlayerData.shopContext._purchasedPropsModel = purchasedPropsModel
         // PlayerData.shopContext._duplicatePropsCountModel = duplicatePropsCountModel
         // Controller.initPropEffects()
+    }
+
+    onVisibleChanged: {
+        Controller.initPropBar()
+    }
+
+    PropCustomizationCore{
+        id: propCore
     }
 
     Column{

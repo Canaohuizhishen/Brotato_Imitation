@@ -121,6 +121,7 @@ Item {
             for(var i=0;i<1;i++)PlayerData.addWeapon(selectedWeaponName,1)
             PlayerData.roleName=""
             PlayerData.roleName=selectedRoleName
+            PlayerData.addProp(selectedRoleName)
             PlayerData.originWeaponName=""
             PlayerData.originWeaponName=selectedWeaponName
             PlayerData.difficulty=selectedDifficulty
@@ -204,7 +205,7 @@ Item {
         Connections {
             target: pauseInterface
             function onVisibleChanged() {
-                if(pauseInterface.visible)storeInterface.hideComponents()
+                if(pauseInterface.visible || settingInterface.visible)storeInterface.hideComponents()
                 else storeInterface.unhideComponents()
             }
         }

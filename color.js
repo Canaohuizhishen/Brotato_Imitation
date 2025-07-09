@@ -23,7 +23,8 @@ function getBorderColor(grade) {
         1: "#000000",
         2: "#52ADE8",
         3: "#974FDD",
-        4: "#E73535"
+        4: "#E73535",
+        5: "#000000"
     }
     return lightenColor(colors[grade] || "#000000", k)
 }
@@ -33,7 +34,8 @@ function getButtonColor(grade) {
         1: "#191919",
         2: "#27363D",
         3: "#272231",
-        4: "#392121"
+        4: "#392121",
+        5: "#191919"
     }
     return lightenColor(colors[grade] || "#000000", k)
 }
@@ -43,7 +45,8 @@ function getBackgroundColor(grade) {
         1: "#000000",
         2: "#0F2028",
         3: "#100A18",
-        4: "#240909"
+        4: "#240909",
+        5: "#000000"
     }
     return lightenColor(colors[grade] || "#000000", k)
 }
@@ -53,7 +56,8 @@ function getImageBackgroundColor(grade) {
         1: "#323232",
         2: "#3E4C52",
         3: "#3F3A48",
-        4: "#4F3939"
+        4: "#4F3939",
+        5: "#323232"
     }
     return lightenColor(colors[grade] || "#000000", k)
 }

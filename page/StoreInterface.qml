@@ -51,8 +51,8 @@ Item {
 
     onVisibleChanged: {
         if (visible) {
-               reload()
-           }
+            reload()
+        }
     }
 
     Component.onCompleted: {
@@ -306,9 +306,6 @@ Item {
             onClicked: {
                 Controller.setPlayerProps(PlayerData)
                 Controller.setPlayerWeapons(PlayerData)
-                // Controller.startNextWave()
-                storeInterface.visible = false
-                waveCountdown.start()
             }
 
             property bool isHovered: false
