@@ -80,7 +80,7 @@ Item {
                     columns: 6
                     scaleFactor: settlementInterface.scaleFactor
                     showNumber: false
-                    purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
+                    // purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
                     showButton: false
                     inUp: false
                     inLeft: false
@@ -92,8 +92,8 @@ Item {
                     scaleFactor: settlementInterface.scaleFactor
                     anchors.top: weaponBar.bottom
                     anchors.topMargin: 30*settlementInterface.scaleFactor
-                    purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
-                    duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
+                    // purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
+                    // duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
                     inUp: true
                     inLeft: false
                 }

@@ -180,9 +180,13 @@ Rectangle {
             onHoveredChanged: {
                 buttonBg.color = hovered ? "white" :root.getButtonColor(root.grade)
                 contentItem.color = hovered ? "root.getButtonColor(root.grade)" : "white"
+                if(hovered) {
+                    sound.playHoverSound1()
+                }
             }
             onClicked: {
                 core.getUpgradeOption(root.grade,root.optionName).choose()
+                sound.playClickSound()
             }
         }
     }

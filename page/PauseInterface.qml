@@ -99,7 +99,7 @@ Rectangle {
                 id: weaponBar
                 columns: 6
                 scaleFactor: root.scaleFactor
-                purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
+                // purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
                 showButton: false
                 inUp: false
                 inLeft: false
@@ -109,8 +109,8 @@ Rectangle {
             PropsBar {
                 id: propBar
                 scaleFactor: root.scaleFactor
-                purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
-                duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
+                // purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
+                // duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
                 columns: 6
                 inUp: true
                 inLeft: false

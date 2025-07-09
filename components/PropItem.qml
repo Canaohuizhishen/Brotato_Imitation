@@ -5,6 +5,7 @@ import "../color.js" as Color
 Item {
     id: root
     property double scaleFactor: 1.0
+    property var itemName
     property var itemData
     property int propNum : 1
     property bool inUp: true
@@ -28,7 +29,7 @@ Item {
 
         Text {
             visible: propNum >= 2
-            text: "X" + count
+            text: "X" + propNum
             color: "white"
             font.pixelSize: 22*root.scaleFactor
             style: Text.Outline
@@ -47,6 +48,7 @@ Item {
                 propImageBackground.hovered = hovered
                 if (hovered) {
                     infoPopup.open()
+                    sound.playHoverSound()
                 } else {
                     infoPopup.close()
                 }

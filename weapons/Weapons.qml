@@ -20,6 +20,10 @@ Item{
     z: 3
     property bool isFaceRight: true
 
+    Component.onCompleted: {
+        upDataWeapons()
+    }
+
     onScaleFactorChanged: {
         relocation()
     }
