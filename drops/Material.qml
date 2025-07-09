@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtMultimedia
 import singleton.PlayerData
 import "../tool.js" as Tool
 
@@ -37,6 +38,12 @@ Item {
         material.isGeted=true
         beGetedAnimation.target=target
         beGetedAnimation.start()
+    }
+
+    SoundEffect {
+        id: materialPickingSound
+        source: "qrc:/audio/materialPicking.wav"
+        volume: 0.6
     }
 
     Image{
@@ -93,8 +100,10 @@ Item {
         }
 
         onStopped: {
+            materialPickingSound.play()
             PlayerData.remainingMaterialsNumber++
-            material.destroy()
+            material.visible=false
+            waitDestroyTimer.start()
         }
     }
 
@@ -125,6 +134,7 @@ Item {
         }
 
         onStopped: {
+            materialPickingSound.play()
             // 残渣掉落动画
             for (var i = 0; i < 6; i++) {
                 var radius = 13*material.scaleFactor;
@@ -133,8 +143,8 @@ Item {
                 var dy = Math.sin(angle)*(Math.random() * material.width*6-material.width*3)+material.width*1.5
                 material.makeResidue(target.x+target.width/2,target.y,dx,dy, radius,gameArea);
             }
-            material.visible=false
             target.getMaterial(material)
+            material.visible=false
             waitDestroyTimer.start()
         }
     }

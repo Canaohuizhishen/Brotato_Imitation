@@ -14,11 +14,6 @@ Item {
     property string cionImage : "qrc:/images/material_icon.png"
     property var itemIndex
     property var wGrade
-    // property var specificWeapon : itemData.type === "道具" ? "" : weaponCore.getWeapon(itemData.objectName, wGrade)
-
-    //点击购买时发出的信号
-    // signal buyRequested(int index)
-    // signal locked(int index)
 
     WeaponCustomizationCore {
         id: weaponCore
@@ -33,7 +28,6 @@ Item {
                                              : Color.getBorderColor(wGrade)
         height: shopItem.height
         width: shopItem.width
-        // anchors.centerIn: shopItem
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
 
@@ -153,8 +147,6 @@ Item {
                                 PlayerData.materialsNumber -= Controller.getSpecificWeapon().curPrice
                             }
                         }
-                        // Controller.setPlayerProps(PlayerData)
-                        // Controller.setPlayerWeapons(PlayerData)
                     }
                 }
 
@@ -185,7 +177,6 @@ Item {
         property color textColor: isLocked ? "black" : (hovered ? "black" : "white")
 
         contentItem: Item {
-            // anchors.fill: parent
             anchors.centerIn: parent
             Row {
                 anchors.centerIn: parent
@@ -209,7 +200,6 @@ Item {
         onClicked: {
             lockButton.isLocked = !lockButton.isLocked
             sound.playClickSound()
-            // console.log("第" + itemData.index + "项锁定:", lockButton.isLocked)
         }
 
         onHoveredChanged: {

@@ -16,7 +16,6 @@ qt_add_qml_module(appBrotato
     QML_FILES
         Main.qml
     SOURCES main.cpp
-    SOURCES monsterData.h monsterData.cpp
     RESOURCES images.qrc
     QML_FILES tool.js
     RESOURCES singleton.qrc

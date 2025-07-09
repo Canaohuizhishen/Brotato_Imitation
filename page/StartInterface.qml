@@ -4,8 +4,6 @@ import QtQuick.Controls 2.15
 Item{
     id: startInterface
     property double scaleFactor: 1.0
-    // width: height/0.5625
-    // height: parent.height
     anchors.fill: parent
     anchors.centerIn: parent
     z: 100

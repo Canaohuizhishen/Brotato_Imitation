@@ -67,25 +67,15 @@ QtObject {
     property int lastStoreRefreshTimes: 0    //上次游戏退出时商店的刷新次数
     property int maxDifficultyCompleted: -1  //已通关的最高难度
     property int maxDifficulty: 0            //已实现的最高难度
+    property FileManager fileManager: FileManager {}
 
     property bool isInCombat: false //正在战斗状态的布尔值
-
-    // // 添加 shopContext 属性
-    // property QtObject shopContext: QtObject {
-    //     property ListModel _purchasedPropsModel: ListModel {}
-    //     property ListModel _duplicatePropsCountModel: ListModel {}
-    //     property ListModel _purchasedWeaponsModel: ListModel {}
-    // }
-    property FileManager fileManager: FileManager {}
 
     signal weaponsListChanged()
     signal upgrad()
 
     Component.onCompleted: {
         loadGame()
-        // shopContext._purchasedPropsModel.clear();
-        // shopContext._duplicatePropsCountModel.clear();
-        // shopContext._purchasedWeaponsModel.clear();
     }
 
     Component.onDestruction: {

@@ -53,7 +53,6 @@ Item {
         }
     }
 
-
     WeaponCustomizationCore{
         id: weaponCore
     }

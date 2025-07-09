@@ -31,8 +31,8 @@ Monster{
         var dx=charger.x-charger.target.x
         var dy=charger.y-charger.target.y
         var distance = Math.sqrt(dx * dx + dy * dy);
-        var x=charger.x-dx/distance*chargeRange
-        var y=charger.y-dy/distance*chargeRange
+        var x=charger.x-dx/distance*chargeRange*scaleFactor
+        var y=charger.y-dy/distance*chargeRange*scaleFactor
         if(dx>0)charger.faceLeft()
         else charger.faceRight()
         faceTarget=false
@@ -85,7 +85,7 @@ Monster{
         running: !charger.isCharging && !charger.inChargeCoolDown && !charger.paused
         repeat: true
         onTriggered: {
-            var inAttackRange=Tool.getDistance(Qt.point(charger.x,charger.y),Qt.point(charger.target.x,charger.target.y))<charger.core.attackRange
+            var inAttackRange=Tool.getDistance(Qt.point(charger.x,charger.y),Qt.point(charger.target.x,charger.target.y))<charger.core.attackRange*charger.scaleFactor
             if(inAttackRange)charger.charge()
         }
     }

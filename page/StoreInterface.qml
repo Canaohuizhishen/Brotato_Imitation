@@ -14,11 +14,6 @@ Item {
     property double scaleFactor: 1.0
     property string cionImage : "qrc:/images/material_icon.png"
     property Button startButton : startButton
-    // property var shopContext: QtObject {
-    //     property var _purchasedPropsModel: ListModel {}
-    //     property var _duplicatePropsCountModel: ListModel {}
-    //     property var _purchasedWeaponsModel: ListModel {}
-    // }//实现向js文件传递模型数据
     property bool isContinue: false
 
     function init()
@@ -42,8 +37,6 @@ Item {
 
     //重新加载整个商店界面的各个组件
     function reload() {
-        // Controller.initPropBar()
-        // Controller.initWeaponBar()
         Controller.refreshShop()
         attributeBar.upData()
         Controller.resetRefreshTimes()
@@ -51,25 +44,8 @@ Item {
     }
 
     onVisibleChanged: {
-        // console.log(visible,"12121")
-        // console.log("good",PlayerData.lastStoreGoods.get(1).goods)
-        // console.log("isLockedModel",PlayerData.lastStoreGoods.get(1).isLockedModel)
-        //  console.log("weaponGrade",PlayerData.lastStoreGoods.get(1).weaponGrade)
-        // console.log("isPurchased",PlayerData.lastStoreGoods.get(1).isPurchased)
         if(isContinue) {
             isContinue = false
-            // console.log("进入111")
-            // shopModel.clear()
-            // for(var i = 0;i < PlayerData.lastStoreGoods.count;i++) {
-            //     var item = PlayerData.lastStoreGoods.get(i)
-            //     shopModel.append({
-            //                          goods: item.goods,
-            //                          isLockedModel: item.isLockedModel,
-            //                          weaponGrade: item.weaponGrade,
-            //                          isPurchased: item.isPurchased
-            //                      })
-            // }
-            // console.log("shopModel",shopModel.get(i).goods)
             reload()
         } else if(visible) {
             reload()
@@ -289,8 +265,6 @@ Item {
             }
 
             onClicked: {
-                // Controller.setPlayerProps(PlayerData)
-                // Controller.setPlayerWeapons(PlayerData)
                 sound.playClickSound()
             }
 

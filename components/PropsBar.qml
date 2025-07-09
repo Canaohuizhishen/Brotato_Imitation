@@ -10,22 +10,9 @@ Item {
     width: propBar.width
     height: propBar.height
     property double scaleFactor: 1.0
-    // property var purchasedPropsModel
-    // property var duplicatePropsCountModel
     property int columns: 8 // 默认值
     property bool inUp: true
     property bool inLeft: true
-
-    Component.onCompleted: {
-        // // 更新单例中的模型引用
-        // PlayerData.shopContext._purchasedPropsModel = purchasedPropsModel
-        // PlayerData.shopContext._duplicatePropsCountModel = duplicatePropsCountModel
-        // Controller.initPropEffects()
-    }
-
-    // onVisibleChanged: {
-    //     Controller.initPropBar()
-    // }
 
     PropCustomizationCore{
         id: propCore
@@ -55,7 +42,6 @@ Item {
             height: 2 * (cellSize + 5*propsBar.scaleFactor)
             cellWidth: cellSize + 5*propsBar.scaleFactor
             cellHeight: cellSize + 5*propsBar.scaleFactor
-            // model: duplicatePropsCountModel
             model: PlayerData.props
             interactive: true
             flickableDirection: Flickable.VerticalFlick

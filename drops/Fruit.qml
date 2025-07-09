@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtMultimedia
 import singleton.PlayerData
 import "../tool.js" as Tool
 
@@ -18,6 +19,12 @@ Image {
         fruit.isGeted=true
         beGetedAnimation.target=target
         beGetedAnimation.start()
+    }
+
+    SoundEffect {
+        id: materialPickingSound
+        source: "qrc:/audio/materialPicking.wav"
+        volume: 0.6
     }
 
     ParallelAnimation{
@@ -47,7 +54,19 @@ Image {
         }
 
         onStopped: {
+            materialPickingSound.play()
             target.getFruit(fruit)
+            fruit.visible=false
+            waitDestroyTimer.start()
+        }
+    }
+
+    Timer {
+        id: waitDestroyTimer
+        interval: 400
+        running: false
+        repeat: false
+        onTriggered: {
             fruit.destroy()
         }
     }
