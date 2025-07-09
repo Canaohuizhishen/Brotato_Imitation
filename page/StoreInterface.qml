@@ -19,6 +19,7 @@ Item {
     //     property var _duplicatePropsCountModel: ListModel {}
     //     property var _purchasedWeaponsModel: ListModel {}
     // }//实现向js文件传递模型数据
+    property bool isContinue: false
 
     function init()
     {
@@ -41,8 +42,8 @@ Item {
 
     //重新加载整个商店界面的各个组件
     function reload() {
-        Controller.initPropBar()
-        Controller.initWeaponBar()
+        // Controller.initPropBar()
+        // Controller.initWeaponBar()
         Controller.refreshShop()
         attributeBar.upData()
         Controller.resetRefreshTimes()
@@ -50,13 +51,29 @@ Item {
     }
 
     onVisibleChanged: {
-        if (visible) {
-               reload()
-           }
-    }
-
-    Component.onCompleted: {
-        Controller.refreshShop()
+        // console.log(visible,"12121")
+        // console.log("good",PlayerData.lastStoreGoods.get(1).goods)
+        // console.log("isLockedModel",PlayerData.lastStoreGoods.get(1).isLockedModel)
+        //  console.log("weaponGrade",PlayerData.lastStoreGoods.get(1).weaponGrade)
+        // console.log("isPurchased",PlayerData.lastStoreGoods.get(1).isPurchased)
+        if(isContinue) {
+            isContinue = false
+            // console.log("进入111")
+            // shopModel.clear()
+            // for(var i = 0;i < PlayerData.lastStoreGoods.count;i++) {
+            //     var item = PlayerData.lastStoreGoods.get(i)
+            //     shopModel.append({
+            //                          goods: item.goods,
+            //                          isLockedModel: item.isLockedModel,
+            //                          weaponGrade: item.weaponGrade,
+            //                          isPurchased: item.isPurchased
+            //                      })
+            // }
+            // console.log("shopModel",shopModel.get(i).goods)
+            reload()
+        } else if(visible) {
+            reload()
+        }
     }
 
     //主背景
@@ -144,49 +161,21 @@ Item {
                 radius: 10*storeInterface.scaleFactor
                 color: refreshButton.isHovered ? "white" : "black"
             }
-            transform: Scale {
-                id: buttonScale
-                origin {
-                    x: refreshButton.width / 2
-                    y: refreshButton.height / 2
-                }
-            }
 
             onHoveredChanged: {
                 isHovered = hovered
-            }
-
-            onPressedChanged: {
-                if (pressed) {
-                    shrinkAnimation.start()
-                } else {
-                    restoreAnimation.start()
+                if(hovered) {
+                    sound.playHoverSound1()
                 }
             }
 
             onClicked: {
-                if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
+                // if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
                     Controller.refreshShop()
                     PlayerData.materialsNumber -= currentRefreshPrice
                     currentRefreshPrice = Controller.refreshPrice(PlayerData.currentWaveNumber)
-                }
-            }
-
-            PropertyAnimation {
-                id: shrinkAnimation
-                target: buttonScale
-                properties: "xScale, yScale"
-                to: 0.95
-                duration: 100
-            }
-
-            PropertyAnimation {
-                id: restoreAnimation
-                target: buttonScale
-                properties: "xScale, yScale"
-                to: 1.0
-                duration: 150
-                easing.type: Easing.OutBack
+                    sound.playClickSound()
+                // }
             }
         }
     }
@@ -223,13 +212,14 @@ Item {
             onLockStateChanged: {
                 if (index >= 0 && index < shopModel.count) {
                     shopModel.setProperty(index, "isLockedModel", lockState)
-
+                    PlayerData.lastStoreGoods.setProperty(index, "isLockedModel", lockState)
                 }
             }
             itemData: goods
             itemIndex: index
             wGrade: weaponGrade
-            visible: index < shopView.columns
+            // visible: index < shopView.columns
+            visible: !isPurchased
             width: shopView.cellW
             height: shopView.cellH
         }
@@ -247,8 +237,8 @@ Item {
         PropsBar {
             scaleFactor: storeInterface.scaleFactor
             anchors.left: parent.left
-            purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
-            duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
+            // purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
+            // duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
             inUp: true
             inLeft: false
         }
@@ -257,7 +247,7 @@ Item {
         WeaponsBar {
             scaleFactor: storeInterface.scaleFactor
             anchors.right: parent.right
-            purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
+            // purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
             inUp: true
             inLeft: true
         }
@@ -293,22 +283,18 @@ Item {
 
             onHoveredChanged: {
                 isHovered = hovered
-            }
-
-            onPressedChanged: {
-                if (pressed) {
-                    startButtonHhrinkAnimation.start()
-                } else {
-                    startButtonRestoreAnimation.start()
+                if(hovered) {
+                    sound.playHoverSound1()
                 }
             }
 
             onClicked: {
-                Controller.setPlayerProps(PlayerData)
-                Controller.setPlayerWeapons(PlayerData)
+                // Controller.setPlayerProps(PlayerData)
+                // Controller.setPlayerWeapons(PlayerData)
                 // Controller.startNextWave()
                 storeInterface.visible = false
                 waveCountdown.start()
+                sound.playClickSound()
             }
 
             property bool isHovered: false
@@ -328,31 +314,6 @@ Item {
                     font.pixelSize: 32*storeInterface.scaleFactor
                     font.bold: true
                 }
-            }
-
-            transform: Scale {
-                id: startButtonButtonScale
-                origin {
-                    x: startButton.width / 2
-                    y: startButton.height / 2
-                }
-            }
-
-            PropertyAnimation {
-                id: startButtonHhrinkAnimation
-                target: startButtonButtonScale
-                properties: "xScale, yScale"
-                to: 0.95
-                duration: 100
-            }
-
-            PropertyAnimation {
-                id: startButtonRestoreAnimation
-                target: startButtonButtonScale
-                properties: "xScale, yScale"
-                to: 1.0
-                duration: 150
-                easing.type: Easing.OutBack
             }
         }
     }

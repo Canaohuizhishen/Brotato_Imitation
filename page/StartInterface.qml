@@ -43,6 +43,15 @@ Item{
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
+
+        onHoveredChanged: {
+            if(hovered) {
+                sound.playHoverSound1()
+            }
+        }
+        onClicked: {
+            sound.playClickSound()
+        }
     }
 
     Button{
@@ -64,6 +73,15 @@ Item{
             color: start.pressed || start.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+        }
+
+        onHoveredChanged: {
+            if(hovered) {
+                sound.playHoverSound1()
+            }
+        }
+        onClicked: {
+            sound.playClickSound()
         }
     }
 
@@ -87,6 +105,15 @@ Item{
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
+
+        onHoveredChanged: {
+            if(hovered) {
+                sound.playHoverSound1()
+            }
+        }
+        onClicked: {
+            sound.playClickSound()
+        }
     }
 
     Button{
@@ -108,6 +135,15 @@ Item{
             color: exit.pressed || exit.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+        }
+
+        onHoveredChanged: {
+            if(hovered) {
+                sound.playHoverSound1()
+            }
+        }
+        onClicked: {
+            sound.playClickSound()
         }
     }
 

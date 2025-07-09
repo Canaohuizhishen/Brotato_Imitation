@@ -2,14 +2,16 @@ import QtQuick
 import QtQuick.Controls
 import "../logic/ShopLogicHandler.js" as Controller
 import singleton.PlayerData
+import "../data"
+
 //道具栏
 Item {
     id: propsBar
     width: propBar.width
     height: propBar.height
     property double scaleFactor: 1.0
-    property var purchasedPropsModel
-    property var duplicatePropsCountModel
+    // property var purchasedPropsModel
+    // property var duplicatePropsCountModel
     property int columns: 8 // 默认值
     property bool inUp: true
     property bool inLeft: true
@@ -35,6 +37,10 @@ Item {
             font.pixelSize: height
         }
 
+        PropCustomizationCore {
+            id: propCore
+        }
+
         GridView {
             id: propView
             property int columns: propsBar.columns
@@ -45,7 +51,8 @@ Item {
             height: 2 * (cellSize + 5*propsBar.scaleFactor)
             cellWidth: cellSize + 5*propsBar.scaleFactor
             cellHeight: cellSize + 5*propsBar.scaleFactor
-            model: duplicatePropsCountModel
+            // model: duplicatePropsCountModel
+            model: PlayerData.props
             interactive: true
             flickableDirection: Flickable.VerticalFlick
             boundsBehavior: Flickable.StopAtBounds
@@ -55,8 +62,9 @@ Item {
                 scaleFactor: propsBar.scaleFactor
                 width: propView.cellSize
                 height: propView.cellSize
-                itemData: propItem
-                propNum: count
+                itemData: propCore.getProp(itemName)
+                itemName: propName
+                propNum: number
                 inUp: propsBar.inUp
                 inLeft: propsBar.inLeft
             }

@@ -86,6 +86,8 @@ qt_add_qml_module(appBrotato
     SOURCES Filemanager.h
     QML_FILES page/DyingBorder.qml
     QML_FILES drops/Material.qml drops/Fruit.qml drops/Drops.qml drops/Chest.qml
+    RESOURCES audio.qrc
+    QML_FILES sound/Sound.qml
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

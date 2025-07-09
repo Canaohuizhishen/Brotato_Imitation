@@ -805,6 +805,12 @@ Item {
             }
             onClicked:{
                 console.log("1")
+                sound.playClickSound()
+            }
+            onHoveredChanged: {
+                if(hovered) {
+                    sound.playHoverSound1()
+                }
             }
         }
         Button {
@@ -830,6 +836,12 @@ Item {
             onClicked:{
                 settingsPopup.visible = true
                 gameControls.visible = false
+                sound.playClickSound()
+            }
+            onHoveredChanged: {
+                if(hovered) {
+                    sound.playHoverSound1()
+                }
             }
         }
     }

@@ -126,6 +126,13 @@ Item {
                         weaponRow.currentIndex=index
                     }
                 }
+                sound.playClickSound()
+            }
+
+            onHoveredChanged: {
+                if(hovered) {
+                    sound.playHoverSound()
+                }
             }
         }
     }
@@ -150,6 +157,15 @@ Item {
             color: back.pressed || back.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+        }
+
+        onHoveredChanged: {
+            if(hovered) {
+                sound.playHoverSound()
+            }
+        }
+        onClicked: {
+            sound.playClickSound()
         }
     }
 }
