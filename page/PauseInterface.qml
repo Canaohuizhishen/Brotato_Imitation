@@ -77,14 +77,6 @@ Rectangle {
                     backMenu.forceActiveFocus()
                 }
             }
-            // SetButton {
-            //     text: "测试濒死"
-            //     width: parent.width
-            //     height: width/8
-            //     onClicked: {
-            //         PlayerData.curHp = 1
-            //     }
-            // }
         }
 
         Column {
@@ -99,7 +91,6 @@ Rectangle {
                 id: weaponBar
                 columns: 6
                 scaleFactor: root.scaleFactor
-                // purchasedWeaponsModel: PlayerData.shopContext._purchasedWeaponsModel
                 showButton: false
                 inUp: false
                 inLeft: false
@@ -109,8 +100,6 @@ Rectangle {
             PropsBar {
                 id: propBar
                 scaleFactor: root.scaleFactor
-                // purchasedPropsModel: PlayerData.shopContext._purchasedPropsModel
-                // duplicatePropsCountModel: PlayerData.shopContext._duplicatePropsCountModel
                 columns: 6
                 inUp: true
                 inLeft: false

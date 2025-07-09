@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtMultimedia
 import singleton.PlayerData
 import "../data"
 import "../tool.js" as Tool
@@ -32,6 +33,12 @@ Image {
         beGetedAnimation.start()
     }
 
+    SoundEffect {
+        id: pickBoxSound
+        source: "qrc:/audio/pickBox.wav"
+        volume: 0.5
+    }
+
     ParallelAnimation{
         id: beGetedAnimation
         loops: 1
@@ -59,7 +66,19 @@ Image {
         }
 
         onStopped: {
+            pickBoxSound.play()
             target.getChest(chest)
+            chest.visible=false
+            waitDestroyTimer.start()
+        }
+    }
+
+    Timer {
+        id: waitDestroyTimer
+        interval: 400
+        running: false
+        repeat: false
+        onTriggered: {
             chest.destroy()
         }
     }

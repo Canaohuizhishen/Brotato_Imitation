@@ -4,26 +4,28 @@ import QtQuick.Controls
 
 Item {
     id: root
-
     property int fadeDuration: 1500
-
     property real masterVolume: 1.0 //主音效
     property real musicVolume: 1.0 //音乐
     property real sfxVolume: 1.0 //声音
-    function setMasterVolume(volume) {
-        masterVolume  = volume
-    }
-    function setMusicVolume(volume) {
-        musicVolume  = volume
-    }
-    function setSfxVolume(volume) {
-        sfxVolume  = volume
-    }
 
     property real mVolume: 0.8 * masterVolume * musicVolume
     property real reducedVolume: 0.4 * masterVolume * musicVolume
-
     property real sVolume: 0.6 * masterVolume * sfxVolume
+
+    property bool autoPlayBackgroundMusic: true
+
+    function setMasterVolume(volume) {
+        masterVolume  = volume
+    }
+
+    function setMusicVolume(volume) {
+        musicVolume  = volume
+    }
+
+    function setSfxVolume(volume) {
+        sfxVolume  = volume
+    }
 
     //背景音乐
     MediaPlayer {
@@ -37,7 +39,7 @@ Item {
     }
 
     Component.onCompleted: {
-        playBackgroundMusic()
+        if(autoPlayBackgroundMusic)playBackgroundMusic()
     }
 
     NumberAnimation {

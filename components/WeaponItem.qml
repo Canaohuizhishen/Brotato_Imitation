@@ -17,7 +17,6 @@ Item {
     property bool showButton: true
     property bool inUp: true
     property bool inLeft: true
-    // property var specificWeapon : itemData.type === "道具" ? "" : weaponCore.getWeapon(itemData.objectName, wGrade)
 
     WeaponCustomizationCore {
         id: weaponCore

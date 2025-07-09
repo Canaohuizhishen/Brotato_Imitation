@@ -292,12 +292,9 @@ Item {
                         contentItem: Row {
                             id: backgroundItem
                             spacing: 10*settingsInterface.scaleFactor
-                            //anchors.fill: parent
-                            //width: backgroundIcon.width+backgroundName.width+spacing
                             height: parent.height
                             anchors.right: indicatorText.left
                             leftPadding: 15*settingsInterface.scaleFactor
-                            //rightPadding: indicatorText.width + 15
 
                             // 当前选中项的图标
                             Rectangle{

@@ -20,14 +20,6 @@ Item {
 
     function updateScale() {
         scaleFactor = width / 1280
-        //console.log(scaleFactor)
-    }
-
-    Component.onCompleted: {
-        // gameArea.player.roleName="wellRounded"
-        // PlayerData.addWeapon("smg")
-        // PlayerData.isInCombat=true
-        // inSelectInterface=false
     }
 
     Component.onDestruction: {
@@ -140,7 +132,7 @@ Item {
             inSelectInterface=false
             paused=false
             //PlayerData.currentWaveNumber=20
-            PlayerData.materialsNumber=10000
+            //PlayerData.materialsNumber=10000
         }
         backButton.onClicked: {
             init()

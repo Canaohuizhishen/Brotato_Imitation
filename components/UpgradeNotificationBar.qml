@@ -17,6 +17,7 @@ Item {
         target: PlayerData
         function onUpgrad() {
             addOne()
+            sound.playUpgradeSound()
         }
     }
 

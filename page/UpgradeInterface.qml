@@ -88,7 +88,6 @@ Rectangle {
                 model.append({ "level":array[i].grade,"name": array[i].objectName, "upgradeOptionName":array[i].optionName , "description": array[i].talentText })
             }
         }
-
     }
 
     UpgradeOptionCustomizationCore{

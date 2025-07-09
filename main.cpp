@@ -2,8 +2,6 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include "Filemanager.h"
-//#include "monsterData.h"
-//#include "playerData.h"
 
 int main(int argc, char *argv[])
 {
@@ -39,11 +37,6 @@ int main(int argc, char *argv[])
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
     engine.loadFromModule("Brotato", "Main");
-
-    // PlayerData player;
-    // player.setHp(5);
-    // player.setMaxHp(5);
-    // engine.rootContext()->setContextProperty("playerData", &player);
 
     return app.exec();
 }

@@ -8,20 +8,11 @@ Item{
     width: weaponBar.width
     height: weaponBar.height
     property double scaleFactor: 1.0
-    // property var purchasedWeaponsModel
     property int columns: 3
     property bool showNumber: true
     property bool showButton: true
     property bool inUp: true
     property bool inLeft: true
-
-    Component.onCompleted: {
-         // PlayerData.shopContext._purchasedWeaponsModel = purchasedWeaponsModel
-    }
-
-    // onVisibleChanged: {
-    //     Controller.initWeaponBar()
-    // }
 
     WeaponCustomizationCore{
         id: weaponCore
@@ -51,7 +42,6 @@ Item{
             height: Math.max(Math.ceil(model.count/columns),1) * (cellSize + 5*scaleFactor)
             cellWidth: cellSize + 5*scaleFactor
             cellHeight: cellSize + 5*scaleFactor
-            // model: purchasedWeaponsModel
             model: PlayerData.weapons
             interactive: false
             delegate: WeaponItem {
