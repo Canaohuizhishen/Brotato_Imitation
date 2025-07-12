@@ -3,10 +3,12 @@
         <file>audio/backgroundMusic.mp3</file>
         <file>audio/hover1.wav</file>
         <file>audio/synthesis.wav</file>
-        <file>audio/pickBox.wav</file>
+        <file>audio/get_chest.wav</file>
+        <file>audio/get_fruit.wav</file>
         <file>audio/upgrade.wav</file>
-        <file>audio/materialPicking.wav</file>
-        <file>audio/fire.wav</file>
+        <file>audio/get_material.wav</file>
+        <file>audio/attack_smg.wav</file>
+        <file>audio/attack_spear.wav</file>
         <file>audio/click.wav</file>
         <file>audio/hover.wav</file>
     </qresource>

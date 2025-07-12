@@ -109,36 +109,6 @@ Item {
         recyclingAndsynthesizingSound.play()
     }
 
-    //开火音效
-    SoundEffect {
-        id: fireSound
-        source: "qrc:/audio/fire.wav"
-        volume: sVolume
-    }
-    function playFireSound() {
-        fireSound.play()
-    }
-
-    //材料拾取音效
-    SoundEffect {
-        id: materialPickingSound
-        source: "qrc:/audio/materialPicking.wav"
-        volume: sVolume
-    }
-    function playMaterialPickingSound() {
-        materialPickingSound.play()
-    }
-
-    //拾取箱子音效
-    SoundEffect {
-        id: pickBoxSound
-        source: "qrc:/audio/pickBox.wav"
-        volume: sVolume
-    }
-    function playPickBoxSound() {
-        pickBoxSound.play()
-    }
-
     //升级音效
     SoundEffect {
         id: upgradeSound

@@ -22,8 +22,8 @@ Image {
     }
 
     SoundEffect {
-        id: materialPickingSound
-        source: "qrc:/audio/materialPicking.wav"
+        id: getSound
+        source: "qrc:/audio/get_fruit.wav"
         volume: 0.6
     }
 
@@ -54,20 +54,10 @@ Image {
         }
 
         onStopped: {
-            materialPickingSound.play()
+            getSound.play()
             target.getFruit(fruit)
             fruit.visible=false
-            waitDestroyTimer.start()
-        }
-    }
-
-    Timer {
-        id: waitDestroyTimer
-        interval: 400
-        running: false
-        repeat: false
-        onTriggered: {
-            fruit.destroy()
+            fruit.destroy(700)
         }
     }
 }

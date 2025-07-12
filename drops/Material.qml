@@ -41,8 +41,8 @@ Item {
     }
 
     SoundEffect {
-        id: materialPickingSound
-        source: "qrc:/audio/materialPicking.wav"
+        id: getSound
+        source: "qrc:/audio/get_material.wav"
         volume: 0.6
     }
 
@@ -100,10 +100,10 @@ Item {
         }
 
         onStopped: {
-            materialPickingSound.play()
+            //getSound.play()
             PlayerData.remainingMaterialsNumber++
             material.visible=false
-            waitDestroyTimer.start()
+            material.destroy(700)
         }
     }
 
@@ -134,7 +134,7 @@ Item {
         }
 
         onStopped: {
-            materialPickingSound.play()
+            getSound.play()
             // 残渣掉落动画
             for (var i = 0; i < 6; i++) {
                 var radius = 13*material.scaleFactor;
@@ -145,17 +145,7 @@ Item {
             }
             target.getMaterial(material)
             material.visible=false
-            waitDestroyTimer.start()
-        }
-    }
-
-    Timer {
-        id: waitDestroyTimer
-        interval: 400
-        running: false
-        repeat: false
-        onTriggered: {
-            material.destroy()
+            material.destroy(700)
         }
     }
 

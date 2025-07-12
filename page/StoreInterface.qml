@@ -146,12 +146,12 @@ Item {
             }
 
             onClicked: {
-                // if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
+                if(PlayerData.materialsNumber >= refreshButton.currentRefreshPrice) {
                     Controller.refreshShop()
                     PlayerData.materialsNumber -= currentRefreshPrice
                     currentRefreshPrice = Controller.refreshPrice(PlayerData.currentWaveNumber)
                     sound.playClickSound()
-                // }
+                }
             }
         }
     }
@@ -280,7 +280,7 @@ Item {
 
                 Text {
                     anchors.centerIn: parent
-                    text: "出发(第" + (PlayerData.currentWaveNumber + 1) + "波)"
+                    text: "出发(第" + PlayerData.currentWaveNumber + "波)"
                     color: startButton.isHovered ? "black" : "white"
                     font.pixelSize: 32*storeInterface.scaleFactor
                     font.bold: true

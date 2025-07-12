@@ -34,8 +34,8 @@ Image {
     }
 
     SoundEffect {
-        id: pickBoxSound
-        source: "qrc:/audio/pickBox.wav"
+        id: getSound
+        source: "qrc:/audio/get_chest.wav"
         volume: 0.5
     }
 
@@ -66,20 +66,10 @@ Image {
         }
 
         onStopped: {
-            pickBoxSound.play()
+            getSound.play()
             target.getChest(chest)
             chest.visible=false
-            waitDestroyTimer.start()
-        }
-    }
-
-    Timer {
-        id: waitDestroyTimer
-        interval: 400
-        running: false
-        repeat: false
-        onTriggered: {
-            chest.destroy()
+            chest.destroy(700)
         }
     }
 }

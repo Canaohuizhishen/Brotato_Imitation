@@ -127,48 +127,6 @@ Monster{
         var x = sprayer.x + sprayer.width*2/3 - Math.cos(angle * (Math.PI / 180)) * sprayer.width *3/5
         var y = sprayer.y + sprayer.height*2/3 - Math.sin(angle * (Math.PI / 180)) * sprayer.height *3/5
         sprayer.parent.spawnBullet(x,y,sprayer.width / 2,sprayer.width / 2,sprayer.monsterData.damage,sprayer.sprayRange,180-angle,Qt.rgba(1, 0, 0, 1))
-        // var bullet = Qt.createQmlObject(
-        //             `import QtQuick 2.15;
-        //             Canvas {
-        //                 id: bullet
-        //                 width: ${sprayer.width / 2}
-        //                 height: width
-        //                 objectName: "子弹"
-        //                 x: ${x - width / 2}
-        //                 y: ${y - height / 2}
-        //                 z: 5
-        //                 property int damage: ${sprayer.monsterData.damage}
-        //                 onPaint: {
-        //                     var ctx = getContext("2d")
-        //                     var gradient = ctx.createRadialGradient(
-        //                         width / 2, height / 2, 0,
-        //                         width / 2, height / 2, Math.max(width / 2, height / 2)
-        //                     )
-        //                     gradient.addColorStop(0, Qt.rgba(1, 1, 1, 1))
-        //                     gradient.addColorStop(0.38, Qt.rgba(1, 1, 1, 1))
-        //                     gradient.addColorStop(0.5, Qt.rgba(1, 0.2, 0.2, 1))
-        //                     gradient.addColorStop(0.75, Qt.rgba(1, 0, 0, 1))
-        //                     gradient.addColorStop(1, Qt.rgba(1, 0, 0, 0))
-        //                     ctx.fillStyle = gradient
-        //                     ctx.beginPath()
-        //                     ctx.ellipse(0, 0, width, height)
-        //                     ctx.fill()
-        //                 }
-        //                 Component.onCompleted: {
-        //                     shoot.start()
-        //                 }
-        //                 ParallelAnimation {
-        //                     id: shoot
-        //                     running: false
-        //                     property int range: ${sprayer.sprayRange}
-        //                     NumberAnimation { target: bullet; property: "x"; to: ${x - Math.cos(angle * (Math.PI / 180)) * sprayer.sprayRange}; loops: 1; duration: 3 * shoot.range; easing.type: Easing.Linear }
-        //                     NumberAnimation { target: bullet; property: "y"; to: ${y - Math.sin(angle * (Math.PI / 180)) * sprayer.sprayRange}; loops: 1; duration: 3 * shoot.range; easing.type: Easing.Linear }
-        //                     onStopped: bullet.destroy()
-        //                 }
-        //             }`,
-        //             sprayer.bulletsParent,
-        //             "dynamicImage"
-        //         );
     }
 
     function makeRedMask(parent){

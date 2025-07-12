@@ -1,5 +1,4 @@
 import QtQuick 2.15
-import QtMultimedia
 
 RangedWeapon {
     id: smg
@@ -13,12 +12,6 @@ RangedWeapon {
             flame.resume()
             fireAnimation.resume()
         }
-    }
-
-    SoundEffect {
-        id: fireSound
-        source: "qrc:/audio/fire.wav"
-        volume: 0.35
     }
 
     Canvas {
@@ -134,8 +127,7 @@ RangedWeapon {
     }
 
     function fire(){
-        inFire = true
-        fireSound.play()
+        attackSound.play()
         if(isFaceRight){
             backAnimation.angle=-rotation
         }else backAnimation.angle=180-rotation
