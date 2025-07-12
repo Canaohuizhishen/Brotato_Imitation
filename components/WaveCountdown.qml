@@ -20,6 +20,7 @@ Item {
             PlayerData.isInCombat=false
         }
     }
+
     onRunningChanged: {
         if(running==true){
             remainingTime=totalTime
@@ -27,7 +28,6 @@ Item {
             PlayerData.curXp+=PlayerData.harvesting
             PlayerData.materialsNumber+=PlayerData.harvesting
             PlayerData.harvesting=Math.ceil(PlayerData.harvesting*1.05)
-            PlayerData.lastWaveNumber=PlayerData.currentWaveNumber
         }
     }
 

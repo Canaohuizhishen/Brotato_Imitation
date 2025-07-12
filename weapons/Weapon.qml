@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtMultimedia
 import "../tool.js" as Tool
 import "../components"
 import "../data"
@@ -9,11 +10,11 @@ Item {
     property string weaponName
     property int grade: 1
     property double scaleFactor: 1
-    //transformOrigin: Item.Left
     property var bulletsParent: parent
     property var originPos: Qt.point(weapon.x,weapon.y)
     property var core: weaponCore.getWeapon(weapon.weaponName,grade)
     property var targetPoint: null
+    property alias  attackSound: attackSound
     property bool active: true
     property bool paused: true
     property bool isFaceRight: true
@@ -47,6 +48,12 @@ Item {
             _lastTargetPoint = null
             rotationReset()
         }
+    }
+
+    SoundEffect {
+        id: attackSound
+        source: "qrc:/audio/attack_"+weapon.core.objectName+".wav"
+        volume: 0.6
     }
 
     Image{

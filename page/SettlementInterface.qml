@@ -42,7 +42,7 @@ Item {
 
         Text {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: (PlayerData.currentWaveNumber>=20 ? "胜利" : "战败")+"  第"+PlayerData.currentWaveNumber+"波-危险"+PlayerData.difficulty
+            text: (PlayerData.curHp>0 ? "胜利" : "战败")+"  第"+PlayerData.currentWaveNumber+"波-危险"+PlayerData.difficulty
             color: "white"
             font.pointSize: 21*settlementInterface.scaleFactor
             style: Text.Outline

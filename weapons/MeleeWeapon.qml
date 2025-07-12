@@ -3,12 +3,31 @@ import "../components"
 
 Weapon {
     id: meleeWeapon
+    property var meleeBullet
 
     onPausedChanged: {
         if(paused==true){
             fireTimer.pause()
         }else{
             fireTimer.resume()
+        }
+    }
+
+    Component.onCompleted: {
+        createMeleeBulletTimer.start()
+    }
+
+    onActiveChanged: {
+        if(meleeBullet===null)meleeWeapon.meleeBullet=meleeWeapon.createMeleeBullet()
+    }
+
+    Timer {
+        id: createMeleeBulletTimer
+        interval: 100
+        running: false
+        repeat: false
+        onTriggered: {
+            meleeWeapon.meleeBullet=meleeWeapon.createMeleeBullet()
         }
     }
 
@@ -35,5 +54,17 @@ Weapon {
                 meleeWeapon.inCoolDown=true
             }
         }
+    }
+
+    function createMeleeBullet(){
+        var bulletComponent = Qt.createComponent("../bullets/MeleeBullet.qml")
+        if (bulletComponent.status === Component.Ready) {
+            var bullet = bulletComponent.createObject(bulletsParent);
+            bullet.target=meleeWeapon
+            bullet.critical=core.critical
+            bullet.criticalDamageRate=core.criticalDamageRate
+            bullet.damage=core.damage
+        }else console.error("Error loading component:", bulletComponent.errorString())
+        return bullet
     }
 }

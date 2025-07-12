@@ -3,7 +3,7 @@ import QtQuick 2.15
 MeleeWeapon {
     id: spear
     weaponName: "spear"
-    property var meleeBullet
+    property double fireRotation: 0
 
     onPausedChanged: {
         if(paused==true){
@@ -18,20 +18,6 @@ MeleeWeapon {
             meleeBullet.inHitCoolDown=false
         }else{
             meleeBullet.inHitCoolDown=true
-        }
-    }
-
-    Component.onCompleted: {
-        sleepTimer.start()
-    }
-
-    Timer {
-        id: sleepTimer
-        interval: 100
-        running: false
-        repeat: false
-        onTriggered: {
-            spear.meleeBullet=spear.createMeleeBullet()
         }
     }
 
@@ -72,22 +58,11 @@ MeleeWeapon {
     }
 
     function fire(){
+        attackSound.play()
         inFire=true
         if(isFaceRight){
             fireAnimation.angle=-rotation
         }else fireAnimation.angle=180-rotation
         fireAnimation.start()
-    }
-
-    function createMeleeBullet(){
-        var bulletComponent = Qt.createComponent("../bullets/MeleeBullet.qml")
-        if (bulletComponent.status === Component.Ready) {
-            var bullet = bulletComponent.createObject(bulletsParent);
-            bullet.target=spear
-            bullet.critical=core.critical
-            bullet.criticalDamageRate=core.criticalDamageRate
-            bullet.damage=core.damage
-        }else console.error("Error loading component:", bulletComponent.errorString())
-        return bullet
     }
 }

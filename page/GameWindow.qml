@@ -289,20 +289,18 @@ Item {
             State {
                 name: "notInCombat"; when: (!PlayerData.isInCombat && !gameWindow.inSelectInterface)
                 PropertyChanges { delayOvertimer.running: true }
-                StateChangeScript {
-                    script: {
-                        if(!waveCountdown.remainingTime){
-                            if(PlayerData.currentWaveNumber<20)Tool.createText(gameWindow,"通过!",40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
-                            else Tool.createText(gameWindow,"胜利!",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
-                        }
-                    }
-                }
             },
             State {
                 name: "inCombat"; when: (PlayerData.isInCombat)
                 PropertyChanges { storeInterface.visible: false }
             }
         ]
+        onRemainingTimeChanged: {
+            if(remainingTime==0){
+                if(PlayerData.currentWaveNumber<20)Tool.createText(gameWindow,"通过!",40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
+                else Tool.createText(gameWindow,"胜利!",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
+            }
+        }
         onPausedChanged: {
             if(paused==true){
                 delayOvertimer.pause()

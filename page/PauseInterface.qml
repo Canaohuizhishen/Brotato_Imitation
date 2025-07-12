@@ -10,7 +10,7 @@ Rectangle {
     color: Qt.rgba(0,0,0,0.85)
     visible: true
     focus: true
-    z: 200
+    z: 400
     property double scaleFactor: 1.0
     property alias continueButton: continueButton
     property alias restartButton: restartButton

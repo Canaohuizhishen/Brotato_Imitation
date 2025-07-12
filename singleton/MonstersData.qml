@@ -371,7 +371,12 @@ Item {
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
-        readonly property double countIcreaseRation: 0.05
-        function init(){ initCount=0; countRation=1 }
+        readonly property double countIcreaseRation: -1
+
+
+        function init(){
+            initCount=0
+            countRation=1
+        }
     }
 }
