@@ -19,6 +19,29 @@ Item {
         id: weaponCore
     }
 
+    function getCurPrice() {
+        var basePrice
+        if (itemData.type === "道具") {
+            basePrice = itemData.basePrice
+        } else {
+            var w = Controller.getSpecificWeapon()
+            basePrice = w ? w.basePrice : itemData.basePrice
+        }
+        return Math.ceil(basePrice * Math.pow(1.1, PlayerData.currentWaveNumber) * PlayerData.goodsDiscountRate)
+    }
+
+    function getTalentText() {
+        if (itemData.type === "道具") {
+            return itemData.talentText
+        } else {
+            var w = Controller.getSpecificWeapon()
+            return w ? weaponCore.renderWeaponTalentText(w) : ""
+        }
+    }
+
+    property int curPrice: getCurPrice()
+    property string talentText: getTalentText()
+
     Rectangle {
         id: backGround
         color: itemData.type === "道具" ? Color.getBackgroundColor(itemData.grade)
@@ -87,8 +110,7 @@ Item {
                 anchors.top: goodsImageBackground.bottom
                 anchors.topMargin: 10*shopItem.scaleFactor
                 anchors.left: goodsImageBackground.left
-                text: itemData.type === "道具" ? itemData.talentText
-                                             : Controller.getSpecificWeapon().talentText
+                text: talentText
                 font.pixelSize: 15*shopItem.scaleFactor
             }
 
@@ -119,10 +141,8 @@ Item {
 
                         Text {
                             // text: "" + itemData.price
-                            text: itemData.type === "道具"
-                                  ? itemData.curPrice
-                                : Controller.getSpecificWeapon().curPrice
-                            color: PlayerData.materialsNumber < (itemData.type === "道具" ? itemData.curPrice : Controller.getSpecificWeapon().curPrice)
+                            text: curPrice
+                            color: PlayerData.materialsNumber < curPrice
                                    ? "red" : (buyButton.hovered ? "black" : "white")
                             font.pixelSize: 22*shopItem.scaleFactor
                             font.bold: true
@@ -137,15 +157,9 @@ Item {
                 }
 
                 onReleased: {
-                    if(PlayerData.materialsNumber >= (itemData.type === "道具" ? itemData.curPrice : Controller.getSpecificWeapon().curPrice)) {
-                        if(itemData.type === "道具") {
-                            if(Controller.buyItem(itemIndex)) {
-                                PlayerData.materialsNumber -= itemData.curPrice
-                            }
-                        } else {
-                            if(Controller.buyItem(itemIndex)) {
-                                PlayerData.materialsNumber -= Controller.getSpecificWeapon().curPrice
-                            }
+                    if(PlayerData.materialsNumber >= curPrice) {
+                        if(Controller.buyItem(itemIndex)) {
+                            PlayerData.materialsNumber -= curPrice
                         }
                     }
                 }

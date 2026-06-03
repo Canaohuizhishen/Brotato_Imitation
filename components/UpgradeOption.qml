@@ -185,7 +185,8 @@ Rectangle {
                 }
             }
             onClicked: {
-                core.getUpgradeOption(root.grade,root.optionName).choose()
+                var opt = core.getUpgradeOption(root.grade,root.optionName)
+                if(opt) core.applyOptionEffects(opt)
                 sound.playClickSound()
             }
         }

@@ -90,3 +90,6 @@ CMakeLists.txt.user*
 *vpp.lck
 
 build/
+
+# Reasonix tooling
+.reasonix/

@@ -19,6 +19,7 @@ qt_add_qml_module(appBrotato
     RESOURCES images.qrc
     QML_FILES tool.js
     RESOURCES singleton.qrc
+    RESOURCES data/data.qrc
     QML_FILES components/ExperienceBar.qml
     QML_FILES components/DifficultyCard.qml components/Fork.qml components/HealthBar.qml components/LockCard.qml components/RecardCard.qml components/RoleCard.qml components/WaveCountdown.qml components/WaveNumberText.qml components/WeaponCard.qml
     QML_FILES weapons/SMG.qml
@@ -47,6 +48,7 @@ qt_add_qml_module(appBrotato
     QML_FILES components/TimerCanPause.qml
     QML_FILES page/StoreInterface.qml
     QML_FILES logic/ShopLogicHandler.js
+    QML_FILES logic/DataLoader.js
     QML_FILES components/PropsBar.qml
     QML_FILES components/PropItem.qml
     QML_FILES components/WeaponsBar.qml

@@ -51,7 +51,7 @@ Item {
     onRoleNameChanged: {
         if(roleName==="")return
         var roleData=core.getRole(roleName)
-        roleData.setInitRoleAttributes()
+        core.applyRoleEffects(roleData)
         faceRight()
     }
 

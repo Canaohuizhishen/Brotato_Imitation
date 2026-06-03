@@ -1,0 +1,38 @@
+[
+  {
+    "objectName": "spear",
+    "weaponName": "长矛",
+    "type": "原始",
+    "source": "Spear.qml",
+    "aspectRatio": 0.1634,
+    "scaleRatio": 2.5,
+    "xOffset": -22,
+    "yOffset": -5,
+    "handX": 22.5,
+    "handY": 7.5,
+    "grades": [
+      { "grade": 1, "baseDamage": 15, "meleeDamageMultiplier": 1.0, "baseCooldown": 1.52, "baseRange": 350, "basePrice": 20 },
+      { "grade": 2, "baseDamage": 25, "meleeDamageMultiplier": 1.0, "baseCooldown": 1.40, "baseRange": 375, "basePrice": 39 },
+      { "grade": 3, "baseDamage": 40, "meleeDamageMultiplier": 1.0, "baseCooldown": 1.28, "baseRange": 400, "basePrice": 74 },
+      { "grade": 4, "baseDamage": 60, "meleeDamageMultiplier": 1.0, "baseCooldown": 1.24, "baseRange": 500, "basePrice": 149 }
+    ]
+  },
+  {
+    "objectName": "smg",
+    "weaponName": "冲锋枪",
+    "type": "枪械",
+    "source": "SMG.qml",
+    "aspectRatio": 0.683,
+    "scaleRatio": 1.0,
+    "xOffset": -2,
+    "yOffset": 0,
+    "handX": 9,
+    "handY": 16,
+    "grades": [
+      { "grade": 1, "baseDamage": 3, "rangedDamageMultiplier": 0.5, "baseCooldown": 0.17, "baseRange": 400, "basePrice": 20 },
+      { "grade": 2, "baseDamage": 4, "rangedDamageMultiplier": 0.6, "baseCooldown": 0.17, "baseRange": 400, "basePrice": 39 },
+      { "grade": 3, "baseDamage": 5, "rangedDamageMultiplier": 0.7, "baseCooldown": 0.17, "baseRange": 400, "basePrice": 74 },
+      { "grade": 4, "baseDamage": 8, "rangedDamageMultiplier": 0.8, "baseCooldown": 0.17, "baseRange": 400, "basePrice": 149 }
+    ]
+  }
+]

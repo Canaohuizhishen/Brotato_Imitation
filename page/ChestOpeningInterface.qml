@@ -89,7 +89,7 @@ Item {
                     // PlayerData.addProp(propCard.propName)
                     Controller.mergeDuplicateProps(propCard.propName)
                     // console.log(propCard.propName)
-                    propCard.core.apply()
+                    propCard.propCore.applyEffects(propCard.core.effects)
                     attributePanel.upData()
                     chestNotificationBar.reduceChest()
                     processedOne()

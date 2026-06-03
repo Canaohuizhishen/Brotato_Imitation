@@ -153,7 +153,7 @@ Item {
                     return null
                 }
                 // text: Controller.getSpecificWeapon().talentText
-                text: specificWeapon ? specificWeapon.talentText : ""
+                text: specificWeapon ? weaponCore.renderWeaponTalentText(specificWeapon) : ""
                 font.pixelSize: 13*root.scaleFactor
                 font.weight: Font.DemiBold
 

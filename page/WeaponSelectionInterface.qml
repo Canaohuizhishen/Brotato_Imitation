@@ -84,13 +84,13 @@ Item {
         cellWidth: 68*weaponSelectionInterface.scaleFactor
         cellHeight: cellWidth
         interactive: false
-        property int canUsedWeaponNumber: weaponCore.children.length
+        property int canUsedWeaponNumber: weaponCore.getAllWeapons().length
         property bool currentItemIsWeapon: currentItem.name!=="question"
         model: ListModel{
             Component.onCompleted: {
-                for(var i=0;i<weaponCore.children.length;i++){
-                    var weapon=weaponCore.children[i]
-                    append({ name: weapon.objectName});
+                var weapons = weaponCore.getAllWeapons()
+                for(var i=0;i<weapons.length;i++){
+                    append({ name: weapons[i].objectName});
                 }
             }
             ListElement{ name: "question" }
