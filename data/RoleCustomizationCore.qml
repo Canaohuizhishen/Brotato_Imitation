@@ -12,7 +12,8 @@ Item {
                 return core.children[i]
             }
         }
-        console.error("roleName: ",roleName,"not found")
+        console.error("RoleCustomizationCore.getRole: '" + roleName + "' not found")
+        return null
     }
 
     Item{
