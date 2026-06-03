@@ -4,7 +4,7 @@ import "../data"
 Rectangle {
     id: roleCard
     property string roleName
-    property var core: roleName == "" ? roleCore.wellRounded : roleCore.getRole(roleName)
+    property var core: roleName == "" ? roleCore.getRole("wellRounded") : roleCore.getRole(roleName)
     property double scaleFactor: 1.0
     visible: roleName != ""
     anchors.top: parent.top

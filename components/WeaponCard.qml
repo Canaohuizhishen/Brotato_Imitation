@@ -1,10 +1,11 @@
 import QtQuick 2.15
 import "../data"
+import singleton.PlayerData
 
 Rectangle {
     id: weaponCard
     property string weaponName
-    property var core: weaponName == "" ? weaponCore.smg : weaponCore.getWeapon(weaponName)
+    property var core: weaponName == "" ? weaponCore.getWeapon("smg") : weaponCore.getWeapon(weaponName)
     property double scaleFactor: 1.0
     visible: weaponName != ""
     anchors.top: parent.top
@@ -58,7 +59,7 @@ Rectangle {
     }
 
     TextEdit {
-        text: weaponCard.weaponName=="" ? "" : core.talentText
+        text: weaponCard.weaponName=="" ? "" : weaponCore.renderWeaponTalentText(core)
         font.pixelSize: 14*weaponCard.scaleFactor
         readOnly: true
         textFormat: TextEdit.RichText

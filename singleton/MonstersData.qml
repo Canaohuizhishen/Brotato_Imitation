@@ -1,11 +1,13 @@
 pragma Singleton
 import QtQuick 2.15
 import singleton.PlayerData
+import "../logic/DataLoader.js" as DataLoader
 
 Item {
     id: core
     property double velocityRate: 0.8
     property int waveNumber: PlayerData.currentWaveNumber
+
     property alias tree: tree
     property alias babyAlien: babyAlien
     property alias chaser: chaser
@@ -23,125 +25,14 @@ Item {
 
     onWaveNumberChanged: {
         init()
-        switch(waveNumber){
-        case 1:{
-            babyAlien.initCount=4
-        }break;
-        case 2:{
-            babyAlien.initCount=4
-            chaser.initCount=3
-        }break;
-        case 3:{
-            babyAlien.initCount=5
-            chaser.initCount=3
-        }break;
-        case 4:{
-            babyAlien.initCount=6
-            sprayer.initCount=2
-        }break;
-        case 5:{
-            babyAlien.initCount=4
-            chaser.initCount=3
-            sprayer.initCount=1
-        }break;
-        case 6:{
-            babyAlien.initCount=7
-            chaser.initCount=3
-            charger.initCount=4
-        }break;
-        case 7:{
-            babyAlien.initCount=3
-            charger.initCount=6
-            sprayer.initCount=3
-        }break;
-        case 8:{
-            babyAlien.initCount=4
-            sprayer.initCount=2
-            brute.initCount=3
-        }break;
-        case 9:{
-            chaser.initCount=6
-            charger.initCount=2
-            brute.initCount=2
-        }break;
-        case 10:{
-            babyAlien.initCount=4
-            chaser.initCount=4
-            charger.initCount=2
-            brute.initCount=1
-        }break;
-        case 11:{
-            babyAlien.initCount=4
-            charger.initCount=4
-            sprayer.initCount=2
-            pursuer.initCount=1
-        }break;
-        case 12:{
-            babyAlien.initCount=5
-            charger.initCount=4
-            pursuer.initCount=1
-            brute.initCount=2
-        }break;
-        case 13:{
-            babyAlien.initCount=3
-            charger.initCount=3
-            pursuer.initCount=1
-            brute.initCount=1
-            helmetBrute.initCount=2
-            helmetAlien.initCount=3
-        }break;
-        case 14:{
-            babyAlien.initCount=3
-            brute.initCount=1
-            helmetAlien.initCount=4
-            summoner.initCount=1
-        }break;
-        case 15:{
-            babyAlien.initCount=3
-            sprayer.initCount=1
-            helmetAlien.initCount=4
-            summoner.initCount=1
-            finChaser.initCount=3
-        }break;
-        case 16:{
-            babyAlien.initCount=3
-            brute.initCount=1
-            helmetAlien.initCount=4
-            finChaser.initCount=3
-            helmetBrute.initCount=1
-        }break;
-        case 17:{
-            babyAlien.initCount=3
-            pursuer.initCount=2
-            helmetAlien.initCount=4
-            finChaser.initCount=3
-            summoner.initCount=1
-        }break;
-        case 18:{
-            sprayer.initCount=2
-            helmetAlien.initCount=5
-            summoner.initCount=1
-            helmetCharger.initCount=3
-        }break;
-        case 19:{
-            babyAlien.initCount=3
-            sprayer.initCount=2
-            pursuer.initCount=2
-            helmetAlien.initCount=4
-            summoner.initCount=1
-            helmetBrute.initCount=2
-            helmetCharger.initCount=3
-        }break;
-        case 20:{
-            babyAlien.initCount=3
-            sprayer.initCount=2
-            pursuer.initCount=2
-            helmetAlien.initCount=4
-            finChaser.initCount=3
-            summoner.initCount=1
-            helmetBrute.initCount=2
-            prayer.initCount=1
-        }break;
+        var config = DataLoader.getWaveConfig(waveNumber)
+        if (!config || !config.spawns) return
+        for (var i = 0; i < config.spawns.length; i++) {
+            var spawn = config.spawns[i]
+            var monster = getMonster(spawn.monster)
+            if (monster) {
+                monster.initCount = spawn.initCount
+            }
         }
     }
 
@@ -168,7 +59,6 @@ Item {
         readonly property string source: "Tree.qml"
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 20
-
         readonly property int initHp: 3
         readonly property double hpBonus: 2
         readonly property int initVelocity: 0
@@ -178,22 +68,12 @@ Item {
         readonly property int materialDrops: 3
         readonly property double consumableDropRate: 1*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.05*(1+PlayerData.luck/100)
-
         property int initCount: 1
         property int curNumber: 0
         property double countRation: 0.9
         readonly property double countIcreaseRation: 0.05
-
-        onCountRationChanged: {
-            if(countRation>=1+countIcreaseRation){
-                countRation=0.8
-            }
-        }
-
-        function init(){
-            initCount=1
-            countRation=0.9
-        }
+        onCountRationChanged: { if(countRation>=1+countIcreaseRation) countRation=0.8 }
+        function init(){ initCount=1; countRation=0.9 }
     }
 
     Item{
@@ -203,7 +83,6 @@ Item {
         readonly property string source: "BabyAlien.qml"
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 50
-
         readonly property int initHp: 3
         readonly property double hpBonus: 2
         readonly property int initVelocity: 250*core.velocityRate
@@ -213,16 +92,11 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.01*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.01*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -232,7 +106,6 @@ Item {
         readonly property string source: "Chaser.qml"
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 25
-
         readonly property int initHp: 1
         readonly property double hpBonus: 1
         readonly property int initVelocity: 380*core.velocityRate
@@ -242,16 +115,11 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.02*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.03*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -261,7 +129,6 @@ Item {
         readonly property string source: "Sprayer.qml"
         readonly property int attackRange: 400
         readonly property int maxCurNumber: 15
-
         readonly property int initHp: 8
         readonly property double hpBonus: 1
         readonly property int initVelocity: 200*core.velocityRate
@@ -271,16 +138,11 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.03*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.1*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -290,7 +152,6 @@ Item {
         readonly property string source: "Charger.qml"
         readonly property int attackRange: 200
         readonly property int maxCurNumber: 15
-
         readonly property int initHp: 4
         readonly property double hpBonus: 2.5
         readonly property int initVelocity: 400*core.velocityRate
@@ -300,16 +161,11 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.01*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.01*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -319,7 +175,6 @@ Item {
         readonly property string source: "Brute.qml"
         readonly property int attackRange: 300
         readonly property int maxCurNumber: 10
-
         readonly property int initHp: 20
         readonly property double hpBonus: 11
         readonly property int initVelocity: 300*core.velocityRate
@@ -329,16 +184,11 @@ Item {
         readonly property int materialDrops: 3
         readonly property double consumableDropRate: 0.03*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.03*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -348,7 +198,6 @@ Item {
         readonly property string source: "Pursuer.qml"
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 10
-
         readonly property int initHp: 10
         readonly property double hpBonus: 2.4
         readonly property int initVelocity: 150*core.velocityRate
@@ -358,16 +207,11 @@ Item {
         readonly property int materialDrops: 3
         readonly property double consumableDropRate: 0.03*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.03*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -377,7 +221,6 @@ Item {
         readonly property string source: "HelmetAlien.qml"
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 30
-
         readonly property int initHp: 8
         readonly property double hpBonus: 3
         readonly property int initVelocity: 225*core.velocityRate
@@ -387,16 +230,11 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.01*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.01*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -406,7 +244,6 @@ Item {
         readonly property string source: "FinChaser.qml"
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 25
-
         readonly property int initHp: 12
         readonly property double hpBonus: 2
         readonly property int initVelocity: 400*core.velocityRate
@@ -416,16 +253,11 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.02*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.03*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -435,7 +267,6 @@ Item {
         readonly property string source: "Summoner.qml"
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 10
-
         readonly property int initHp: 10
         readonly property double hpBonus: 1
         readonly property int initVelocity: 120*core.velocityRate
@@ -445,16 +276,11 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.01*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.01*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -464,7 +290,6 @@ Item {
         readonly property string source: "Scavenger.qml"
         readonly property int attackRange: 10000
         readonly property int maxCurNumber: 30
-
         readonly property int initHp: 20
         readonly property double hpBonus: 5
         readonly property int initVelocity: 350*core.velocityRate
@@ -474,16 +299,11 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.01*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.01*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -493,7 +313,6 @@ Item {
         readonly property string source: "HelmetBrute.qml"
         readonly property int attackRange: 300
         readonly property int maxCurNumber: 10
-
         readonly property int initHp: 30
         readonly property double hpBonus: 22
         readonly property int initVelocity: 300*core.velocityRate
@@ -503,16 +322,11 @@ Item {
         readonly property int materialDrops: 3
         readonly property double consumableDropRate: 0.03*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.03*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -522,7 +336,6 @@ Item {
         readonly property string source: "HelmetCharger.qml"
         readonly property int attackRange: 200
         readonly property int maxCurNumber: 15
-
         readonly property int initHp: 12
         readonly property double hpBonus: 5
         readonly property int initVelocity: 425*core.velocityRate
@@ -532,16 +345,11 @@ Item {
         readonly property int materialDrops: 1
         readonly property double consumableDropRate: 0.01*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.01*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 
     Item{
@@ -551,7 +359,6 @@ Item {
         readonly property string source: "Prayer.qml"
         readonly property int attackRange: 10000
         readonly property int maxCurNumber: 1
-
         readonly property int initHp: 29900
         readonly property double hpBonus: 0
         readonly property int initVelocity: 175*core.velocityRate
@@ -561,16 +368,10 @@ Item {
         readonly property int materialDrops: 10
         readonly property double consumableDropRate: 0*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0*(1+PlayerData.luck/100)
-
         property int initCount: 0
         property int curNumber: 0
         property double countRation: 1
         readonly property double countIcreaseRation: 0.05
-
-
-        function init(){
-            initCount=0
-            countRation=1
-        }
+        function init(){ initCount=0; countRation=1 }
     }
 }

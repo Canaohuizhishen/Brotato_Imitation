@@ -87,13 +87,14 @@ Item {
         cellWidth: 68*roleSelectionInterface.scaleFactor
         cellHeight: cellWidth
         interactive: false
-        property int canUsedRoleNumber: roleCore.children.length
+        property var _allRoles: roleCore.getAllRoles()
+        property int canUsedRoleNumber: _allRoles.length
         property bool currentItemIsRole: currentItem.name!=="question" && currentItem.name!=="lock"
         model: ListModel{
             Component.onCompleted: {
-                for(var i=0;i<roleCore.children.length;i++){
-                    var role=roleCore.children[i]
-                    append({ name: role.objectName});
+                var roles = roleCore.getAllRoles()
+                for(var i=0;i<roles.length;i++){
+                    append({ name: roles[i].objectName});
                 }
                 while(roleGrid.count<49){
                     append({ name: "lock"});

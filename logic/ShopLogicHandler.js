@@ -100,7 +100,7 @@ function buyItem(itemIndex)
     if(purchasedItem.goods.type === "道具") {
         // PlayerData.shopContext._purchasedPropsModel.append({propItem: purchasedItem.goods})
         mergeDuplicateProps(purchasedItem.goods.propName) //将道具合并，并加入模型
-        purchasedItem.goods.apply()
+        propCore.applyEffects(purchasedItem.goods.effects)
         attributeBar.upData()
         PlayerData.lastStoreGoods.get(itemIndex).isPurchased = true
         purchasedItem.isPurchased = true //购买了该商品后商品项就不可见

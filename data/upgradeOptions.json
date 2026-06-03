@@ -1,0 +1,130 @@
+[
+  {
+    "objectName": "leg",
+    "optionName": "腿",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>%速度</font><br>",
+    "effects": [{ "attribute": "speed", "deltaFromGrade": 3 }]
+  },
+  {
+    "objectName": "chest",
+    "optionName": "胸",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>护甲</font><br>",
+    "effects": [{ "attribute": "armor", "deltaFromGrade": 1 }]
+  },
+  {
+    "objectName": "skull",
+    "optionName": "头骨",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>工程学</font><br>",
+    "effects": [{ "attribute": "engineering", "deltaFromGrade": 2 }]
+  },
+  {
+    "objectName": "lung",
+    "optionName": "肺",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>生命恢复</font><br>",
+    "effects": [{ "attribute": "hpRegeneration", "deltaFromGrade": 2 }]
+  },
+  {
+    "objectName": "finger",
+    "optionName": "手指",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>暴击率</font><br>",
+    "effects": [{ "attribute": "critChance", "deltaFromGrade": 3 }]
+  },
+  {
+    "objectName": "back",
+    "optionName": "背",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>闪避</font><br>",
+    "effects": [{ "attribute": "dodge", "deltaFromGrade": 3 }]
+  },
+  {
+    "objectName": "teeth",
+    "optionName": "牙齿",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>生命窃取</font><br>",
+    "effects": [{ "attribute": "lifeSteal", "deltaFromGrade": 1 }]
+  },
+  {
+    "objectName": "heart",
+    "optionName": "心脏",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>最大生命值</font><br>",
+    "effects": [{ "attribute": "maxHp", "deltaFromGrade": 3 }, { "attribute": "curHp", "deltaFromGrade": 3 }]
+  },
+  {
+    "objectName": "brain",
+    "optionName": "脑",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>元素伤害</font><br>",
+    "effects": [{ "attribute": "elementalDamage", "deltaFromGrade": 1 }]
+  },
+  {
+    "objectName": "reflexes",
+    "optionName": "反应能力",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>攻击速度</font><br>",
+    "effects": [{ "attribute": "attackSpeed", "deltaFromGrade": 5 }]
+  },
+  {
+    "objectName": "nose",
+    "optionName": "鼻",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>幸运</font><br>",
+    "effects": [{ "attribute": "luck", "deltaFromGrade": 5 }]
+  },
+  {
+    "objectName": "hand",
+    "optionName": "手",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>收获</font><br>",
+    "effects": [{ "attribute": "harvesting", "deltaFromGrade": 5 }]
+  },
+  {
+    "objectName": "shoulder",
+    "optionName": "肩",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>远程伤害</font><br>",
+    "effects": [{ "attribute": "rangedDamage", "deltaFromGrade": 1 }]
+  },
+  {
+    "objectName": "foream",
+    "optionName": "前臂",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>近战伤害</font><br>",
+    "effects": [{ "attribute": "meleeDamage", "deltaFromGrade": 2 }]
+  },
+  {
+    "objectName": "triceps",
+    "optionName": "三头肌",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>伤害</font><br>",
+    "effects": [{ "attribute": "damage", "deltaFromGrade": 5 }]
+  },
+  {
+    "objectName": "eyes",
+    "optionName": "眼睛",
+    "grade": 1,
+    "type": "升级",
+    "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>范围</font><br>",
+    "effects": [{ "attribute": "range", "deltaFromGrade": 15 }]
+  }
+]

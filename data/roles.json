@@ -1,0 +1,22 @@
+[
+  {
+    "objectName": "wellRounded",
+    "roleName": "全能者",
+    "talentText": "<font color='lime'>+5</font><font color='white'> 最大生命值</font><br>\n<font color='lime'>+5</font><font color='white'> %速度</font><br>\n<font color='lime'>+8</font><font color='white'> 收获</font>",
+    "effects": [
+      { "attribute": "maxHp", "condition": "lt", "conditionValue": 15, "setTo": 15 },
+      { "attribute": "curHp", "setToProp": "maxHp" },
+      { "attribute": "speed", "condition": "lt", "conditionValue": 5, "setTo": 5 },
+      { "attribute": "harvesting", "condition": "lt", "conditionValue": 8, "setTo": 8 }
+    ]
+  },
+  {
+    "objectName": "mutant",
+    "roleName": "异变体",
+    "talentText": "<font color='white'>升级需要</font><font color='lime'>-66%</font><font color='white'>经验值</font><br>\n<font color='red'>+50</font><font color='white'> %道具价格</font>",
+    "effects": [
+      { "attribute": "expDiscountRate", "condition": "lt", "conditionValue": 0.33, "setTo": 0.33 },
+      { "attribute": "goodsDiscountRate", "condition": "lt", "conditionValue": 1.5, "setTo": 1.5 }
+    ]
+  }
+]

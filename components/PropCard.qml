@@ -5,6 +5,7 @@ import "../color.js" as Color
 Item {
     id: propCard
     property string propName
+    property alias propCore: propCore
     property var core: propName=="" ? propCore.getProp("斗篷") : propCore.getProp(propName)
     property double scaleFactor: 1.0
     width: 280*propCard.scaleFactor

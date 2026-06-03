@@ -6,7 +6,7 @@ Item {
     id: root
     property double scaleFactor: 1.0
     property var itemName
-    property var itemData
+    property var itemData: ({ grade: 1, objectName: "", propName: "", type: "", talentText: "" })
     property int propNum : 1
     property bool inUp: true
     property bool inLeft: true
