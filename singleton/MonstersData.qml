@@ -147,9 +147,12 @@ Item {
 
     function getMonster(monsterName){
         for(var i=0;i<core.children.length;i++){
-            if(core.children[i].objectName===monsterName || core.children[i].monsterName===monsterName)break
+            if(core.children[i].objectName===monsterName || core.children[i].monsterName===monsterName){
+                return core.children[i]
+            }
         }
-        return core.children[i]
+        console.error("MonstersData.getMonster: '" + monsterName + "' not found")
+        return null
     }
 
     function init(){

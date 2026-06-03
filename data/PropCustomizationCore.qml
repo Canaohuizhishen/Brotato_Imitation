@@ -290,7 +290,7 @@ Item {
         <font color='red'>-1</font><font color='white'>最大生命值</font><br>
         `
         function apply(){
-            PlayerData.elementalDamag+=2
+            PlayerData.elementalDamage+=2
             PlayerData.maxHp-=1
         }
     }
@@ -549,7 +549,7 @@ Item {
         `
         function apply(){
             PlayerData.luck+=10
-            PlayerData.Damage-=2
+            PlayerData.damage-=2
         }
     }
     Item{
@@ -621,6 +621,7 @@ Item {
         <font color='lime'>+8</font><font color='white'>收获</font><br>
         <font color='red'>-1</font><font color='white'>近战伤害</font><br>
         `
+        // TODO: 数值与talentText描述不一致（代码-2近战伤害，描述-1近战伤害）
         function apply(){
             PlayerData.harvesting+=8
             PlayerData.meleeDamage-=2
