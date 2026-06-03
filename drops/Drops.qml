@@ -68,26 +68,14 @@ Item {
         }
     }
 
-    Timer {
-        id: collidingTimer
-        interval: 200
-        running: drops.active
-        repeat: true
-        onTriggered: {
-            for(var i=0;i<drops.children.length;i++){
-                var child=drops.children[i]
-                if(child.objectName==="材料" && child.isGeted===false && !child.isDestroy){
-                    if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange*scaleFactor){
-                        child.beGetedTo(target)
-                    }
-                }else if(child.objectName==="果实" && child.isGeted===false && !child.isDestroy){
-                    if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange*scaleFactor){
-                        child.beGetedTo(target)
-                    }
-                }else if(child.objectName==="宝箱" && child.isGeted===false && !child.isDestroy){
-                    if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(drops.target.x,drops.target.y))<PlayerData.pickupRange*scaleFactor){
-                        child.beGetedTo(target)
-                    }
+    function checkDropCollisions() {
+        if (!active) return
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i]
+            if (child.isGeted || child.isDestroy) continue
+            if (Tool.getDistance(Qt.point(child.x, child.y), Qt.point(target.x, target.y)) < PlayerData.pickupRange * scaleFactor) {
+                if (child.objectName === "材料" || child.objectName === "果实" || child.objectName === "宝箱") {
+                    child.beGetedTo(target)
                 }
             }
         }

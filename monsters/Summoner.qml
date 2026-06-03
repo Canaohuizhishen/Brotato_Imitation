@@ -15,25 +15,20 @@ Monster{
         summon(3)
     }
 
-    Timer {
-        id: checkTimer
-        interval: 150
-        running: summoner.active && !summoner.paused
-        repeat: true
-        onTriggered: {
-            var distance=Tool.getDistance(Qt.point(summoner.x,summoner.y),Qt.point(summoner.target.x,summoner.target.y))
-            if(distance<summoner.stopRange && !summoner.isEscaping)summoner.isMoveStoped=true
-            else summoner.isMoveStoped=false
-            if(distance<summoner.escapeRange){
-                summoner.isEscaping=true
-                summoner.moveDirectionConverse=true
-            }else if(distance>summoner.stopRange){
-                summoner.isEscaping=false
-                summoner.moveDirectionConverse=false
-            }
-            if(summoner.isInEdge()){
-                summoner.isEscaping=false
-            }
+    function checkSummonerBehavior() {
+        if (!active || paused) return
+        var distance = Tool.getDistance(Qt.point(x, y), Qt.point(target.x, target.y))
+        if (distance < stopRange && !isEscaping) isMoveStoped = true
+        else isMoveStoped = false
+        if (distance < escapeRange) {
+            isEscaping = true
+            moveDirectionConverse = true
+        } else if (distance > stopRange) {
+            isEscaping = false
+            moveDirectionConverse = false
+        }
+        if (isInEdge()) {
+            isEscaping = false
         }
     }
 

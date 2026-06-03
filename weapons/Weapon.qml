@@ -21,6 +21,7 @@ Item {
     property bool inFire: false
     property bool inCoolDown: false
     property bool isDestroy: false //用来标记是否已销毁，因为qml的destroy()是异步方法
+    property var _lastTargetPoint: null  // 用于坐标去重，避免相同位置反复瞄准
     property double baseWidth: 45*core.scaleRatio
     width: baseWidth*scaleFactor
     height: width*core.aspectRatio
@@ -32,8 +33,20 @@ Item {
     }
 
     onTargetPointChanged: {
-        if(targetPoint!=null)aimToTarget()
-        else rotationReset()
+        if (inFire) return
+        if (targetPoint !== null) {
+            // 坐标去重：只有位置真正变化 (超过 2px 阈值) 才重新瞄准
+            // 避免 updateGoals() 每 96ms 生成新 Qt.point 对象导致瞄准被反复打断
+            if (!_lastTargetPoint
+                || Math.abs(targetPoint.x - _lastTargetPoint.x) > 2
+                || Math.abs(targetPoint.y - _lastTargetPoint.y) > 2) {
+                aimToTarget()
+                _lastTargetPoint = Qt.point(targetPoint.x, targetPoint.y)
+            }
+        } else {
+            _lastTargetPoint = null
+            rotationReset()
+        }
     }
 
     Image{

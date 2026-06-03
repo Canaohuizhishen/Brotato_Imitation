@@ -126,6 +126,7 @@ RangedWeapon {
         onStopped: {
             smg.x=smg.originPos.x
             smg.y=smg.originPos.y
+            inFire = false
         }
         function pause(){
             if(running)paused=true
@@ -133,6 +134,7 @@ RangedWeapon {
     }
 
     function fire(){
+        inFire = true
         fireSound.play()
         if(isFaceRight){
             backAnimation.angle=-rotation

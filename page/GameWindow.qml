@@ -140,6 +140,15 @@ Item {
         }
     }
 
+    FPSCounter {
+        id: fpsCounter
+        gameLoop: gameArea.gameLoop
+        anchors.right: parent.right
+        anchors.rightMargin: 12
+        anchors.top: parent.top
+        anchors.topMargin: 8
+    }
+
     GameArea {
         id: gameArea
         target: gameWindow

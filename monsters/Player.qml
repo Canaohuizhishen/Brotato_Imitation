@@ -25,7 +25,7 @@ Item {
     property bool isFaceRight: true
 
     property int interval: 5
-    property double v: 500*scaleFactor*(1+PlayerData.speed/100)*0.8
+    property double v: 500*scaleFactor*(1+PlayerData.speed/100)*0.8*5/6
     property double stepSize: v*interval/1200
     property double diagonalStepSize: stepSize*0.7
 
@@ -33,6 +33,7 @@ Item {
     property bool sPressed: false
     property bool aPressed: false
     property bool dPressed: false
+    property var keysPressed: ({ "W": false, "A": false, "S": false, "D": false })
 
     signal faceLefted()
     signal faceRighted()
@@ -201,7 +202,6 @@ Item {
         },
         State {
             name: "up"; when: (player.wPressed && !player.sPressed && ((!player.aPressed && !player.dPressed)||(player.aPressed && player.dPressed)))
-            PropertyChanges { target: pressW; running: true }
             StateChangeScript {
                 script: {
                     playerAnimation.faster()
@@ -210,7 +210,6 @@ Item {
         },
         State {
             name: "down"; when: (player.sPressed && !player.wPressed && ((!player.aPressed && !player.dPressed)||(player.aPressed && player.dPressed)))
-            PropertyChanges { target: pressS; running: true }
             StateChangeScript {
                 script: {
                     playerAnimation.faster()
@@ -219,7 +218,6 @@ Item {
         },
         State {
             name: "left"; when: (player.aPressed && !player.dPressed && ((!player.wPressed && !player.sPressed)||(player.wPressed && player.sPressed)))
-            PropertyChanges { target: pressA; running: true }
             StateChangeScript {
                 script: {
                     player.faceLeft()
@@ -229,7 +227,6 @@ Item {
         },
         State {
             name: "right"; when: (player.dPressed && !player.aPressed && ((!player.wPressed && !player.sPressed)||(player.wPressed && player.sPressed)))
-            PropertyChanges { target: pressD; running: true }
             StateChangeScript {
                 script: {
                     player.faceRight()
@@ -239,9 +236,6 @@ Item {
         },
         State {
             name: "upLeft"; when: (player.wPressed && player.aPressed && !player.sPressed && !player.dPressed)
-            PropertyChanges { target: pressW; running: false }
-            PropertyChanges { target: pressA; running: false }
-            PropertyChanges { target: pressWA; running: true }
             StateChangeScript {
                 script: {
                     player.faceLeft();
@@ -251,9 +245,6 @@ Item {
         },
         State {
             name: "downLeft"; when: (player.sPressed && player.aPressed && !player.wPressed && !player.dPressed)
-            PropertyChanges { target: pressS; running: false }
-            PropertyChanges { target: pressA; running: false }
-            PropertyChanges { target: pressSA; running: true }
             StateChangeScript {
                 script: {
                     player.faceLeft();
@@ -263,9 +254,6 @@ Item {
         },
         State {
             name: "upRight"; when: (player.wPressed && player.dPressed && !player.sPressed && !player.aPressed)
-            PropertyChanges { target: pressW; running: false }
-            PropertyChanges { target: pressD; running: false }
-            PropertyChanges { target: pressWD; running: true }
             StateChangeScript {
                 script: {
                     player.faceRight()
@@ -275,9 +263,6 @@ Item {
         },
         State {
             name: "downRight"; when: (player.sPressed && player.dPressed && !player.wPressed && !player.aPressed)
-            PropertyChanges { target: pressS; running: false }
-            PropertyChanges { target: pressD; running: false }
-            PropertyChanges { target: pressSD; running: true }
             StateChangeScript {
                 script: {
                     player.faceRight();
@@ -287,72 +272,36 @@ Item {
         }
     ]
 
-    Timer {
-        id: pressW
-        interval: player.interval; running: false; repeat: true
-        onTriggered: {
-            if (player.y > -player.height*2/5)player.y -= player.stepSize;
-        }
-    }
+    function updateMovement(deltaTime) {
+        if (!active || paused || !gameArea.isInCombat) return
 
-    Timer {
-        id: pressS
-        interval: player.interval; running: false; repeat: true
-        onTriggered: {
-            if (player.y < player.parent.height - player.height)player.y += player.stepSize;
-        }
-    }
+        var step = v * deltaTime
+        var dx = 0, dy = 0
+        if (keysPressed.W) dy -= 1
+        if (keysPressed.S) dy += 1
+        if (keysPressed.A) dx -= 1
+        if (keysPressed.D) dx += 1
 
-    Timer {
-        id: pressA
-        interval: player.interval; running: false; repeat: true
-        onTriggered: {
-            if (player.x > -player.width/7)player.x -= player.stepSize;
+        // 对角线归一化
+        if (dx !== 0 && dy !== 0) {
+            dx *= 0.707
+            dy *= 0.707
         }
-    }
 
-    Timer {
-        id: pressD
-        interval: player.interval; running: false; repeat: true
-        onTriggered: {
-            if (player.x < player.parent.width - player.width+player.width/7)player.x += player.stepSize;
-        }
-    }
+        // 边界约束 — 越界则拉回
+        var newX = x + dx * step
+        var newY = y + dy * step
+        if (newY < -height * 2 / 5) newY = -height * 2 / 5
+        if (newY > parent.height - height) newY = parent.height - height
+        if (newX < -width / 7) newX = -width / 7
+        if (newX > parent.width - width + width / 7) newX = parent.width - width + width / 7
 
-    Timer {
-        id: pressWA
-        interval: player.interval; running: false; repeat: true
-        onTriggered: {
-            if (player.y > -player.height*2/5)player.y -= player.diagonalStepSize;
-            if (player.x > -player.width/7)player.x -= player.diagonalStepSize;
-        }
-    }
+        x = newX
+        y = newY
 
-    Timer {
-        id: pressSA
-        interval: player.interval; running: false; repeat: true
-        onTriggered: {
-            if (player.y < player.parent.height - player.height)player.y += player.diagonalStepSize;
-            if (player.x > -player.width/7)player.x -= player.diagonalStepSize;
-        }
-    }
-
-    Timer {
-        id: pressWD
-        interval: player.interval; running: false; repeat: true
-        onTriggered: {
-            if (player.y > -player.height*2/5)player.y -= player.diagonalStepSize;
-            if (player.x < player.parent.width - player.width+player.width/7)player.x += player.diagonalStepSize;
-        }
-    }
-
-    Timer {
-        id: pressSD
-        interval: player.interval; running: false; repeat: true
-        onTriggered: {
-            if (player.y < player.parent.height - player.height)player.y += player.diagonalStepSize;
-            if (player.x < player.parent.width - player.width+player.width/7)player.x += player.diagonalStepSize;
-        }
+        // 更新朝向
+        if (dx > 0) faceRight()
+        else if (dx < 0) faceLeft()
     }
 
     Keys.onPressed: function(event) {
@@ -360,13 +309,17 @@ Item {
         if(player.active && !player.paused){
             if (event.key === Qt.Key_W || event.key === Qt.Key_Up) {
                 player.wPressed=true;
+                keysPressed.W = true;
             }else if (event.key === Qt.Key_S || event.key === Qt.Key_Down) {
                 player.sPressed=true;
+                keysPressed.S = true;
             }else if (event.key === Qt.Key_A || event.key === Qt.Key_Left) {
                 player.aPressed=true;
+                keysPressed.A = true;
                 player.faceLeft()
             }else if (event.key === Qt.Key_D || event.key === Qt.Key_Right) {
                 player.dPressed=true;
+                keysPressed.D = true;
                 player.faceRight()
             }
         }
@@ -376,16 +329,16 @@ Item {
         //console.log("Key released: " + event.key)  // 调试输出
         if (event.key === Qt.Key_W || event.key === Qt.Key_Up) {
             player.wPressed=false;
-            pressW.running=false;
+            keysPressed.W = false;
         }else if (event.key === Qt.Key_S || event.key === Qt.Key_Down) {
             player.sPressed=false;
-            pressS.running=false;
+            keysPressed.S = false;
         }else if (event.key === Qt.Key_A || event.key === Qt.Key_Left) {
             player.aPressed=false;
-            pressA.running=false;
+            keysPressed.A = false;
         }else if (event.key === Qt.Key_D || event.key === Qt.Key_Right) {
             player.dPressed=false;
-            pressD.running=false;
+            keysPressed.D = false;
         }
     }
 

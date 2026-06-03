@@ -18,6 +18,9 @@ Item {
     property bool paused: false
 
     property int maxNum: 100
+    property var gameLoop: null
+    // 暴露内部 bullets 组件，供 GameArea 注册怪物子弹碰撞检测
+    property alias bullets: bullets
 
     function init(){
         active=true
@@ -69,10 +72,8 @@ Item {
     onPausedChanged: {
         if(paused==true){
             sleepTimer.pause()
-            createMonsterTimer.pause()
         }else{
             sleepTimer.resume()
-            createMonsterTimer.resume()
         }
     }
 
@@ -97,43 +98,52 @@ Item {
         }
     }
 
-    //定时生成怪物
-    TimerCanPause {
-        id: createMonsterTimer
-        interval: 3000; running: monsters.active; repeat: true
-        onTriggered: {
-            if(!monsters.active)return
-            if(monsters.children.length<monsters.maxNum){
-                for(var i=0;i<MonstersData.children.length;i++){
-                    var monsterData=MonstersData.children[i]
-                    var n=Math.floor(monsterData.initCount*monsterData.countRation)
-                    if(n==0){
-                        monsterData.countRation*=1+monsterData.countIcreaseRation
-                    }else if(n+monsterData.curNumber>monsterData.maxCurNumber){
-                        monsters.spawnMonsters(monsterData.maxCurNumber-monsterData.curNumber,monsterData.objectName)
-                        monsterData.countRation/=1+monsterData.countIcreaseRation
-                    }else{
-                        monsters.spawnMonsters(n,monsterData.objectName)
-                        monsterData.countRation*=1+monsterData.countIcreaseRation
-                    }
+    function createWaveMonsters() {
+        if (!active || paused) return
+        if (children.length < maxNum) {
+            for (var i = 0; i < MonstersData.children.length; i++) {
+                var monsterData = MonstersData.children[i]
+                var n = Math.floor(monsterData.initCount * monsterData.countRation)
+                if (n === 0) {
+                    monsterData.countRation *= 1 + monsterData.countIcreaseRation
+                } else if (n + monsterData.curNumber > monsterData.maxCurNumber) {
+                    spawnMonsters(monsterData.maxCurNumber - monsterData.curNumber, monsterData.objectName)
+                    monsterData.countRation /= 1 + monsterData.countIcreaseRation
+                } else {
+                    spawnMonsters(n, monsterData.objectName)
+                    monsterData.countRation *= 1 + monsterData.countIcreaseRation
                 }
             }
-            //console.log("怪物数量",monsters.children.length,MonstersData.babyAlien.curNumber)
         }
     }
 
-    //检测怪物间的碰撞
-    Timer {
-        id: checkCollidingMonsterTimer
-        interval: 150; running: monsters.active && !monsters.paused; repeat: true
-        onTriggered: {
-            for (var i = 0; i < monsters.children.length; i++) {
-                var child = monsters.children[i];
-                if (child.objectName === "Monster") {
-                    if(monsters.isFrontHaveOtherMonster(child,child.width/2))child.isFrontHaveOtherMonster=true
-                    else child.isFrontHaveOtherMonster=false
+    function checkMonsterCollisions() {
+        if (!active || paused) return
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i]
+            if (child.objectName === "Monster") {
+                if (isFrontHaveOtherMonster(child, child.width / 2)) child.isFrontHaveOtherMonster = true
+                else child.isFrontHaveOtherMonster = false
+            }
+        }
+    }
+
+    function updateAllMonsterMovements(deltaTime) {
+        if (!active || paused) return
+        var deadList = []
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i]
+            if (child.objectName === "Monster") {
+                if (child.isDestroy) {
+                    deadList.push(child)
+                } else if (!child.isDead) {
+                    child.updateMovement(deltaTime)
                 }
             }
+        }
+        // 清理已销毁对象，防止 children 数组无限膨胀导致帧率下降
+        for (var j = 0; j < deadList.length; j++) {
+            deadList[j].destroy()
         }
     }
 
@@ -223,6 +233,7 @@ Item {
         for (var i = 0; i < monsters.children.length; i++) {
             var child = monsters.children[i];
             if (child.objectName === "Monster") {
+                unregisterMonsterCallbacks(child)
                 child.destroy()
                 child.isDestroy=true
             }
@@ -267,6 +278,7 @@ Item {
                 monster.paused=Qt.binding(function(){return monsters.paused})
                 if((monster.x-monster.target.x)>0)monster.faceLeft()
                 else monster.faceRight()
+                registerMonsterCallbacks(monster)
                 child.destroy()
             }
         }
@@ -278,8 +290,63 @@ Item {
         var monsterComponent = Qt.createComponent(source)
         if (monsterComponent.status === Component.Ready) {
             var monster = monsterComponent.createObject(parent);
+            registerMonsterCallbacks(monster)
         }else console.error("Error loading component:", monsterComponent.errorString())
         return monster
+    }
+
+    // 根据怪物类型注册对应的 GameLoop 回调
+    function registerMonsterCallbacks(monster) {
+        if (!gameLoop || !monster) return
+        switch (monster.monsterName) {
+        case "charger":
+            gameLoop.registerPerFrame(monster.checkChargeCollision)
+            gameLoop.registerPer200ms(monster.checkChargeRange)
+            break
+        case "sprayer":
+            gameLoop.registerPer200ms(monster.checkSprayBehavior)
+            break
+        case "prayer":
+            gameLoop.registerPer1000ms(monster.updatePrayerExistTime)
+            gameLoop.registerPer3000ms(monster.triggerPrayerAttack)
+            break
+        case "scavenger":
+            gameLoop.registerPer3000ms(monster.setGoalRandomly)
+            break
+        case "summoner":
+            gameLoop.registerPer200ms(monster.checkSummonerBehavior)
+            break
+        case "pursuer":
+            gameLoop.registerPer200ms(monster.updateAcceleration)
+            break
+        }
+    }
+
+    // 注销怪物的 GameLoop 回调
+    function unregisterMonsterCallbacks(monster) {
+        if (!gameLoop || !monster) return
+        switch (monster.monsterName) {
+        case "charger":
+            gameLoop.removePerFrame(monster.checkChargeCollision)
+            gameLoop.removePer200ms(monster.checkChargeRange)
+            break
+        case "sprayer":
+            gameLoop.removePer200ms(monster.checkSprayBehavior)
+            break
+        case "prayer":
+            gameLoop.removePer1000ms(monster.updatePrayerExistTime)
+            gameLoop.removePer3000ms(monster.triggerPrayerAttack)
+            break
+        case "scavenger":
+            gameLoop.removePer3000ms(monster.setGoalRandomly)
+            break
+        case "summoner":
+            gameLoop.removePer200ms(monster.checkSummonerBehavior)
+            break
+        case "pursuer":
+            gameLoop.removePer200ms(monster.updateAcceleration)
+            break
+        }
     }
 
     //在dropsParent中怪物monster的当前位置附近生成其死亡时应掉落数量个材料
