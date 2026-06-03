@@ -62,21 +62,23 @@ Item{
         id: weaponCore
     }
 
-    Timer {
-        id: setGoalTimer
-        interval: 100
-        running: weapons.active
-        repeat: true
-        onTriggered: {
-            for(var i=0;i<weapons.children.length;i++){
-                var child=weapons.children[i]
-                if(child.objectName==="Weapon" && !child.inFire){
-                    var weapon=child.core
-                    var monster=weapons.target.getClosestMonster(child.x+weapons.x,child.y+weapons.y,weapon.range*weapons.scaleFactor)
-                    if(monster===null){
-                        child.targetPoint=null
+    function updateGoals() {
+        if (!active || paused) return
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i]
+            if (child.objectName === "Weapon") {
+                var weapon = child.core
+                var monster = target.getClosestMonster(child.x + weapons.x, child.y + weapons.y, weapon.range * scaleFactor)
+                if (monster === null) {
+                    // 目标丢失 → 即使开火中也立即停火（设置 null 使 fireTimer 停止）
+                    child.targetPoint = null
+                    if (!child.inFire) {
                         owner.isFaceRight ? child.faceRight() : child.faceLeft()
-                    }else child.targetPoint=Qt.point(monster.x+monster.width/2-weapons.x,monster.y+monster.height/2-weapons.y)
+                    }
+                } else {
+                    // 所有武器每周期都更新 targetPoint
+                    // 近战武器依靠 Spear.onRotationChanged 锁保持方向
+                    child.targetPoint = Qt.point(monster.x + monster.width / 2 - weapons.x, monster.y + monster.height / 2 - weapons.y)
                 }
             }
         }

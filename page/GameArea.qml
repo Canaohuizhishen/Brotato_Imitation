@@ -5,6 +5,7 @@ import "../bullets"
 import "../monsters"
 import "../weapons"
 import "../drops"
+import "../logic"
 
 Item{
     id: gameArea
@@ -24,8 +25,26 @@ Item{
     property Bullets bullets: bullets
     property Drops drops: drops
     property ChestNotificationBar chestBar
+    property alias gameLoop: gameLoop
+
+    GameLoop {
+        id: gameLoop
+        active: gameArea.isInCombat && gameArea.active
+        paused: gameArea.paused
+    }
 
     Component.onCompleted: {
+        // 注册全局 GameLoop 回调
+        gameLoop.registerPerFrame(function(dt) { player.updateMovement(dt) })
+        gameLoop.registerPerFrame(function(dt) { monsters.updateAllMonsterMovements(dt) })
+        gameLoop.registerPerFrame(function() { bullets.checkBulletCollisions() })
+        gameLoop.registerPerFrame(function() { monsters.bullets.checkBulletCollisions() })
+        gameLoop.registerPer100ms(function() { weapons.updateGoals() })
+        gameLoop.registerPer200ms(function() { monsters.checkMonsterCollisions() })
+        gameLoop.registerPer200ms(function() { drops.checkDropCollisions() })
+        gameLoop.registerPer3000ms(function() { monsters.createWaveMonsters() })
+        // 将 gameLoop 引用传递给 monsters 用于子类怪物回调注册
+        monsters.gameLoop = gameLoop
     }
 
     onIsInCombatChanged: {

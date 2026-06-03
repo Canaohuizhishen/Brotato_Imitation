@@ -19,39 +19,25 @@ Monster{
 
     onPausedChanged: {
         if(paused==true){
-            timer.pause()
-            attackTimer.pause()
             windUpAnimation.pause()
             attackAnimation.pause()
         }else{
-            timer.resume()
-            attackTimer.resume()
             windUpAnimation.resume()
             attackAnimation.resume()
         }
     }
 
-    TimerCanPause {
-        id: timer
-        interval: 1000
-        running: prayer.active
-        repeat: true
-        onTriggered: {
-            existTime++
-            if(existTime>30 && spawnR<maxSpawnR){
-                spawnR+=20
-            }
+    function updatePrayerExistTime() {
+        if (!active || paused) return
+        existTime++
+        if (existTime > 30 && spawnR < maxSpawnR) {
+            spawnR += 20
         }
     }
 
-    TimerCanPause {
-        id: attackTimer
-        interval: 3000
-        running: prayer.active && !prayer.paused
-        repeat: true
-        onTriggered: {
-            windUp()
-        }
+    function triggerPrayerAttack() {
+        if (!active || paused) return
+        windUp()
     }
 
     transform: Scale {

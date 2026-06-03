@@ -15,37 +15,30 @@ Monster{
 
     onPausedChanged: {
         if(paused==true){
-            setGoalRandomlyTimer.pause()
             sprayAnimation.pause()
             shootAnimation.pause()
         }else{
-            setGoalRandomlyTimer.resume()
             sprayAnimation.resume()
             shootAnimation.resume()
         }
     }
 
-    TimerCanPause {
-        id: setGoalRandomlyTimer
-        interval: 3000
-        running: scavenger.active && !scavenger.paused
-        repeat: true
-        triggeredOnStart: true
-        onTriggered: {
-            var margin = 50
-            do{
-            var x=Math.random() * (scavenger.owner.width - margin*2)+margin;
-            var y=Math.random() * (scavenger.owner.height - margin*2)+margin;
-            }while(Tool.getDistance(Qt.point(scavenger.x,scavenger.y),Qt.point(x,y))<scavenger.v*interval/1000)
-            var point={
-                x: x,
-                y: y,
-                width: 0,
-                height: 0
-            }
-            scavenger.target=point
-            spray()
+    function setGoalRandomly() {
+        if (!active || paused) return
+        var margin = 50
+        var rx, ry
+        do {
+            rx = Math.random() * (owner.width - margin * 2) + margin
+            ry = Math.random() * (owner.height - margin * 2) + margin
+        } while (Tool.getDistance(Qt.point(x, y), Qt.point(rx, ry)) < v * 0.05)
+        var point = {
+            x: rx,
+            y: ry,
+            width: 0,
+            height: 0
         }
+        target = point
+        spray()
     }
 
     transform: Scale {

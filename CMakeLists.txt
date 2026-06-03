@@ -49,6 +49,7 @@ qt_add_qml_module(appBrotato
     QML_FILES page/StoreInterface.qml
     QML_FILES logic/ShopLogicHandler.js
     QML_FILES logic/DataLoader.js
+    QML_FILES logic/GameLoop.qml
     QML_FILES components/PropsBar.qml
     QML_FILES components/PropItem.qml
     QML_FILES components/WeaponsBar.qml
@@ -59,6 +60,7 @@ qt_add_qml_module(appBrotato
     QML_FILES components/SwitchSettingButton.qml
     QML_FILES components/ProgressBarControlButton.qml
     QML_FILES components/ChestNotificationBar.qml
+    QML_FILES components/FPSCounter.qml
     QML_FILES page/ChestOpeningInterface.qml
     QML_FILES components/PropCard.qml
     QML_FILES page/SettlementInterface.qml

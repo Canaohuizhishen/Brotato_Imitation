@@ -37,7 +37,7 @@ Item {
     property var core: MonstersData.getMonster(monsterName)
     property var monsterCore: MonstersData
 
-    property double v: core.initVelocity
+    property double v: core.initVelocity * 5 / 6
     property int interval: 10
     property double stepSize: v*interval/1200*scaleFactor
 
@@ -149,33 +149,32 @@ Item {
         }
     }
 
-    Timer {
-        id: moveTimer
-        interval: monster.interval; running: monster.active && !monster.paused; repeat: true
-        onTriggered: {
-            if(monster.isDead==true)return
-            if(monster.isFrontHaveOtherMonster)return
-            if(monster.isMoveStoped==true)return
-            var dx = (monster.target.x + monster.target.width/2) - (monster.x + monster.width/2);
-            var dy = (monster.target.y + monster.target.height/2) - (monster.y + monster.height/2);
-            var distance = Math.sqrt(dx * dx + dy * dy);
+    function updateMovement(deltaTime) {
+        if (isDead) return
+        if (isFrontHaveOtherMonster || isMoveStoped) return
+        if (!active || paused) return
 
-            if (distance < monster.target.width/2) {//已碰撞
-                monster.hit()
+        var dx = (target.x + target.width / 2) - (x + width / 2)
+        var dy = (target.y + target.height / 2) - (y + height / 2)
+        var distance = Math.sqrt(dx * dx + dy * dy)
+
+        if (distance < target.width / 2) {
+            // 已碰撞
+            hit()
+        } else {
+            var stepSize = v * deltaTime
+            var stepX = (dx / distance) * stepSize
+            var stepY = (dy / distance) * stepSize
+            if (moveDirectionConverse) {
+                if (x > 0 && x < parent.width - width) x -= stepX
+                if (y > 0 && y < parent.height - height) y -= stepY
             } else {
-                var stepX = (dx / distance) * monster.stepSize;
-                var stepY = (dy / distance) * monster.stepSize;
-                if(monster.moveDirectionConverse){
-                    if(monster.x>0 && monster.x<monster.parent.width-monster.width)monster.x -= stepX;
-                    if(monster.y>0 && monster.y<monster.parent.height-monster.height)monster.y -= stepY;
-                }else {
-                    monster.x += stepX;
-                    monster.y += stepY;
-                }
+                x += stepX
+                y += stepY
             }
-
-            monster.z=monster.y+monster.height//实现相对靠下的怪物在上层
         }
+
+        z = y + height  // Y 排序
     }
 
     Timer {
@@ -249,6 +248,9 @@ Item {
             easing.type: Easing.Linear
         }
         onStopped:{
+            if (monster.owner && monster.owner.unregisterMonsterCallbacks)
+                monster.owner.unregisterMonsterCallbacks(monster)
+            monster.isDestroy = true
             monster.destroy()
         }
         function pause(){

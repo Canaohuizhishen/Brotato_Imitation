@@ -3,12 +3,7 @@ import QtQuick 2.15
 MeleeWeapon {
     id: spear
     weaponName: "spear"
-    property double fireRotation: 0
     property var meleeBullet
-
-    onRotationChanged: {
-        if(inFire)rotation=fireRotation
-    }
 
     onPausedChanged: {
         if(paused==true){
@@ -78,7 +73,6 @@ MeleeWeapon {
 
     function fire(){
         inFire=true
-        fireRotation=rotation
         if(isFaceRight){
             fireAnimation.angle=-rotation
         }else fireAnimation.angle=180-rotation

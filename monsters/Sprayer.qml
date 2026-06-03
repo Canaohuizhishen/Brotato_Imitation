@@ -20,37 +20,30 @@ Monster{
 
     onPausedChanged: {
         if(paused==true){
-            coolDownTimer.pause()
             sprayAnimation.pause()
             shootAnimation.pause()
         }else{
-            coolDownTimer.resume()
             sprayAnimation.resume()
             shootAnimation.resume()
         }
     }
 
-    Timer {
-        id: checkTimer
-        interval: 150
-        running: sprayer.active && !sprayer.paused
-        repeat: true
-        onTriggered: {
-            var distance=Tool.getDistance(Qt.point(sprayer.x,sprayer.y),Qt.point(sprayer.target.x,sprayer.target.y))
-            var inAttackRange=distance<sprayer.core.attackRange*scaleFactor
-            if(inAttackRange && !sprayer.isSpraying && !sprayer.insprayCoolDown)sprayer.spray()
-            if(distance<sprayer.stopRange && !sprayer.isEscaping)sprayer.isMoveStoped=true
-            else sprayer.isMoveStoped=false
-            if(distance<sprayer.escapeRange){
-                sprayer.isEscaping=true
-                sprayer.moveDirectionConverse=true
-            }else if(distance>sprayer.stopRange){
-                sprayer.isEscaping=false
-                sprayer.moveDirectionConverse=false
-            }
-            if(sprayer.isInEdge()){
-                sprayer.isEscaping=false
-            }
+    function checkSprayBehavior() {
+        if (!active || paused) return
+        var distance = Tool.getDistance(Qt.point(x, y), Qt.point(target.x, target.y))
+        var inAttackRange = distance < core.attackRange * scaleFactor
+        if (inAttackRange && !isSpraying && !insprayCoolDown) spray()
+        if (distance < stopRange && !isEscaping) isMoveStoped = true
+        else isMoveStoped = false
+        if (distance < escapeRange) {
+            isEscaping = true
+            moveDirectionConverse = true
+        } else if (distance > stopRange) {
+            isEscaping = false
+            moveDirectionConverse = false
+        }
+        if (isInEdge()) {
+            isEscaping = false
         }
     }
 

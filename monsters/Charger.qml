@@ -17,10 +17,8 @@ Monster{
 
     onPausedChanged: {
         if(paused==true){
-            coolDownTimer.pause()
             chargeAnimation.pause()
         }else{
-            coolDownTimer.resume()
             chargeAnimation.resume()
         }
     }
@@ -79,17 +77,6 @@ Monster{
                     );
     }
 
-    Timer {
-        id: checkTimer
-        interval: 150
-        running: !charger.isCharging && !charger.inChargeCoolDown && !charger.paused
-        repeat: true
-        onTriggered: {
-            var inAttackRange=Tool.getDistance(Qt.point(charger.x,charger.y),Qt.point(charger.target.x,charger.target.y))<charger.core.attackRange*charger.scaleFactor
-            if(inAttackRange)charger.charge()
-        }
-    }
-
     TimerCanPause {
         id: coolDownTimer
         interval: 800
@@ -97,6 +84,19 @@ Monster{
         repeat: false
         onTriggered: {
             charger.inChargeCoolDown=false
+        }
+    }
+
+    function checkChargeRange() {
+        if (isCharging || inChargeCoolDown || paused || !active) return
+        var inAttackRange = Tool.getDistance(Qt.point(x, y), Qt.point(target.x, target.y)) < core.attackRange * scaleFactor
+        if (inAttackRange) charge()
+    }
+
+    function checkChargeCollision() {
+        if (!chargeAnimation || !chargeAnimation.running || paused) return
+        if (Tool.getDistance(Qt.point(x, y), Qt.point(target.x, target.y)) < target.width / 2) {
+            hit()
         }
     }
 
@@ -141,16 +141,6 @@ Monster{
 
         function pause(){
             if(running)paused=true
-        }
-    }
-
-    Timer {
-        id: collisionDetectionTimer
-        interval: charger.interval; running: chargeAnimation.running &&!charger.paused; repeat: true
-        onTriggered: {
-            if (Tool.getDistance(Qt.point(charger.x,charger.y),Qt.point(charger.target.x,charger.target.y)) < charger.target.width/2) {//已碰撞
-                charger.hit()
-            }
         }
     }
 

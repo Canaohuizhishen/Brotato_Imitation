@@ -37,13 +37,15 @@ Item {
         onTriggered: {
             pauseableTimer.triggered()
 
-            //重置状态
-            running = false
+            // 重置暂停状态（不设置 running = false，否则会破坏外部 binding）
             pauseableTimer.paused  = false
             pauseableTimer.remaining = pauseableTimer.interval
+            // resume() 会破坏 timer.interval 的绑定，每次触发后恢复为正确间隔
+            // 否则暂停/继续循环会导致 interval 递归缩小 → 飞速倒计时
+            timer.interval = pauseableTimer.interval
             if(pauseableTimer.showDebugInfo)console.log("Timer 触发，重置为初始状态")
-            if(repeat)pauseableTimer.start()
-            else pauseableTimer.stop()
+            // 让 QML Timer 自身的 repeat 机制处理重复触发
+            // 不要手动调用 start() 或设置 running = false（会破坏绑定以及导致无法停止）
         }
     }
 
