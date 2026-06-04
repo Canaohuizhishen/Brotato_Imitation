@@ -41,23 +41,18 @@ Item {
             anchors.bottomMargin: 2*root.scaleFactor
         }
 
-        HoverHandler {
-            id: hoverHandler
-            acceptedDevices: PointerDevice.Mouse
-            onHoveredChanged: {
-                propImageBackground.hovered = hovered
-                if (hovered) {
-                    infoPopup.open()
-                    sound.playHoverSound()
-                } else {
-                    infoPopup.close()
-                }
-            }
-        }
-
-        TapHandler {
-            onTapped: {
+        MouseArea {
+            id: hoverArea
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: {
+                propImageBackground.hovered = true
                 infoPopup.open()
+                sound.playHoverSound()
+            }
+            onExited: {
+                propImageBackground.hovered = false
+                infoPopup.close()
             }
         }
     }

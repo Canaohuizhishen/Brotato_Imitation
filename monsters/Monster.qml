@@ -43,6 +43,12 @@ Item {
 
     property var bulletImmunityList: [] //用来记录免疫的子弹，模拟近战武器攻击时的冷却
     property int immuneTime: 250
+    property bool _reachedTarget: false
+
+    // 到达目标点时的钩子，子类可覆盖（如 Scavenger 抵达后立即换方向）
+    function onReachTarget() {
+        // 基类空实现
+    }
 
     Component.onCompleted: {
         core.curNumber++
@@ -157,14 +163,17 @@ Item {
         var dx = (target.x + target.width / 2) - (x + width / 2)
         var dy = (target.y + target.height / 2) - (y + height / 2)
         var distance = Math.sqrt(dx * dx + dy * dy)
+        var stepSize = v * deltaTime
 
         if (distance < target.width / 2) {
             // 已碰撞
             hit()
-        } else {
-            var stepSize = v * deltaTime
-            var stepX = (dx / distance) * stepSize
-            var stepY = (dy / distance) * stepSize
+            _reachedTarget = false
+        } else if (distance > 0.01) {
+            // 实际步长不超过剩余距离，防止过冲振荡
+            var actualStep = Math.min(stepSize, distance)
+            var stepX = (dx / distance) * actualStep
+            var stepY = (dy / distance) * actualStep
             if (moveDirectionConverse) {
                 if (x > 0 && x < parent.width - width) x -= stepX
                 if (y > 0 && y < parent.height - height) y -= stepY
@@ -172,6 +181,11 @@ Item {
                 x += stepX
                 y += stepY
             }
+            _reachedTarget = false
+        } else if (!_reachedTarget) {
+            // 首次进入已到达状态 → 通知子类（Scavenger 立即换方向）
+            _reachedTarget = true
+            onReachTarget()
         }
 
         z = y + height  // Y 排序
@@ -333,7 +347,7 @@ Item {
         //模拟角色被子弹击中
         var _x=(x+width/2+target.x+target.width/2)/2
         var _y=(y+height/2+target.y+target.height/2)/2
-        var bullet={damage: monster.monsterData.damage, x: _x, y: _y}
+        var bullet={damage: monster.monsterData.damage, x: _x, y: _y, rotation: 0}
         target.onHit(bullet)
 
         hitingTimer.start()

@@ -28,13 +28,20 @@ Item {
     }
 
     //检测悬停区域
-    HoverHandler {
-        id: hoverHandler
-        acceptedDevices: PointerDevice.Mouse
-        onHoveredChanged: {
+    MouseArea {
+        id: hoverArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onEntered: {
             if (root.detailDescription) {
-                root.hovered = hovered
-                hovered ? detailPopup.open() : detailPopup.close()
+                root.hovered = true
+                detailPopup.open()
+            }
+        }
+        onExited: {
+            if (root.detailDescription) {
+                root.hovered = false
+                detailPopup.close()
             }
         }
     }

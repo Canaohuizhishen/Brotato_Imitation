@@ -24,10 +24,7 @@ Item {
     property bool isSlow: true
     property bool isFaceRight: true
 
-    property int interval: 5
     property double v: 500*scaleFactor*(1+PlayerData.speed/100)*0.8*5/6
-    property double stepSize: v*interval/1200
-    property double diagonalStepSize: stepSize*0.7
 
     property bool wPressed: false
     property bool sPressed: false

@@ -24,10 +24,7 @@ Rectangle {
         onTapped: {}
     }
 
-    //拦截悬停事件，防止悬停穿透
-    HoverHandler {
-        onHoveredChanged: {}
-    }
+
 
     Row {
         id: pause

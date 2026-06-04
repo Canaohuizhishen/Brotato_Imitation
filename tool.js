@@ -29,39 +29,20 @@ function getMirrorX(x,targetX){
 }
 
 function createText(parent, text, size, color, _x, _y, duration=600, OutlineColor="black") {
-    var component = Qt.createQmlObject(
-                `import QtQuick 2.15;
-                Text {
-                    id: textEffect
-                    x: ${_x}
-                    y: ${_y}
-                    text: "${text}"
-                    color: "${color}"
-                    font.pixelSize: Math.floor(${size})
-                    font.bold: true
-                    style: Text.Outline
-                    styleColor: "${OutlineColor}"
-                    z: 100
-
-                    SequentialAnimation {
-                        loops: 1
-                        running: true
-                        OpacityAnimator {
-                            target: textEffect
-                            from: 0
-                            to: 0.8
-                            duration: ${duration/2}
-                        }
-                        OpacityAnimator {
-                            target: textEffect
-                            from: 0.8
-                            to: 0
-                            duration: ${duration/2}
-                        }
-                        onStopped: textEffect.destroy()
-                    }
-                }`,
-                parent,
-                "dynamicText"
-                )
+    var component = Qt.createComponent("components/DynamicText.qml")
+    if (component.status === 1) { // Component.Ready
+        var txt = component.createObject(parent, {
+            "x": _x,
+            "y": _y,
+            "text": text,
+            "color": color,
+            "font.pixelSize": Math.floor(size),
+            "duration": duration,
+            "outlineColor": OutlineColor
+        })
+        return txt
+    } else {
+        console.error("DynamicText component load failed:", component.errorString())
+        return null
+    }
 }

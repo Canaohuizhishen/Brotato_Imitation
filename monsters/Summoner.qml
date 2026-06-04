@@ -44,6 +44,13 @@ Monster{
             monster.bulletsParent=bulletsParent
             if((monster.x-monster.target.x)>0)monster.faceLeft()
             else monster.faceRight()
+            // 被召唤的怪物也需要注册帧循环回调 + 立即随机方向
+            if (owner && owner.registerMonsterCallbacks) {
+                owner.registerMonsterCallbacks(monster)
+            }
+            if (monster.monsterName === "scavenger") {
+                monster.setGoalRandomly()
+            }
         }
     }
 }

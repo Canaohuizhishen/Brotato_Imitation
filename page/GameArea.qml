@@ -39,7 +39,7 @@ Item{
         gameLoop.registerPerFrame(function(dt) { monsters.updateAllMonsterMovements(dt) })
         gameLoop.registerPerFrame(function() { bullets.checkBulletCollisions() })
         gameLoop.registerPerFrame(function() { monsters.bullets.checkBulletCollisions() })
-        gameLoop.registerPer100ms(function() { weapons.updateGoals() })
+        gameLoop.registerPerFrame(function() { weapons.updateGoals() })
         gameLoop.registerPer200ms(function() { monsters.checkMonsterCollisions() })
         gameLoop.registerPer200ms(function() { drops.checkDropCollisions() })
         gameLoop.registerPer3000ms(function() { monsters.createWaveMonsters() })

@@ -41,24 +41,25 @@ Item {
             anchors.centerIn: parent
         }
 
-        HoverHandler {
-            id: hoverHandler
-            acceptedDevices: PointerDevice.Mouse
-            onHoveredChanged: {
-                weaponImageBackground.hovered = hovered
-                if (popupActive) return
-                if (hovered) {
+        MouseArea {
+            id: hoverArea
+            anchors.fill: parent
+            hoverEnabled: true
+            onEntered: {
+                weaponImageBackground.hovered = true
+                if (!popupActive) {
                     infoPopup.open()
                     sound.playHoverSound()
-                } else {
+                }
+            }
+            onExited: {
+                weaponImageBackground.hovered = false
+                if (!popupActive) {
                     infoPopup.close()
                 }
             }
-        }
-
-        TapHandler {
-            onTapped: {
-                if(!root.showButton)return
+            onClicked: {
+                if (!root.showButton) return
                 popupActive = true
                 infoPopup.modal = true
                 infoPopup.open()

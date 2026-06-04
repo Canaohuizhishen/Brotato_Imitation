@@ -18,6 +18,9 @@ MeleeWeapon {
             meleeBullet.inHitCoolDown=false
         }else{
             meleeBullet.inHitCoolDown=true
+            if (targetPoint === null) {
+                rotationReset()
+            }
         }
     }
 
@@ -60,9 +63,10 @@ MeleeWeapon {
     function fire(){
         attackSound.play()
         inFire=true
-        if(isFaceRight){
-            fireAnimation.angle=-rotation
-        }else fireAnimation.angle=180-rotation
+        // 从武器位置到 targetPoint 的几何方向（不受 rotation 动画时序影响，不分朝向）
+        var dx = targetPoint.x - (x + width / 2)
+        var dy = targetPoint.y - (y + height / 2)
+        fireAnimation.angle = Math.atan2(-dy, dx) * 180 / Math.PI
         fireAnimation.start()
     }
 }
