@@ -18,7 +18,7 @@ Weapon {
     }
 
     onActiveChanged: {
-        if(meleeBullet===null)meleeWeapon.meleeBullet=meleeWeapon.createMeleeBullet()
+        if(!meleeBullet)meleeWeapon.meleeBullet=meleeWeapon.createMeleeBullet()
     }
 
     Timer {

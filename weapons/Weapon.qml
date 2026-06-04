@@ -34,18 +34,26 @@ Item {
     }
 
     onTargetPointChanged: {
-        if (inFire) return
         if (targetPoint !== null) {
             // 坐标去重：只有位置真正变化 (超过 2px 阈值) 才重新瞄准
-            // 避免 updateGoals() 每 96ms 生成新 Qt.point 对象导致瞄准被反复打断
             if (!_lastTargetPoint
                 || Math.abs(targetPoint.x - _lastTargetPoint.x) > 2
                 || Math.abs(targetPoint.y - _lastTargetPoint.y) > 2) {
-                aimToTarget()
-                _lastTargetPoint = Qt.point(targetPoint.x, targetPoint.y)
+                if (!inFire) {
+                    aimToTarget()
+                    _lastTargetPoint = Qt.point(targetPoint.x, targetPoint.y)
+                }
             }
         } else {
             _lastTargetPoint = null
+            if (!inFire) {
+                rotationReset()
+            }
+        }
+    }
+
+    onInFireChanged: {
+        if (!inFire && targetPoint === null) {
             rotationReset()
         }
     }
@@ -134,6 +142,25 @@ Item {
         if(isFaceRight)return
         weaponIcon.isRight=true
         isFaceRight=true
+    }
+
+    function _snapRotation() {
+        // 开火中更新旋转角度（无动画、无 isAiming、无朝向翻转）
+        // 仅当目标在当前朝向的同一侧时才更新；在背面则跳过，等 inFire 结束后由 aimToTarget 处理朝向翻转
+        if (targetPoint === null) return
+        var dx = targetPoint.x - (x + width / 2)
+        var dy = targetPoint.y - (y + height / 2)
+        // 目标在武器当前朝向的背面 → 开火中不处理，避免角度错乱
+        if ((isFaceRight && dx < 0) || (!isFaceRight && dx >= 0)) return
+        rotateBehavior.stop()
+        var angle = Math.atan2(dy, dx) * 180 / Math.PI
+        if (isFaceRight) {
+            rotation = angle
+        } else {
+            // 朝左时图片是 _faceLeft.png（天生指左），atan2 角度需翻转 180°
+            rotation = Tool.reduceAbs(angle, 180)
+        }
+        rotateBehavior.start()
     }
 
     function aimToTarget() {

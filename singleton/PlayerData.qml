@@ -102,12 +102,14 @@ QtObject {
     }
 
     onCurXpChanged: {
-        while(curXp>=maxXp){
+        var maxIter = 100
+        while(curXp>=maxXp && maxXp > 0 && --maxIter > 0){
             curXp-=maxXp
             curLevel++
             upgrad()
         }
-        while(curXp<0){
+        maxIter = 100
+        while(curXp<0 && --maxIter > 0){
             if(curLevel<=0){
                 curXp=0
                 break
@@ -241,6 +243,20 @@ QtObject {
         return arr
     }
 
+    function lastStoreGoodsToArray(goodsModel) {
+        const arr = []
+        for (let i = 0; i < goodsModel.count; ++i) {
+            const item = goodsModel.get(i)
+            arr.push({
+                goods: item.goods,
+                isLockedModel: item.isLockedModel,
+                weaponGrade: item.weaponGrade,
+                isPurchased: item.isPurchased
+            })
+        }
+        return arr
+    }
+
     function saveGame() {
         try {
             const saveData = {
@@ -297,7 +313,7 @@ QtObject {
 
                 "weapons": weaponsToArray(weapons),
                 "props": propsToArray(props),
-                "lastStoreGoods": weaponsToArray(lastStoreGoods),
+                "lastStoreGoods": lastStoreGoodsToArray(lastStoreGoods),
                 "lastStoreRefreshTimes": lastStoreRefreshTimes,
                 "maxDifficultyCompleted": maxDifficultyCompleted,
 
@@ -390,7 +406,11 @@ QtObject {
             // 武器列表恢复
             weapons.clear()
             if (saveData.weapons && Array.isArray(saveData.weapons)) {
-                saveData.weapons.forEach(weapon => weapons.append({weaponName: weapon.weaponName,grade: weapon.grade}))
+                saveData.weapons.forEach(weapon => {
+                    var g = parseInt(weapon.grade)
+                    if (isNaN(g) || g < 1 || g > 4) g = 1
+                    weapons.append({weaponName: weapon.weaponName, grade: g})
+                })
             }
             // 道具列表恢复
             props.clear()
@@ -400,7 +420,12 @@ QtObject {
             // 商店商品项恢复
             lastStoreGoods.clear();
             if (saveData.lastStoreGoods && Array.isArray(saveData.lastStoreGoods)) {
-                saveData.lastStoreGoods.forEach(item => lastStoreGoods.append(item));
+                saveData.lastStoreGoods.forEach(item => lastStoreGoods.append({
+                    goods: item.goods,
+                    isLockedModel: item.isLockedModel,
+                    weaponGrade: item.weaponGrade,
+                    isPurchased: item.isPurchased
+                }));
             }
 
             console.log("游戏加载成功")

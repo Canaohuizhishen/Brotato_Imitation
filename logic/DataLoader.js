@@ -162,7 +162,17 @@ function _ensureLoaded() {
     }
     _weaponsByGrade = { 1: [], 2: [], 3: [], 4: [] }
     for (var j = 0; j < _weapons.length; j++) {
-        _weaponsByGrade[1].push(_weapons[j])
+        var w = _weapons[j]
+        if (w.grades) {
+            for (var g = 0; g < w.grades.length; g++) {
+                var grade = w.grades[g].grade
+                if (grade >= 1 && grade <= 4) {
+                    _weaponsByGrade[grade].push(w)
+                }
+            }
+        } else {
+            _weaponsByGrade[1].push(w)
+        }
     }
     _upgradeOptionsByGrade = { 1: [], 2: [], 3: [], 4: [] }
     for (var k = 0; k < _upgradeOptions.length; k++) {
@@ -273,12 +283,21 @@ function _applyGradeData(weapon, grade) {
 
 function getWeaponRandomly(count, gradeWeights) {
     _ensureLoaded()
-    return _weightedRandomSelect(_weaponsByGrade, gradeWeights, count)
+    var result = _weightedRandomSelect(_weaponsByGrade, gradeWeights, count)
+    for (var i = 0; i < result.length; i++) {
+        _applyGradeData(result[i], result[i].grade)
+    }
+    return result
 }
 
 function getWeaponGradeCounts() {
     _ensureLoaded()
-    return { 1: _weaponsByGrade[1].length, 2: 0, 3: 0, 4: 0 }
+    return {
+        1: _weaponsByGrade[1].length,
+        2: _weaponsByGrade[2].length,
+        3: _weaponsByGrade[3].length,
+        4: _weaponsByGrade[4].length
+    }
 }
 
 // ---- 道具 ----
@@ -339,9 +358,29 @@ function getUpgradeOption(grade, objectName) {
     return null
 }
 
+function _randomGrade(gradeWeights) {
+    var total = gradeWeights[1] + gradeWeights[2] + gradeWeights[3] + gradeWeights[4]
+    var r = Math.random() * total
+    var p = gradeWeights[4]
+    if (r < p) return 4
+    p += gradeWeights[3]
+    if (r < p) return 3
+    p += gradeWeights[2]
+    if (r < p) return 2
+    return 1
+}
+
 function getUpgradeOptionRandomly(count, gradeWeights) {
     _ensureLoaded()
-    return _weightedRandomSelect(_upgradeOptionsByGrade, gradeWeights, count)
+    var result = _weightedRandomSelect(_upgradeOptionsByGrade, gradeWeights, count)
+    // 重新生成 grade：_upgradeOptionsByGrade 中只有 grade 1 条目，
+    // _weightedRandomSelect 内部 fallback 会改写 grade=1 丢弃原始选中等级。
+    // 升级选项使用 deltaFromGrade * grade 模式，grade 决定效果倍率，
+    // 需独立重新随机以确保高等级选项出现。
+    for (var i = 0; i < result.length; i++) {
+        result[i].grade = _randomGrade(gradeWeights)
+    }
+    return result
 }
 
 // ---- 怪物 ----
@@ -369,7 +408,7 @@ function getWaveConfig(waveNumber) {
 }
 
 // ---- 通用 effect 应用 ----
-function applyEffects(effects, playerData) {
+function applyEffects(effects, playerData, grade) {
     if (!effects || !playerData) return
     for (var i = 0; i < effects.length; i++) {
         var eff = effects[i]
@@ -382,8 +421,8 @@ function applyEffects(effects, playerData) {
         } else if (eff.delta !== undefined) {
             playerData[eff.attribute] += eff.delta
         } else if (eff.deltaFromGrade !== undefined) {
-            var grade = eff.grade || 1
-            playerData[eff.attribute] += eff.deltaFromGrade * grade
+            var g = grade || eff.grade || 1
+            playerData[eff.attribute] += eff.deltaFromGrade * g
         }
     }
 }

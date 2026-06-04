@@ -104,14 +104,17 @@ Item {
             for (var i = 0; i < MonstersData.children.length; i++) {
                 var monsterData = MonstersData.children[i]
                 var n = Math.floor(monsterData.initCount * monsterData.countRation)
+                var increaseFactor = 1 + monsterData.countIcreaseRation
+                // 避免 countIcreaseRation = -1 时除零（如 Prayer）
+                if (increaseFactor <= 0) increaseFactor = 1
                 if (n === 0) {
-                    monsterData.countRation *= 1 + monsterData.countIcreaseRation
+                    monsterData.countRation *= increaseFactor
                 } else if (n + monsterData.curNumber > monsterData.maxCurNumber) {
                     spawnMonsters(monsterData.maxCurNumber - monsterData.curNumber, monsterData.objectName)
-                    monsterData.countRation /= 1 + monsterData.countIcreaseRation
+                    monsterData.countRation /= increaseFactor
                 } else {
                     spawnMonsters(n, monsterData.objectName)
-                    monsterData.countRation *= 1 + monsterData.countIcreaseRation
+                    monsterData.countRation *= increaseFactor
                 }
             }
         }
@@ -222,6 +225,7 @@ Item {
         for (var i = 0; i < monsters.children.length; i++) {
             child = monsters.children[i];
             if (child.objectName === "Monster" && !child.isDestroy) {
+                unregisterMonsterCallbacks(child)
                 child.disappear()
             }
         }
@@ -245,12 +249,16 @@ Item {
     function spawnMonsters(n,monsterName) {
         for(var i=0;i<n;i++){
             var margin = 50
-            var x=Math.random() * (monsters.parent.width - margin*2)+margin;
-            var y=Math.random() * (monsters.parent.height - margin*2)+margin;
-            if(Tool.getDistance(Qt.point(target.x,target.y),Qt.point(x,y))<200){//离玩家太近时重新定位
-                i--
-                continue
+            var retries = 0
+            var maxRetries = 50
+            var x, y
+            while (retries < maxRetries) {
+                x = Math.random() * (monsters.parent.width - margin*2) + margin
+                y = Math.random() * (monsters.parent.height - margin*2) + margin
+                if (Tool.getDistance(Qt.point(target.x,target.y), Qt.point(x,y)) >= 200) break
+                retries++
             }
+            if (retries >= maxRetries) continue
             var fork = forkParent.spawnFork()
             fork.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
             fork.x = x
@@ -279,6 +287,10 @@ Item {
                 if((monster.x-monster.target.x)>0)monster.faceLeft()
                 else monster.faceRight()
                 registerMonsterCallbacks(monster)
+                // Scavenger 需要生成后立即获得随机方向，不等 per3000ms
+                if (monster.monsterName === "scavenger") {
+                    monster.setGoalRandomly()
+                }
                 child.destroy()
             }
         }
@@ -354,6 +366,8 @@ Item {
         if(monster.isDestroy)return
         var materialComponent=Qt.createComponent("../drops/Material.qml")
         if (materialComponent.status === Component.Ready){
+            var mapW = monsters.parent.width
+            var mapH = monsters.parent.height
             for(var i=0;i<monster.monsterData.materialDrops;i++){
                 var material=materialComponent.createObject(dropsParent)
                 material.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
@@ -364,6 +378,9 @@ Item {
                     material.x=monster.x+monster.width/2-material.width/2+(Math.random()-0.5)*monster.width*2
                     material.y=monster.y+monster.height-material.height+(Math.random()-0.5)*monster.width*2
                 }
+                // 钳制到地图内，防止掉到黑色区域
+                material.x = Math.max(0, Math.min(mapW - material.width, material.x))
+                material.y = Math.max(0, Math.min(mapH - material.height, material.y))
             }
         }else console.log("Error loading component:", materialComponent.errorString())
     }
@@ -377,6 +394,8 @@ Item {
             fruit.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
             fruit.x=monster.x+monster.width/2-fruit.width/2+(Math.random()-0.5)*monster.width*1.6
             fruit.y=monster.y+monster.height-fruit.height+(Math.random()-0.5)*monster.width*1.6
+            fruit.x = Math.max(0, Math.min(monsters.parent.width - fruit.width, fruit.x))
+            fruit.y = Math.max(0, Math.min(monsters.parent.height - fruit.height, fruit.y))
         }else console.log("Error loading component:", fruitComponent.errorString())
     }
 
@@ -389,6 +408,8 @@ Item {
             chest.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
             chest.x=monster.x+monster.width/2-chest.width/2+(Math.random()-0.5)*monster.width*1.6
             chest.y=monster.y+monster.height-chest.height+(Math.random()-0.5)*monster.width*1.6
+            chest.x = Math.max(0, Math.min(monsters.parent.width - chest.width, chest.x))
+            chest.y = Math.max(0, Math.min(monsters.parent.height - chest.height, chest.y))
         }else console.log("Error loading component:", chestComponent.errorString())
     }
 

@@ -25,7 +25,7 @@ Item {
     }
 
     function applyOptionEffects(optionData){
-        DataLoader.applyEffects(optionData.effects, PlayerData)
+        DataLoader.applyEffects(optionData.effects, PlayerData, optionData.grade)
     }
 
     function renderTalentText(template, grade){

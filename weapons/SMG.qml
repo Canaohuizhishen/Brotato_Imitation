@@ -127,6 +127,7 @@ RangedWeapon {
     }
 
     function fire(){
+        inFire = true
         attackSound.play()
         if(isFaceRight){
             backAnimation.angle=-rotation

@@ -30,15 +30,14 @@ Monster{
         do {
             rx = Math.random() * (owner.width - margin * 2) + margin
             ry = Math.random() * (owner.height - margin * 2) + margin
-        } while (Tool.getDistance(Qt.point(x, y), Qt.point(rx, ry)) < v * 0.05)
-        var point = {
-            x: rx,
-            y: ry,
-            width: 0,
-            height: 0
-        }
-        target = point
+        } while (Tool.getDistance(Qt.point(x, y), Qt.point(rx, ry)) < v * interval / 1000)
+        target = { x: rx, y: ry, width: 0, height: 0 }
         spray()
+    }
+
+    // 基类 Monster.updateMovement 在到达目标点时自动调用此函数
+    function onReachTarget() {
+        setGoalRandomly()
     }
 
     transform: Scale {

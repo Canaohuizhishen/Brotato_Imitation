@@ -168,40 +168,28 @@ function mergeDuplicateProps(propName)
 //移除一个与该武器相同的武器，并将该武器等级提高1,然后移动到模型尾部
 function compositeWeapon(wIndex)
 {
-    // console.log(wIndex)
     var currentWeapon = PlayerData.weapons.get(wIndex)
-    // console.log(wIndex)
-    var matchIndex = -1
+    // 在操作模型前先存下 grade，避免 remove 后引用悬空导致 grade 变成 NaN
+    var keepGrade = currentWeapon.grade
+    // 优先移除索引较大的那个，避免索引偏移
+    var removeIdx = -1, keepIdx = -1
     for(var i = 0; i < PlayerData.weapons.count; i++) {
-        if(i === wIndex) {
-            continue
-        }
-
-        if(PlayerData.weapons.get(i).weaponName === currentWeapon.weaponName
-                && PlayerData.weapons.get(i).grade === currentWeapon.grade) {
-            matchIndex = i
-            break
+        if(i === wIndex) continue
+        var w = PlayerData.weapons.get(i)
+        if(w.weaponName === currentWeapon.weaponName && w.grade === keepGrade) {
+            if (i > wIndex) { removeIdx = i; keepIdx = wIndex; break }
+            else { removeIdx = wIndex; keepIdx = i; break }
         }
     }
+    if (removeIdx === -1) return
 
-    if(matchIndex === -1) {
-        return
-    } else {
-        PlayerData.weapons.remove(matchIndex)
-    }
-
-    //如果移除的项在当前项之前，就把当前项的索引-1
-    //如果在其之后，不进行操作，避免移除了在其之前的项后model的大小减少导致wIndex指引错误
-    if(matchIndex < wIndex) {
-        wIndex--
-    }
-
-    PlayerData.weapons.move(wIndex, PlayerData.weapons.count -1, 1)
-    var movedItem = PlayerData.weapons.get(PlayerData.weapons.count - 1)
-    // movedItem.weaponGrade++;
-    PlayerData.weapons.setProperty(PlayerData.weapons.count - 1, "grade", currentWeapon.grade + 1)
+    PlayerData.weapons.remove(removeIdx)
+    // keepIdx 不受 remove 影响（因为移除了更高/更低索引）
+    var finalIdx = keepIdx
+    PlayerData.weapons.move(finalIdx, PlayerData.weapons.count - 1, 1)
+    PlayerData.weapons.setProperty(PlayerData.weapons.count - 1, "grade", keepGrade + 1)
     PlayerData.weaponsListChanged()
-    PlayerData.weapons.layoutChanged() //强制模型更新，触发按钮可见性的重新计算
+    PlayerData.weapons.layoutChanged()
 }
 
 //控制合成按钮的可见性

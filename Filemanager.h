@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include <QFile>
+#include <QFileInfo>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QDir>
@@ -15,10 +16,15 @@ public:
     // 基础保存功能（带自动备份）
     Q_INVOKABLE bool saveGameData(const QString &filePath, const QJsonObject &data)
     {
-        // 创建备份
+        // 创建备份（仅当原文件存在时）
         const QString backupPath = filePath + ".bak";
-        QFile::remove(backupPath);
-        QFile::copy(filePath, backupPath);
+        QFileInfo fileInfo(filePath);
+        if (fileInfo.exists()) {
+            QFile::remove(backupPath);
+            if (!QFile::copy(filePath, backupPath)) {
+                qWarning() << "备份失败：" << filePath;
+            }
+        }
 
         // 写入新数据
         QFile file(filePath);

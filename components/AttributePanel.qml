@@ -63,7 +63,7 @@ Rectangle {
             color: mainButton.hovered&&!root.isMain ? "black" : "white"
             font.pixelSize: 20*root.scaleFactor
             horizontalAlignment: Text.AlignHCenter
-
+            verticalAlignment: Text.AlignVCenter
         }
 
         onHoveredChanged: {
@@ -98,6 +98,7 @@ Rectangle {
             color: minorButton.hovered&&root.isMain ? "black" : "white"
             font.pixelSize: 20*root.scaleFactor
             horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
         }
 
         onHoveredChanged: {
