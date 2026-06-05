@@ -1,5 +1,7 @@
 import QtQuick 2.15
 import singleton.PlayerData
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 import "../logic/DataLoader.js" as DataLoader
 
 Item {
@@ -55,7 +57,21 @@ Item {
     }
 
     function renderWeaponTalentText(weapon){
-        return DataLoader.renderWeaponTalentText(weapon, PlayerData)
+        var data = DataLoader.renderWeaponTalentText(weapon, PlayerData)
+        if (!data) return ""
+        var lang = SettingsData.language
+
+        if (data.isMelee) {
+            return "<font color='#ffffc0'>" + I18n.tr("伤害", lang) + " : </font><font color='white'>" + data.dmg + "(+100%" + I18n.tr("近战伤害", lang) + ")</font><br>\n"
+                + "<font color='#ffffc0'>" + I18n.tr("暴击", lang) + " : </font><font color='white'>x" + data.critMultiplier.toFixed(1) + "(" + data.critChance + "%" + I18n.tr("概率", lang) + ")</font><br>\n"
+                + "<font color='#ffffc0'>" + I18n.tr("冷却", lang) + " : </font><font color='white'>" + data.cd.toFixed(2) + "</font><br>\n"
+                + "<font color='#ffffc0'>" + I18n.tr("范围", lang) + " : </font><font color='white'>" + data.range + "(" + I18n.tr("近战", lang) + ")</font><br>"
+        } else {
+            return "<font color='#ffffc0'>" + I18n.tr("伤害", lang) + " : </font><font color='white'>" + data.dmg + "(+50%" + I18n.tr("远程伤害", lang) + ")</font><br>\n"
+                + "<font color='#ffffc0'>" + I18n.tr("暴击", lang) + " : </font><font color='white'>x" + data.critMultiplier.toFixed(1) + "(" + data.critChance + "%" + I18n.tr("概率", lang) + ")</font><br>\n"
+                + "<font color='#ffffc0'>" + I18n.tr("冷却", lang) + " : </font><font color='white'>" + data.cd.toFixed(2) + "</font><br>\n"
+                + "<font color='#ffffc0'>" + I18n.tr("范围", lang) + " : </font><font color='white'>" + data.range + "(" + I18n.tr("远战", lang) + ")</font><br>"
+        }
     }
 
     function getAllWeapons(){

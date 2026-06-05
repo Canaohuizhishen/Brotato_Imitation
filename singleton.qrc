@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>singleton/PlayerData.qml</file>
         <file>singleton/MonstersData.qml</file>
+        <file>singleton/SettingsData.qml</file>
         <file>logic/DataLoader.js</file>
     </qresource>
 </RCC>

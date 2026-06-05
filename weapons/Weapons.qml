@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import singleton.PlayerData
+import singleton.SettingsData
 import "../tool.js" as Tool
 import "../monsters"
 import "../components"
@@ -20,6 +21,8 @@ Item{
     height: width
     z: 3
     property bool isFaceRight: true
+    // 手动瞄准目标点（全局坐标，由 GameArea 设置）
+    property var manualAimPoint: null
 
     Component.onCompleted: {
         upDataWeapons()
@@ -65,20 +68,29 @@ Item{
 
     function updateGoals() {
         if (!active || paused) return
+        
+        var useManualAim = SettingsData.manualAim && manualAimPoint !== null
+
         for (var i = 0; i < children.length; i++) {
             var child = children[i]
-            if (child.objectName === "Weapon") {
+            if (child.objectName !== "Weapon") continue
+            
+            if (useManualAim) {
+                // 手动瞄准：鼠标光标位置（已由 GameArea 转换到游戏区坐标）
+                child.targetPoint = Qt.point(
+                    manualAimPoint.x - weapons.x,
+                    manualAimPoint.y - weapons.y
+                )
+            } else {
+                // 自动瞄准
                 var weapon = child.core
                 var monster = target.getClosestMonster(child.x + weapons.x, child.y + weapons.y, weapon.range * scaleFactor)
                 if (monster === null) {
-                    // 目标丢失 → 即使开火中也立即停火（设置 null 使 fireTimer 停止）
                     child.targetPoint = null
                     if (!child.inFire) {
                         owner.isFaceRight ? child.faceRight() : child.faceLeft()
                     }
                 } else {
-                    // 所有武器每周期都更新 targetPoint
-                    // 近战武器依靠 Spear.onRotationChanged 锁保持方向
                     child.targetPoint = Qt.point(monster.x + monster.width / 2 - weapons.x, monster.y + monster.height / 2 - weapons.y)
                 }
             }

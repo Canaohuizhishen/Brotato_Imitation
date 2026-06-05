@@ -1,11 +1,12 @@
 import QtQuick 2.15
+import singleton.SettingsData
+import "../logic/DataLoader.js" as DataLoader
 import "../components"
 
 Rectangle {
     id: background
     width: parent.width
     height: parent.height
-    color: "#796461"
     focus: false
     property double scaleFactor: 1.0
     property int stoneNum: 100
@@ -14,10 +15,39 @@ Rectangle {
     property Forks forks: forks
     property var componentCache: null
 
+    // 当前主题数据（从 DataLoader 加载）
+    property var themeData: null
+
+    // 背景色：主题有数据则用 backgroundColor，否则回退默认色
+    color: themeData ? themeData.backgroundColor : "#796461"
+
     Component.onCompleted: {
+        loadTheme()
         stoneNum=width*height/stoneWidth/stoneHeight*0.1
         createStones()
         createJaggedEdges()
+    }
+
+    // 当用户在设置页面切换背景时，立即重新加载主题
+    Connections {
+        target: SettingsData
+        function onBackgroundChanged() {
+            loadTheme()
+        }
+    }
+
+    function loadTheme() {
+        var index = SettingsData.background
+        if (index === 0) {
+            // 随机：只从有数据的主题中选
+            var validThemes = []
+            var allThemes = DataLoader.getAllThemes()
+            for (var i = 1; i < allThemes.length; i++) {
+                if (allThemes[i] !== null) validThemes.push(i)
+            }
+            index = validThemes[Math.floor(Math.random() * validThemes.length)]
+        }
+        themeData = DataLoader.getTheme(index)
     }
 
     Forks{

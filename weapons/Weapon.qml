@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtMultimedia
+import singleton.SettingsData
 import "../tool.js" as Tool
 import "../components"
 import "../data"
@@ -62,6 +63,28 @@ Item {
         id: attackSound
         source: "qrc:/audio/attack_"+weapon.core.objectName+".wav"
         volume: 0.6
+    }
+
+    // 武器突显轮廓
+    Rectangle {
+        id: weaponHighlight
+        anchors.centerIn: weapon
+        width: weapon.width + 20 * weapon.scaleFactor
+        height: weapon.height + 20 * weapon.scaleFactor
+        radius: 6 * weapon.scaleFactor
+        color: "transparent"
+        border.color: "yellow"
+        border.width: 2 * weapon.scaleFactor
+        visible: SettingsData.highlightWeapon
+        z: 1
+
+        NumberAnimation on opacity {
+            from: 0.3
+            to: 0.8
+            duration: 500
+            running: SettingsData.highlightWeapon
+            loops: Animation.Infinite
+        }
     }
 
     Image{

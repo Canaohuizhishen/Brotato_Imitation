@@ -3,6 +3,8 @@ import QtQuick.Controls
 import"../components"
 import singleton.PlayerData
 import "../logic/ShopLogicHandler.js" as Controller
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Rectangle {
     id: root
@@ -40,14 +42,14 @@ Rectangle {
 
             SetButton {
                 id:continueButton
-                text: "继续"
+                text: I18n.tr("继续", SettingsData.language)
                 width: parent.width
                 height: width/8
                 onClicked: {
                 }
             }
             SetButton {
-                text: "重新开始"
+                text: I18n.tr("重新开始", SettingsData.language)
                 width: parent.width
                 height: width/8
                 onClicked: {
@@ -59,12 +61,12 @@ Rectangle {
             }
             SetButton {
                 id: settingButton
-                text: "设置"
+                text: I18n.tr("设置", SettingsData.language)
                 width: parent.width
                 height: width/8
             }
             SetButton {
-                text: "返回主菜单"
+                text: I18n.tr("返回主菜单", SettingsData.language)
                 width: parent.width
                 height: width/8
                 onClicked: {
@@ -130,16 +132,17 @@ Rectangle {
             anchors.margins: 20*root.scaleFactor
             spacing: 15*root.scaleFactor
 
-            Text {
-                text: "是否返回主菜单?"
+            ScaledText {
+                text: I18n.tr("是否返回主菜单?", SettingsData.language)
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "white"
-                font.pixelSize: 30*root.scaleFactor
+                basePixelSize: 30
+                uiScale: root.scaleFactor
             }
 
             SetButton {
                 id:backMainMenuButton
-                text: "是"
+                text: I18n.tr("是", SettingsData.language)
                 width: parent.width
                 height: width/8
                 onClicked: {
@@ -150,7 +153,7 @@ Rectangle {
             }
 
             SetButton {
-                text: "否"
+                text: I18n.tr("否", SettingsData.language)
                 width: parent.width
                 height: width/8
                 onClicked: {
@@ -181,16 +184,17 @@ Rectangle {
             anchors.margins: 20*root.scaleFactor
             spacing: 15
 
-            Text {
-                text: "是否重新开始本轮游戏?"
+            ScaledText {
+                text: I18n.tr("是否重新开始本轮游戏?", SettingsData.language)
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "white"
-                font.pixelSize: 30*root.scaleFactor
+                basePixelSize: 30
+                uiScale: root.scaleFactor
             }
 
             SetButton {
                 id: restartButton
-                text: "是"
+                text: I18n.tr("是", SettingsData.language)
                 width: parent.width
                 height: width/8
                 onClicked: {
@@ -201,7 +205,7 @@ Rectangle {
             }
 
             SetButton {
-                text: "否"
+                text: I18n.tr("否", SettingsData.language)
                 width: parent.width
                 height: width/8
                 onClicked: {

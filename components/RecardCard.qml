@@ -1,4 +1,6 @@
 import QtQuick 2.15
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Rectangle {
     id: recardCard
@@ -23,28 +25,31 @@ Rectangle {
         anchors.topMargin: 30*recardCard.scaleFactor
     }
 
-    Text{
-        text: "纪录"
+    ScaledText {
+        text: I18n.tr("纪录", SettingsData.language)
         color: "white"
-        font.pixelSize: 19*recardCard.scaleFactor
+        basePixelSize: 19
+        uiScale: recardCard.scaleFactor
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 105*recardCard.scaleFactor
     }
 
-    Text{
-        text: "通关最高难度"
+    ScaledText {
+        text: I18n.tr("通关最高难度", SettingsData.language)
         color: "#ffffc0"
-        font.pixelSize: 15*recardCard.scaleFactor
+        basePixelSize: 15
+        uiScale: recardCard.scaleFactor
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 140*recardCard.scaleFactor
     }
 
-    Text{
-        text: "尚无记录"
+    ScaledText {
+        text: I18n.tr("尚无记录", SettingsData.language)
         color: "white"
-        font.pixelSize: 15*recardCard.scaleFactor
+        basePixelSize: 15
+        uiScale: recardCard.scaleFactor
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 160*recardCard.scaleFactor

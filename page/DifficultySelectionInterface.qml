@@ -3,6 +3,8 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts
 import singleton.PlayerData
 import "../components"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: difficultySelectionInterface
@@ -43,13 +45,14 @@ Item {
         }
     }
 
-    Text {
-        text: "难度选择"
+    ScaledText {
+        text: I18n.tr("难度选择", SettingsData.language)
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 42*difficultySelectionInterface.scaleFactor
         color: "white"
-        font.pixelSize: 35*difficultySelectionInterface.scaleFactor
+        basePixelSize: 35
+        uiScale: difficultySelectionInterface.scaleFactor
         style: Text.Outline
         styleColor: "black"
     }
@@ -148,7 +151,7 @@ Item {
 
     Button{
         id: back
-        text: "返回"
+        text: I18n.tr("返回", SettingsData.language)
         visible: true
         width: 120*difficultySelectionInterface.scaleFactor
         height: 30*difficultySelectionInterface.scaleFactor
@@ -160,9 +163,10 @@ Item {
             color: back.pressed || back.hovered ? "#cfcfcf" : "#202020"
             radius: 7
         }
-        contentItem: Text {
+        contentItem: ScaledText {
             text: back.text
-            font.pixelSize: 17*difficultySelectionInterface.scaleFactor
+            basePixelSize: 17
+            uiScale: difficultySelectionInterface.scaleFactor
             color: back.pressed || back.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

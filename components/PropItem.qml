@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import "../color.js" as Color
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: root
@@ -27,11 +29,12 @@ Item {
             anchors.centerIn: parent
         }
 
-        Text {
+        ScaledText {
             visible: propNum >= 2
             text: "X" + propNum
             color: "white"
-            font.pixelSize: 22*root.scaleFactor
+            basePixelSize: 22
+            uiScale: root.scaleFactor
             style: Text.Outline
             styleColor: "black"
             font.weight: Font.DemiBold
@@ -105,24 +108,27 @@ Item {
                 anchors.leftMargin: 5*root.scaleFactor
                 anchors.top: popupImageBackground.top
 
-                Text {
+                ScaledText {
                     id: popupName
-                    text: itemData.propName
+                    text: I18n.tr(itemData.propName, SettingsData.language)
                     color: "white"
-                    font.pixelSize: 18*root.scaleFactor
+                    basePixelSize: 18
+                    uiScale: root.scaleFactor
                 }
 
-                Text {
-                    text: itemData.type
+                ScaledText {
+                    text: I18n.tr(itemData.type, SettingsData.language)
                     color: "#ffffc0"
-                    font.pixelSize: 15*root.scaleFactor
+                    basePixelSize: 15
+                    uiScale: root.scaleFactor
                 }
             }
 
-            Text {
+            ScaledText {
                 id: talentText
-                text: itemData.talentText
-                font.pixelSize: 13*root.scaleFactor
+                text: I18n.translateRichText(itemData.talentText, SettingsData.language)
+                basePixelSize: 13
+                uiScale: root.scaleFactor
                 font.weight: Font.DemiBold
                 anchors.top: popupImageBackground.bottom
                 anchors.topMargin: 10*root.scaleFactor

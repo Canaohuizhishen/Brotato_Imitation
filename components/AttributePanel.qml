@@ -1,6 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import singleton.PlayerData
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Rectangle {
     id: root
@@ -22,6 +24,14 @@ Rectangle {
         upData()
     }
 
+    // 语言切换时刷新
+    Connections {
+        target: SettingsData
+        function onLanguageChanged() {
+            upData()
+        }
+    }
+
     function upData(){
         mainAttributes.clear()
         mainAttributes.addAttributes()
@@ -29,10 +39,11 @@ Rectangle {
         secondaryAttributes.addAttributes()
     }
 
-    Text {
-        text: "属性"
+    ScaledText {
+        text: I18n.tr("属性", SettingsData.language)
         color: "white"
-        font.pixelSize: 29*root.scaleFactor
+        basePixelSize: 29
+        uiScale: root.scaleFactor
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 14*root.scaleFactor
@@ -45,7 +56,7 @@ Rectangle {
         anchors.right: root.horizontalCenter
         anchors.top: root.top
         anchors.topMargin: 65*root.scaleFactor
-        text: "主要"
+        text: I18n.tr("主要", SettingsData.language)
         onClicked: {
             root.isMain = true
             mainAttributes.visible = true
@@ -58,10 +69,11 @@ Rectangle {
             color: !mainButton.hovered&&!root.isMain ? "black" : "white"
             anchors.fill: parent
         }
-        contentItem: Text {
+        contentItem: ScaledText {
             text: mainButton.text
             color: mainButton.hovered&&!root.isMain ? "black" : "white"
-            font.pixelSize: 20*root.scaleFactor
+            basePixelSize: 20
+            uiScale: root.scaleFactor
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
@@ -80,7 +92,7 @@ Rectangle {
         anchors.left: root.horizontalCenter
         anchors.top: root.top
         anchors.topMargin: 65*root.scaleFactor
-        text: "次要"
+        text: I18n.tr("次要", SettingsData.language)
         onClicked: {
             root.isMain = false
             mainAttributes.visible = false
@@ -93,10 +105,11 @@ Rectangle {
             color: !minorButton.hovered&&root.isMain ? "black" : "white"
             anchors.fill: parent
         }
-        contentItem: Text {
+        contentItem: ScaledText {
             text: minorButton.text
             color: minorButton.hovered&&root.isMain ? "black" : "white"
-            font.pixelSize: 20*root.scaleFactor
+            basePixelSize: 20
+            uiScale: root.scaleFactor
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
         }
@@ -122,7 +135,7 @@ Rectangle {
             anchors.top: mainAttributes.top
             anchors.horizontalCenter: mainAttributes.horizontalCenter
             scaleFactor: root.scaleFactor
-            attribute: "目前等级"
+            attribute: I18n.tr("目前等级", SettingsData.language)
             attributeValue: PlayerData.curLevel
             iconSource: "qrc:/images/upgrade_icon.png"
         }
@@ -162,22 +175,23 @@ Rectangle {
                 addAttributes()
             }
             function addAttributes(){
-                mainattributesModel.append({ "name": "最大生命值","value":PlayerData.maxHp ,"imageSource":"/images/attribute-maxHp.png",imageSource2:"/images/heart.png","detail":"你可承受的伤害不能超过"+PlayerData.maxHp})
-                mainattributesModel.append({ "name": "生命再生","value":PlayerData.hpRegeneration, "imageSource":"/images/attribute-hpRegeneration.png",imageSource2:"/images/lung.png","detail":"每隔"+(1/PlayerData.hpRegenerationPerSecond()).toFixed(2)+"秒，你恢复1点生命值("+PlayerData.hpRegenerationPerSecond().toFixed(2)+"点生命值/秒"})
-                mainattributesModel.append({ "name": "%生命窃取","value":PlayerData.lifeSteal , "imageSource":"/images/attribute-lifeSteal.png",imageSource2:"/images/teeth.png","detail":"你的攻击有"+PlayerData.lifeSteal+"%概率为自己恢复1生命值。上限：10生命值/秒"})
-                mainattributesModel.append({ "name": "%伤害","value":PlayerData.damage , "imageSource":"/images/attribute-damage.png",imageSource2:"/images/triceps.png","detail":"你的攻击造成的伤害"+PlayerData.damage+"%"})
-                mainattributesModel.append({ "name": "近战伤害","value":PlayerData.meleeDamage, "imageSource":"/images/attribute-meleeDamage.png" ,imageSource2:"/images/foream.png","detail":"你的近战攻击造成的伤害"+PlayerData.meleeDamage})
-                mainattributesModel.append({ "name": "远程伤害","value":PlayerData.rangedDamage , "imageSource":"/images/attribute-rangedDamage.png",imageSource2:"/images/shoulder.png","detail":"你的远战攻击造成的伤害"+PlayerData.rangedDamage})
-                mainattributesModel.append({ "name": "元素伤害","value":PlayerData.elementalDamage, "imageSource":"/images/attribute-elementalDamage.png" ,imageSource2:"/images/brain.png","detail":"元素伤害增加"+PlayerData.elementalDamage})
-                mainattributesModel.append({ "name": "%攻击速度","value":PlayerData.attackSpeed , "imageSource":"/images/attribute-attackSpeed.png",imageSource2:"/images/reflexes.png","detail":"攻击速度提高"+PlayerData.attackSpeed+",同样适用于远战武器"})
-                mainattributesModel.append({ "name": "%暴击率","value":PlayerData.critChance, "imageSource":"/images/attribute-critChance.png",imageSource2:"/images/finger.png","detail":"你的攻击有"+PlayerData.critChance+"%概率造成更多伤害"})
-                mainattributesModel.append({ "name": "工程学","value":PlayerData.engineering,"imageSource":"/images/attribute-engineering.png" ,imageSource2:"/images/skull.png","detail":"增强构筑物的力量。除次要属性外的其他主要属性皆不会影响构筑物。(例如贯通,反弹，爆炸等)"})
-                mainattributesModel.append({ "name": "范围","value":PlayerData.range ,"imageSource":"/images/attribute-range.png",imageSource2:"/images/eyes.png","detail":"你的武器最大射程增加"+PlayerData.range+"，对近战武器的效果减半。攻击范围变大也会延长近战武器的冷却时间（移动距离增长）"})
-                mainattributesModel.append({ "name": "护甲","value":PlayerData.armor ,"imageSource":"/images/attribute-armor.png",imageSource2:"/images/chest.png","detail":"你受到的伤害减少"+PlayerData.damageReduction()*100+"%"})
-                mainattributesModel.append({ "name": "%闪避","value":PlayerData.dodge ,"imageSource":"/images/attribute-dodge.png",imageSource2:"/images/back.png","detail":"你有"+PlayerData.dodge+"%的概率闪避攻击。上限：60%"})
-                mainattributesModel.append({ "name": "%速度","value":PlayerData.speed ,"imageSource":"/images/attribute-speed.png",imageSource2:"/images/leg.png","detail":"移速提高"+PlayerData.speed+"%"})
-                mainattributesModel.append({ "name": "幸运","value":PlayerData.luck ,"imageSource":"/images/attribute-luck.png",imageSource2:"/images/nose.png","detail":"击杀敌人发现道具或消耗品的概率提高"+PlayerData.luck+"%。此外，提高商店中道具的品级和等级提升"})
-                mainattributesModel.append({ "name": "收获","value":PlayerData.harvesting ,"imageSource":"/images/attribute-harvesting.png",imageSource2:"/images/hand.png","detail":"敌袭结束后获得"+PlayerData.harvesting+"材料和XP。每次发动时增加5%直至第20波敌袭，随后减低至20%"})
+                var lang = SettingsData.language
+                mainattributesModel.append({ "name": I18n.tr("最大生命值", lang),"value":PlayerData.maxHp ,"imageSource":"/images/attribute-maxHp.png",imageSource2:"/images/heart.png","detail":I18n.translateRichText("你可承受的伤害不能超过"+PlayerData.maxHp, lang)})
+                mainattributesModel.append({ "name": I18n.tr("生命再生", lang),"value":PlayerData.hpRegeneration, "imageSource":"/images/attribute-hpRegeneration.png",imageSource2:"/images/lung.png","detail":I18n.translateRichText("每隔"+(1/PlayerData.hpRegenerationPerSecond()).toFixed(2)+"秒，你恢复1点生命值("+PlayerData.hpRegenerationPerSecond().toFixed(2)+"点生命值/秒", lang)})
+                mainattributesModel.append({ "name": I18n.tr("%生命窃取", lang),"value":PlayerData.lifeSteal , "imageSource":"/images/attribute-lifeSteal.png",imageSource2:"/images/teeth.png","detail":I18n.translateRichText("你的攻击有"+PlayerData.lifeSteal+"%概率为自己恢复1生命值。上限：10生命值/秒", lang)})
+                mainattributesModel.append({ "name": I18n.tr("%伤害", lang),"value":PlayerData.damage , "imageSource":"/images/attribute-damage.png",imageSource2:"/images/triceps.png","detail":I18n.translateRichText("你的攻击造成的伤害"+PlayerData.damage+"%", lang)})
+                mainattributesModel.append({ "name": I18n.tr("近战伤害", lang),"value":PlayerData.meleeDamage, "imageSource":"/images/attribute-meleeDamage.png" ,imageSource2:"/images/foream.png","detail":I18n.translateRichText("你的近战攻击造成的伤害"+PlayerData.meleeDamage, lang)})
+                mainattributesModel.append({ "name": I18n.tr("远程伤害", lang),"value":PlayerData.rangedDamage , "imageSource":"/images/attribute-rangedDamage.png",imageSource2:"/images/shoulder.png","detail":I18n.translateRichText("你的远战攻击造成的伤害"+PlayerData.rangedDamage, lang)})
+                mainattributesModel.append({ "name": I18n.tr("元素伤害", lang),"value":PlayerData.elementalDamage, "imageSource":"/images/attribute-elementalDamage.png" ,imageSource2:"/images/brain.png","detail":I18n.translateRichText("元素伤害增加"+PlayerData.elementalDamage, lang)})
+                mainattributesModel.append({ "name": I18n.tr("%攻击速度", lang),"value":PlayerData.attackSpeed , "imageSource":"/images/attribute-attackSpeed.png",imageSource2:"/images/reflexes.png","detail":I18n.translateRichText("攻击速度提高"+PlayerData.attackSpeed+",同样适用于远战武器", lang)})
+                mainattributesModel.append({ "name": I18n.tr("%暴击率", lang),"value":PlayerData.critChance, "imageSource":"/images/attribute-critChance.png",imageSource2:"/images/finger.png","detail":I18n.translateRichText("你的攻击有"+PlayerData.critChance+"%概率造成更多伤害", lang)})
+                mainattributesModel.append({ "name": I18n.tr("工程学", lang),"value":PlayerData.engineering,"imageSource":"/images/attribute-engineering.png" ,imageSource2:"/images/skull.png","detail":I18n.translateRichText("增强构筑物的力量。除次要属性外的其他主要属性皆不会影响构筑物。(例如贯通,反弹，爆炸等)", lang)})
+                mainattributesModel.append({ "name": I18n.tr("范围", lang),"value":PlayerData.range ,"imageSource":"/images/attribute-range.png",imageSource2:"/images/eyes.png","detail":I18n.translateRichText("你的武器最大射程增加"+PlayerData.range+"，对近战武器的效果减半。攻击范围变大也会延长近战武器的冷却时间（移动距离增长）", lang)})
+                mainattributesModel.append({ "name": I18n.tr("护甲", lang),"value":PlayerData.armor ,"imageSource":"/images/attribute-armor.png",imageSource2:"/images/chest.png","detail":I18n.translateRichText("你受到的伤害减少"+PlayerData.damageReduction()*100+"%", lang)})
+                mainattributesModel.append({ "name": I18n.tr("%闪避", lang),"value":PlayerData.dodge ,"imageSource":"/images/attribute-dodge.png",imageSource2:"/images/back.png","detail":I18n.translateRichText("你有"+PlayerData.dodge+"%的概率闪避攻击。上限：60%", lang)})
+                mainattributesModel.append({ "name": I18n.tr("%速度", lang),"value":PlayerData.speed ,"imageSource":"/images/attribute-speed.png",imageSource2:"/images/leg.png","detail":I18n.translateRichText("移速提高"+PlayerData.speed+"%", lang)})
+                mainattributesModel.append({ "name": I18n.tr("幸运", lang),"value":PlayerData.luck ,"imageSource":"/images/attribute-luck.png",imageSource2:"/images/nose.png","detail":I18n.translateRichText("击杀敌人发现道具或消耗品的概率提高"+PlayerData.luck+"%。此外，提高商店中道具的品级和等级提升", lang)})
+                mainattributesModel.append({ "name": I18n.tr("收获", lang),"value":PlayerData.harvesting ,"imageSource":"/images/attribute-harvesting.png",imageSource2:"/images/hand.png","detail":I18n.translateRichText("敌袭结束后获得"+PlayerData.harvesting+"材料和XP。每次发动时增加5%直至第20波敌袭，随后减低至20%", lang)})
             }
         }
         function clear(){mainAttributesList.model.clear()}
@@ -213,27 +227,28 @@ Rectangle {
         }
         function clear(){secondaryAttributes.model.clear()}
         function addAttributes(){
+            var lang = SettingsData.language
             secondaryAttributesModel.clear();
-            secondaryAttributesModel.append({ "name": "消耗性治疗","value":PlayerData.consumptiveTherapy})
-            secondaryAttributesModel.append({ "name": "%材料治疗","value":PlayerData.materialTherapy })
-            secondaryAttributesModel.append({ "name": "获得%经验","value":PlayerData.gainExperience })
-            secondaryAttributesModel.append({ "name": "%拾取范围","value":PlayerData.pickingRegion })
-            secondaryAttributesModel.append({ "name": "%道具价格","value":PlayerData.propPrices })
-            secondaryAttributesModel.append({ "name": "%爆炸伤害","value":PlayerData.explosiveDamage })
-            secondaryAttributesModel.append({ "name": "%爆炸范围","value":PlayerData.explosionRange })
-            secondaryAttributesModel.append({ "name": "反弹","value":PlayerData.rebound })
-            secondaryAttributesModel.append({ "name": "贯通","value":PlayerData.penetrate })
-            secondaryAttributesModel.append({ "name": "%贯通伤害","value":PlayerData.penetratingDamage })
-            secondaryAttributesModel.append({ "name": "%对BOSS伤害","value":PlayerData.damageToBoss })
-            secondaryAttributesModel.append({ "name": "%燃烧速度","value":PlayerData.burningRatePercentage })
-            secondaryAttributesModel.append({ "name": "燃烧速度","value":PlayerData.burningRate })
-            secondaryAttributesModel.append({ "name": "击退","value":PlayerData.repel })
-            secondaryAttributesModel.append({ "name": "%几率获得双倍材料","value":PlayerData.obtainingDoubleMaterial })
-            secondaryAttributesModel.append({ "name": "箱子里的材料","value":PlayerData.materialsInTheBox })
-            secondaryAttributesModel.append({ "name": "免费刷新","value":PlayerData.freeRefresh })
-            secondaryAttributesModel.append({ "name": "树木","value":PlayerData.trees })
-            secondaryAttributesModel.append({ "name": "%敌人","value":PlayerData.enemy })
-            secondaryAttributesModel.append({ "name": "%敌人速度","value":PlayerData.enemySpeed })
+            secondaryAttributesModel.append({ "name": I18n.tr("消耗性治疗", lang),"value":PlayerData.consumptiveTherapy})
+            secondaryAttributesModel.append({ "name": I18n.tr("%材料治疗", lang),"value":PlayerData.materialTherapy })
+            secondaryAttributesModel.append({ "name": I18n.tr("获得%经验", lang),"value":PlayerData.gainExperience })
+            secondaryAttributesModel.append({ "name": I18n.tr("%拾取范围", lang),"value":PlayerData.pickingRegion })
+            secondaryAttributesModel.append({ "name": I18n.tr("%道具价格", lang),"value":PlayerData.propPrices })
+            secondaryAttributesModel.append({ "name": I18n.tr("%爆炸伤害", lang),"value":PlayerData.explosiveDamage })
+            secondaryAttributesModel.append({ "name": I18n.tr("%爆炸范围", lang),"value":PlayerData.explosionRange })
+            secondaryAttributesModel.append({ "name": I18n.tr("反弹", lang),"value":PlayerData.rebound })
+            secondaryAttributesModel.append({ "name": I18n.tr("贯通", lang),"value":PlayerData.penetrate })
+            secondaryAttributesModel.append({ "name": I18n.tr("%贯通伤害", lang),"value":PlayerData.penetratingDamage })
+            secondaryAttributesModel.append({ "name": I18n.tr("%对BOSS伤害", lang),"value":PlayerData.damageToBoss })
+            secondaryAttributesModel.append({ "name": I18n.tr("%燃烧速度", lang),"value":PlayerData.burningRatePercentage })
+            secondaryAttributesModel.append({ "name": I18n.tr("燃烧速度", lang),"value":PlayerData.burningRate })
+            secondaryAttributesModel.append({ "name": I18n.tr("击退", lang),"value":PlayerData.repel })
+            secondaryAttributesModel.append({ "name": I18n.tr("%几率获得双倍材料", lang),"value":PlayerData.obtainingDoubleMaterial })
+            secondaryAttributesModel.append({ "name": I18n.tr("箱子里的材料", lang),"value":PlayerData.materialsInTheBox })
+            secondaryAttributesModel.append({ "name": I18n.tr("免费刷新", lang),"value":PlayerData.freeRefresh })
+            secondaryAttributesModel.append({ "name": I18n.tr("树木", lang),"value":PlayerData.trees })
+            secondaryAttributesModel.append({ "name": I18n.tr("%敌人", lang),"value":PlayerData.enemy })
+            secondaryAttributesModel.append({ "name": I18n.tr("%敌人速度", lang),"value":PlayerData.enemySpeed })
         }
     }
 

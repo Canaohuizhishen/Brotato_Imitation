@@ -1,4 +1,6 @@
 import QtQuick 2.15
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Rectangle {
     id: lockCard
@@ -19,10 +21,11 @@ Rectangle {
         anchors.topMargin: 65*lockCard.scaleFactor
     }
 
-    Text{
-        text: "敬请期待"
+    ScaledText {
+        text: I18n.tr("敬请期待", SettingsData.language)
         color: "white"
-        font.pixelSize: 18*lockCard.scaleFactor
+        basePixelSize: 18
+        uiScale: lockCard.scaleFactor
         anchors.centerIn: parent
     }
 }

@@ -1,5 +1,7 @@
 import QtQuick 2.15
 import "../data"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Rectangle {
     id: roleCard
@@ -33,20 +35,22 @@ Rectangle {
         }
     }
 
-    Text{
+    ScaledText {
         text: roleCard.roleName == "" ? "" : core.roleName
         color: "white"
-        font.pixelSize: 18*roleCard.scaleFactor
+        basePixelSize: 18
+        uiScale: roleCard.scaleFactor
         anchors.left: parent.left
         anchors.leftMargin: roleIcon.width+20*roleCard.scaleFactor
         anchors.top: parent.top
         anchors.topMargin: 12*roleCard.scaleFactor
     }
 
-    Text{
-        text: "角色"
+    ScaledText {
+        text: I18n.tr("角色", SettingsData.language)
         color: "#ffffc0"
-        font.pixelSize: 15*roleCard.scaleFactor
+        basePixelSize: 15
+        uiScale: roleCard.scaleFactor
         anchors.left: parent.left
         anchors.leftMargin: roleIcon.width+20*roleCard.scaleFactor
         anchors.top: parent.top

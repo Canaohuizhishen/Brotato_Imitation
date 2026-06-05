@@ -4,6 +4,8 @@ import singleton.PlayerData
 import "../components"
 import "../logic/ShopLogicHandler.js" as Controller
 import "../data"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: chestOpeningInterface
@@ -28,17 +30,18 @@ Item {
         opacity: 0.85
     }
 
-    Text {
+    ScaledText {
         id: upgradeTitle
-        text: "发现道具!"
-        font.pixelSize: 42*chestOpeningInterface.scaleFactor
+        text: I18n.tr("发现道具!", SettingsData.language)
+        basePixelSize: 42
+        uiScale: chestOpeningInterface.scaleFactor
         style: Text.Outline
         color: "black"
         anchors.top: parent.top
         anchors.topMargin: 70*chestOpeningInterface.scaleFactor
         anchors.horizontalCenter: parent.horizontalCenter
 
-        Text {
+        ScaledText {
             text: upgradeTitle.text
             color: "white"
             font.pixelSize: upgradeTitle.font.pixelSize
@@ -71,16 +74,17 @@ Item {
 
             Button{
                 id: getButton
-                text: "拿取"
+                text: I18n.tr("拿取", SettingsData.language)
                 width: 230*chestOpeningInterface.scaleFactor
                 height: width/4
                 background: Rectangle {
                     color: getButton.pressed || getButton.hovered ? "white" : "black"
                     radius: 4*chestOpeningInterface.scaleFactor
                 }
-                contentItem: Text {
+                contentItem: ScaledText {
                     text: getButton.text
-                    font.pixelSize: 23*chestOpeningInterface.scaleFactor
+                    basePixelSize: 23
+                    uiScale: chestOpeningInterface.scaleFactor
                     color: getButton.pressed || getButton.hovered ? "black" : "white"
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
@@ -118,16 +122,18 @@ Item {
                         width: 30*chestOpeningInterface.scaleFactor
                         height: width
                     }
-                    Text {
+                    ScaledText {
                         text: "+"+propCard.core.basePrice
-                        font.pixelSize: 23*chestOpeningInterface.scaleFactor
+                        basePixelSize: 23
+                        uiScale: chestOpeningInterface.scaleFactor
                         color: recycleButton.pressed || recycleButton.hovered ? "black" : "white"
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-                    Text {
-                        text: "回收"
-                        font.pixelSize: 23*chestOpeningInterface.scaleFactor
+                    ScaledText {
+                        text: I18n.tr("回收", SettingsData.language)
+                        basePixelSize: 23
+                        uiScale: chestOpeningInterface.scaleFactor
                         color: recycleButton.pressed || recycleButton.hovered ? "black" : "white"
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter

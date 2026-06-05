@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import singleton.SettingsData
 import "../tool.js" as Tool
 import "../components"
 
@@ -10,6 +11,28 @@ Canvas {
     z: 5
     property bool paused: false
     property double scaleFactor: 1.0
+
+    // 投射物突显轮廓
+    Rectangle {
+        id: bulletHighlight
+        anchors.centerIn: parent
+        width: parent.width + 8
+        height: parent.height + 8
+        radius: width / 2
+        color: "transparent"
+        border.color: "#FF4444"
+        border.width: 2
+        visible: SettingsData.highlightProjectiles
+        z: -1
+
+        NumberAnimation on opacity {
+            from: 0.4
+            to: 0.9
+            duration: 400
+            running: SettingsData.highlightProjectiles
+            loops: Animation.Infinite
+        }
+    }
     property double lastScaleFactor: 1.0
     property color color: Qt.rgba(1, 0, 0, 1)
     property double damage: 0

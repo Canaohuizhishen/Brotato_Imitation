@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import singleton.PlayerData
+import singleton.SettingsData
 import "../components"
+import "../data/i18n.js" as I18n
 
 Item {
     id: settlementInterface
@@ -40,13 +42,34 @@ Item {
         anchors.centerIn: settlementInterface
         spacing: 15*settlementInterface.scaleFactor
 
-        Text {
+        ScaledText {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: (PlayerData.curHp>0 ? "胜利" : "战败")+"  第"+PlayerData.currentWaveNumber+"波-危险"+PlayerData.difficulty
+            text: PlayerData.curHp>0
+                ? I18n.trFormat("settlement_victory", SettingsData.language, [PlayerData.currentWaveNumber, PlayerData.difficulty])
+                : I18n.trFormat("settlement_defeat", SettingsData.language, [PlayerData.currentWaveNumber, PlayerData.difficulty])
             color: "white"
-            font.pointSize: 21*settlementInterface.scaleFactor
+            basePixelSize: 21
+            uiScale: settlementInterface.scaleFactor
             style: Text.Outline
             styleColor: "black"
+        }
+
+        // 无尽模式得分
+        ScaledText {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: {
+                if (PlayerData.currentWaveNumber < 20) return ""
+                var modeName = SettingsData.endlessScoreMode === 0
+                    ? I18n.tr("最高敌袭次数", SettingsData.language) : I18n.tr("最高难度", SettingsData.language)
+                var score = SettingsData.endlessScoreMode === 0
+                    ? PlayerData.currentWaveNumber
+                    : PlayerData.currentWaveNumber * PlayerData.difficulty
+                return I18n.trFormat("endless_score", SettingsData.language, [modeName, score])
+            }
+            color: "#FFD700"
+            basePixelSize: 18
+            uiScale: settlementInterface.scaleFactor
+            visible: PlayerData.currentWaveNumber >= 20
         }
 
         Rectangle{
@@ -102,19 +125,19 @@ Item {
             spacing: 15*settlementInterface.scaleFactor
             SetButton{
                 id: retryButton
-                text: "重试"
+                text: I18n.tr("重试", SettingsData.language)
                 width: 200*settlementInterface.scaleFactor
                 height: 40*settlementInterface.scaleFactor
             }
             SetButton{
                 id: newGameButton
-                text: "新游戏"
+                text: I18n.tr("新游戏", SettingsData.language)
                 width: 200*settlementInterface.scaleFactor
                 height: 40*settlementInterface.scaleFactor
             }
             SetButton{
                 id: backMainMenuButton
-                text: "返回主菜单"
+                text: I18n.tr("返回主菜单", SettingsData.language)
                 width: 400*settlementInterface.scaleFactor
                 height: 40*settlementInterface.scaleFactor
             }

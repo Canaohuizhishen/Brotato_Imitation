@@ -104,7 +104,26 @@ var _MONSTERS_DATA = [
 ]
 
 // ============================================================
-// 6. 波次数据
+// 6. 地图主题数据
+// ============================================================
+var _THEMES_DATA = [
+  null,  // 0=随机（无数据）
+  null,  // 1=泥地
+  null,  // 2=森林
+  null,  // 3=火山
+  {      // 4=梦幻之地 —— 唯一有数据的主题
+    "name": "梦幻之地",
+    "backgroundColor": "#796461",
+    "overlayColor": null,
+    "stoneImages": ["stone1.png", "stone2.png", "stone3.png", "stone4.png"],
+    "edgeImage": "edge.png"
+  },
+  null,  // 5=墓地
+  null   // 6=黑暗之地
+]
+
+// ============================================================
+// 7. 波次数据
 // ============================================================
 var _WAVES_DATA = [
   { "wave": 1, "spawns": [ { "monster": "babyAlien", "initCount": 4 } ] },
@@ -136,6 +155,7 @@ var _roles = null
 var _upgradeOptions = null
 var _monsters = null
 var _waves = null
+var _themes = null
 
 var _propsByGrade = null
 var _weaponsByGrade = null
@@ -151,6 +171,7 @@ function _ensureLoaded() {
     _upgradeOptions = _UPGRADE_OPTIONS_DATA
     _monsters = _MONSTERS_DATA
     _waves = _WAVES_DATA
+    _themes = _THEMES_DATA
 
     // 按等级分桶索引
     _propsByGrade = { 1: [], 2: [], 3: [], 4: [] }
@@ -407,6 +428,18 @@ function getWaveConfig(waveNumber) {
     return null
 }
 
+// ---- 地图主题 ----
+function getTheme(index) {
+    _ensureLoaded()
+    if (index < 0 || index >= _themes.length) return null
+    return _themes[index] ? _deepCopy(_themes[index]) : null
+}
+
+function getAllThemes() {
+    _ensureLoaded()
+    return _deepCopy(_themes)
+}
+
 // ---- 通用 effect 应用 ----
 function applyEffects(effects, playerData, grade) {
     if (!effects || !playerData) return
@@ -433,27 +466,33 @@ function renderTalentText(template, grade) {
     return template.replace(/\{\{value\}\}/g, String(grade))
 }
 
-// ---- 武器 talentText 动态渲染 ----
+// ---- 武器 talentText 结构化数据（由 WeaponCustomizationCore 配合 I18n.tr 渲染） ----
 function renderWeaponTalentText(weapon, playerData) {
-    if (!weapon || !playerData) return ""
-    var dmg = weapon.baseDamage
-    if (weapon.meleeDamageMultiplier !== undefined) {
-        dmg = Math.floor(Math.max((dmg + playerData.meleeDamage * weapon.meleeDamageMultiplier) * (1 + playerData.damage / 100), 1))
-        var crit = 3 + playerData.critChance
-        var cd = weapon.baseCooldown / (1 + playerData.attackSpeed / 100)
-        return "<font color='#ffffc0'>伤害 : </font><font color='white'>" + dmg + "(+100%近战伤害)</font><br>\n"
-            + "<font color='#ffffc0'>暴击 : </font><font color='white'>x2.0(" + crit + "%概率)</font><br>\n"
-            + "<font color='#ffffc0'>冷却 : </font><font color='white'>" + cd.toFixed(2) + "</font><br>\n"
-            + "<font color='#ffffc0'>范围 : </font><font color='white'>" + (weapon.baseRange + playerData.range) + "(近战)</font><br>"
+    if (!weapon || !playerData) return null
+    if (weapon.meleeDamageMultiplier === undefined && weapon.rangedDamageMultiplier === undefined) return null
+    
+    var isMelee = weapon.meleeDamageMultiplier !== undefined
+    var dmg, critChance, critMultiplier
+    
+    if (isMelee) {
+        dmg = Math.floor(Math.max((weapon.baseDamage + playerData.meleeDamage * weapon.meleeDamageMultiplier) * (1 + playerData.damage / 100), 1))
+        critChance = 3 + playerData.critChance
+        critMultiplier = 2.0
+    } else {
+        dmg = Math.floor(Math.max((weapon.baseDamage + playerData.rangedDamage * weapon.rangedDamageMultiplier) * (1 + playerData.damage / 100), 1))
+        critChance = 1 + playerData.critChance
+        critMultiplier = 1.5
     }
-    if (weapon.rangedDamageMultiplier !== undefined) {
-        dmg = Math.floor(Math.max((dmg + playerData.rangedDamage * weapon.rangedDamageMultiplier) * (1 + playerData.damage / 100), 1))
-        var crit = 1 + playerData.critChance
-        var cd = weapon.baseCooldown / (1 + playerData.attackSpeed / 100)
-        return "<font color='#ffffc0'>伤害 : </font><font color='white'>" + dmg + "(+50%远程伤害)</font><br>\n"
-            + "<font color='#ffffc0'>暴击 : </font><font color='white'>x1.5(" + crit + "%概率)</font><br>\n"
-            + "<font color='#ffffc0'>冷却 : </font><font color='white'>" + cd.toFixed(2) + "</font><br>\n"
-            + "<font color='#ffffc0'>范围 : </font><font color='white'>" + (weapon.baseRange + playerData.range) + "(远战)</font><br>"
+    
+    var cd = weapon.baseCooldown / (1 + playerData.attackSpeed / 100)
+    var range = weapon.baseRange + playerData.range
+    
+    return {
+        dmg: dmg,
+        critChance: critChance,
+        critMultiplier: critMultiplier,
+        cd: cd,
+        range: range,
+        isMelee: isMelee
     }
-    return ""
 }

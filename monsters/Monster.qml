@@ -2,6 +2,7 @@ import QtQuick 2.15
 import Brotato
 import singleton.PlayerData
 import singleton.MonstersData
+import singleton.SettingsData
 import "../components"
 import "../data"
 import "../tool.js" as Tool
@@ -39,7 +40,7 @@ Item {
     property var core: MonstersData.getMonster(monsterName)
     property var monsterCore: MonstersData
 
-    property double v: core.initVelocity
+    property double v: core.initVelocity * (SettingsData.enemySpeedModifier / 100.0)
     property int interval: 10
     property double stepSize: v*interval/1200*scaleFactor
 
@@ -85,9 +86,9 @@ Item {
 
     Item {
         id: monsterData
-        property int maxHp: monster.core.initHp+monster.core.hpBonus*(PlayerData.currentWaveNumber-1)
+        property int maxHp: Math.round((monster.core.initHp+monster.core.hpBonus*(PlayerData.currentWaveNumber-1)) * (SettingsData.enemyHpModifier / 100.0))
         property int hp: maxHp
-        property int damage: monster.core.initDamage+monster.core.damageBonus*(PlayerData.currentWaveNumber-1)
+        property int damage: Math.round((monster.core.initDamage+monster.core.damageBonus*(PlayerData.currentWaveNumber-1)) * (SettingsData.enemyDamageModifier / 100.0))
         property int materialDrops: monster.core.materialDrops
         property double consumableDropRate: monster.core.consumableDropRate
         property double chestDropRate: monster.core.chestDropRate
@@ -131,7 +132,7 @@ Item {
     // Boss 血条
     Item {
         id: bossHpBar
-        visible: monster.core.isBoss
+        visible: monster.core.isBoss && SettingsData.showBossHealthBar
         opacity: 0.7
         anchors.bottom: monsterIcon.top
         anchors.bottomMargin: 4 * scaleFactor
@@ -468,10 +469,16 @@ Item {
         //可能的暴击
         if(Math.random()<bullet.critical/100){
             monsterData.hp-=bullet.damage*bullet.criticalDamageRate
-            Tool.createText(owner,bullet.damage*2,27*scaleFactor,"yellow",bullet.x,bullet.y)
+            if(SettingsData.showDamageNumbers) Tool.createText(owner,bullet.damage*2,27*scaleFactor,"yellow",bullet.x,bullet.y)
         }else{
             monsterData.hp-=bullet.damage
-            Tool.createText(owner,bullet.damage,27*scaleFactor,"white",bullet.x,bullet.y)
+            if(SettingsData.showDamageNumbers) Tool.createText(owner,bullet.damage,27*scaleFactor,"white",bullet.x,bullet.y)
+        }
+
+        //可能的爆炸特效
+        if (SettingsData.explosionEffect && PlayerData.explosiveDamage > 0) {
+            var expRadius = 20 + (PlayerData.explosionRange / 100) * 30
+            ParticlePool.spawnExplosion(bullet.x, bullet.y, expRadius * scaleFactor, gameArea, SettingsData.explosionEffect)
         }
 
         //可能的生命窃取
@@ -482,7 +489,7 @@ Item {
     }
 
     function makeBlood(x,y,dx,dy, width, parent){
-        ParticlePool.spawn(x, y, dx, dy, width, parent)
+        ParticlePool.spawn(x, y, dx, dy, width, parent, SettingsData.visualEffects)
     }
 }
 

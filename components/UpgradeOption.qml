@@ -1,6 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "../data"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Rectangle {
     id: root
@@ -132,22 +134,24 @@ Rectangle {
             }
 
             Column {
-                Text {
-                    text: root.title+" "+root.numberToText(root.grade)
+                ScaledText {
+                    text: I18n.tr(root.title, SettingsData.language)+" "+root.numberToText(root.grade)
                     color:root.color=="#000000" ? "white" : root.color
-                    font.pixelSize: 24*root.scaleFactor
+                    basePixelSize: 24
+                    uiScale: root.scaleFactor
                 }
-                Text {
-                    text: root.subtitle
+                ScaledText {
+                    text: I18n.tr(root.subtitle, SettingsData.language)
                     color: "#ffffc0"
-                    font.pixelSize: 15*root.scaleFactor
+                    basePixelSize: 15
+                    uiScale: root.scaleFactor
                 }
             }
         }
 
         // 数值和描述行
         TextEdit {
-            text: root.talentText
+            text: I18n.translateRichText(root.talentText, SettingsData.language)
             height:15*root.scaleFactor
             font.pixelSize: height
             readOnly: true
@@ -158,7 +162,7 @@ Rectangle {
         // 选择按钮
         Button {
             id: chooseButton
-            text: "选择"
+            text: I18n.tr("选择", SettingsData.language)
             height: 30*root.scaleFactor
             anchors.left: parent.left
             anchors.right: parent.right
@@ -168,10 +172,11 @@ Rectangle {
                 radius: 7*root.scaleFactor
             }
 
-            contentItem: Text {
+            contentItem: ScaledText {
                 text: chooseButton.text
                 color: "white"
-                font.pixelSize: 26*root.scaleFactor
+                basePixelSize: 26
+                uiScale: root.scaleFactor
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }

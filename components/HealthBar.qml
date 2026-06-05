@@ -34,11 +34,12 @@ Item {
             anchors.leftMargin: maxHp.border.width
         }
 
-        Text {
+        ScaledText {
             id: hpText
             text: healthBar.hp+"/"+healthBar.maxHp
             color: "white"
-            font.pixelSize: 18*healthBar.scaleFactor
+            basePixelSize: 18
+            uiScale: healthBar.scaleFactor
             style: Text.Outline
             styleColor: "black"
             anchors.centerIn: parent

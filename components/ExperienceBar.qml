@@ -36,11 +36,12 @@ Item {
 
         }
 
-        Text {
+        ScaledText {
             id: xpText
             text: "LV."+experienceBar.level
             color: "white"
-            font.pixelSize: 18*experienceBar.scaleFactor
+            basePixelSize: 18
+            uiScale: experienceBar.scaleFactor
             style: Text.Outline
             styleColor: "black"
             anchors.right: parent.right

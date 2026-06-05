@@ -11,50 +11,57 @@ Item {
     property string label: "Label"
     property bool checked: false
     property int fontSize: 30*root.scaleFactor
+    property real indent: 0  // 缩进量（子选项用）
 
     // 信号
     signal toggled(bool checked)
 
+    readonly property bool _dimmed: !root.enabled  // 父级禁用时自动变暗
+
     Rectangle {
         width: parent.width
         height: parent.height
-        color: root.checked ? "#000000" : (hoverHandler.hovered ? "white" : "#000000")
+        color: root._dimmed ? "#1a1a1a" : (root.checked ? "#000000" : (hoverHandler.hovered ? "white" : "#000000"))
         radius: 5*root.scaleFactor
 
         // 悬停检测
         HoverHandler {
             id: hoverHandler
             acceptedDevices: PointerDevice.Mouse
+            enabled: root.enabled
         }
         // 点击检测
         TapHandler {
+            enabled: root.enabled
             onTapped: switchControl.toggle()
         }
 
         Row {
             anchors.verticalCenter:  parent.verticalCenter
-            anchors.leftMargin: 10*root.scaleFactor
+            anchors.leftMargin: 10*root.scaleFactor + root.indent
             anchors.left: parent.left
-            spacing: parent.width - labelText.implicitWidth - switchControl.width-5*root.scaleFactor
+            spacing: parent.width - labelText.implicitWidth - switchControl.width - 5*root.scaleFactor - root.indent
 
-            Text {
+            ScaledText {
                 id: labelText
                 text: root.label
                 color: root.checked ? "white" : (hoverHandler.hovered ? "black" : "white")
-                font.pixelSize: root.fontSize
+                basePixelSize: 30
+                uiScale: root.scaleFactor
                 verticalAlignment: Text.AlignVCenter
             }
 
             Switch {
                 id: switchControl
                 checked: root.checked
+                enabled: root.enabled
                 indicator: Rectangle {
                     implicitWidth: 50*root.scaleFactor
                     implicitHeight: 20*root.scaleFactor
                     y: parent.height/2 - height/2
                     radius: 0
-                    color: switchControl.checked ? "#afafaf" : "#252525"
-                    border.color: "#000000"
+                    color: root._dimmed ? "#333333" : (switchControl.checked ? "#afafaf" : "#252525")
+                    border.color: root._dimmed ? "#444444" : "#000000"
                     border.width: 3*root.scaleFactor
 
                     Rectangle {
@@ -63,14 +70,14 @@ Item {
                         width: 20*root.scaleFactor
                         height: 26*root.scaleFactor
                         radius: 0
-                        color: switchControl.checked ? "#dbdbdb" : "#656565"
-                        border.color: "#000000"
+                        color: root._dimmed ? "#555555" : (switchControl.checked ? "#dbdbdb" : "#656565")
+                        border.color: root._dimmed ? "#444444" : "#000000"
                         border.width: 3*root.scaleFactor
                     }
                 }
 
                 onCheckedChanged: {
-                    root.checked = checked
+                    // 不覆盖 root.checked，以保持父级的属性绑定
                     root.toggled(checked)
                 }
             }

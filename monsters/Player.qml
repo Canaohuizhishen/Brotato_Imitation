@@ -1,9 +1,11 @@
 import QtQuick 2.15
 import QtQuick.Shapes 1.15
 import singleton.PlayerData
+import singleton.SettingsData
 import Brotato
 import "../components"
 import "../data"
+import "../data/i18n.js" as I18n
 import "../tool.js" as Tool
 
 Item {
@@ -34,6 +36,9 @@ Item {
 
     signal faceLefted()
     signal faceRighted()
+    signal screenShakeRequested()  // 屏幕振动请求——由 GameArea 连接
+    // 仅限鼠标模式：鼠标移动目标点（全局坐标，由 GameArea 设置）
+    property var mouseTarget: null
 
     Component.onCompleted: {
         x=ground.width/2
@@ -82,11 +87,64 @@ Item {
         xScale: 1.0; yScale: 1.0
     }
 
+    // 角色突显轮廓
+    Rectangle {
+        id: charHighlight
+        anchors.centerIn: playerIcon
+        width: playerIcon.width + 16 * player.scaleFactor
+        height: playerIcon.height + 16 * player.scaleFactor
+        radius: width / 4
+        color: "transparent"
+        border.color: "cyan"
+        border.width: 3 * player.scaleFactor
+        visible: SettingsData.highlightCharacter
+        z: 0
+
+        NumberAnimation on opacity {
+            from: 0.3
+            to: 0.9
+            duration: 600
+            running: SettingsData.highlightCharacter
+            loops: Animation.Infinite
+        }
+    }
+
     Image{
         id: playerIcon
         source: player.roleName == "" ? "" : "/images/"+ player.roleName +"_faceRight.png"
         anchors.fill: parent
         z: 1
+    }
+
+    // 角色头顶血条
+    Item {
+        id: characterHpBar
+        visible: SettingsData.showCharacterHealthBar
+        opacity: 0.7
+        anchors.bottom: playerIcon.top
+        anchors.bottomMargin: 2 * player.scaleFactor
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 40 * player.scaleFactor
+        height: 8 * player.scaleFactor
+        z: 101
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#454545"
+            border.color: "black"
+            border.width: 1
+            radius: 2
+        }
+
+        Rectangle {
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.margins: 1.5
+            width: (parent.width - 3) * Math.max(0, PlayerData.curHp / PlayerData.maxHp)
+            color: Qt.rgba(0.7, 0, 0, 1)
+            radius: 1
+        }
     }
 
     Canvas {
@@ -274,15 +332,30 @@ Item {
 
         var step = v * deltaTime
         var dx = 0, dy = 0
-        if (keysPressed.W) dy -= 1
-        if (keysPressed.S) dy += 1
-        if (keysPressed.A) dx -= 1
-        if (keysPressed.D) dx += 1
 
-        // 对角线归一化
-        if (dx !== 0 && dy !== 0) {
-            dx *= 0.707
-            dy *= 0.707
+        // 仅限鼠标模式
+        if (SettingsData.mouseOnly && mouseTarget !== null) {
+            var targetDx = mouseTarget.x - x
+            var targetDy = mouseTarget.y - y
+            var dist = Math.sqrt(targetDx * targetDx + targetDy * targetDy)
+            if (dist < 10) {
+                // 到达目标附近，停止移动
+                mouseTarget = null
+            } else {
+                dx = targetDx / dist
+                dy = targetDy / dist
+            }
+        } else {
+            // 键盘移动
+            if (keysPressed.W) dy -= 1
+            if (keysPressed.S) dy += 1
+            if (keysPressed.A) dx -= 1
+            if (keysPressed.D) dx += 1
+            // 对角线归一化
+            if (dx !== 0 && dy !== 0) {
+                dx *= 0.707
+                dy *= 0.707
+            }
         }
 
         // 边界约束 — 越界则拉回
@@ -386,9 +459,11 @@ Item {
             //护甲减伤
             var damage=Math.ceil(bullet.damage*(1-PlayerData.damageReduction()))
             PlayerData.curHp-=damage
-            Tool.createText(ground,"-"+damage,29*player.scaleFactor,"red",bullet.x,bullet.y)
+            if(SettingsData.showDamageNumbers) Tool.createText(ground,"-"+damage,29*player.scaleFactor,"red",bullet.x,bullet.y)
+            // 屏幕振动
+            if(SettingsData.screenShake) screenShakeRequested()
         }else{//闪避成功
-            Tool.createText(ground,"闪避",20*player.scaleFactor,"white",bullet.x,bullet.y,600,"blue")
+            if(SettingsData.showDamageNumbers) Tool.createText(ground,I18n.tr("闪避",SettingsData.language),20*player.scaleFactor,"white",bullet.x,bullet.y,600,"blue")
         }
     }
 }
