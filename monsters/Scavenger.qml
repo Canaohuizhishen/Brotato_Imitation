@@ -88,6 +88,40 @@ Monster{
         }
     }
 
+    // 预声明红色遮罩
+    Image {
+        id: redMask
+        anchors.fill: parent
+        source: scavenger.isFaceRight ? "qrc:/images/" + monsterName + "_redMask_faceRight.png" : "qrc:/images/" + monsterName + "_redMask_faceLeft.png"
+        visible: false
+        opacity: 1.0
+        z: 100
+
+        SequentialAnimation {
+            id: maskAnimator
+            running: false
+
+            OpacityAnimator {
+                target: redMask
+                from: 0
+                to: 0.55
+                duration: 600
+            }
+            OpacityAnimator {
+                target: redMask
+                from: 0.55
+                to: 0
+                duration: 200
+                onStopped: redMask.visible = false
+            }
+        }
+    }
+
+    function showRedMask() {
+        redMask.visible = true
+        maskAnimator.restart()
+    }
+
     function spray(){
         var dx=scavenger.x-scavenger.target.x
         var dy=scavenger.y-scavenger.target.y
@@ -96,7 +130,7 @@ Monster{
         var y=scavenger.y-dy/distance*sprayRange
         sprayAnimation.targetPoint=Qt.point(Math.min(Math.max(x,0),scavenger.parent.width-scavenger.width),Math.min(Math.max(y,0),scavenger.parent.height-scavenger.height))
         sprayAnimation.start()
-        makeRedMask(scavenger)
+        showRedMask()
     }
 
     function fire() {
@@ -108,41 +142,5 @@ Monster{
         scavenger.parent.spawnBullet(x,y,scavenger.width / 2,scavenger.width / 2,scavenger.monsterData.damage,scavenger.sprayRange,180-angle,Qt.rgba(1, 0, 0, 1))
     }
 
-    function makeRedMask(parent){
-        var mask = Qt.createQmlObject(
-                    `import QtQuick 2.15;
-                    Image {
-                        id: redOverlay
-                        anchors.fill: parent
-                        source: parent.isFaceRight ? "/images/scavenger_redMask_faceRight.png" : "/images/scavenger_redMask_faceLeft.png"
-                        z: 100
-                        Component.onCompleted: {
-                        }
-                        SequentialAnimation {
-                            loops: 1
-                            running: true
-                            OpacityAnimator {
-                                target: redOverlay
-                                from: 0
-                                to: 0.55
-                                duration: 600
-                                onStopped: {
-                                    redOverlay.destroy()
-                                }
-                            }
-                            OpacityAnimator {
-                                target: redOverlay
-                                from: 0.55
-                                to: 0
-                                duration: 200
-                                onStopped: {
-                                    redOverlay.destroy()
-                                }
-                            }
-                        }
-                    }`,
-                    parent,
-                    "dynamicImage"
-                    );
-    }
+
 }

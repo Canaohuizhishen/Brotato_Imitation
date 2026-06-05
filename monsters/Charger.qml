@@ -36,45 +36,41 @@ Monster{
         faceTarget=false
         chargeAnimation.targetPoint=Qt.point(Math.min(Math.max(x,0),charger.parent.width-charger.width),Math.min(Math.max(y,0),charger.parent.height-charger.height))
         chargeAnimation.start()
-        makeRedMask(charger)
+        showRedMask()
     }
 
-    function makeRedMask(parent){
-        var mask = Qt.createQmlObject(
-                    `import QtQuick 2.15;
-                    Image {
-                        id: redOverlay
-                        anchors.fill: parent
-                        source: parent.isFaceRight ? "qrc:/images/${monsterName}_redMask_faceRight.png" : "qrc:/images/${monsterName}_redMask_faceLeft.png"
-                        z: 100
-                        Component.onCompleted: {
-                        }
-                        SequentialAnimation {
-                            loops: 1
-                            running: true
-                            OpacityAnimator {
-                                target: redOverlay
-                                from: 0
-                                to: 0.7
-                                duration: 600
-                                onStopped: {
-                                    redOverlay.destroy()
-                                }
-                            }
-                            OpacityAnimator {
-                                target: redOverlay
-                                from: 0.7
-                                to: 0
-                                duration: 200
-                                onStopped: {
-                                    redOverlay.destroy()
-                                }
-                            }
-                        }
-                    }`,
-                    parent,
-                    "dynamicImage"
-                    );
+    // 预声明红色遮罩（对象池模式，避免运行时 Qt.createQmlObject）
+    Image {
+        id: redMask
+        anchors.fill: parent
+        source: charger.isFaceRight ? "qrc:/images/" + monsterName + "_redMask_faceRight.png" : "qrc:/images/" + monsterName + "_redMask_faceLeft.png"
+        visible: false
+        opacity: 1.0
+        z: 100
+
+        SequentialAnimation {
+            id: maskAnimator
+            running: false
+
+            OpacityAnimator {
+                target: redMask
+                from: 0
+                to: 0.7
+                duration: 600
+            }
+            OpacityAnimator {
+                target: redMask
+                from: 0.7
+                to: 0
+                duration: 200
+                onStopped: redMask.visible = false
+            }
+        }
+    }
+
+    function showRedMask() {
+        redMask.visible = true
+        maskAnimator.restart()
     }
 
     TimerCanPause {

@@ -4,6 +4,7 @@ import "../components"
 Weapon {
     id: meleeWeapon
     property var meleeBullet
+    property var componentCache: null
 
     onPausedChanged: {
         if(paused==true){
@@ -18,7 +19,10 @@ Weapon {
     }
 
     onActiveChanged: {
-        if(!meleeBullet)meleeWeapon.meleeBullet=meleeWeapon.createMeleeBullet()
+        // 只在 active==true 且子弹不存在时创建，避免 addWeapon 设 binding 时误创建
+        if (active && (!meleeBullet || meleeBullet.isDestroy)) {
+            meleeWeapon.meleeBullet=meleeWeapon.createMeleeBullet()
+        }
     }
 
     Timer {
@@ -57,14 +61,19 @@ Weapon {
     }
 
     function createMeleeBullet(){
-        var bulletComponent = Qt.createComponent("../bullets/MeleeBullet.qml")
-        if (bulletComponent.status === Component.Ready) {
-            var bullet = bulletComponent.createObject(bulletsParent);
-            bullet.target=meleeWeapon
-            bullet.critical=core.critical
-            bullet.criticalDamageRate=core.criticalDamageRate
-            bullet.damage=core.damage
-        }else console.error("Error loading component:", bulletComponent.errorString())
+        if (!meleeWeapon.componentCache) return null
+        // 先创建子弹（只传非 target 属性）
+        var bullet = meleeWeapon.componentCache.createMeleeBullet(bulletsParent, {
+            critical: core.critical,
+            criticalDamageRate: core.criticalDamageRate,
+            damage: core.damage
+        })
+        if (bullet) {
+            // target 在 createObject 之后设置，此时子弹已完全初始化
+            bullet.target = meleeWeapon
+        } else {
+            console.error("Error loading component: MeleeBullet.qml")
+        }
         return bullet
     }
 }

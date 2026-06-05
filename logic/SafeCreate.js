@@ -1,5 +1,7 @@
 .pragma library
 
+var _COMPONENT_READY = 1  // Component.Ready — QML JS 引擎不暴露 Component 枚举
+
 /**
  * SafeCreate — 安全的 QML 动态组件创建工具
  *
@@ -27,7 +29,7 @@
 // 创建组件并设置属性
 function create(componentPath, parent, properties) {
     var component = Qt.createComponent(componentPath)
-    if (component.status !== Component.Ready) {
+    if (component.status !== _COMPONENT_READY) {
         console.error("SafeCreate: failed to load", componentPath, component.errorString())
         return null
     }
@@ -43,7 +45,7 @@ function create(componentPath, parent, properties) {
 // 创建组件 + 注入从父级继承的绑定属性
 function createWithBindings(componentPath, parent, customProperties, bindingMap) {
     var component = Qt.createComponent(componentPath)
-    if (component.status !== Component.Ready) {
+    if (component.status !== _COMPONENT_READY) {
         console.error("SafeCreate: failed to load", componentPath, component.errorString())
         return null
     }

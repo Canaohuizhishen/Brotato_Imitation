@@ -10,6 +10,7 @@ Item{
     property Player owner
     property Monsters target
     property var bulletsParent: parent
+    property var componentCache: null
     property double scaleFactor: 1.0
     property bool active: true
     property bool paused: false
@@ -139,17 +140,20 @@ Item{
 
     function addWeapon(weaponName,grade=1){
         var weaponData = weaponCore.getWeapon(weaponName,grade)
-        var component = Qt.createComponent(weaponData.source);
-        if (component.status === Component.Ready) {
-            var weapon = component.createObject(weapons);
+        if (!componentCache || !weaponData) return
+        // 数据中 source 是裸文件名（如 "SMG.qml"），需拼接目录前缀
+        // 路径相对于 ComponentCache 的位置（logic/），所以用 ../weapons/
+        var weapon = componentCache.createFromSource("../weapons/" + weaponData.source, weapons, {})
+        if (weapon) {
             weapon.grade=grade
+            weapon.componentCache=weapons.componentCache
             weapon.bulletsParent=weapons.bulletsParent
             weapon.scaleFactor=Qt.binding(function() { return weapons.scaleFactor; })
             weapon.active=Qt.binding(function() { return weapons.active; })
             weapon.paused=Qt.binding(function() { return weapons.paused; })
             relocation()
         } else {
-            console.log("Error loading component:", component.errorString());
+            console.log("Error loading component:", weaponData.source);
         }
     }
 

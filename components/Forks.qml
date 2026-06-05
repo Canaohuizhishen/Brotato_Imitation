@@ -9,6 +9,7 @@ Item {
     property Player target
     property double scaleFactor: 1.0
     property double lastScaleFactor: 1.0
+    property var componentCache: null
     z: 2
 
     onScaleFactorChanged: {
@@ -23,11 +24,7 @@ Item {
     }
 
     function spawnFork() {
-        var forkComponent = Qt.createComponent("../components/Fork.qml");
-        if (forkComponent.status === Component.Ready) {
-                var fork = forkComponent.createObject(forks);
-        }else console.error("Error loading component:", forkComponent.errorString())
-        return fork
+        return componentCache ? componentCache.createFork(forks, {}) : null
     }
 
     function init(){

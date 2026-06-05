@@ -19,6 +19,7 @@ Item {
 
     property int maxNum: 100
     property var gameLoop: null
+    property var componentCache: null
     // 暴露内部 bullets 组件，供 GameArea 注册怪物子弹碰撞检测
     property alias bullets: bullets
 
@@ -299,11 +300,12 @@ Item {
     //在parent中动态生成一个怪物名为monsterName的怪物
     function spawnMonster(parent,monsterName) {
         var source=MonstersData.getMonster(monsterName).source
-        var monsterComponent = Qt.createComponent(source)
-        if (monsterComponent.status === Component.Ready) {
-            var monster = monsterComponent.createObject(parent);
-            registerMonsterCallbacks(monster)
-        }else console.error("Error loading component:", monsterComponent.errorString())
+        // 数据中 source 是裸文件名（如 "Charger.qml"），需拼接目录前缀
+        // 路径相对于 ComponentCache 的位置（logic/），所以用 ../monsters/
+        var monster = componentCache
+                ? componentCache.createFromSource("../monsters/" + source, parent, {})
+                : null
+        if (monster) registerMonsterCallbacks(monster)
         return monster
     }
 
@@ -364,117 +366,135 @@ Item {
     //在dropsParent中怪物monster的当前位置附近生成其死亡时应掉落数量个材料
     function dropMaterial(monster){
         if(monster.isDestroy)return
-        var materialComponent=Qt.createComponent("../drops/Material.qml")
-        if (materialComponent.status === Component.Ready){
-            var mapW = monsters.parent.width
-            var mapH = monsters.parent.height
-            for(var i=0;i<monster.monsterData.materialDrops;i++){
-                var material=materialComponent.createObject(dropsParent)
-                material.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-                if(i==0){
-                    material.x=monster.x+monster.width/2-material.width/2
-                    material.y=monster.y+monster.height-material.height
-                }else{
-                    material.x=monster.x+monster.width/2-material.width/2+(Math.random()-0.5)*monster.width*2
-                    material.y=monster.y+monster.height-material.height+(Math.random()-0.5)*monster.width*2
-                }
-                // 钳制到地图内，防止掉到黑色区域
-                material.x = Math.max(0, Math.min(mapW - material.width, material.x))
-                material.y = Math.max(0, Math.min(mapH - material.height, material.y))
+        if (!componentCache) {
+            console.warn("Monsters: componentCache not available in dropMaterial")
+            return
+        }
+        var mapW = monsters.parent.width
+        var mapH = monsters.parent.height
+        for(var i=0;i<monster.monsterData.materialDrops;i++){
+            var material=componentCache.createMaterial(dropsParent, {})
+            if (!material) continue
+            material.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+            if(i==0){
+                material.x=monster.x+monster.width/2-material.width/2
+                material.y=monster.y+monster.height-material.height
+            }else{
+                material.x=monster.x+monster.width/2-material.width/2+(Math.random()-0.5)*monster.width*2
+                material.y=monster.y+monster.height-material.height+(Math.random()-0.5)*monster.width*2
             }
-        }else console.log("Error loading component:", materialComponent.errorString())
+            // 钳制到地图内，防止掉到黑色区域
+            material.x = Math.max(0, Math.min(mapW - material.width, material.x))
+            material.y = Math.max(0, Math.min(mapH - material.height, material.y))
+        }
     }
 
     //在dropsParent中怪物monster的当前位置附近生成一个果实
     function dropFruit(monster){
         if(monster.isDestroy)return
-        var fruitComponent=Qt.createComponent("../drops/Fruit.qml")
-        if (fruitComponent.status === Component.Ready){
-            var fruit=fruitComponent.createObject(dropsParent)
-            fruit.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-            fruit.x=monster.x+monster.width/2-fruit.width/2+(Math.random()-0.5)*monster.width*1.6
-            fruit.y=monster.y+monster.height-fruit.height+(Math.random()-0.5)*monster.width*1.6
-            fruit.x = Math.max(0, Math.min(monsters.parent.width - fruit.width, fruit.x))
-            fruit.y = Math.max(0, Math.min(monsters.parent.height - fruit.height, fruit.y))
-        }else console.log("Error loading component:", fruitComponent.errorString())
+        if (!componentCache) {
+            console.warn("Monsters: componentCache not available in dropFruit")
+            return
+        }
+        var fruit=componentCache.createFruit(dropsParent, {})
+        if (!fruit) return
+        fruit.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+        fruit.x=monster.x+monster.width/2-fruit.width/2+(Math.random()-0.5)*monster.width*1.6
+        fruit.y=monster.y+monster.height-fruit.height+(Math.random()-0.5)*monster.width*1.6
+        fruit.x = Math.max(0, Math.min(monsters.parent.width - fruit.width, fruit.x))
+        fruit.y = Math.max(0, Math.min(monsters.parent.height - fruit.height, fruit.y))
     }
 
     //在dropsParent中怪物monster的当前位置附近生成一个宝箱
     function dropChest(monster){
         if(monster.isDestroy)return
-        var chestComponent=Qt.createComponent("../drops/Chest.qml")
-        if (chestComponent.status === Component.Ready){
-            var chest=chestComponent.createObject(dropsParent)
-            chest.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
-            chest.x=monster.x+monster.width/2-chest.width/2+(Math.random()-0.5)*monster.width*1.6
-            chest.y=monster.y+monster.height-chest.height+(Math.random()-0.5)*monster.width*1.6
-            chest.x = Math.max(0, Math.min(monsters.parent.width - chest.width, chest.x))
-            chest.y = Math.max(0, Math.min(monsters.parent.height - chest.height, chest.y))
-        }else console.log("Error loading component:", chestComponent.errorString())
+        if (!componentCache) {
+            console.warn("Monsters: componentCache not available in dropChest")
+            return
+        }
+        var chest=componentCache.createChest(dropsParent, {})
+        if (!chest) return
+        chest.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+        chest.x=monster.x+monster.width/2-chest.width/2+(Math.random()-0.5)*monster.width*1.6
+        chest.y=monster.y+monster.height-chest.height+(Math.random()-0.5)*monster.width*1.6
+        chest.x = Math.max(0, Math.min(monsters.parent.width - chest.width, chest.x))
+        chest.y = Math.max(0, Math.min(monsters.parent.height - chest.height, chest.y))
     }
 
     //在bulletsParent中的点（x,y）位置上生成宽width高height伤害为damage射程为range攻击角度为shootAngle颜色为color的飞行子弹
     function spawnBullet(x,y,width,height,damage,range,shootAngle,color){
-        var bulletComponent = Qt.createComponent("../bullets/RoundMovingBullet.qml")
-        if (bulletComponent.status === Component.Ready) {
-            var bullet = bulletComponent.createObject(bullets);
+        if (!componentCache) {
+            console.warn("Monsters: componentCache not available in spawnBullet")
+            return
+        }
+        var bullet = componentCache.createRoundMovingBullet(bullets, {})
+        if (!bullet) return
+        bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
+        bullet.paused=Qt.binding(function(){return monsters.paused})
+        bullet.width=width
+        bullet.height=height
+        bullet.x=x - bullet.width / 2
+        bullet.y=y - bullet.height / 2
+        bullet.originPoint=Qt.point(x - bullet.width / 2,y - bullet.height / 2)
+        bullet.color=color
+        bullet.damage=damage
+        bullet.fireRate=400
+        bullet.fireRange=range
+        bullet.shootAngle=shootAngle
+    }
+
+    //在bulletsParent中的点（centerX,centerY）方圆spawnR内随机生成n个宽width高height伤害为damage颜色为color存在时间为existTime的静止子弹
+    function spawnRandomStaticBullets(n,centerX,centerY,width,height,damage,color,existTime,spawnR){
+        if (!componentCache) {
+            console.warn("Monsters: componentCache not available in spawnRandomStaticBullets")
+            return
+        }
+        for(var i=0;i<n;i++){
+            var bullet = componentCache.createRoundStaticBullet(bullets, {})
+            if (!bullet) {
+                console.warn("Monsters: failed to create round static bullet")
+                continue
+            }
+            var angle=360*Math.random()
+            var distance=spawnR*Math.random()
+            var x=centerX+distance*Math.cos(angle* (Math.PI/180))
+            var y=centerY+distance*Math.sin(angle* (Math.PI/180))
             bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
             bullet.paused=Qt.binding(function(){return monsters.paused})
             bullet.width=width
             bullet.height=height
             bullet.x=x - bullet.width / 2
             bullet.y=y - bullet.height / 2
-            bullet.originPoint=Qt.point(x - bullet.width / 2,y - bullet.height / 2)
             bullet.color=color
             bullet.damage=damage
-            bullet.fireRate=400
-            bullet.fireRange=range
-            bullet.shootAngle=shootAngle
-        }else console.error("Error loading component:", bulletComponent.errorString())
-    }
-
-    //在bulletsParent中的点（centerX,centerY）方圆spawnR内随机生成n个宽width高height伤害为damage颜色为color存在时间为existTime的静止子弹
-    function spawnRandomStaticBullets(n,centerX,centerY,width,height,damage,color,existTime,spawnR){
-        var bulletComponent = Qt.createComponent("../bullets/RoundStaticBullet.qml")
-        if (bulletComponent.status === Component.Ready) {
-            for(var i=0;i<n;i++){
-                var bullet = bulletComponent.createObject(bullets);
-                var angle=360*Math.random()
-                var distance=spawnR*Math.random()
-                var x=centerX+distance*Math.cos(angle* (Math.PI/180))
-                var y=centerY+distance*Math.sin(angle* (Math.PI/180))
-                bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
-                bullet.paused=Qt.binding(function(){return monsters.paused})
-                bullet.width=width
-                bullet.height=height
-                bullet.x=x - bullet.width / 2
-                bullet.y=y - bullet.height / 2
-                bullet.color=color
-                bullet.damage=damage
-                bullet.existTime=existTime
-            }
-        }else console.error("Error loading component:", bulletComponent.errorString())
+            bullet.existTime=existTime
+        }
     }
 
     //以bulletsParent中的点（centerX,centerY）为圆心spawnR为半径生成n个宽width高height伤害为damage颜色为color存在时间为existTime的静止子弹均匀分布在圆周
     function spawnCircularStaticBullets(n,centerX,centerY,width,height,damage,color,existTime,spawnR){
-        var bulletComponent = Qt.createComponent("../bullets/RoundStaticBullet.qml")
-        if (bulletComponent.status === Component.Ready) {
-            for(var i=0;i<n;i++){
-                var bullet = bulletComponent.createObject(bullets);
-                var angle=360/(n+1)*i
-                var x=centerX+spawnR*Math.cos(angle* (Math.PI/180))
-                var y=centerY+spawnR*Math.sin(angle* (Math.PI/180))
-                bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
-                bullet.paused=Qt.binding(function(){return monsters.paused})
-                bullet.width=width
-                bullet.height=height
-                bullet.x=x - bullet.width / 2
-                bullet.y=y - bullet.height / 2
-                bullet.color=color
-                bullet.damage=damage
-                bullet.existTime=existTime
+        if (!componentCache) {
+            console.warn("Monsters: componentCache not available in spawnCircularStaticBullets")
+            return
+        }
+        for(var i=0;i<n;i++){
+            var bullet = componentCache.createRoundStaticBullet(bullets, {})
+            if (!bullet) {
+                console.warn("Monsters: failed to create round static bullet")
+                continue
             }
-        }else console.error("Error loading component:", bulletComponent.errorString())
+            var angle=360/(n+1)*i
+            var x=centerX+spawnR*Math.cos(angle* (Math.PI/180))
+            var y=centerY+spawnR*Math.sin(angle* (Math.PI/180))
+            bullet.scaleFactor=Qt.binding(function(){return monsters.scaleFactor})
+            bullet.paused=Qt.binding(function(){return monsters.paused})
+            bullet.width=width
+            bullet.height=height
+            bullet.x=x - bullet.width / 2
+            bullet.y=y - bullet.height / 2
+            bullet.color=color
+            bullet.damage=damage
+            bullet.existTime=existTime
+        }
     }
 }

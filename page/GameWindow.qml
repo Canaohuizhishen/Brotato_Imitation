@@ -64,7 +64,6 @@ Item {
         visible: true
         scaleFactor: gameWindow.scaleFactor
         z:100
-        resumeButton.visible: PlayerData.currentWaveNumber>1 ? true : false
         resumeButton.onClicked: continueGame()
         startButton.onClicked:{
             startInterface.visible=false
@@ -443,6 +442,10 @@ Item {
         upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
         chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
         startInterface.visible=true
+        // 主动存档，不依赖 destruction 顺序
+        if (PlayerData.currentWaveNumber > 1) {
+            PlayerData.saveGame()
+        }
     }
 
     function backMainMenuFromSettlement(){

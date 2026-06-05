@@ -26,11 +26,16 @@ Item{
     property Drops drops: drops
     property ChestNotificationBar chestBar
     property alias gameLoop: gameLoop
+    property alias componentCache: componentCache
 
     GameLoop {
         id: gameLoop
         active: gameArea.isInCombat && gameArea.active
         paused: gameArea.paused
+    }
+
+    ComponentCache {
+        id: componentCache
     }
 
     Component.onCompleted: {
@@ -45,6 +50,10 @@ Item{
         gameLoop.registerPer3000ms(function() { monsters.createWaveMonsters() })
         // 将 gameLoop 引用传递给 monsters 用于子类怪物回调注册
         monsters.gameLoop = gameLoop
+        // 将 componentCache 传递给子组件
+        monsters.componentCache = componentCache
+        weapons.componentCache = componentCache
+        background.componentCache = componentCache
     }
 
     onIsInCombatChanged: {

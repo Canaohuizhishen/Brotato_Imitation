@@ -108,6 +108,40 @@ Monster{
         }
     }
 
+    // 预声明红色遮罩
+    Image {
+        id: redMask
+        anchors.fill: parent
+        source: sprayer.isFaceRight ? "qrc:/images/" + monsterName + "_redMask_faceRight.png" : "qrc:/images/" + monsterName + "_redMask_faceLeft.png"
+        visible: false
+        opacity: 1.0
+        z: 100
+
+        SequentialAnimation {
+            id: maskAnimator
+            running: false
+
+            OpacityAnimator {
+                target: redMask
+                from: 0
+                to: 0.55
+                duration: 600
+            }
+            OpacityAnimator {
+                target: redMask
+                from: 0.55
+                to: 0
+                duration: 200
+                onStopped: redMask.visible = false
+            }
+        }
+    }
+
+    function showRedMask() {
+        redMask.visible = true
+        maskAnimator.restart()
+    }
+
     function spray(){
         isSpraying=true
         var dx=sprayer.x-sprayer.target.x
@@ -117,7 +151,7 @@ Monster{
         var y=sprayer.y-dy/distance*sprayRange
         sprayAnimation.targetPoint=Qt.point(Math.min(Math.max(x,0),sprayer.parent.width-sprayer.width),Math.min(Math.max(y,0),sprayer.parent.height-sprayer.height))
         sprayAnimation.start()
-        makeRedMask(sprayer)
+        showRedMask()
     }
 
     function fire() {
@@ -129,41 +163,5 @@ Monster{
         sprayer.parent.spawnBullet(x,y,sprayer.width / 2,sprayer.width / 2,sprayer.monsterData.damage,sprayer.sprayRange,180-angle,Qt.rgba(1, 0, 0, 1))
     }
 
-    function makeRedMask(parent){
-        var mask = Qt.createQmlObject(
-                    `import QtQuick 2.15;
-                    Image {
-                        id: redOverlay
-                        anchors.fill: parent
-                        source: parent.isFaceRight ? "qrc:/images/sprayer_redMask_faceRight.png" : "qrc:/images/sprayer_redMask_faceLeft.png"
-                        z: 100
-                        Component.onCompleted: {
-                        }
-                        SequentialAnimation {
-                            loops: 1
-                            running: true
-                            OpacityAnimator {
-                                target: redOverlay
-                                from: 0
-                                to: 0.55
-                                duration: 600
-                                onStopped: {
-                                    redOverlay.destroy()
-                                }
-                            }
-                            OpacityAnimator {
-                                target: redOverlay
-                                from: 0.55
-                                to: 0
-                                duration: 200
-                                onStopped: {
-                                    redOverlay.destroy()
-                                }
-                            }
-                        }
-                    }`,
-                    parent,
-                    "dynamicImage"
-                    );
-    }
+
 }
