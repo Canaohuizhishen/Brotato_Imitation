@@ -40,6 +40,11 @@ Monster{
         setGoalRandomly()
     }
 
+    // 阻塞超过 1 秒仍未滑开 → 换方向
+    function onBlockedTimeout() {
+        setGoalRandomly()
+    }
+
     transform: Scale {
         id: squashScale
         origin.x: scavenger.width/2

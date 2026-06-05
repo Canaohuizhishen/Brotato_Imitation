@@ -284,12 +284,6 @@ Item {
         scaleFactor: gameWindow.scaleFactor
         active: gameArea.active
         paused: gameArea.paused
-        onRemainingTimeChanged: {
-            if(remainingTime==0){
-                if(PlayerData.currentWaveNumber<20)Tool.createText(gameWindow,"通过!",40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
-                else Tool.createText(gameWindow,"胜利!",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
-            }
-        }
         onPausedChanged: {
             if(paused==true){
                 delayOvertimer.pause()
@@ -304,6 +298,8 @@ Item {
             id: delayOvertimer
             interval: 2000; running: false; repeat: false
             onTriggered: {
+                // 防守：如果已经回到主菜单，忽略残留的计时器触发
+                if(gameWindow.inSelectInterface) return
                 if(PlayerData.currentWaveNumber===20){
                     settlementInterface.visible=true
                 }else if(chestNotificationBar.number){
@@ -330,6 +326,12 @@ Item {
                 delayOvertimer.stop()
                 delayOvertimer.running = false
                 delayOvertimer.running = true
+                // 显示通过/胜利文本（覆盖倒计时结束和Boss击杀两种路径）
+                if(PlayerData.currentWaveNumber<20){
+                    Tool.createText(gameWindow,"通过!",40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
+                }else{
+                    Tool.createText(gameWindow,"胜利!",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
+                }
             }
         }
     }
@@ -383,6 +385,7 @@ Item {
     }
 
     function restart(){
+        inSelectInterface=true
         settingInterface.init()
         pauseInterface.init()
         gameArea.init()
@@ -405,6 +408,7 @@ Item {
 
         PlayerData.isInCombat=true
         paused=false
+        inSelectInterface=false
     }
 
     function continueGame(){
@@ -417,6 +421,8 @@ Item {
     }
 
     function backMainMenu(){
+        // 必须先设 inSelectInterface=true，阻止 onIsInCombatChanged 误触发 delayOvertimer
+        inSelectInterface=true
         if(PlayerData.currentWaveNumber===1){
             roleSelectionInterface.init()
             weaponSelectionInterface.init()
@@ -443,7 +449,6 @@ Item {
         chestNotificationBar.init()
         waveCountdown.init()
 
-        inSelectInterface=true
         gameArea.paused=Qt.binding(function(){return paused})
         upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
         chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
