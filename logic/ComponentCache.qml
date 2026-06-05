@@ -58,16 +58,29 @@ Item {
         _checkAllReady()
     }
 
+    function _checkComponent(comp, name) {
+        if (!comp) return null
+        if (comp.status === Component.Ready) {
+            _loadedCount++
+            return comp
+        }
+        if (comp.status === Component.Error) {
+            console.error("ComponentCache: " + name + " failed to load:", comp.errorString())
+            return null
+        }
+        return comp  // still loading
+    }
+
     function _checkAllReady() {
         _loadedCount = 0
-        if (forkComponent && forkComponent.status === Component.Ready) _loadedCount++
-        if (materialComponent && materialComponent.status === Component.Ready) _loadedCount++
-        if (fruitComponent && fruitComponent.status === Component.Ready) _loadedCount++
-        if (chestComponent && chestComponent.status === Component.Ready) _loadedCount++
-        if (roundMovingBulletComponent && roundMovingBulletComponent.status === Component.Ready) _loadedCount++
-        if (roundStaticBulletComponent && roundStaticBulletComponent.status === Component.Ready) _loadedCount++
-        if (meleeBulletComponent && meleeBulletComponent.status === Component.Ready) _loadedCount++
-        if (ellipticalMovingBulletComponent && ellipticalMovingBulletComponent.status === Component.Ready) _loadedCount++
+        forkComponent = _checkComponent(forkComponent, "forkComponent")
+        materialComponent = _checkComponent(materialComponent, "materialComponent")
+        fruitComponent = _checkComponent(fruitComponent, "fruitComponent")
+        chestComponent = _checkComponent(chestComponent, "chestComponent")
+        roundMovingBulletComponent = _checkComponent(roundMovingBulletComponent, "roundMovingBulletComponent")
+        roundStaticBulletComponent = _checkComponent(roundStaticBulletComponent, "roundStaticBulletComponent")
+        meleeBulletComponent = _checkComponent(meleeBulletComponent, "meleeBulletComponent")
+        ellipticalMovingBulletComponent = _checkComponent(ellipticalMovingBulletComponent, "ellipticalMovingBulletComponent")
         if (_loadedCount >= _totalCount) {
             allReady = true
             console.log("ComponentCache: all " + _loadedCount + " components ready")

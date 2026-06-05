@@ -55,13 +55,14 @@ function spawn(x, y, dx, dy, width, parent) {
     if (_bloodPool.length === 0) return
 
     var particle = _bloodPool[_bloodIndex]
-    _bloodIndex = (_bloodIndex + 1) % _bloodPool.length
 
     if (!particle) {
         particle = _createBloodParticle(parent)
         if (!particle) return
-        _bloodPool[_bloodIndex === 0 ? _bloodPool.length - 1 : _bloodIndex - 1] = particle
+        _bloodPool[_bloodIndex] = particle
     }
+
+    _bloodIndex = (_bloodIndex + 1) % _bloodPool.length
 
     if (particle.visible) {
         particle.visible = false
@@ -113,13 +114,14 @@ function spawnDebris(x, y, dx, dy, width, parent) {
     if (_debrisPool.length === 0) return
 
     var debris = _debrisPool[_debrisIndex]
-    _debrisIndex = (_debrisIndex + 1) % _debrisPool.length
 
     if (!debris) {
         debris = _createDebrisParticle(parent)
         if (!debris) return
-        _debrisPool[_debrisIndex === 0 ? _debrisPool.length - 1 : _debrisIndex - 1] = debris
+        _debrisPool[_debrisIndex] = debris
     }
+
+    _debrisIndex = (_debrisIndex + 1) % _debrisPool.length
 
     if (debris.visible) {
         debris.visible = false

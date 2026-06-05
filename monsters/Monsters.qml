@@ -4,6 +4,7 @@ import "../tool.js" as Tool
 import "../data"
 import "../components"
 import "../bullets"
+import "../logic/SpatialGrid.js" as SpatialGrid
 
 Item {
     id: monsters
@@ -121,14 +122,59 @@ Item {
         }
     }
 
+    // 将所有活着的怪物重新插入 SpatialGrid（每次碰撞检测前调用）
+    function updateSpatialGrid() {
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i]
+            if (child.objectName === "Monster" && !child.isDead && !child.isDestroy) {
+                SpatialGrid.insert(child, child.x, child.y)
+            }
+        }
+    }
+
     function checkMonsterCollisions() {
         if (!active || paused) return
         for (var i = 0; i < children.length; i++) {
-            var child = children[i]
-            if (child.objectName === "Monster") {
-                if (isFrontHaveOtherMonster(child, child.width / 2)) child.isFrontHaveOtherMonster = true
-                else child.isFrontHaveOtherMonster = false
+            var m = children[i]
+            if (m.objectName !== "Monster" || m.isDead || m.isDestroy) continue
+            // 用 SpatialGrid 快速找到附近怪物候选，再套用原版方向+距离+同种判定
+            var checkDistance = m.width / 2
+            // 查询范围覆盖 checkDistance + 一个网格边距，确保不漏
+            var margin = Math.max(checkDistance + m.width, 200)
+            var candidates = SpatialGrid.query(m.x - margin, m.y - margin, m.width + margin * 2, m.height + margin * 2)
+            var blocked = false
+            for (var j = 0; j < candidates.length; j++) {
+                var other = candidates[j]
+                if (other === m || other.isDead || other.isDestroy) continue
+                // 原版逻辑：仅同种怪物互相阻挡
+                if (other.monsterName !== m.monsterName) continue
+                // 原版逻辑：只检查前方的怪物
+                var dx = m.x - other.x
+                var dy = (m.y + m.height) - (other.y + other.height)
+                var inFront = false
+                if (m.isFaceRight) {
+                    if (dx <= 0) {
+                        if (m.isFaceUp) {
+                            if (dy >= 0) inFront = true
+                        } else {
+                            if (dy <= 0) inFront = true
+                        }
+                    }
+                } else {
+                    if (dx >= 0) {
+                        if (m.isFaceUp) {
+                            if (dy >= 0) inFront = true
+                        } else {
+                            if (dy <= 0) inFront = true
+                        }
+                    }
+                }
+                if (inFront && Tool.getDistance(Qt.point(m.x, m.y), Qt.point(other.x, other.y)) < checkDistance) {
+                    blocked = true
+                    break
+                }
             }
+            m.isFrontHaveOtherMonster = blocked
         }
     }
 
@@ -203,18 +249,20 @@ Item {
         return null
     }
 
-    //返回range范围内距离坐标(x,y)最近的怪物
+    //返回range范围内距离坐标(x,y)最近的怪物（使用 SpatialGrid 优化）
     function getClosestMonster(x,y,range){
         if(monsters.children.length===0)return null
         var m=null
-        for (var i = 0; i < monsters.children.length; i++) {
-            var child = monsters.children[i];
-            if (child.objectName === "Monster" && !child.isDestroy) {
-                if(child.isDead===true)continue
-                if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(x,y))<range){
-                    if(m==null)m=child
-                    else if(Tool.getDistance(Qt.point(child.x,child.y),Qt.point(x,y)) < Tool.getDistance(Qt.point(m.x,m.y),Qt.point(x,y)))m=child
-                }
+        var minDist = Infinity
+        // 用 SpatialGrid 查询 (x-range, y-range, range*2, range*2) 范围内的候选怪物
+        var candidates = SpatialGrid.query(x - range, y - range, range * 2, range * 2)
+        for (var j = 0; j < candidates.length; j++) {
+            var child = candidates[j]
+            if (!child || child.isDead || child.isDestroy) continue
+            var dist = Tool.getDistance(Qt.point(child.x, child.y), Qt.point(x, y))
+            if (dist < range && dist < minDist) {
+                m = child
+                minDist = dist
             }
         }
         return m
@@ -288,6 +336,8 @@ Item {
                 if((monster.x-monster.target.x)>0)monster.faceLeft()
                 else monster.faceRight()
                 registerMonsterCallbacks(monster)
+                // 注册到空间网格
+                SpatialGrid.insert(monster, monster.x, monster.y)
                 // Scavenger 需要生成后立即获得随机方向，不等 per3000ms
                 if (monster.monsterName === "scavenger") {
                     monster.setGoalRandomly()

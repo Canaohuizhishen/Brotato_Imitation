@@ -284,16 +284,6 @@ Item {
         scaleFactor: gameWindow.scaleFactor
         active: gameArea.active
         paused: gameArea.paused
-        states: [
-            State {
-                name: "notInCombat"; when: (!PlayerData.isInCombat && !gameWindow.inSelectInterface)
-                PropertyChanges { delayOvertimer.running: true }
-            },
-            State {
-                name: "inCombat"; when: (PlayerData.isInCombat)
-                PropertyChanges { storeInterface.visible: false }
-            }
-        ]
         onRemainingTimeChanged: {
             if(remainingTime==0){
                 if(PlayerData.currentWaveNumber<20)Tool.createText(gameWindow,"通过!",40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
@@ -324,6 +314,22 @@ Item {
                 }else{
                     storeInterface.visible=true
                 }
+            }
+        }
+    }
+
+    // 替代原先 QML states 管理 delayOvertimer：
+    // 波次结束→启动计时器；波次开始→关闭商店并停止计时器
+    Connections {
+        target: PlayerData
+        function onIsInCombatChanged() {
+            if (PlayerData.isInCombat) {
+                storeInterface.visible = false
+                delayOvertimer.stop()
+            } else if (!gameWindow.inSelectInterface) {
+                delayOvertimer.stop()
+                delayOvertimer.running = false
+                delayOvertimer.running = true
             }
         }
     }

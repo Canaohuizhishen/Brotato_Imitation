@@ -45,8 +45,10 @@ function _ensureTextPool(parent) {
     }
     while (_textPool.length < _textPoolSize) {
         var t = _textComp.createObject(parent)
-        t.visible = false
-        _textPool.push(t)
+        if (t) {
+            t.visible = false
+            _textPool.push(t)
+        }
     }
 }
 
