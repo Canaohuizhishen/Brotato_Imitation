@@ -46,9 +46,15 @@ Item {
     property var bulletImmunityList: [] //用来记录免疫的子弹，模拟近战武器攻击时的冷却
     property int immuneTime: 250
     property bool _reachedTarget: false
+    property double blockedTime: 0   // 当前阻塞时长（秒），用于超时换向
 
     // 到达目标点时的钩子，子类可覆盖（如 Scavenger 抵达后立即换方向）
     function onReachTarget() {
+        // 基类空实现
+    }
+
+    // 阻塞超时（1 秒）时的钩子，子类可覆盖
+    function onBlockedTimeout() {
         // 基类空实现
     }
 
@@ -122,6 +128,39 @@ Item {
         z: 100
     }
 
+    // Boss 血条
+    Item {
+        id: bossHpBar
+        visible: monster.core.isBoss
+        opacity: 0.7
+        anchors.bottom: monsterIcon.top
+        anchors.bottomMargin: 4 * scaleFactor
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: 45 * scaleFactor
+        height: 11 * scaleFactor
+        z: 101
+
+        Rectangle {
+            id: hpBarBg
+            anchors.fill: parent
+            color: "#454545"
+            border.color: "black"
+            border.width: hpBarFill.anchors.margins
+            radius: 2
+        }
+
+        Rectangle {
+            id: hpBarFill
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.margins: 2.3
+            width: (parent.width - anchors.margins*2) * Math.max(0, monsterData.hp / monsterData.maxHp)
+            color: Qt.rgba(0.7, 0, 0, 1)
+            radius: 1
+        }
+    }
+
     Canvas {
         id: shadow
         width: monster.shadowWidth/1.1
@@ -161,13 +200,40 @@ Item {
 
     function updateMovement(deltaTime) {
         if (isDead) return
-        if (isFrontHaveOtherMonster || isMoveStoped) return
+        if (isMoveStoped) return
         if (!active || paused) return
 
         var dx = (target.x + target.width / 2) - (x + width / 2)
         var dy = (target.y + target.height / 2) - (y + height / 2)
         var distance = Math.sqrt(dx * dx + dy * dy)
         var stepSize = v * deltaTime
+
+        if (isFrontHaveOtherMonster) {
+            // 侧向混合移动：前向分量（30%）+ 垂直滑开分量（60%）
+            blockedTime += deltaTime
+            if (distance > 0.01) {
+                var nx = dx / distance
+                var ny = dy / distance
+                // 垂直方向（逆时针旋转90°）
+                var pnx = -ny
+                var pny = nx
+
+                var newX = x + nx * stepSize * 0.3 + pnx * stepSize * 0.6
+                var newY = y + ny * stepSize * 0.3 + pny * stepSize * 0.6
+
+                // 边界 clamp，防止滑出屏幕
+                if (newX >= 0 && newX <= parent.width - width) x = newX
+                if (newY >= 0 && newY <= parent.height - height) y = newY
+            }
+            // 阻塞超过 1 秒 → 触发换向钩子
+            if (blockedTime > 1.0) {
+                blockedTime = 0
+                onBlockedTimeout()
+            }
+            z = y + height
+            return
+        }
+        blockedTime = 0
 
         if (distance < target.width / 2) {
             // 已碰撞
@@ -297,13 +363,13 @@ Item {
     }
 
     //无法暂停whiteOverlayAnimator
-    OpacityAnimator {
+    NumberAnimation {
         id: whiteOverlayAnimator
         target: whiteOverlay
-        from: 1
+        property: "opacity"
+        from: 0.6
         to: 0
         duration: 200
-        running: false
     }
 
     function faceLeft(){
@@ -335,6 +401,10 @@ Item {
         //可能掉落宝箱
         if(Math.random()<core.chestDropRate)
             monster.owner.dropChest(monster)
+        // 第20波击杀Boss(prayer)立即通关
+        if(PlayerData.currentWaveNumber===20 && core.isBoss){
+            PlayerData.isInCombat=false
+        }
         deadAnimation.start()
     }
 
@@ -385,7 +455,7 @@ Item {
         //stunned(100)
 
         // 白色遮罩动画
-        whiteOverlayAnimator.start()
+        whiteOverlayAnimator.restart()
 
         // 飙血动画
         for (var i = 0; i < 5; i++) {

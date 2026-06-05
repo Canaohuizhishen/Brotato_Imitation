@@ -64,6 +64,7 @@ Item{
         monsters.componentCache = componentCache
         weapons.componentCache = componentCache
         background.componentCache = componentCache
+        drops.componentCache = componentCache
     }
 
     onIsInCombatChanged: {

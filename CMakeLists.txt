@@ -91,7 +91,7 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Tree.qml
     SOURCES Filemanager.h
     QML_FILES page/DyingBorder.qml
-    QML_FILES drops/Material.qml drops/Fruit.qml drops/Drops.qml drops/Chest.qml
+    QML_FILES drops/Material.qml drops/Fruit.qml drops/Drops.qml drops/Chest.qml drops/BigMaterial.qml
     RESOURCES audio.qrc
     QML_FILES sound/Sound.qml
     QML_FILES components/DynamicText.qml

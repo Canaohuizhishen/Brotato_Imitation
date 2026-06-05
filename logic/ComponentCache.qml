@@ -21,6 +21,7 @@ Item {
     property Component materialComponent: null
     property Component fruitComponent: null
     property Component chestComponent: null
+    property Component bigMaterialComponent: null
     property Component roundMovingBulletComponent: null
     property Component roundStaticBulletComponent: null
     property Component meleeBulletComponent: null
@@ -29,7 +30,7 @@ Item {
     // ---- 状态 ----
     property bool allReady: false
     property int _loadedCount: 0
-    readonly property int _totalCount: 8
+    readonly property int _totalCount: 9
 
     // 动态组件缓存（懒加载，按 source URL 缓存）
     property var _dynamicCache: ({})
@@ -40,6 +41,7 @@ Item {
         materialComponent = Qt.createComponent("../drops/Material.qml", Component.Asynchronous)
         fruitComponent = Qt.createComponent("../drops/Fruit.qml", Component.Asynchronous)
         chestComponent = Qt.createComponent("../drops/Chest.qml", Component.Asynchronous)
+        bigMaterialComponent = Qt.createComponent("../drops/BigMaterial.qml", Component.Asynchronous)
         roundMovingBulletComponent = Qt.createComponent("../bullets/RoundMovingBullet.qml", Component.Asynchronous)
         roundStaticBulletComponent = Qt.createComponent("../bullets/RoundStaticBullet.qml", Component.Asynchronous)
         meleeBulletComponent = Qt.createComponent("../bullets/MeleeBullet.qml", Component.Asynchronous)
@@ -49,6 +51,7 @@ Item {
         materialComponent.statusChanged.connect(_checkAllReady)
         fruitComponent.statusChanged.connect(_checkAllReady)
         chestComponent.statusChanged.connect(_checkAllReady)
+        bigMaterialComponent.statusChanged.connect(_checkAllReady)
         roundMovingBulletComponent.statusChanged.connect(_checkAllReady)
         roundStaticBulletComponent.statusChanged.connect(_checkAllReady)
         meleeBulletComponent.statusChanged.connect(_checkAllReady)
@@ -77,6 +80,7 @@ Item {
         materialComponent = _checkComponent(materialComponent, "materialComponent")
         fruitComponent = _checkComponent(fruitComponent, "fruitComponent")
         chestComponent = _checkComponent(chestComponent, "chestComponent")
+        bigMaterialComponent = _checkComponent(bigMaterialComponent, "bigMaterialComponent")
         roundMovingBulletComponent = _checkComponent(roundMovingBulletComponent, "roundMovingBulletComponent")
         roundStaticBulletComponent = _checkComponent(roundStaticBulletComponent, "roundStaticBulletComponent")
         meleeBulletComponent = _checkComponent(meleeBulletComponent, "meleeBulletComponent")
@@ -139,6 +143,32 @@ Item {
         var fallback = Qt.createComponent("../drops/Chest.qml")
         return fallback.status === Component.Ready
                 ? fallback.createObject(parent, properties || {}) : null
+    }
+
+    function createBigMaterial(parent, properties) {
+        if (bigMaterialComponent && bigMaterialComponent.status === Component.Ready) {
+            return bigMaterialComponent.createObject(parent, properties || {})
+        }
+        // Check status of async pre-compiled component
+        if (bigMaterialComponent) {
+            if (bigMaterialComponent.status === Component.Error) {
+                console.error("ComponentCache: bigMaterialComponent error:", bigMaterialComponent.errorString())
+            } else if (bigMaterialComponent.status === Component.Loading) {
+                console.warn("ComponentCache: bigMaterialComponent still loading, trying sync fallback")
+            }
+        }
+        console.warn("ComponentCache: bigMaterialComponent not ready, fallback to sync")
+        var fallback = Qt.createComponent("../drops/BigMaterial.qml")
+        if (fallback.status === Component.Error) {
+            console.error("ComponentCache: BigMaterial sync fallback error:", fallback.errorString())
+            return null
+        }
+        if (fallback.status === Component.Ready) {
+            return fallback.createObject(parent, properties || {})
+        }
+        // Still loading (shouldn't happen for sync), wait a frame
+        console.warn("ComponentCache: BigMaterial sync fallback also loading, retrying next frame")
+        return null
     }
 
     function createRoundMovingBullet(parent, properties) {

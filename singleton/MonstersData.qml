@@ -57,6 +57,7 @@ Item {
         objectName: "tree"
         property string monsterName: "树"
         readonly property string source: "Tree.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 20
         readonly property int initHp: 3
@@ -81,6 +82,7 @@ Item {
         objectName: "babyAlien"
         property string monsterName: "外星婴儿"
         readonly property string source: "BabyAlien.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 50
         readonly property int initHp: 3
@@ -104,6 +106,7 @@ Item {
         objectName: "chaser"
         property string monsterName: "追逐者"
         readonly property string source: "Chaser.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 25
         readonly property int initHp: 1
@@ -127,6 +130,7 @@ Item {
         objectName: "sprayer"
         property string monsterName: "喷射者"
         readonly property string source: "Sprayer.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 400
         readonly property int maxCurNumber: 15
         readonly property int initHp: 8
@@ -150,6 +154,7 @@ Item {
         objectName: "charger"
         property string monsterName: "冲锋者"
         readonly property string source: "Charger.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 200
         readonly property int maxCurNumber: 15
         readonly property int initHp: 4
@@ -173,6 +178,7 @@ Item {
         objectName: "brute"
         property string monsterName: "大块头"
         readonly property string source: "Brute.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 300
         readonly property int maxCurNumber: 10
         readonly property int initHp: 20
@@ -196,6 +202,7 @@ Item {
         objectName: "pursuer"
         property string monsterName: "追击者"
         readonly property string source: "Pursuer.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 10
         readonly property int initHp: 10
@@ -219,6 +226,7 @@ Item {
         objectName: "helmetAlien"
         property string monsterName: "戴头盔的外星人"
         readonly property string source: "HelmetAlien.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 30
         readonly property int initHp: 8
@@ -242,6 +250,7 @@ Item {
         objectName: "finChaser"
         property string monsterName: "鱼鳍追逐者"
         readonly property string source: "FinChaser.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 25
         readonly property int initHp: 12
@@ -265,6 +274,7 @@ Item {
         objectName: "summoner"
         property string monsterName: "召唤者"
         readonly property string source: "Summoner.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 0
         readonly property int maxCurNumber: 10
         readonly property int initHp: 10
@@ -288,6 +298,7 @@ Item {
         objectName: "scavenger"
         property string monsterName: "拾荒者"
         readonly property string source: "Scavenger.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 10000
         readonly property int maxCurNumber: 30
         readonly property int initHp: 20
@@ -311,6 +322,7 @@ Item {
         objectName: "helmetBrute"
         property string monsterName: "头盔大块头"
         readonly property string source: "HelmetBrute.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 300
         readonly property int maxCurNumber: 10
         readonly property int initHp: 30
@@ -334,6 +346,7 @@ Item {
         objectName: "helmetCharger"
         property string monsterName: "头盔冲锋者"
         readonly property string source: "HelmetCharger.qml"
+        readonly property bool isBoss: false
         readonly property int attackRange: 200
         readonly property int maxCurNumber: 15
         readonly property int initHp: 12
@@ -357,6 +370,7 @@ Item {
         objectName: "prayer"
         property string monsterName: "祈祷者"
         readonly property string source: "Prayer.qml"
+        readonly property bool isBoss: true
         readonly property int attackRange: 10000
         readonly property int maxCurNumber: 1
         readonly property int initHp: 29900

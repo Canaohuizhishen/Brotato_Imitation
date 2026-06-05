@@ -107,13 +107,11 @@ Item {
                 var monsterData = MonstersData.children[i]
                 var n = Math.floor(monsterData.initCount * monsterData.countRation)
                 var increaseFactor = 1 + monsterData.countIcreaseRation
-                // 避免 countIcreaseRation = -1 时除零（如 Prayer）
-                if (increaseFactor <= 0) increaseFactor = 1
                 if (n === 0) {
                     monsterData.countRation *= increaseFactor
                 } else if (n + monsterData.curNumber > monsterData.maxCurNumber) {
                     spawnMonsters(monsterData.maxCurNumber - monsterData.curNumber, monsterData.objectName)
-                    monsterData.countRation /= increaseFactor
+                    if (increaseFactor !== 0) monsterData.countRation /= increaseFactor
                 } else {
                     spawnMonsters(n, monsterData.objectName)
                     monsterData.countRation *= increaseFactor
