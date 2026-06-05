@@ -33,12 +33,13 @@ Item {
     property bool moveDirectionConverse: false
     property bool faceTarget: true
     property bool isFrontHaveOtherMonster: false
+    property string _spatialId: ""
 
     property alias monsterData: monsterData
     property var core: MonstersData.getMonster(monsterName)
     property var monsterCore: MonstersData
 
-    property double v: core.initVelocity * 5 / 6
+    property double v: core.initVelocity
     property int interval: 10
     property double stepSize: v*interval/1200*scaleFactor
 
@@ -53,6 +54,8 @@ Item {
 
     Component.onCompleted: {
         core.curNumber++
+        // 生成空间网格唯一 ID（不使用 monsterName 以避免初始化时序问题）
+        _spatialId = "monster_" + Math.random().toString(36).substr(2, 8)
     }
     Component.onDestruction: {
         core.curNumber--

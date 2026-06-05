@@ -20,6 +20,7 @@ Canvas {
     property bool hitNotDestroy: false //击中目标后不会销毁的布尔值
     property bool inHitCoolDown: false //子弹正处于击中冷却的布尔值
     property bool canAutomaticActive: true //到期子弹可以自动退出冷却
+    property string _spatialId: ""
 
     onPausedChanged: {
         if(paused==true){

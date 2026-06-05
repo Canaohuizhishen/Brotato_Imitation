@@ -6,6 +6,7 @@ import "../monsters"
 import "../weapons"
 import "../drops"
 import "../logic"
+import "../logic/SpatialGrid.js" as SpatialGrid
 
 Item{
     id: gameArea
@@ -39,13 +40,22 @@ Item{
     }
 
     Component.onCompleted: {
+        // 初始化空间网格（200×200 单元格）
+        SpatialGrid.init(200)
+
         // 注册全局 GameLoop 回调
+        // 注意顺序：移动 → 网格重建 → 碰撞检测 → 武器瞄准
         gameLoop.registerPerFrame(function(dt) { player.updateMovement(dt) })
         gameLoop.registerPerFrame(function(dt) { monsters.updateAllMonsterMovements(dt) })
+        // 每帧重建空间网格（所有活着的怪物重新插入）
+        gameLoop.registerPerFrame(function() {
+            SpatialGrid.clear()
+            monsters.updateSpatialGrid()
+        })
+        gameLoop.registerPerFrame(function() { monsters.checkMonsterCollisions() })
         gameLoop.registerPerFrame(function() { bullets.checkBulletCollisions() })
         gameLoop.registerPerFrame(function() { monsters.bullets.checkBulletCollisions() })
         gameLoop.registerPerFrame(function() { weapons.updateGoals() })
-        gameLoop.registerPer200ms(function() { monsters.checkMonsterCollisions() })
         gameLoop.registerPer200ms(function() { drops.checkDropCollisions() })
         gameLoop.registerPer3000ms(function() { monsters.createWaveMonsters() })
         // 将 gameLoop 引用传递给 monsters 用于子类怪物回调注册

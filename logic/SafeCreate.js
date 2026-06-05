@@ -61,9 +61,12 @@ function createWithBindings(componentPath, parent, customProperties, bindingMap)
         for (var targetProp in bindingMap) {
             if (bindingMap.hasOwnProperty(targetProp)) {
                 var sourceProp = bindingMap[targetProp]
-                // 使用 Function 构造函数创建绑定表达式
-                // 这是在 JS 中创建 QML 绑定的标准方式
-                obj[targetProp] = parent[sourceProp]
+                // 使用 IIFE 捕获 sourceProp（for 循环的 var 变量会有闭包陷阱）
+                ;(function(capturedTarget, capturedSource) {
+                    obj[capturedTarget] = Qt.binding(function() {
+                        return parent[capturedSource]
+                    })
+                })(targetProp, sourceProp)
             }
         }
     }
