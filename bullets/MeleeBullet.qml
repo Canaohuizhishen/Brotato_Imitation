@@ -10,11 +10,21 @@ Bullet {
     canAutomaticActive: false
 
     onTargetChanged: {
-        width=Qt.binding(function(){return target.width})
-        height=Qt.binding(function(){return target.height})
-        x=Qt.binding(function(){return target.parent.x+target.x})
-        y=Qt.binding(function(){return target.parent.y+target.y})
+        if (!target) return
+        width=Qt.binding(function(){
+            return target ? target.width : 0
+        })
+        height=Qt.binding(function(){
+            return target ? target.height : 0
+        })
+        x=Qt.binding(function(){
+            return target && target.parent ? target.parent.x + target.x : 0
+        })
+        y=Qt.binding(function(){
+            return target && target.parent ? target.parent.y + target.y : 0
+        })
         rotation=Qt.binding(function(){
+            if (!target) return 0
             if(target.isFaceRight)return target.rotation
             else return 180+target.rotation
         })

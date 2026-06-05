@@ -12,6 +12,12 @@ ApplicationWindow {
     title: "土豆兄弟(Brotato)(仿)"
     color: "black"
 
+    // 窗口关闭前先存盘，确保不因组件销毁顺序丢档
+    onClosing: function(close) {
+        PlayerData.saveGame()
+        close.accepted = true
+    }
+
     GameWindow{
         id: gameWindow
         width: window.width/window.height > 1.7777 ? window.height*1.7777 : window.width

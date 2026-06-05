@@ -1,5 +1,7 @@
 .pragma library
 
+var _COMPONENT_READY = 1  // Component.Ready — QML JS 引擎不暴露 Component 枚举
+
 function getDistance(p1,p2){
     var dx=p1.x-p2.x
     var dy=p1.y-p2.y
@@ -28,21 +30,31 @@ function getMirrorX(x,targetX){
     return newX
 }
 
-function createText(parent, text, size, color, _x, _y, duration=600, OutlineColor="black") {
-    var component = Qt.createComponent("components/DynamicText.qml")
-    if (component.status === 1) { // Component.Ready
-        var txt = component.createObject(parent, {
-            "x": _x,
-            "y": _y,
-            "text": text,
-            "color": color,
-            "font.pixelSize": Math.floor(size),
-            "duration": duration,
-            "outlineColor": OutlineColor
-        })
-        return txt
-    } else {
-        console.error("DynamicText component load failed:", component.errorString())
-        return null
+// ---- 文本对象池 ----
+var _textPool = []
+var _textPoolSize = 30
+var _textPoolIndex = 0
+var _textComp = null
+
+function _ensureTextPool(parent) {
+    if (_textComp === null) {
+        _textComp = Qt.createComponent("particles/DamageText.qml")
+        if (_textComp.status !== _COMPONENT_READY) {
+            _textComp = Qt.createComponent("../particles/DamageText.qml")
+        }
+    }
+    while (_textPool.length < _textPoolSize) {
+        var t = _textComp.createObject(parent)
+        t.visible = false
+        _textPool.push(t)
+    }
+}
+
+function createText(parent, text, size, color, _x, _y, duration, OutlineColor) {
+    _ensureTextPool(parent)
+    var t = _textPool[_textPoolIndex]
+    _textPoolIndex = (_textPoolIndex + 1) % _textPoolSize
+    if (t) {
+        t.showText(text, size, color, _x, _y, duration || 600, OutlineColor || "black")
     }
 }

@@ -34,14 +34,18 @@ public:
         }
 
         QJsonDocument doc(data);
-        file.write(doc.toJson(QJsonDocument::Indented));
-
-        if (file.error() != QFile::NoError) {
+        QByteArray jsonBytes = doc.toJson(QJsonDocument::Indented);
+        qint64 written = file.write(jsonBytes);
+        if (written != jsonBytes.size() || file.error() != QFile::NoError) {
             qWarning() << "文件写入错误：" << file.errorString();
             return false;
         }
+        if (!file.flush()) {
+            qWarning() << "文件刷新错误：" << file.errorString();
+            return false;
+        }
 
-        qDebug() << "游戏数据已保存至：" << filePath;
+        qDebug() << "游戏数据已保存至：" << filePath << "(" << written << "bytes)";
         return true;
     }
 

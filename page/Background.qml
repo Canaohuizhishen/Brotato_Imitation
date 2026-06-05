@@ -12,6 +12,7 @@ Rectangle {
     property int stoneWidth: 40*scaleFactor
     property int stoneHeight: 40*scaleFactor
     property Forks forks: forks
+    property var componentCache: null
 
     Component.onCompleted: {
         stoneNum=width*height/stoneWidth/stoneHeight*0.1
@@ -22,6 +23,7 @@ Rectangle {
     Forks{
         id: forks
         scaleFactor: background.scaleFactor
+        componentCache: background.componentCache
     }
 
     function createJaggedEdges(){

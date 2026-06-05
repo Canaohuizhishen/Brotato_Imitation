@@ -341,7 +341,8 @@ QtObject {
             const saveData = fileManager.loadGameData(savePath)
             // 检查是否为空对象
             if (Object.keys(saveData).length === 0) {
-                console.log("未找到有效存档数据")
+                console.warn("存档加载失败，已从备份恢复或使用默认值")
+                console.warn("当前波次 = " + currentWaveNumber + "，如果不符合预期，说明存档文件损坏")
                 return
             }
 
@@ -428,7 +429,7 @@ QtObject {
                 }));
             }
 
-            console.log("游戏加载成功")
+            console.log("游戏加载成功，当前波次 = " + currentWaveNumber + "，材料 = " + materialsNumber)
         } catch (e) {
             console.error("加载异常：" + e)
         }

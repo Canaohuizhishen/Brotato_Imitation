@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import singleton.PlayerData
 
 Item{
     id: startInterface
@@ -142,6 +143,18 @@ Item{
         }
         onClicked: {
             sound.playClickSound()
+        }
+    }
+
+    // 用 Connections 替代声明式绑定，避免单例属性重求值失效
+    Component.onCompleted: {
+        resume.visible = PlayerData.currentWaveNumber > 1
+    }
+
+    Connections {
+        target: PlayerData
+        function onCurrentWaveNumberChanged() {
+            resume.visible = PlayerData.currentWaveNumber > 1
         }
     }
 

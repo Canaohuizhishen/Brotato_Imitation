@@ -3,6 +3,7 @@ import QtQuick 2.15
 RangedWeapon {
     id: smg
     weaponName: "smg"
+    property var componentCache: null
 
     onPausedChanged: {
         if(paused==true){
@@ -136,9 +137,9 @@ RangedWeapon {
         flame.flame()
         var x=smg.parent.x+smg.x+smg.width/2+Math.cos(backAnimation.angle* (Math.PI/180))*smg.width/2
         var y=smg.parent.y+smg.y+smg.height/4-Math.sin(backAnimation.angle* (Math.PI/180))*smg.width/2
-        var bulletComponent = Qt.createComponent("../bullets/EllipticalMovingBullet.qml")
-        if (bulletComponent.status === Component.Ready) {
-            var bullet = bulletComponent.createObject(bulletsParent);
+        if (!smg.componentCache) return
+        var bullet = smg.componentCache.createEllipticalMovingBullet(bulletsParent, {})
+        if (bullet) {
             bullet.scaleFactor=Qt.binding(function(){return smg.scaleFactor})
             bullet.paused=Qt.binding(function(){return smg.paused})
             bullet.critical=core.critical
@@ -153,6 +154,8 @@ RangedWeapon {
             bullet.fireRate=2000
             bullet.fireRange=core.range
             bullet.shootAngle=backAnimation.angle
-        }else console.error("Error loading component:", bulletComponent.errorString())
+        } else {
+            console.error("Error loading component: EllipticalMovingBullet.qml")
+        }
     }
 }

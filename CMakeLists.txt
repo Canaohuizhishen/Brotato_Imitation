@@ -51,6 +51,11 @@ qt_add_qml_module(appBrotato
     QML_FILES logic/DataLoader.js
     QML_FILES logic/SafeCreate.js
     QML_FILES logic/GameLoop.qml
+    QML_FILES logic/ComponentCache.qml
+    QML_FILES logic/ParticlePool.js
+    QML_FILES particles/BloodParticle.qml
+    QML_FILES particles/DamageText.qml
+    QML_FILES particles/DebrisParticle.qml
     QML_FILES components/PropsBar.qml
     QML_FILES components/PropItem.qml
     QML_FILES components/WeaponsBar.qml

@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtMultimedia
 import singleton.PlayerData
 import "../tool.js" as Tool
+import "../logic/ParticlePool.js" as ParticlePool
 
 Item {
     id: material
@@ -150,68 +151,6 @@ Item {
     }
 
     function makeResidue(x,y,dx,dy, width, parent){
-        var blood = Qt.createQmlObject(
-                    `import QtQuick 2.15;
-                    Rectangle {
-                        id: bloodSplatter
-                        width: ${width}  //直径
-                        height: width * 1.1
-                        x: ${x}-width/2 //初始位置
-                        y: ${y}-height/2 //初始位置
-                        color: 'black'
-                        visible: true
-                        radius: width / 2
-                        rotation: -30
-                        z: 3
-
-                        Rectangle {
-                            width: parent.width / 1.6
-                            height: width * 1.2
-                            anchors.centerIn: parent
-                            color: Qt.rgba(0,1,0,1)
-                            visible: parent.visible
-                            radius: width / 2
-                        }
-
-
-                        SequentialAnimation {
-                            running: bloodSplatter.visible
-
-                            // 移动并缩小
-                            ParallelAnimation{
-                                PropertyAnimation {
-                                    target: bloodSplatter
-                                    property: "x"
-                                    to: bloodSplatter.x + ${dx}  // 移动的距离
-                                    duration: 350
-                                    easing.type: Easing.Linear
-                                }
-
-                                PropertyAnimation {
-                                    target: bloodSplatter
-                                    property: "y"
-                                    to: bloodSplatter.y + ${dy}  // 移动的距离
-                                    duration: 350
-                                    easing.type: Easing.Linear
-                                }
-
-                                PropertyAnimation {
-                                    target: bloodSplatter
-                                    property: "scale"
-                                    from: 1
-                                    to: 0 //缩放倍数
-                                    duration: 550
-                                    easing.type: Easing.Linear
-                                }
-                            }
-
-                            onStopped: {
-                                bloodSplatter.destroy()
-                            }
-                        }
-                    }`,
-                    parent,
-                    "dynamicImage"
-                    );
+        ParticlePool.spawnDebris(x, y, dx, dy, width, parent)
     }
 }
