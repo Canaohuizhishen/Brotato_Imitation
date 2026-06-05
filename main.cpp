@@ -29,6 +29,11 @@ int main(int argc, char *argv[])
                              1,                        // 主版本号
                              0,                        // 次版本号
                              "MonstersData");          // QML 中使用的类型名
+    qmlRegisterSingletonType(QUrl("qrc:/singleton/SettingsData.qml"),
+                             "singleton.SettingsData", // 模块名
+                             1,                        // 主版本号
+                             0,                        // 次版本号
+                             "SettingsData");          // QML 中使用的类型名
 
     QObject::connect(
         &engine,

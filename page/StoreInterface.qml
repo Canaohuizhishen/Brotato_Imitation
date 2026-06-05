@@ -6,6 +6,8 @@ import "../data"
 import "../logic/ShopLogicHandler.js" as Controller
 import "../color.js" as Color
 import singleton.PlayerData
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: storeInterface
@@ -81,11 +83,12 @@ Item {
         anchors.topMargin: 20
         anchors.left: shopView.left
 
-        Text {
+        ScaledText {
             id: shopTitle
-            text: qsTr("商店(第") + PlayerData.currentWaveNumber + qsTr("波)")
+            text: I18n.tr("商店(", SettingsData.language) + PlayerData.currentWaveNumber + I18n.tr("波)", SettingsData.language)
             color: "white"
-            font.pixelSize: 30*storeInterface.scaleFactor
+            basePixelSize: 30
+            uiScale: storeInterface.scaleFactor
             anchors.left: topBar.left
             anchors.verticalCenter: topBar.verticalCenter
         }
@@ -114,11 +117,12 @@ Item {
                 Row {
                     anchors.centerIn: parent
                     spacing: 5*storeInterface.scaleFactor
-                    Text {
+                    ScaledText {
                         id: refreshText
                         // text: qsTr("刷新") + Controller.refreshPrice(waveNumberText.text)
-                        text: "刷新-" + refreshButton.currentRefreshPrice
-                        font.pixelSize: 24*storeInterface.scaleFactor
+                        text: I18n.tr("刷新-", SettingsData.language) + refreshButton.currentRefreshPrice
+                        basePixelSize: 24
+                        uiScale: storeInterface.scaleFactor
                         color: PlayerData.materialsNumber >= refreshButton.currentRefreshPrice
                                ? (refreshButton.isHovered ? "black" : "white")
                                : "red"
@@ -278,11 +282,12 @@ Item {
             contentItem: Item {
                 anchors.fill: parent
 
-                Text {
+                ScaledText {
                     anchors.centerIn: parent
-                    text: "出发(第" + PlayerData.currentWaveNumber + "波)"
+                    text: I18n.tr("出发(第", SettingsData.language) + PlayerData.currentWaveNumber + I18n.tr("波)", SettingsData.language)
                     color: startButton.isHovered ? "black" : "white"
-                    font.pixelSize: 32*storeInterface.scaleFactor
+                    basePixelSize: 32
+                    uiScale: storeInterface.scaleFactor
                     font.bold: true
                 }
             }

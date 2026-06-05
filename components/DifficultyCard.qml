@@ -1,4 +1,6 @@
 import QtQuick 2.15
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Rectangle {
     id: difficultyCard
@@ -31,20 +33,22 @@ Rectangle {
         }
     }
 
-    Text{
-        text: "危险"+difficultyCard.difficulty
+    ScaledText {
+        text: I18n.tr("危险", SettingsData.language)+difficultyCard.difficulty
         color: "white"
-        font.pixelSize: 18*difficultyCard.scaleFactor
+        basePixelSize: 18
+        uiScale: difficultyCard.scaleFactor
         anchors.left: parent.left
         anchors.leftMargin: difficultyIcon.width+20*difficultyCard.scaleFactor
         anchors.top: parent.top
         anchors.topMargin: 12*difficultyCard.scaleFactor
     }
 
-    Text{
-        text: "难度"
+    ScaledText {
+        text: I18n.tr("难度", SettingsData.language)
         color: "#ffffc0"
-        font.pixelSize: 15*difficultyCard.scaleFactor
+        basePixelSize: 15
+        uiScale: difficultyCard.scaleFactor
         anchors.left: parent.left
         anchors.leftMargin: difficultyIcon.width+20*difficultyCard.scaleFactor
         anchors.top: parent.top
@@ -68,7 +72,7 @@ Rectangle {
         id: core
         function getDifficultyDescription(n){
             switch(n-'0'){
-            case 0: return "<font color='white'>无修改</font>"
+            case 0: return "<font color='white'>" + I18n.tr("无修改", SettingsData.language) + "</font>"
             default: return ""
             }
         }

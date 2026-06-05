@@ -3,6 +3,8 @@ import QtQuick.Controls
 import "../logic/ShopLogicHandler.js" as Controller
 import singleton.PlayerData
 import "../data"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 //道具栏
 Item {
@@ -26,7 +28,7 @@ Item {
 
         Text {
             id: propText
-            text: "道具"
+            text: I18n.tr("道具", SettingsData.language)
             color: "white"
             height: 30* scaleFactor
             font.pixelSize: height

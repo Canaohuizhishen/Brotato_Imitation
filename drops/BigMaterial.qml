@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtMultimedia
 import singleton.PlayerData
+import singleton.SettingsData
 import "../tool.js" as Tool
 import "../logic/ParticlePool.js" as ParticlePool
 
@@ -173,7 +174,7 @@ Item {
         }
 
         onStopped: {
-            getSound.play()
+            if (SettingsData.materialSound) getSound.play()
             // 残渣掉落动画（数量随 tier 增加）
             var particleCount = 6 + (bigMaterial.tier - 1) * 4
             for (var i = 0; i < particleCount; i++) {
@@ -192,6 +193,6 @@ Item {
     }
 
     function makeResidue(x, y, dx, dy, width, parent) {
-        ParticlePool.spawnDebris(x, y, dx, dy, width, parent)
+        ParticlePool.spawnDebris(x, y, dx, dy, width, parent, SettingsData.visualEffects)
     }
 }

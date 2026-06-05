@@ -5,6 +5,8 @@ import "../logic/ShopLogicHandler.js" as Controller
 import "../color.js" as Color
 import "../data"
 import singleton.PlayerData
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: root
@@ -73,7 +75,7 @@ Item {
         modal: false
         closePolicy: Popup.NoAutoClose
         width: parent.width*3.85
-        height: (root.showButton ? parent.width*3.7 : parent.width*2.9)+(compositeButton.visible ? compositeButton.height+buttonLayout.rowSpacing*2 : 0)
+        height: Math.max((root.showButton ? parent.width*3.7 : parent.width*2.9)+(compositeButton.visible ? compositeButton.height+buttonLayout.rowSpacing*2 : 0), contentLayout.implicitHeight + 30*root.scaleFactor)
         implicitHeight: contentLayout.implicitHeight + 30*root.scaleFactor
         x: root.inLeft ? weaponImageBackground.width-width : 0
         y: root.inUp ? -height-5*root.scaleFactor : weaponImageBackground.height+5*root.scaleFactor
@@ -129,23 +131,25 @@ Item {
                     Layout.topMargin: 8*root.scaleFactor
                     spacing: 1*root.scaleFactor
 
-                    Text {
+                    ScaledText {
                         id: text
                         // text: itemData.weaponName
-                        text: itemData.weaponName
+                        text: I18n.tr(itemData.weaponName, SettingsData.language)
                         color: "white"
-                        font.pixelSize: 18*root.scaleFactor
+                        basePixelSize: 18
+                        uiScale: root.scaleFactor
                     }
 
-                    Text {
-                        text: itemData.type
+                    ScaledText {
+                        text: I18n.tr(itemData.type, SettingsData.language)
                         color: "#ffffc0"
-                        font.pixelSize: 15*root.scaleFactor
+                        basePixelSize: 15
+                        uiScale: root.scaleFactor
                     }
                 }
             }
 
-            Text {
+            ScaledText {
                 //不直接使用text: Controller.getSpecificWeapon().talentText是因为防止循环绑定报错
                 property var specificWeapon: {
                     if (itemData && itemData.type !== "道具") {
@@ -155,7 +159,8 @@ Item {
                 }
                 // text: Controller.getSpecificWeapon().talentText
                 text: specificWeapon ? weaponCore.renderWeaponTalentText(specificWeapon) : ""
-                font.pixelSize: 13*root.scaleFactor
+                basePixelSize: 13
+                uiScale: root.scaleFactor
                 font.weight: Font.DemiBold
 
                 Layout.topMargin: 5*root.scaleFactor
@@ -200,9 +205,10 @@ Item {
                         Controller.compositeWeapon(wIndex)
                     }
 
-                    contentItem: Text {
-                        text: "合成"
-                        font.pixelSize: 18*root.scaleFactor
+                    contentItem: ScaledText {
+                        text: I18n.tr("合成", SettingsData.language)
+                        basePixelSize: 18
+                        uiScale: root.scaleFactor
                         color: compositeButton.isHovered ? "#444444" : "white"
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -224,7 +230,7 @@ Item {
                     property bool isHovered: false
                     property int recycleValue: 0
 
-                    //这样做的原因是：如果直接使用text: "回收(+" + Controller.recycledPrice(wIndex,wGrade) + ")" 会导致循环绑定的报错
+                    //这样做的原因是：如果直接使用text: I18n.tr("回收(+") + Controller.recycledPrice(wIndex,wGrade) + ")" 会导致循环绑定的报错
                     //当弹出框打开时更新回收值
                     Connections {
                         target: infoPopup
@@ -251,10 +257,11 @@ Item {
                         sound.playSynthesizeSound()
                     }
 
-                    contentItem: Text {
-                        // text: "回收(+" + Controller.recycledPrice(wIndex,wGrade) + ")"
-                        text: "回收(+" + recycleButton.recycleValue + ")"
-                        font.pixelSize: 18*root.scaleFactor
+                    contentItem: ScaledText {
+                        // text: I18n.tr("回收(+") + Controller.recycledPrice(wIndex,wGrade) + ")"
+                        text: I18n.tr("回收(+", SettingsData.language) + recycleButton.recycleValue + ")"
+                        basePixelSize: 18
+                        uiScale: root.scaleFactor
                         color: recycleButton.isHovered ? "#444444" : "white"
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -288,9 +295,10 @@ Item {
                         sound.playClickSound()
                     }
 
-                    contentItem: Text {
-                        text: "取消"
-                        font.pixelSize: 18*root.scaleFactor
+                    contentItem: ScaledText {
+                        text: I18n.tr("取消", SettingsData.language)
+                        basePixelSize: 18
+                        uiScale: root.scaleFactor
                         color: cancelButton.isHovered ? "#444444" : "white"
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter

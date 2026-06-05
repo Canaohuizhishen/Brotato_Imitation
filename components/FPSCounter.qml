@@ -1,6 +1,6 @@
 import QtQuick 2.15
 
-Text {
+ScaledText {
     id: fpsCounter
 
     property var gameLoop: null
@@ -11,7 +11,7 @@ Text {
     property double _instantFPS: 0
 
     color: smoothedFPS >= 55 ? "#4f4" : (smoothedFPS >= 30 ? "#ff4" : "#f44")
-    font.pixelSize: 14
+    basePixelSize: 14
     font.bold: true
     text: smoothedFPS + " FPS"
     z: 1000

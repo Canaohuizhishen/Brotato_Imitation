@@ -2,6 +2,8 @@ import QtQuick 2.15
 import "../logic/ShopLogicHandler.js" as Controller
 import singleton.PlayerData
 import "../data"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item{
     id: root
@@ -26,7 +28,7 @@ Item{
 
         Text {
             id: weaponText
-            text: "武器" + (root.showNumber ? "(" + Controller.getPurchasedWNum() + "/6)" : "")
+            text: I18n.tr("武器", SettingsData.language) + (root.showNumber ? "(" + Controller.getPurchasedWNum() + "/6)" : "")
             color: "white"
             height: 30* scaleFactor
             font.pixelSize: height

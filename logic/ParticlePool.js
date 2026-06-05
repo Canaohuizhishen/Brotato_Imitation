@@ -12,10 +12,12 @@ var _COMPONENT_READY = 1  // Component.Ready — QML JS 引擎不暴露 Componen
  *   import "../logic/ParticlePool.js" as ParticlePool
  *
  *   // 血花（怪物受击）
- *   ParticlePool.spawn(x, y, dx, dy, width, gameArea)
+ *   ParticlePool.spawn(x, y, dx, dy, width, gameArea, enabled)
  *
  *   // 残渣（材料拾取）
- *   ParticlePool.spawnDebris(x, y, dx, dy, width, gameArea)
+ *   ParticlePool.spawnDebris(x, y, dx, dy, width, gameArea, enabled)
+ *
+ *   enabled — 是否实际生成粒子（用于 SettingsData.visualEffects 控制）
  */
 
 // ---- 血花粒子池 ----
@@ -50,7 +52,8 @@ function _createBloodParticle(parent) {
     return null
 }
 
-function spawn(x, y, dx, dy, width, parent) {
+function spawn(x, y, dx, dy, width, parent, enabled) {
+    if (enabled === false) return
     if (!_bloodInitialized) init(parent)
     if (_bloodPool.length === 0) return
 
@@ -106,7 +109,8 @@ function _createDebrisParticle(parent) {
     return null
 }
 
-function spawnDebris(x, y, dx, dy, width, parent) {
+function spawnDebris(x, y, dx, dy, width, parent, enabled) {
+    if (enabled === false) return
     if (!_debrisInitialized) {
         if (_bloodInitialized) _initDebris(parent)
         else init(parent)
@@ -133,4 +137,59 @@ function spawnDebris(x, y, dx, dy, width, parent) {
     debris.targetDx = dx
     debris.targetDy = dy
     debris.restartAnimation()
+}
+
+// ---- 爆炸粒子池 ----
+var _explosionPoolSize = 10
+var _explosionPool = []
+var _explosionIndex = 0
+var _explosionInitialized = false
+var _explosionComponent = null
+
+function _initExplosion(parent) {
+    if (_explosionInitialized) return
+    _explosionComponent = Qt.createComponent("../particles/ExplosionParticle.qml")
+    for (var i = 0; i < _explosionPoolSize; i++) {
+        var exp = _createExplosionParticle(parent)
+        if (exp) {
+            exp.visible = false
+            _explosionPool.push(exp)
+        }
+    }
+    _explosionInitialized = true
+}
+
+function _createExplosionParticle(parent) {
+    if (!_explosionComponent || _explosionComponent.status !== _COMPONENT_READY) {
+        _explosionComponent = Qt.createComponent("../particles/ExplosionParticle.qml")
+    }
+    if (_explosionComponent.status === _COMPONENT_READY)
+        return _explosionComponent.createObject(parent)
+    console.error("ParticlePool: failed to load ExplosionParticle.qml")
+    return null
+}
+
+function spawnExplosion(x, y, radius, parent, enabled) {
+    if (enabled === false) return
+    if (!_explosionInitialized) {
+        if (_debrisInitialized || _bloodInitialized) _initExplosion(parent)
+        else init(parent)
+    }
+    if (_explosionPool.length === 0) return
+
+    var exp = _explosionPool[_explosionIndex]
+
+    if (!exp) {
+        exp = _createExplosionParticle(parent)
+        if (!exp) return
+        _explosionPool[_explosionIndex] = exp
+    }
+
+    _explosionIndex = (_explosionIndex + 1) % _explosionPool.length
+
+    if (exp.visible) {
+        exp.visible = false
+    }
+
+    exp.showExplosion(x, y, radius)
 }

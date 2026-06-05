@@ -1,6 +1,7 @@
 import QtQuick
 import QtMultimedia
 import QtQuick.Controls
+import singleton.SettingsData
 
 Item {
     id: root
@@ -39,6 +40,10 @@ Item {
     }
 
     Component.onCompleted: {
+        // 从设置初始化音量
+        masterVolume = SettingsData.masterVolume / 100.0
+        musicVolume = SettingsData.musicVolume / 100.0
+        sfxVolume = SettingsData.sfxVolume / 100.0
         if(autoPlayBackgroundMusic)playBackgroundMusic()
     }
 

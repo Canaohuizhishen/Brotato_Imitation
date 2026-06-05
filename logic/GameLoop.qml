@@ -36,90 +36,96 @@ Item {
             // -- 每帧回调 --
             var i
             for (i = 0; i < perFrameCallbacks.length; i++) {
-                perFrameCallbacks[i](gameLoop.deltaTime)
+                perFrameCallbacks[i].func.call(perFrameCallbacks[i].target, gameLoop.deltaTime)
             }
 
             // -- 约 100ms (每 ~6 帧) --
             if (frameCount % 6 === 0) {
                 for (i = 0; i < per100msCallbacks.length; i++) {
-                    per100msCallbacks[i]()
+                    per100msCallbacks[i].func.call(per100msCallbacks[i].target)
                 }
             }
 
             // -- 约 200ms (每 ~12 帧) --
             if (frameCount % 12 === 0) {
                 for (i = 0; i < per200msCallbacks.length; i++) {
-                    per200msCallbacks[i]()
+                    per200msCallbacks[i].func.call(per200msCallbacks[i].target)
                 }
             }
 
             // -- 约 500ms (每 ~31 帧) --
             if (frameCount % 31 === 0) {
                 for (i = 0; i < per500msCallbacks.length; i++) {
-                    per500msCallbacks[i]()
+                    per500msCallbacks[i].func.call(per500msCallbacks[i].target)
                 }
             }
 
             // -- 约 1000ms (每 ~62 帧) --
             if (frameCount % 62 === 0) {
                 for (i = 0; i < per1000msCallbacks.length; i++) {
-                    per1000msCallbacks[i]()
+                    per1000msCallbacks[i].func.call(per1000msCallbacks[i].target)
                 }
             }
 
             // -- 约 2000ms (每 ~125 帧) --
             if (frameCount % 125 === 0) {
                 for (i = 0; i < per2000msCallbacks.length; i++) {
-                    per2000msCallbacks[i]()
+                    per2000msCallbacks[i].func.call(per2000msCallbacks[i].target)
                 }
             }
 
             // -- 约 3000ms (每 ~187 帧) --
             if (frameCount % 187 === 0) {
                 for (i = 0; i < per3000msCallbacks.length; i++) {
-                    per3000msCallbacks[i]()
+                    per3000msCallbacks[i].func.call(per3000msCallbacks[i].target)
                 }
             }
         }
     }
 
     // ---- 注册/注销接口 ----
-    function registerPerFrame(callback)     { perFrameCallbacks.push(callback) }
-    function registerPer100ms(callback)     { per100msCallbacks.push(callback) }
-    function registerPer200ms(callback)     { per200msCallbacks.push(callback) }
-    function registerPer500ms(callback)     { per500msCallbacks.push(callback) }
-    function registerPer1000ms(callback)    { per1000msCallbacks.push(callback) }
-    function registerPer2000ms(callback)    { per2000msCallbacks.push(callback) }
-    function registerPer3000ms(callback)    { per3000msCallbacks.push(callback) }
+    // 重载：registerPerXxx(target, func) — 上下文感知模式
+    //       registerPerXxx(func)          — 传统模式（向前兼容）
+    function _pushCallback(list, target_or_func, func_or_undefined) {
+        if (func_or_undefined !== undefined)
+            list.push({ target: target_or_func, func: func_or_undefined })
+        else
+            list.push({ target: null, func: target_or_func })
+    }
+    function registerPerFrame(a, b)         { _pushCallback(perFrameCallbacks, a, b) }
+    function registerPer100ms(a, b)         { _pushCallback(per100msCallbacks, a, b) }
+    function registerPer200ms(a, b)         { _pushCallback(per200msCallbacks, a, b) }
+    function registerPer500ms(a, b)         { _pushCallback(per500msCallbacks, a, b) }
+    function registerPer1000ms(a, b)        { _pushCallback(per1000msCallbacks, a, b) }
+    function registerPer2000ms(a, b)        { _pushCallback(per2000msCallbacks, a, b) }
+    function registerPer3000ms(a, b)        { _pushCallback(per3000msCallbacks, a, b) }
 
-    function removePerFrame(callback) {
-        var idx = perFrameCallbacks.indexOf(callback)
-        if (idx >= 0) perFrameCallbacks.splice(idx, 1)
+    // 重载：removePerXxx(target, func) — 按目标+函数对移除
+    //       removePerXxx(func)          — 传统函数引用移除（向前兼容）
+    function _removeCallback(list, a, b) {
+        if (b !== undefined) {
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].target === a && list[i].func === b) {
+                    list.splice(i, 1)
+                    return
+                }
+            }
+        } else {
+            for (var i = 0; i < list.length; i++) {
+                if (list[i].func === a) {
+                    list.splice(i, 1)
+                    return
+                }
+            }
+        }
     }
-    function removePer100ms(callback) {
-        var idx = per100msCallbacks.indexOf(callback)
-        if (idx >= 0) per100msCallbacks.splice(idx, 1)
-    }
-    function removePer200ms(callback) {
-        var idx = per200msCallbacks.indexOf(callback)
-        if (idx >= 0) per200msCallbacks.splice(idx, 1)
-    }
-    function removePer500ms(callback) {
-        var idx = per500msCallbacks.indexOf(callback)
-        if (idx >= 0) per500msCallbacks.splice(idx, 1)
-    }
-    function removePer1000ms(callback) {
-        var idx = per1000msCallbacks.indexOf(callback)
-        if (idx >= 0) per1000msCallbacks.splice(idx, 1)
-    }
-    function removePer2000ms(callback) {
-        var idx = per2000msCallbacks.indexOf(callback)
-        if (idx >= 0) per2000msCallbacks.splice(idx, 1)
-    }
-    function removePer3000ms(callback) {
-        var idx = per3000msCallbacks.indexOf(callback)
-        if (idx >= 0) per3000msCallbacks.splice(idx, 1)
-    }
+    function removePerFrame(a, b)           { _removeCallback(perFrameCallbacks, a, b) }
+    function removePer100ms(a, b)           { _removeCallback(per100msCallbacks, a, b) }
+    function removePer200ms(a, b)           { _removeCallback(per200msCallbacks, a, b) }
+    function removePer500ms(a, b)           { _removeCallback(per500msCallbacks, a, b) }
+    function removePer1000ms(a, b)          { _removeCallback(per1000msCallbacks, a, b) }
+    function removePer2000ms(a, b)          { _removeCallback(per2000msCallbacks, a, b) }
+    function removePer3000ms(a, b)          { _removeCallback(per3000msCallbacks, a, b) }
 
     // ---- 重置 ----
     function reset() {

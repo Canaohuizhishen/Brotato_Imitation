@@ -1,6 +1,8 @@
 import QtQuick 2.15
 import "../data"
 import singleton.PlayerData
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Rectangle {
     id: weaponCard
@@ -34,20 +36,22 @@ Rectangle {
         }
     }
 
-    Text{
-        text: weaponCard.weaponName == "" ? "" : core.weaponName
+    ScaledText {
+        text: weaponCard.weaponName == "" ? "" : I18n.tr(core.weaponName, SettingsData.language)
         color: "white"
-        font.pixelSize: 18*weaponCard.scaleFactor
+        basePixelSize: 18
+        uiScale: weaponCard.scaleFactor
         anchors.left: parent.left
         anchors.leftMargin: weaponIcon.width+20*weaponCard.scaleFactor
         anchors.top: parent.top
         anchors.topMargin: 12*weaponCard.scaleFactor
     }
 
-    Text{
-        text: weaponCard.weaponName=="" ? "" : core.type
+    ScaledText {
+        text: weaponCard.weaponName=="" ? "" : I18n.tr(core.type, SettingsData.language)
         color: "#ffffc0"
-        font.pixelSize: 15*weaponCard.scaleFactor
+        basePixelSize: 15
+        uiScale: weaponCard.scaleFactor
         anchors.left: parent.left
         anchors.leftMargin: weaponIcon.width+20*weaponCard.scaleFactor
         anchors.top: parent.top

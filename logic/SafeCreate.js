@@ -1,6 +1,6 @@
 .pragma library
 
-var _COMPONENT_READY = 1  // Component.Ready — QML JS 引擎不暴露 Component 枚举
+var _COMPONENT_READY = 2  // Component.Ready (enum value 2) — QML JS 引擎不暴露 Component 枚举
 
 /**
  * SafeCreate — 安全的 QML 动态组件创建工具

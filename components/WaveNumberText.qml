@@ -1,4 +1,6 @@
 import QtQuick 2.15
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: waveNumberText
@@ -12,7 +14,7 @@ Item {
 
     Text {
         id: text
-        text: "第"+waveNumberText.text+"波"
+        text: I18n.tr("第", SettingsData.language)+waveNumberText.text+I18n.tr("波", SettingsData.language)
         color: "white"
         font.pixelSize: waveNumberText.height
         style: Text.Outline

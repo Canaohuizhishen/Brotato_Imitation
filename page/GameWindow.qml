@@ -1,8 +1,10 @@
 import QtQuick 2.15
 import singleton.PlayerData
+import singleton.SettingsData
 import "../components"
 import "../tool.js" as Tool
 import "../data"
+import "../data/i18n.js" as I18n
 import "../sound"
 
 Item {
@@ -43,7 +45,6 @@ Item {
         id: settingInterface
         visible: false
         scaleFactor: gameWindow.scaleFactor
-        showModifier: inSelectInterface
     }
 
     PauseInterface{
@@ -252,7 +253,7 @@ Item {
                     gameArea.active=false
                     gameArea.paused=true
                     delayDietimer.start()
-                    Tool.createText(gameWindow,"战败",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
+                    Tool.createText(gameWindow,I18n.tr("战败",SettingsData.language),50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
                 }
             }
         }
@@ -328,9 +329,9 @@ Item {
                 delayOvertimer.running = true
                 // 显示通过/胜利文本（覆盖倒计时结束和Boss击杀两种路径）
                 if(PlayerData.currentWaveNumber<20){
-                    Tool.createText(gameWindow,"通过!",40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
+                    Tool.createText(gameWindow,I18n.tr("通过!",SettingsData.language),40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
                 }else{
-                    Tool.createText(gameWindow,"胜利!",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
+                    Tool.createText(gameWindow,I18n.tr("胜利",SettingsData.language)+"!",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
                 }
             }
         }

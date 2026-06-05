@@ -9,63 +9,80 @@ Item {
     height: 40*root.scaleFactor
 
     property string labelText: ""
+    /// 音频通道标识：master / sfx / music / ""（非音量滑块留空）
+    property string audioChannel: ""
     property int initialValue: 50
+    property int currentValue: initialValue  // 可被父级绑定的当前值
     signal valueChanged(int newValue)
     property bool isActive: false  // 新增：当前是否被激活
     property bool linkFontSize: false  // 控制字体大小关联
+    property int sliderFrom: 0         // 滑块范围下限
+    property int sliderTo: 100         // 滑块范围上限
+    property bool _settingFromExternal: false  // 防止循环更新的内部标志
 
     function mapFontSize(sliderValue) {
         return 25 * (sliderValue / 100)
     }
 
-    // 文本标签（左对齐）
-    Text {
+    // 测量标签在目标字号下的完整宽度（用于超长英文时缩小字号）
+    TextMetrics {
+        id: labelMetrics
+        text: root.labelText
+        font.pixelSize: (root.linkFontSize ? mapFontSize(slider.value) : 25) * root.scaleFactor
+    }
+
+    // 字号收缩因子：文本超过标签宽度时按比例缩小
+    // 减 2px 容差：补偿字体 hinting 导致实际渲染比 TextMetrics 宽出 1-3px
+    readonly property real _labelFitScale: Math.min(1.0, ((130 - 2) * root.scaleFactor) / Math.max(1, labelMetrics.width))
+
+    // 文本标签（固定宽 130px，超长自动缩小字号，clip 防溢出）
+    ScaledText {
         id: label
         text: root.labelText
         color: "white"
-        font.pixelSize: root.linkFontSize ? mapFontSize(slider.value)*root.scaleFactor : 25*root.scaleFactor
+        font.pixelSize: (root.linkFontSize ? mapFontSize(slider.value) : 25) * root.scaleFactor * root._labelFitScale
         anchors {
             left: parent.left
+            leftMargin: 10*root.scaleFactor
             verticalCenter: parent.verticalCenter
         }
-        width: 80*root.scaleFactor
+        width: 130*root.scaleFactor
         horizontalAlignment: Text.AlignLeft
+        clip: true
     }
 
-    // 滑块（居中）
+    // 滑块
     Slider {
         id: slider
         anchors {
             left: label.right
             right: percent.left
             verticalCenter: parent.verticalCenter
-            leftMargin: 50*root.scaleFactor
+            leftMargin: 5*root.scaleFactor
             rightMargin: 15*root.scaleFactor
         }
-        height: 25*root.scaleFactor  // 默认高度
-        from: root.linkFontSize ? 50 : 0  // 动态范围
-        to: root.linkFontSize ? 125 : 100
-        value: root.linkFontSize ? 100 : root.initialValue
-        stepSize: root.linkFontSize ? 1*root.scaleFactor : 3*root.scaleFactor
+        height: 25*root.scaleFactor
+        from: root.sliderFrom
+        to: root.sliderTo
+        value: root.currentValue
+        stepSize: 1
         handle: Item { visible: false }
 
         Component.onCompleted: {
-            if(labelText === "主音效") {
+            if (root.audioChannel === "master") {
                 sound.setMasterVolume(value * 0.01)
-            } else if(labelText === "音效") {
+            } else if (root.audioChannel === "sfx") {
                 sound.setSfxVolume(value * 0.01)
-            } else {
+            } else if (root.audioChannel === "music") {
                 sound.setMusicVolume(value * 0.01)
             }
         }
 
-        // 悬停检测
         HoverHandler {
             id: hoverHandler
             acceptedDevices: PointerDevice.Mouse
         }
 
-        // 点击检测
         TapHandler {
             acceptedButtons: Qt.LeftButton
             onTapped: {
@@ -75,22 +92,12 @@ Item {
                 root.isActive = true
             }
         }
-        TapHandler {
-            acceptedButtons: Qt.LeftButton
-            onTapped: {
-                if (root.parent && root.parent.deselectAllSliders) {
-                    root.parent.deselectAllSliders()
-                }
-            }
-        }
 
-        // 背景轨道
         background: Rectangle {
             id: trackBg
             anchors.fill: parent
-            color: "#252525"                          // 默认状态
+            color: "#252525"
 
-            // 进度条
             Rectangle {
                 id: progressBar
                 width: slider.visualPosition * parent.width
@@ -108,7 +115,6 @@ Item {
             }
         }
 
-        // 悬停/激活时的高度变化
         states: [
             State {
                 when: root.isActive
@@ -124,31 +130,29 @@ Item {
         }
 
         onValueChanged: {
-            if (root.linkFontSize) {
-                label.font.pixelSize = mapFontSize(value)
-            }
             root.valueChanged(Math.round(value))
-            if(labelText === "主音效") {
+            if (root.audioChannel === "master") {
                 sound.setMasterVolume(value * 0.01)
-            } else if(labelText === "音效") {
+            } else if (root.audioChannel === "sfx") {
                 sound.setSfxVolume(value * 0.01)
-            } else {
+            } else if (root.audioChannel === "music") {
                 sound.setMusicVolume(value * 0.01)
             }
         }
     }
 
     // 百分比（右对齐）
-    Text {
+    ScaledText {
         id: percent
         text: {
             if (root.linkFontSize) {
-                return Math.round(slider.value) + "%" // 显示80%-125%
+                return Math.round(slider.value) + "%"
             }
             return Math.round(slider.value) + "%"
         }
         color: "white"
-        font.pixelSize: 24*root.scaleFactor
+        basePixelSize: 24
+        uiScale: root.scaleFactor
         anchors {
             right: parent.right
             verticalCenter: parent.verticalCenter
@@ -156,13 +160,12 @@ Item {
         width: 60*root.scaleFactor
         horizontalAlignment: Text.AlignRight
     }
-    onLinkFontSizeChanged: {
-        if (linkFontSize) {
-            slider.value = 100
-            label.font.pixelSize = mapFontSize(100)*root.scaleFactor
-        } else {
-            slider.value = initialValue
-            label.font.pixelSize = 25*root.scaleFactor
+    // 当外部（如 SettingsData.loadSettings）修改 currentValue 时，同步到 slider
+    onCurrentValueChanged: {
+        if (!_settingFromExternal && Math.round(slider.value) !== currentValue) {
+            _settingFromExternal = true
+            slider.value = currentValue
+            _settingFromExternal = false
         }
     }
 

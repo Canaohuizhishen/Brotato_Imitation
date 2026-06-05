@@ -95,6 +95,10 @@ qt_add_qml_module(appBrotato
     RESOURCES audio.qrc
     QML_FILES sound/Sound.qml
     QML_FILES components/DynamicText.qml
+    QML_FILES components/ScaledText.qml
+    QML_FILES components/TranslatableText.qml
+    QML_FILES particles/ExplosionParticle.qml
+    QML_FILES data/i18n.js
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

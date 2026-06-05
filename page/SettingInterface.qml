@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import"../components"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: settingsInterface
@@ -8,7 +10,6 @@ Item {
     z: 200
     anchors.fill: parent
     focus: true
-    property bool showModifier: true
     property alias backButton: backButton
 
     onVisibleChanged: {
@@ -39,10 +40,6 @@ Item {
 
 
 
-    TextMetrics {
-        id: textMetrics
-        font: backgroundComboBox.font
-    }
 
     Rectangle {
         anchors.fill: parent
@@ -59,32 +56,30 @@ Item {
 
         SetButton {
             scaleFactor: settingsInterface.scaleFactor
-            text: "一般设定"
+            text: I18n.tr("一般设定", SettingsData.language)
             width: parent.width
-            onClicked: {
+            onActivated: {
                 general.visible = true
                 settingsPopup.visible = false
-                console.log("一般设定被点击")
             }
         }
 
         SetButton {
             scaleFactor: settingsInterface.scaleFactor
-            text: "游戏操作"
+            text: I18n.tr("游戏操作", SettingsData.language)
             width: parent.width
-            onClicked: {
+            onActivated: {
                 gameControls.visible = true
                 settingsPopup.visible = false
-                console.log("游戏操作被点击")
             }
         }
 
         SetButton {
             scaleFactor: settingsInterface.scaleFactor
             id: backButton
-            text: "返回"
+            text: I18n.tr("返回", SettingsData.language)
             width: parent.width
-            onClicked:{
+            onActivated:{
                 settingsInterface.visible = false
             }
         }
@@ -108,12 +103,13 @@ Item {
                 width: 420*settingsInterface.scaleFactor
                 height: 500*settingsInterface.scaleFactor
                 spacing: 5*settingsInterface.scaleFactor
-                Text {
-                    text: "视频"
+                ScaledText {
+                    translationKey: "视频"
                     color: "white"
                     anchors.left: parent.left
                     anchors.leftMargin: 180*settingsInterface.scaleFactor
-                    font.pixelSize: 40*settingsInterface.scaleFactor
+                    basePixelSize: 40
+                    uiScale: settingsInterface.scaleFactor
                 }
 
                 ComboBox {
@@ -122,7 +118,8 @@ Item {
                     width: 420*settingsInterface.scaleFactor
                     height: 45*settingsInterface.scaleFactor
                     model: ["中文", "繁体中文", "English", "Français", "日本語", "한국어", "Русский язык", "Polski", "Español", "Português", "Deutsch", "Türk", "Italiano"]
-                    currentIndex: 0
+                    currentIndex: SettingsData.language
+                    onActivated: { SettingsData.language = index; SettingsData.saveSettings() }
                     property bool isHovered: false
                     property bool isActive: popup.visible
 
@@ -139,9 +136,10 @@ Item {
                     }
 
 
-                    contentItem: Text {
-                        text: parent.displayText
-                        font.pixelSize: 30*settingsInterface.scaleFactor
+                    contentItem: ScaledText {
+                        text: I18n.tr(languageComboBox.model[languageComboBox.currentIndex], SettingsData.language)
+                        basePixelSize: 30
+                        uiScale: settingsInterface.scaleFactor
                         color: {
                             if (languageComboBox.isActive) "#000000"
                             else if (languageComboBox.isHovered) "#000000"
@@ -151,14 +149,15 @@ Item {
                         leftPadding: 10*settingsInterface.scaleFactor
                     }
 
-                    indicator: Text {
+                    indicator: ScaledText {
                         text: "▼"
                         color: {
                             if (languageComboBox.isActive) "#000000"
                             else if (languageComboBox.isHovered) "white"  // 悬停时箭头变白
                             else "lightgray"
                         }
-                        font.pixelSize: 25*settingsInterface.scaleFactor
+                        basePixelSize: 25
+                        uiScale: settingsInterface.scaleFactor
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
                         anchors.rightMargin: 10*settingsInterface.scaleFactor
@@ -192,9 +191,10 @@ Item {
                                 height: 40*settingsInterface.scaleFactor
                                 property bool isHovered: ListView.view.hoveredItem === this
 
-                                Text {
-                                    text: ListView.isCurrentItem ? "◦ " + modelData : "• " + modelData
-                                    font.pixelSize: 24*settingsInterface.scaleFactor
+                                ScaledText {
+                                    text: ListView.isCurrentItem ? "◦ " + I18n.tr(modelData, SettingsData.language) : "• " + I18n.tr(modelData, SettingsData.language)
+                                    basePixelSize: 24
+                                    uiScale: settingsInterface.scaleFactor
                                     color: parent.isHovered ? "black" : "white"
                                     verticalAlignment: Text.AlignVCenter
                                     leftPadding: 10*settingsInterface.scaleFactor
@@ -217,11 +217,12 @@ Item {
                                 }
 
                                 // 点击处理
-                                TapHandler {
-                                    onTapped: {
-                                        // 设置当前选中项
-                                        languageComboBox.currentIndex = index
-                                        // 关闭下拉菜单
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: (mouse) => {
+                                        mouse.accepted = true
+                                        SettingsData.language = index
+                                        SettingsData.saveSettings()
                                         languageComboBox.popup.close()
                                     }
                                 }
@@ -237,11 +238,13 @@ Item {
                     width: parent.width
                     height: 45*settingsInterface.scaleFactor
 
-                    Text {
-                        text:"背景"
-                        font.pixelSize: 30*settingsInterface.scaleFactor
+                    ScaledText {
+                        translationKey: "背景"
+                        basePixelSize: 30
+                        uiScale: settingsInterface.scaleFactor
                         color: "white"
                         anchors.left: parent.left
+                        anchors.leftMargin: 10*settingsInterface.scaleFactor
                         width: 60*settingsInterface.scaleFactor
                     }
                     ComboBox {
@@ -249,29 +252,48 @@ Item {
                         width: backgroundIcon.width+backgroundName.width+backgroundItem.spacing+indicatorText.width+20*settingsInterface.scaleFactor
                         height: parent.height
                         anchors.right: parent.right
+                        textRole: "text"
+                        currentIndex: SettingsData.background
+                        onActivated: { SettingsData.background = index; SettingsData.saveSettings() }
+
+                        // 动态模型：ListElement 不支持表达式，改为在 JS 中填充翻译文本
                         model: ListModel {
                             id: bgModel
-                            ListElement { text: "随机"; icon: "" }
-                            ListElement { text: "泥地"; icon: "" }
-                            ListElement { text: "森林"; icon: "" }
-                            ListElement { text: "火山"; icon: "" }
-                            ListElement { text: "梦幻之地"; icon: "qrc:/images/stone3.png" }
-                            ListElement { text: "墓地"; icon: "" }
-                            ListElement { text: "黑暗之地"; icon: "" }
+                            ListElement { text: ""; icon: "" }
+                            ListElement { text: ""; icon: "" }
+                            ListElement { text: ""; icon: "" }
+                            ListElement { text: ""; icon: "" }
+                            ListElement { text: ""; icon: "qrc:/images/stone3.png" }
+                            ListElement { text: ""; icon: "" }
+                            ListElement { text: ""; icon: "" }
                         }
-                        textRole: "text"
-                        currentIndex: 0
+
+                        // 背景原始 key（用于 I18n.tr 查找），图标已内置在模型静态行中
+                        property var _bgKeys: ["随机", "泥地", "森林", "火山", "梦幻之地", "墓地", "黑暗之地"]
+
+                        // 用翻译文本填充模型（仅首次 + 语言切换时调用）
+                        // 不改变模型结构/数量，避免破坏 currentIndex 绑定
+                        function translateModel() {
+                            for (var i = 0; i < backgroundComboBox._bgKeys.length; i++) {
+                                bgModel.setProperty(i, "text",
+                                    I18n.tr(backgroundComboBox._bgKeys[i], SettingsData.language))
+                            }
+                        }
+
+                        Component.onCompleted: {
+                            translateModel()
+                        }
+
+                        // 语言切换时刷新模型中的翻译文本
+                        Connections {
+                            target: SettingsData
+                            function onLanguageChanged() {
+                                backgroundComboBox.translateModel()
+                            }
+                        }
+
                         property bool isHovered: false
                         property bool isActive: popup.visible
-
-                        // 动态更新宽度
-                        function updateWidth() {
-                            var currentItem = bgModel.get(currentIndex)
-                            textMetrics.text = currentItem.text + "▼"
-                        }
-
-                        Component.onCompleted: updateWidth()
-                        onDisplayTextChanged: updateWidth()
 
                         background: Rectangle {
                             color: {
@@ -311,10 +333,11 @@ Item {
                             }
 
                             // 当前选中项的文本
-                            Text {
+                            ScaledText {
                                 id: backgroundName
                                 text: backgroundComboBox.displayText
-                                font.pixelSize: 30*settingsInterface.scaleFactor
+                                basePixelSize: 30
+                                uiScale: settingsInterface.scaleFactor
                                 color: {
                                     if (backgroundComboBox.isActive) "#000000"
                                     else if (backgroundComboBox.isHovered) "#000000"
@@ -326,7 +349,7 @@ Item {
                             }
                         }
 
-                        indicator: Text {
+                        indicator: ScaledText {
                             id: indicatorText
                             text: "▼"
                             color: {
@@ -334,7 +357,8 @@ Item {
                                 else if (backgroundComboBox.isHovered) "white"  // 悬停时箭头变白
                                 else "lightgray"
                             }
-                            font.pixelSize: 25*settingsInterface.scaleFactor
+                            basePixelSize: 25
+                            uiScale: settingsInterface.scaleFactor
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.right: parent.right
                             anchors.rightMargin: 10*settingsInterface.scaleFactor
@@ -369,9 +393,10 @@ Item {
                                     height: 40*settingsInterface.scaleFactor
                                     property bool isHovered: ListView.view.hoveredItem === this
 
-                                    Text {
+                                    ScaledText {
                                         text: ListView.isCurrentItem ? "◦ " + model.text : "• " + model.text
-                                        font.pixelSize: 24*settingsInterface.scaleFactor
+                                        basePixelSize: 24
+                                        uiScale: settingsInterface.scaleFactor
                                         color: parent.isHovered ? "black" : "white"
                                         verticalAlignment: Text.AlignVCenter
                                         horizontalAlignment: Text.AlignLeft
@@ -399,9 +424,12 @@ Item {
                                         }
                                     }
 
-                                    TapHandler {
-                                        onTapped: {
-                                            backgroundComboBox.currentIndex = index
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: (mouse) => {
+                                            mouse.accepted = true
+                                            SettingsData.background = index
+                                            SettingsData.saveSettings()
                                             backgroundComboBox.popup.close()
                                         }
                                     }
@@ -414,40 +442,46 @@ Item {
                 //屏幕振动***********************************************************************
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "屏幕振动"
-                    onToggled: (checked) => console.log("屏幕振动:", checked)
+                    label: I18n.tr("屏幕振动", SettingsData.language)
+                    checked: SettingsData.screenShake
+                    onToggled: (checked) => { SettingsData.screenShake = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "全屏模式"
-                    onToggled: (checked) => console.log("全屏模式:", checked)
+                    label: I18n.tr("全屏模式", SettingsData.language)
+                    checked: SettingsData.fullscreen
+                    onToggled: (checked) => { SettingsData.fullscreen = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "视觉效果"
-                    onToggled: (checked) => console.log("视觉效果:", checked)
+                    label: I18n.tr("视觉效果", SettingsData.language)
+                    checked: SettingsData.visualEffects
+                    onToggled: (checked) => { SettingsData.visualEffects = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "伤害显示"
-                    onToggled: (checked) => console.log("伤害显示:", checked)
+                    label: I18n.tr("伤害显示", SettingsData.language)
+                    checked: SettingsData.showDamageNumbers
+                    onToggled: (checked) => { SettingsData.showDamageNumbers = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "敌袭结束优化"
-                    onToggled: (checked) => console.log("敌袭结束优化:", checked)
+                    label: I18n.tr("敌袭结束优化", SettingsData.language)
+                    checked: SettingsData.endOfWaveOptimization
+                    onToggled: (checked) => { SettingsData.endOfWaveOptimization = checked; SettingsData.saveSettings() }
                 }
             }
             Column {
                 width: 420*settingsInterface.scaleFactor
                 height: 500*settingsInterface.scaleFactor
                 spacing: 3*settingsInterface.scaleFactor
-                Text {
-                    text: "声音"
+                ScaledText {
+                    translationKey: "声音"
                     color: "white"
                     anchors.left: parent.left
                     anchors.leftMargin: 180*settingsInterface.scaleFactor
-                    font.pixelSize: 40*settingsInterface.scaleFactor
+                    basePixelSize: 40
+                    uiScale: settingsInterface.scaleFactor
                 }
                 function deselectAllSliders() {
                     for (var i = 0; i < children.length; i++) {
@@ -459,30 +493,38 @@ Item {
 
                 ProgressBarControlButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    labelText: "主音效"
-                    initialValue: 70
+                    labelText: I18n.tr("主音效", SettingsData.language)
+                    audioChannel: "master"
+                    currentValue: SettingsData.masterVolume
+                    onValueChanged: (newValue) => { SettingsData.masterVolume = newValue; SettingsData.saveSettings() }
                 }
 
                 ProgressBarControlButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    labelText: "音效"
-                    initialValue: 50
+                    labelText: I18n.tr("音效", SettingsData.language)
+                    audioChannel: "sfx"
+                    currentValue: SettingsData.sfxVolume
+                    onValueChanged: (newValue) => { SettingsData.sfxVolume = newValue; SettingsData.saveSettings() }
                 }
 
                 ProgressBarControlButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    labelText: "音乐"
-                    initialValue: 30
+                    labelText: I18n.tr("音乐", SettingsData.language)
+                    audioChannel: "music"
+                    currentValue: SettingsData.musicVolume
+                    onValueChanged: (newValue) => { SettingsData.musicVolume = newValue; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "窗口未置于前方时静音"
-                    onToggled: (checked) => console.log("窗口未置于前方时静音:", checked)
+                    label: I18n.tr("窗口未置于前方时静音", SettingsData.language)
+                    checked: SettingsData.muteWhenUnfocused
+                    onToggled: (checked) => { SettingsData.muteWhenUnfocused = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "窗口未置于前方时暂停"
-                    onToggled: (checked) => console.log("窗口未置于前方时暂停:", checked)
+                    label: I18n.tr("窗口未置于前方时暂停", SettingsData.language)
+                    checked: SettingsData.pauseWhenUnfocused
+                    onToggled: (checked) => { SettingsData.pauseWhenUnfocused = checked; SettingsData.saveSettings() }
                 }
             }
         }
@@ -498,16 +540,18 @@ Item {
                 Behavior on color { ColorAnimation { duration: 100 } }
             }
 
-            contentItem: Text {
-                text: "返回"
+            contentItem: ScaledText {
+                translationKey: "返回"
                 color: root.hovered ? "#000000" : "white"
-                font.pixelSize: 30*settingsInterface.scaleFactor
+                basePixelSize: 30
+                uiScale: settingsInterface.scaleFactor
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
             onClicked:{
                 settingsPopup.visible = true
                 general.visible = false
+                sound.playClickSound()
             }
         }
     }
@@ -530,72 +574,75 @@ Item {
                 width: 420*settingsInterface.scaleFactor
                 height: 570*settingsInterface.scaleFactor
                 spacing: 5*settingsInterface.scaleFactor
-                Text {
-                    text: "游戏操作"
+                ScaledText {
+                    translationKey: "游戏操作"
                     color: "white"
                     anchors.left: parent.left
                     anchors.leftMargin: 125*settingsInterface.scaleFactor
-                    font.pixelSize: 40*settingsInterface.scaleFactor
+                    basePixelSize: 40
+                    uiScale: settingsInterface.scaleFactor
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "仅限鼠标"
-                    onToggled: (checked) => console.log("屏幕振动:", checked)
+                    label: I18n.tr("仅限鼠标", SettingsData.language)
+                    checked: SettingsData.mouseOnly
+                    onToggled: (checked) => { SettingsData.mouseOnly = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "手动瞄准"
-                    onToggled: (checked) => console.log("全屏模式:", checked)
+                    label: I18n.tr("手动瞄准", SettingsData.language)
+                    checked: SettingsData.manualAim
+                    onToggled: (checked) => { SettingsData.manualAim = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "按下鼠标时手动瞄准"
-                    onToggled: (checked) => console.log("视觉效果:", checked)
+                    label: I18n.tr("—按下鼠标时手动瞄准", SettingsData.language)
+                    checked: SettingsData.manualAimOnPress
+                    indent: 40 * settingsInterface.scaleFactor
+                    enabled: SettingsData.manualAim
+                    onToggled: (checked) => { SettingsData.manualAimOnPress = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "角色头顶显示血条 "
-                    onToggled: (checked) => console.log("伤害显示:", checked)
+                    label: I18n.tr("角色头顶显示血条", SettingsData.language)
+                    checked: SettingsData.showCharacterHealthBar
+                    onToggled: (checked) => { SettingsData.showCharacterHealthBar = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "头目头顶显示血条"
-                    onToggled: (checked) => console.log("敌袭结束优化:", checked)
+                    label: I18n.tr("头目头顶显示血条", SettingsData.language)
+                    checked: SettingsData.showBossHealthBar
+                    onToggled: (checked) => { SettingsData.showBossHealthBar = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "锁定物品"
-                    onToggled: (checked) => console.log("敌袭结束优化:", checked)
+                    label: I18n.tr("锁定物品", SettingsData.language)
+                    checked: SettingsData.lockItems
+                    onToggled: (checked) => { SettingsData.lockItems = checked; SettingsData.saveSettings() }
                 }
 
                 Item{
                     width: parent.width
                     height: 45*settingsInterface.scaleFactor
 
-                    Text {
-                        text:"无尽模式得分"
-                        font.pixelSize: 30*settingsInterface.scaleFactor
+                    ScaledText {
+                        translationKey: "无尽模式得分"
+                        basePixelSize: 30
+                        uiScale: settingsInterface.scaleFactor
                         color: "white"
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     ComboBox {
                         id: endlessModeScore
-                        width: modeText.text===model[0] ? 220*settingsInterface.scaleFactor : 160*settingsInterface.scaleFactor
+                        width: endlessModeScore.currentIndex === 0 ? 220*settingsInterface.scaleFactor : 160*settingsInterface.scaleFactor
                         height: 45*settingsInterface.scaleFactor
                         anchors.right: parent.right
                         model: ["最高敌袭次数", "最高难度"]
-                        currentIndex: 0
+                        currentIndex: SettingsData.endlessScoreMode
+                        onActivated: { SettingsData.endlessScoreMode = index; SettingsData.saveSettings() }
                         property bool isHovered: false
                         property bool isActive: popup.visible
 
-
-                        // 动态更新宽度
-                        function updateWidth() {
-                            textMetrics.text = displayText+endlessModeScoreText.text
-                        }
-
-                        Component.onCompleted: updateWidth()
-                        onDisplayTextChanged: updateWidth()
 
                         background: Rectangle {
                             color: {
@@ -609,10 +656,11 @@ Item {
                             onHoveredChanged: endlessModeScore.isHovered = hovered
                         }
 
-                        contentItem: Text {
+                        contentItem: ScaledText {
                             id: modeText
-                            text: parent.displayText
-                            font.pixelSize: 30*settingsInterface.scaleFactor
+                            text: I18n.tr(endlessModeScore.model[endlessModeScore.currentIndex], SettingsData.language)
+                            basePixelSize: 30
+                            uiScale: settingsInterface.scaleFactor
                             color: {
                                 if (endlessModeScore.isActive) "#000000"
                                 else if (endlessModeScore.isHovered) "#000000"
@@ -626,7 +674,7 @@ Item {
                             }
                         }
 
-                        indicator: Text {
+                        indicator: ScaledText {
                             id: endlessModeScoreText
                             text: "▼"
                             color: {
@@ -634,7 +682,8 @@ Item {
                                 else if (endlessModeScore.isHovered) "white"  // 悬停时箭头变白
                                 else "lightgray"
                             }
-                            font.pixelSize: 25*settingsInterface.scaleFactor
+                            basePixelSize: 25
+                            uiScale: settingsInterface.scaleFactor
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.right: parent.right
                             anchors.rightMargin: 10*settingsInterface.scaleFactor
@@ -642,7 +691,7 @@ Item {
 
                         popup: Popup {
                             y: endlessModeScore.height - 1*settingsInterface.scaleFactor
-                            width: modeText.text===endlessModeScore.model[0] ? 220*settingsInterface.scaleFactor : 165*settingsInterface.scaleFactor
+                            width: endlessModeScore.currentIndex === 0 ? 220*settingsInterface.scaleFactor : 165*settingsInterface.scaleFactor
                             implicitHeight: Math.min(400, contentItem.implicitHeight)
                             padding: 1*settingsInterface.scaleFactor
 
@@ -669,9 +718,10 @@ Item {
                                     height: 40*settingsInterface.scaleFactor
                                     property bool isHovered: ListView.view.hoveredItem === this
 
-                                    Text {
-                                        text: ListView.isCurrentItem ? "◦" + modelData : "•" + modelData
-                                        font.pixelSize: 24*settingsInterface.scaleFactor
+                                    ScaledText {
+                                        text: ListView.isCurrentItem ? "◦" + I18n.tr(modelData, SettingsData.language) : "•" + I18n.tr(modelData, SettingsData.language)
+                                        basePixelSize: 24
+                                        uiScale: settingsInterface.scaleFactor
                                         color: parent.isHovered ? "black" : "white"
                                         verticalAlignment: Text.AlignVCenter
                                         horizontalAlignment: Text.AlignLeft
@@ -699,7 +749,8 @@ Item {
 
                                     TapHandler {
                                         onTapped: {
-                                            endlessModeScore.currentIndex = index
+                                            SettingsData.endlessScoreMode = index
+                                            SettingsData.saveSettings()
                                             endlessModeScore.popup.close()
                                         }
                                     }
@@ -715,66 +766,89 @@ Item {
                 width: 420*settingsInterface.scaleFactor
                 height: 570*settingsInterface.scaleFactor
                 spacing: 3*settingsInterface.scaleFactor
-                Text {
-                    text: "辅助功能"
+                function deselectAllSliders() {
+                    for (var i = 0; i < children.length; i++) {
+                        if (children[i].deselect) {
+                            children[i].deselect()
+                        }
+                    }
+                }
+                ScaledText {
+                    translationKey: "辅助功能"
                     color: "white"
                     anchors.left: parent.left
                     anchors.leftMargin: 125*settingsInterface.scaleFactor
-                    font.pixelSize: 40*settingsInterface.scaleFactor
-                }
-                ProgressBarControlButton {
-                    visible: settingsInterface.showModifier
-                    scaleFactor: settingsInterface.scaleFactor
-                    labelText: "敌人生命值"
-                    initialValue: 70
-                }
-                ProgressBarControlButton {
-                    visible: settingsInterface.showModifier
-                    scaleFactor: settingsInterface.scaleFactor
-                    labelText: "敌人伤害"
-                    initialValue: 70
-                }
-                ProgressBarControlButton {
-                    visible: settingsInterface.showModifier
-                    scaleFactor: settingsInterface.scaleFactor
-                    labelText: "敌人速度"
-                    initialValue: 70
+                    basePixelSize: 40
+                    uiScale: settingsInterface.scaleFactor
                 }
                 ProgressBarControlButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    labelText: "字体大小"
-                    initialValue: 100
+                    labelText: I18n.tr("敌人生命值", SettingsData.language)
+                    currentValue: SettingsData.enemyHpModifier
+                    sliderFrom: 50
+                    sliderTo: 125
+                    onValueChanged: (newValue) => { SettingsData.enemyHpModifier = newValue; SettingsData.saveSettings() }
+                }
+                ProgressBarControlButton {
+                    scaleFactor: settingsInterface.scaleFactor
+                    labelText: I18n.tr("敌人伤害", SettingsData.language)
+                    currentValue: SettingsData.enemyDamageModifier
+                    sliderFrom: 50
+                    sliderTo: 125
+                    onValueChanged: (newValue) => { SettingsData.enemyDamageModifier = newValue; SettingsData.saveSettings() }
+                }
+                ProgressBarControlButton {
+                    scaleFactor: settingsInterface.scaleFactor
+                    labelText: I18n.tr("敌人速度", SettingsData.language)
+                    currentValue: SettingsData.enemySpeedModifier
+                    sliderFrom: 50
+                    sliderTo: 125
+                    onValueChanged: (newValue) => { SettingsData.enemySpeedModifier = newValue; SettingsData.saveSettings() }
+                }
+                ProgressBarControlButton {
+                    scaleFactor: settingsInterface.scaleFactor
+                    labelText: I18n.tr("字体大小", SettingsData.language)
+                    currentValue: SettingsData.fontSize
                     linkFontSize: true
+                    sliderFrom: 50
+                    sliderTo: 125
+                    onValueChanged: (newValue) => { SettingsData.fontSize = newValue; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "突显角色"
-                    onToggled: (checked) => console.log("突显角色:", checked)
+                    label: I18n.tr("突显角色", SettingsData.language)
+                    checked: SettingsData.highlightCharacter
+                    onToggled: (checked) => { SettingsData.highlightCharacter = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "突显武器"
-                    onToggled: (checked) => console.log("突显武器:", checked)
+                    label: I18n.tr("突显武器", SettingsData.language)
+                    checked: SettingsData.highlightWeapon
+                    onToggled: (checked) => { SettingsData.highlightWeapon = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "爆炸"
-                    onToggled: (checked) => console.log("爆炸:", checked)
+                    label: I18n.tr("爆炸", SettingsData.language)
+                    checked: SettingsData.explosionEffect
+                    onToggled: (checked) => { SettingsData.explosionEffect = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "改变材料的声音 "
-                    onToggled: (checked) => console.log("改变材料的声音:", checked)
+                    label: I18n.tr("改变材料的声音", SettingsData.language)
+                    checked: SettingsData.materialSound
+                    onToggled: (checked) => { SettingsData.materialSound = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "屏幕变暗 "
-                    onToggled: (checked) => console.log("屏幕变暗:", checked)
+                    label: I18n.tr("屏幕变暗", SettingsData.language)
+                    checked: SettingsData.dimScreen
+                    onToggled: (checked) => { SettingsData.dimScreen = checked; SettingsData.saveSettings() }
                 }
                 SwitchSettingButton {
                     scaleFactor: settingsInterface.scaleFactor
-                    label: "突显投射物 "
-                    onToggled: (checked) => console.log("突显投射物:", checked)
+                    label: I18n.tr("突显投射物", SettingsData.language)
+                    checked: SettingsData.highlightProjectiles
+                    onToggled: (checked) => { SettingsData.highlightProjectiles = checked; SettingsData.saveSettings() }
                 }
             }
         }
@@ -790,15 +864,16 @@ Item {
                 Behavior on color { ColorAnimation { duration: 100 } }
             }
 
-            contentItem: Text {
-                text: "重置至默认"
+            contentItem: ScaledText {
+                translationKey: "重置至默认"
                 color: resetToDefault.hovered ? "#000000" : "white"
-                font.pixelSize: 30*settingsInterface.scaleFactor
+                basePixelSize: 30
+                uiScale: settingsInterface.scaleFactor
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }
             onClicked:{
-                console.log("1")
+                SettingsData.resetToDefaults()
                 sound.playClickSound()
             }
             onHoveredChanged: {
@@ -820,10 +895,11 @@ Item {
                 Behavior on color { ColorAnimation { duration: 100 } }
             }
 
-            contentItem: Text {
-                text: "返回"
+            contentItem: ScaledText {
+                translationKey: "返回"
                 color: back.hovered ? "#000000" : "white"
-                font.pixelSize: 30*settingsInterface.scaleFactor
+                basePixelSize: 30
+                uiScale: settingsInterface.scaleFactor
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
             }

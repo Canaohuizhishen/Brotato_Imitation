@@ -3,6 +3,8 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts
 import "../components"
 import "../data"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: weaponSelectionInterface
@@ -41,13 +43,14 @@ Item {
         }
     }
 
-    Text {
-        text: "武器选择"
+    ScaledText {
+        text: I18n.tr("武器选择", SettingsData.language)
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 42*weaponSelectionInterface.scaleFactor
         color: "white"
-        font.pixelSize: 35*weaponSelectionInterface.scaleFactor
+        basePixelSize: 35
+        uiScale: weaponSelectionInterface.scaleFactor
         style: Text.Outline
         styleColor: "black"
     }
@@ -137,7 +140,7 @@ Item {
 
     Button{
         id: back
-        text: "返回"
+        text: I18n.tr("返回", SettingsData.language)
         visible: true
         width: 120*weaponSelectionInterface.scaleFactor
         height: 30*weaponSelectionInterface.scaleFactor
@@ -149,9 +152,10 @@ Item {
             color: back.pressed || back.hovered ? "#cfcfcf" : "#202020"
             radius: 7
         }
-        contentItem: Text {
+        contentItem: ScaledText {
             text: back.text
-            font.pixelSize: 17*weaponSelectionInterface.scaleFactor
+            basePixelSize: 17
+            uiScale: weaponSelectionInterface.scaleFactor
             color: back.pressed || back.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

@@ -1,6 +1,8 @@
 import QtQuick 2.15
 import "../data"
 import "../color.js" as Color
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: propCard
@@ -50,22 +52,23 @@ Item {
             }
         }
 
-        Text {
+        ScaledText {
             id: goodsName
-            text: core.propName
+            text: I18n.tr(core.propName, SettingsData.language)
             color: core.grade === 1 ? "white" : Color.getBorderColor(core.grade)
-            font.pixelSize: 25*propCard.scaleFactor
+            basePixelSize: 25
+            uiScale: propCard.scaleFactor
             anchors.left: goodsImageBackground.right
             anchors.leftMargin: 5*propCard.scaleFactor
             anchors.verticalCenter: goodsImageBackground.verticalCenter
         }
 
         //物品属性
-        Text {
+        ScaledText {
             anchors.top: goodsImageBackground.bottom
             anchors.topMargin: 10*propCard.scaleFactor
             anchors.left: goodsImageBackground.left
-            text: core.talentText
+            text: I18n.translateRichText(core.talentText, SettingsData.language)
             font.pixelSize: goodsName.font.pixelSize*0.7
             lineHeight: 1.15
             //font.weight: Font.DemiBold

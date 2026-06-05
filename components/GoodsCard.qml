@@ -5,6 +5,9 @@ import "../logic/ShopLogicHandler.js" as Controller
 import "../color.js" as Color
 import "../data"
 import singleton.PlayerData
+import singleton.SettingsData
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: shopItem
@@ -88,30 +91,33 @@ Item {
                 anchors.leftMargin: 10*shopItem.scaleFactor
                 anchors.top: goodsImageBackground.top
 
-                Text {
+                ScaledText {
                     id: goodsName
-                    text: itemData.type === "道具" ? itemData.propName  : itemData.weaponName
+                    text: itemData.type === "道具" ? I18n.tr(itemData.propName, SettingsData.language) : I18n.tr(itemData.weaponName, SettingsData.language)
                     style: Text.Outline
                     color: itemData.type === "道具" ? ((itemData.grade === 1) ? "white" : Color.getBorderColor(itemData.grade))
                                                   : ((wGrade === 1) ? "white" : Color.getBorderColor(wGrade))
-                    font.pixelSize: 18*shopItem.scaleFactor
+                    basePixelSize: 18
+                    uiScale: shopItem.scaleFactor
                 }
 
-                Text {
-                    text: itemData.type
+                ScaledText {
+                    text: I18n.tr(itemData.type, SettingsData.language)
                     color: "#ffffc0"
-                    font.pixelSize: 16*shopItem.scaleFactor
+                    basePixelSize: 16
+                    uiScale: shopItem.scaleFactor
                 }
             }
 
 
             //物品属性
-            Text {
+            ScaledText {
                 anchors.top: goodsImageBackground.bottom
                 anchors.topMargin: 10*shopItem.scaleFactor
                 anchors.left: goodsImageBackground.left
-                text: talentText
-                font.pixelSize: 15*shopItem.scaleFactor
+                text: I18n.translateRichText(talentText, SettingsData.language)
+                basePixelSize: 15
+                uiScale: shopItem.scaleFactor
             }
 
 
@@ -139,12 +145,13 @@ Item {
                         spacing: 8*shopItem.scaleFactor
                         anchors.centerIn: parent
 
-                        Text {
+                        ScaledText {
                             // text: "" + itemData.price
                             text: curPrice
                             color: PlayerData.materialsNumber < curPrice
                                    ? "red" : (buyButton.hovered ? "black" : "white")
-                            font.pixelSize: 22*shopItem.scaleFactor
+                            basePixelSize: 22
+                            uiScale: shopItem.scaleFactor
                             font.bold: true
                         }
 
@@ -186,6 +193,7 @@ Item {
         anchors.topMargin: 7*shopItem.scaleFactor
         anchors.horizontalCenter: backGround.horizontalCenter
         hoverEnabled: true
+        visible: SettingsData.lockItems
 
         property bool isLocked: false
         property color textColor: isLocked ? "black" : (hovered ? "black" : "white")
@@ -195,10 +203,11 @@ Item {
             Row {
                 anchors.centerIn: parent
 
-                Text {
+                ScaledText {
                     id: lockTex
-                    text: qsTr("锁定")
-                    font.pixelSize: 18*shopItem.scaleFactor
+                    text: I18n.tr("锁定", SettingsData.language)
+                    basePixelSize: 18
+                    uiScale: shopItem.scaleFactor
                     font.weight: Font.DemiBold
                     color: lockButton.isLocked ? "black" : (lockButton.hovered ? "black": "white")
                 }
@@ -219,6 +228,16 @@ Item {
         onHoveredChanged: {
             if(hovered) {
                 sound.playHoverSound1()
+            }
+        }
+    }
+
+    // 全局锁定关闭时，解锁所有商品
+    Connections {
+        target: SettingsData
+        function onLockItemsChanged() {
+            if (!SettingsData.lockItems) {
+                lockButton.isLocked = false
             }
         }
     }

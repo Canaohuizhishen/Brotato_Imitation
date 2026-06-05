@@ -362,51 +362,50 @@ Item {
         if (!gameLoop || !monster) return
         switch (monster.monsterName) {
         case "charger":
-            gameLoop.registerPerFrame(monster.checkChargeCollision)
-            gameLoop.registerPer200ms(monster.checkChargeRange)
+            gameLoop.registerPerFrame(monster, monster.checkChargeCollision)
+            gameLoop.registerPer200ms(monster, monster.checkChargeRange)
             break
         case "sprayer":
-            gameLoop.registerPer200ms(monster.checkSprayBehavior)
+            gameLoop.registerPer200ms(monster, monster.checkSprayBehavior)
             break
         case "prayer":
-            gameLoop.registerPer1000ms(monster.updatePrayerExistTime)
-            gameLoop.registerPer3000ms(monster.triggerPrayerAttack)
+            gameLoop.registerPer1000ms(monster, monster.updatePrayerExistTime)
+            gameLoop.registerPer3000ms(monster, monster.triggerPrayerAttack)
             break
         case "scavenger":
-            gameLoop.registerPer3000ms(monster.setGoalRandomly)
+            gameLoop.registerPer3000ms(monster, monster.setGoalRandomly)
             break
         case "summoner":
-            gameLoop.registerPer200ms(monster.checkSummonerBehavior)
+            gameLoop.registerPer200ms(monster, monster.checkSummonerBehavior)
             break
         case "pursuer":
-            gameLoop.registerPer200ms(monster.updateAcceleration)
+            gameLoop.registerPer200ms(monster, monster.updateAcceleration)
             break
         }
     }
 
-    // 注销怪物的 GameLoop 回调
     function unregisterMonsterCallbacks(monster) {
         if (!gameLoop || !monster) return
         switch (monster.monsterName) {
         case "charger":
-            gameLoop.removePerFrame(monster.checkChargeCollision)
-            gameLoop.removePer200ms(monster.checkChargeRange)
+            gameLoop.removePerFrame(monster, monster.checkChargeCollision)
+            gameLoop.removePer200ms(monster, monster.checkChargeRange)
             break
         case "sprayer":
-            gameLoop.removePer200ms(monster.checkSprayBehavior)
+            gameLoop.removePer200ms(monster, monster.checkSprayBehavior)
             break
         case "prayer":
-            gameLoop.removePer1000ms(monster.updatePrayerExistTime)
-            gameLoop.removePer3000ms(monster.triggerPrayerAttack)
+            gameLoop.removePer1000ms(monster, monster.updatePrayerExistTime)
+            gameLoop.removePer3000ms(monster, monster.triggerPrayerAttack)
             break
         case "scavenger":
-            gameLoop.removePer3000ms(monster.setGoalRandomly)
+            gameLoop.removePer3000ms(monster, monster.setGoalRandomly)
             break
         case "summoner":
-            gameLoop.removePer200ms(monster.checkSummonerBehavior)
+            gameLoop.removePer200ms(monster, monster.checkSummonerBehavior)
             break
         case "pursuer":
-            gameLoop.removePer200ms(monster.updateAcceleration)
+            gameLoop.removePer200ms(monster, monster.updateAcceleration)
             break
         }
     }

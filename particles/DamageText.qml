@@ -15,7 +15,7 @@ Text {
     font.bold: true
     style: Text.Outline
     styleColor: outlineColor
-    z: 100
+    z: 10000
 
     // 可配置属性
     property string outlineColor: "black"

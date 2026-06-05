@@ -4,6 +4,8 @@ import QtQuick.Controls 2.15
 import singleton.PlayerData
 import "../components"
 import "../data"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Rectangle {
     id: root
@@ -30,17 +32,18 @@ Rectangle {
     }
 
     // 升级文本
-    Text {
+    ScaledText {
         id: upgradeTitle
-        text: "升级!"
-        font.pixelSize: 42*root.scaleFactor
+        text: I18n.tr("升级!", SettingsData.language)
+        basePixelSize: 42
+        uiScale: root.scaleFactor
         style: Text.Outline
         color: "black"
         anchors.top: parent.top
         anchors.topMargin: 70*root.scaleFactor
         anchors.horizontalCenter: parent.horizontalCenter
 
-        Text {
+        ScaledText {
             text: upgradeTitle.text
             color: "white"
             font.pixelSize: upgradeTitle.font.pixelSize
@@ -97,7 +100,6 @@ Rectangle {
     //刷新按钮
     Button {
         id: refreshButton
-        font.pixelSize: 20*root.scaleFactor
         width: 160*root.scaleFactor
         height: 42*root.scaleFactor
         hoverEnabled: true
@@ -123,9 +125,10 @@ Rectangle {
             spacing: 2*root.scaleFactor
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: parent.verticalCenter
-            Text {
-                text:"刷新-"+refreshButton.value
-                font.pixelSize: 28*root.scaleFactor
+            ScaledText {
+                text:I18n.tr("刷新-", SettingsData.language)+refreshButton.value
+                basePixelSize: 28
+                uiScale: root.scaleFactor
                 color: PlayerData.materialsNumber>=refreshButton.value ? (refreshButton.hovered ? "black" : "white") : "red"
             }
 

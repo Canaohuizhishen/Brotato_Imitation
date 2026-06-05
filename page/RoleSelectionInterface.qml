@@ -3,6 +3,8 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "../components"
 import "../data"
+import singleton.SettingsData
+import "../data/i18n.js" as I18n
 
 Item {
     id: roleSelectionInterface
@@ -39,13 +41,14 @@ Item {
         }
     }
 
-    Text {
-        text: "角色选择"
+    ScaledText {
+        text: I18n.tr("角色选择", SettingsData.language)
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         anchors.topMargin: 42*roleSelectionInterface.scaleFactor
         color: "white"
-        font.pixelSize: 35*roleSelectionInterface.scaleFactor
+        basePixelSize: 35
+        uiScale: roleSelectionInterface.scaleFactor
         style: Text.Outline
         styleColor: "black"
     }
@@ -144,7 +147,7 @@ Item {
 
     Button{
         id: back
-        text: "返回"
+        text: I18n.tr("返回", SettingsData.language)
         visible: true
         width: 120*roleSelectionInterface.scaleFactor
         height: 30*roleSelectionInterface.scaleFactor
@@ -156,9 +159,10 @@ Item {
             color: back.pressed || back.hovered ? "#cfcfcf" : "#202020"
             radius: 7
         }
-        contentItem: Text {
+        contentItem: ScaledText {
             text: back.text
-            font.pixelSize: 17*roleSelectionInterface.scaleFactor
+            basePixelSize: 17
+            uiScale: roleSelectionInterface.scaleFactor
             color: back.pressed || back.hovered ? "black" : "white"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

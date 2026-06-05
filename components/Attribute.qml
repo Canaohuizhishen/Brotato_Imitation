@@ -56,7 +56,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
     }
 
-    Text {
+    ScaledText {
         id:attributeText
         text: root.attribute
         color: root.getValueColor(root.attributeValue)
@@ -66,7 +66,7 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
     }
 
-    Text {
+    ScaledText {
         text: root.attributeValue
         color: root.getValueColor(root.attributeValue)
         font.pixelSize: root.fontSize
@@ -108,19 +108,21 @@ Item {
             Column{
                 width:240*root.scaleFactor
                 spacing: 5*root.scaleFactor
-                Text {
+                ScaledText {
                     id:text1
                     width:100*root.scaleFactor
                     text:root.attribute
                     color: "white"
-                    font.pixelSize: 14*root.scaleFactor
+                    basePixelSize: 14
+                    uiScale: root.scaleFactor
                 }
-                Text {
+                ScaledText {
                     width:parent.width
                     text: root.detailDescription
                     color: "white"
                     wrapMode: Text.Wrap
-                    font.pixelSize: 14*root.scaleFactor
+                    basePixelSize: 14
+                    uiScale: root.scaleFactor
                     visible: text !== ""
                 }
             }
