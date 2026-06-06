@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import singleton.PlayerData
-import "../logic/DataLoader.js" as DataLoader
+import "../../logic/DataLoader.js" as DataLoader
 
 Item {
     id: core

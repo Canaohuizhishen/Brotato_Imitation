@@ -1,8 +1,8 @@
 import QtQuick 2.15
 import singleton.PlayerData
 import singleton.SettingsData
-import "../data/i18n.js" as I18n
-import "../logic/DataLoader.js" as DataLoader
+import "../../logic/utils/i18n.js" as I18n
+import "../../logic/DataLoader.js" as DataLoader
 
 Item {
     id: core

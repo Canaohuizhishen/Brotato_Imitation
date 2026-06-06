@@ -4,9 +4,9 @@ import singleton.PlayerData
 import singleton.SettingsData
 import Brotato
 import "../components"
-import "../data"
-import "../data/i18n.js" as I18n
-import "../tool.js" as Tool
+import "../data/cores"
+import "../logic/utils/i18n.js" as I18n
+import "../logic/utils/tool.js" as Tool
 
 Item {
     id: player

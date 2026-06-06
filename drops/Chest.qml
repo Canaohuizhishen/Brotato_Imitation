@@ -1,8 +1,8 @@
 import QtQuick 2.15
 import QtMultimedia
 import singleton.PlayerData
-import "../data"
-import "../tool.js" as Tool
+import "../data/cores"
+import "../logic/utils/tool.js" as Tool
 
 Image {
     id: chest

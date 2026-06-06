@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtMultimedia
 import singleton.PlayerData
-import "../tool.js" as Tool
+import "../logic/utils/tool.js" as Tool
 
 Image {
     id: fruit

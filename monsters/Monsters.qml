@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import singleton.MonstersData
-import "../tool.js" as Tool
-import "../data"
+import "../logic/utils/tool.js" as Tool
+import "../data/cores"
 import "../components"
 import "../bullets"
 import "../logic/SpatialGrid.js" as SpatialGrid

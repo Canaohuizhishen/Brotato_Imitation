@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import singleton.PlayerData
 import singleton.SettingsData
 import "../components"
-import "../data/i18n.js" as I18n
+import "../logic/utils/i18n.js" as I18n
 
 Item{
     id: startInterface

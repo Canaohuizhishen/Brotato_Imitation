@@ -1,9 +1,9 @@
 import QtQuick 2.15
 import QtMultimedia
 import singleton.SettingsData
-import "../tool.js" as Tool
+import "../logic/utils/tool.js" as Tool
 import "../components"
-import "../data"
+import "../data/cores"
 
 Item {
     id: weapon

@@ -1,5 +1,5 @@
 import QtQuick 2.15
-import "../tool.js" as Tool
+import "../logic/utils/tool.js" as Tool
 import "../components"
 
 Bullet {

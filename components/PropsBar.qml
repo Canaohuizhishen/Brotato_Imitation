@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Controls
 import "../logic/ShopLogicHandler.js" as Controller
 import singleton.PlayerData
-import "../data"
+import "../data/cores"
 import singleton.SettingsData
-import "../data/i18n.js" as I18n
+import "../logic/utils/i18n.js" as I18n
 
 //道具栏
 Item {

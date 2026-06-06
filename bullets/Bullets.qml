@@ -1,6 +1,5 @@
 import QtQuick 2.15
 import singleton.PlayerData
-import "../monsters"
 import "../logic/SpatialGrid.js" as SpatialGrid
 
 Item {
