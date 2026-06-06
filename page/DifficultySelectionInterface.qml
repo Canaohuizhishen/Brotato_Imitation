@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import singleton.PlayerData
 import "../components"
 import singleton.SettingsData
-import "../data/i18n.js" as I18n
+import "../logic/utils/i18n.js" as I18n
 
 Item {
     id: difficultySelectionInterface

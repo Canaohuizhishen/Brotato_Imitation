@@ -4,8 +4,8 @@ import singleton.PlayerData
 import singleton.MonstersData
 import singleton.SettingsData
 import "../components"
-import "../data"
-import "../tool.js" as Tool
+import "../data/cores"
+import "../logic/utils/tool.js" as Tool
 import "../logic/ParticlePool.js" as ParticlePool
 
 Item {

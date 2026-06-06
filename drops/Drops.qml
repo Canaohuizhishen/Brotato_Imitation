@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import singleton.PlayerData
-import "../monsters"
-import "../tool.js" as Tool
+import "../logic/utils/tool.js" as Tool
 
 Item {
     id: drops

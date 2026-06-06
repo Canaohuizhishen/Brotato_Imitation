@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import"../components"
 import singleton.SettingsData
-import "../data/i18n.js" as I18n
+import "../logic/utils/i18n.js" as I18n
 
 Item {
     id: settingsInterface

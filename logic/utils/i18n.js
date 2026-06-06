@@ -8,7 +8,7 @@
  *
  * 当前仅实现 中文 / English 的常用翻译，其余语言 fallback 到英文。
  * 用法：
- *   import "../data/i18n.js" as I18n
+ *   import "../logic/utils/i18n.js" as I18n
  *   I18n.tr("开始游戏")
  */
 

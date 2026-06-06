@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Controls
-import "../color.js" as Color
+import "../logic/utils/color.js" as Color
 import singleton.SettingsData
-import "../data/i18n.js" as I18n
+import "../logic/utils/i18n.js" as I18n
 
 Item {
     id: root

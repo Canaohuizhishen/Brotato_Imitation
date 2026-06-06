@@ -2,9 +2,9 @@ import QtQuick 2.15
 import singleton.PlayerData
 import singleton.SettingsData
 import "../components"
-import "../tool.js" as Tool
-import "../data"
-import "../data/i18n.js" as I18n
+import "../logic/utils/tool.js" as Tool
+import "../data/cores"
+import "../logic/utils/i18n.js" as I18n
 import "../sound"
 
 Item {

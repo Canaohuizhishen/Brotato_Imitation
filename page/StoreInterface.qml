@@ -2,12 +2,12 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import "../components"
-import "../data"
+import "../data/cores"
 import "../logic/ShopLogicHandler.js" as Controller
-import "../color.js" as Color
+import "../logic/utils/color.js" as Color
 import singleton.PlayerData
 import singleton.SettingsData
-import "../data/i18n.js" as I18n
+import "../logic/utils/i18n.js" as I18n
 
 Item {
     id: storeInterface

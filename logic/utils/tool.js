@@ -39,7 +39,7 @@ var _textComp = null
 
 function _ensureTextPool(parent) {
     if (_textComp === null) {
-        _textComp = Qt.createComponent("particles/DamageText.qml")
+        _textComp = Qt.createComponent("../../particles/DamageText.qml")
         // 异步加载可能未完成，由 statusChanged 回调填充池子
         if (_textComp.status === _COMPONENT_LOADING) {
             _textComp.statusChanged.connect(function() {

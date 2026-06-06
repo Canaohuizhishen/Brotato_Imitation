@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.15
 import Brotato
 import singleton.PlayerData
 import singleton.SettingsData
-import "./data/i18n.js" as I18n
+import "./logic/utils/i18n.js" as I18n
 
 ApplicationWindow {
     id: window

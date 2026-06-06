@@ -4,6 +4,7 @@ import singleton.SettingsData
 import "../components"
 import "../bullets"
 import "../monsters"
+import "../entities"
 import "../weapons"
 import "../drops"
 import "../logic"

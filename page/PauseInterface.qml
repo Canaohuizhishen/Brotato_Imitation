@@ -4,7 +4,7 @@ import"../components"
 import singleton.PlayerData
 import "../logic/ShopLogicHandler.js" as Controller
 import singleton.SettingsData
-import "../data/i18n.js" as I18n
+import "../logic/utils/i18n.js" as I18n
 
 Rectangle {
     id: root

@@ -1,10 +1,10 @@
 import QtQuick 2.15
 import singleton.PlayerData
 import singleton.SettingsData
-import "../tool.js" as Tool
+import "../logic/utils/tool.js" as Tool
 import "../monsters"
 import "../components"
-import "../data"
+import "../data/cores"
 
 Item{
     id: weapons

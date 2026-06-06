@@ -13,33 +13,42 @@ qt_add_executable(appBrotato)
 qt_add_qml_module(appBrotato
     URI "Brotato"
     VERSION 1.0
+    # ── Entry Point ──
     QML_FILES
         Main.qml
     SOURCES main.cpp
+    # ── Resources ──
     RESOURCES images.qrc
-    QML_FILES tool.js
+    # ── JS Utilities ──
+    QML_FILES logic/utils/tool.js
     RESOURCES singleton.qrc
     RESOURCES data/data.qrc
+    # ── Components ──
     QML_FILES components/ExperienceBar.qml
     QML_FILES components/DifficultyCard.qml components/Fork.qml components/HealthBar.qml components/LockCard.qml components/RecardCard.qml components/RoleCard.qml components/WaveCountdown.qml components/WaveNumberText.qml components/WeaponCard.qml
+    # ── Weapons ──
     QML_FILES weapons/SMG.qml
     QML_FILES weapons/Weapons.qml
+    # ── Monsters ──
     QML_FILES monsters/Monsters.qml monsters/Monster.qml
+    # ── Pages ──
     QML_FILES page/Background.qml page/DifficultySelectionInterface.qml page/GameArea.qml page/GameWindow.qml page/RoleSelectionInterface.qml page/StartInterface.qml page/WeaponSelectionInterface.qml
-    QML_FILES monsters/Player.qml
-    QML_FILES data/WeaponCustomizationCore.qml data/RoleCustomizationCore.qml
+    # ── Entities ──
+    QML_FILES entities/Player.qml
+    # ── Data Cores ──
+    QML_FILES data/cores/WeaponCustomizationCore.qml data/cores/RoleCustomizationCore.qml
     QML_FILES components/MaterialsBar.qml
     QML_FILES components/BagBar.qml
     QML_FILES monsters/BabyAlien.qml
     QML_FILES monsters/Chaser.qml
     QML_FILES weapons/Weapon.qml
-    QML_FILES data/PropCustomizationCore.qml
+    QML_FILES data/cores/PropCustomizationCore.qml
     QML_FILES components/GoodsCard.qml
     QML_FILES components/UpgradeNotificationBar.qml
     QML_FILES page/UpgradeInterface.qml
     QML_FILES components/UpgradeOption.qml
     QML_FILES monsters/Charger.qml
-    QML_FILES data/UpgradeOptionCustomizationCore.qml
+    QML_FILES data/cores/UpgradeOptionCustomizationCore.qml
     QML_FILES components/Attribute.qml
     QML_FILES components/AttributePanel.qml
     QML_FILES monsters/Sprayer.qml
@@ -47,6 +56,7 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Brute.qml
     QML_FILES components/TimerCanPause.qml
     QML_FILES page/StoreInterface.qml
+    # ── Game Logic ──
     QML_FILES logic/ShopLogicHandler.js
     QML_FILES logic/DataLoader.js
     QML_FILES logic/SafeCreate.js
@@ -54,6 +64,7 @@ qt_add_qml_module(appBrotato
     QML_FILES logic/ComponentCache.qml
     QML_FILES logic/ParticlePool.js
     QML_FILES logic/SpatialGrid.js
+    # ── Particles ──
     QML_FILES particles/BloodParticle.qml
     QML_FILES particles/DamageText.qml
     QML_FILES particles/DebrisParticle.qml
@@ -61,7 +72,7 @@ qt_add_qml_module(appBrotato
     QML_FILES components/PropItem.qml
     QML_FILES components/WeaponsBar.qml
     QML_FILES components/WeaponItem.qml
-    QML_FILES color.js
+    QML_FILES logic/utils/color.js
     QML_FILES page/PauseInterface.qml
     QML_FILES components/SetButton.qml
     QML_FILES components/SwitchSettingButton.qml
@@ -80,6 +91,7 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/HelmetCharger.qml
     QML_FILES monsters/FinChaser.qml
     QML_FILES monsters/Prayer.qml
+    # ── Bullets ──
     QML_FILES bullets/Bullets.qml bullets/EllipticalMovingBullet.qml bullets/RoundMovingBullet.qml  bullets/RoundStaticBullet.qml
     QML_FILES bullets/Bullet.qml
     QML_FILES bullets/StaticBullet.qml
@@ -89,16 +101,19 @@ qt_add_qml_module(appBrotato
     QML_FILES weapons/RangedWeapon.qml
     QML_FILES weapons/MeleeWeapon.qml
     QML_FILES monsters/Tree.qml
+    # ── Native Bridge ──
     SOURCES Filemanager.h
     QML_FILES page/DyingBorder.qml
+    # ── Drops ──
     QML_FILES drops/Material.qml drops/Fruit.qml drops/Drops.qml drops/Chest.qml drops/BigMaterial.qml
+    # ── Audio ──
     RESOURCES audio.qrc
     QML_FILES sound/Sound.qml
     QML_FILES components/DynamicText.qml
     QML_FILES components/ScaledText.qml
     QML_FILES components/TranslatableText.qml
     QML_FILES particles/ExplosionParticle.qml
-    QML_FILES data/i18n.js
+    QML_FILES logic/utils/i18n.js
 )
 
 target_compile_features(appBrotato PRIVATE cxx_std_23)

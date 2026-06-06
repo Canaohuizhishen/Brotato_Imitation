@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import "../components"
-import "../tool.js" as Tool
+import "../logic/utils/tool.js" as Tool
 
 Monster{
     id: summoner

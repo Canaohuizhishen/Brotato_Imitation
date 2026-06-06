@@ -1,8 +1,8 @@
 import QtQuick 2.15
-import "../data"
-import "../color.js" as Color
+import "../data/cores"
+import "../logic/utils/color.js" as Color
 import singleton.SettingsData
-import "../data/i18n.js" as I18n
+import "../logic/utils/i18n.js" as I18n
 
 Item {
     id: propCard
