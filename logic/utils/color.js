@@ -1,3 +1,5 @@
+.pragma library
+
 var k = 1.1
 function lightenColor(hexColor, factor) {
     // 解析十六进制颜色

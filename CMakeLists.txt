@@ -2,13 +2,17 @@ cmake_minimum_required(VERSION 3.31)
 
 project(Brotato VERSION 0.1 LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD_REQUIRED ON) # Globally preventing the fallback behaviour of C++ standard
-
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick QuickTest)
 
 qt_standard_project_setup(REQUIRES 6.8)
 
 qt_add_executable(appBrotato)
+
+# ShopLogicHandler.js 依赖 QML 上下文（PlayerData 等），不可加 .pragma library
+# 显式跳过 qmldir 条目以消除 CMake 警告
+set_source_files_properties(logic/ShopLogicHandler.js PROPERTIES
+    QT_QML_SKIP_QMLDIR_ENTRY TRUE
+)
 
 qt_add_qml_module(appBrotato
     URI "Brotato"
@@ -138,3 +142,18 @@ install(TARGETS appBrotato
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# ── Test Target ──
+if(BUILD_TESTS OR NOT DEFINED BUILD_TESTS)
+    enable_testing()
+
+    qt_add_executable(tst_core
+        tests/main.cpp
+    )
+    target_link_libraries(tst_core PRIVATE Qt6::QuickTest Qt6::Quick)
+
+    add_test(NAME tst_core
+        COMMAND $<TARGET_FILE:tst_core> -input ${CMAKE_SOURCE_DIR}/tests
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+endif()

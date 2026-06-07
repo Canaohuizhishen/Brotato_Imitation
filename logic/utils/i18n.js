@@ -1,3 +1,5 @@
+.pragma library
+
 /**
  * i18n — 国际化翻译表
  *
