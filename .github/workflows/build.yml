@@ -1,0 +1,68 @@
+# Brotato CI — 代码质量与构建验证
+#
+# 触发条件：push 到 main、任何 pull request
+# 两个并行 job：
+#   test  — Qt Quick Test 单元测试（需 Qt 6.8 QML 运行时）
+#   build — CMake 构建验证
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  # ----------------------------------------
+  # Job 1: Qt Quick Test 单元测试
+  # ----------------------------------------
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Qt 6.8
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.*'
+          modules: 'qtbase qtdeclarative'
+          cache: true
+
+      - name: 安装系统依赖
+        run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev
+
+      - name: 配置 CMake（含测试）
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON
+
+      - name: 构建测试
+        run: cmake --build build --target tst_core --parallel
+
+      - name: 运行 Qt Quick Test
+        run: |
+          export QT_QPA_PLATFORM=offscreen
+          ctest --test-dir build -R tst_core --output-on-failure
+
+      # (Node.js 独立测试方案已废弃，统一使用 Qt Quick Test)
+
+  # ----------------------------------------
+  # Job 2: CMake Release 构建验证
+  # ----------------------------------------
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Qt 6.8
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.*'
+          modules: 'qtbase qtdeclarative'
+          cache: true
+
+      - name: 配置 CMake
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF
+
+      - name: 编译
+        run: cmake --build build --parallel

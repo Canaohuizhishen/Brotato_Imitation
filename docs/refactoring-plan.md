@@ -1996,51 +1996,63 @@ property bool _isInViewport: x + width > -200 && x < parent.width + 200 &&
 
 ## Phase 7：测试与质量基础设施
 
-**目标**：建立基本的测试框架和 CI 流水线，防止回归。
+**目标**：建立测试框架 + CI 流水线，防止回归。
 
-**总预计编辑次数**：5+
+> ⚠ **实施记录**：尝试了三种方案。
+>
+> 1. **Node.js 方案**（已废弃）—— `tests/test_core.js` + 4 个 JS 文件加 `module.exports`。
+>    需 hack 剥离 `.pragma library`、`vm.runInNewContext`，污染生产代码，且无法测 QML 组件。
+>
+> 2. **自定义 QML 框架**（已废弃）—— `tests/tst_runner.qml` + `QQmlComponent`。
+>    在无显示环境中 Timer/onCompleted 不触发，无法可靠退出事件循环。
+>
+> 3. **QtTest.TestCase + 中文包装脚本** ✅ 最终方案——
+>    底层用 QtTest 生成 `build/tst_core`，外层用 `run_test.sh` 包装输出中文。
 
 ---
 
-### Step 7.1 — 核心 JS 逻辑单元测试
+### Step 7.1 — QtTest.TestCase 单元测试 + 中文输出
 
-**新建文件**：`tests/test_core.js`
+**新建文件**：
+- `tests/tst_core.qml` — 72 个 TestCase 用例（+ `tst_gameloop.qml` / `tst_createText.qml` / `tst_safecreate.qml` 共 14 个，合计 86 个）
+- `tests/main.cpp` — `QUICK_TEST_MAIN(tst_core)` 入口
+- `run_test.sh` — 包装脚本，运行 `build/tst_core` 并输出中文
 
-测试内容：
-- **伤害公式**：`damageReduction()` 在 `armor=0/10/100` 时的返回值
-- **概率选择**：`DataLoader._weightedRandomSelect` 在确定性输入下的输出分布
-- **存档序列化**：`SaveManager.saveGame` 和 `loadGame` 的往返一致性
-- **边界检查**：`PlayerState` 的 `onDodgeChanged` 上限 60
+**修改文件**：`CMakeLists.txt`
+- `find_package` 增加 `QuickTest` 组件
+- 新增 `tst_core` 可执行目标，注册到 CTest
 
-使用轻量 JS 测试框架（如自定义的 `assert()` 集合）：
+测试内容（合计 86 个用例）：
 
-```javascript
-function test_damageReduction_zero_armor() {
-    // 模拟 PlayerState
-    var state = { armor: 0 }
-    var result = state.armor / (state.armor + 15)
-    assert(result === 0, "damageReduction(0) should be 0, got " + result)
-}
+| 模块 | 用例数 | 覆盖范围 |
+|------|--------|----------|
+| `DataLoader.js` | 30 | 武器/道具/角色/怪物/升级查找、随机、效果、伤害计算 |
+| `SpatialGrid.js` | 8 | 插入/查询/删除/更新/清空/多实体/跨格 |
+| `utils/tool.js` | 7 | 距离、象限、浮点比较、镜像坐标 |
+| `utils/color.js` | 5 | 颜色变亮、边框/按钮/背景色 |
 
-function test_dodge_cap() {
-    var dodge = 70
-    if (dodge > 60) dodge = 60
-    assert(dodge === 60, "dodge should cap at 60, got " + dodge)
-}
+**中文输出原理**：`run_test.sh` 内置 86 条函数名 → 中文描述的映射表，
+逐行解析 QtTest 原始输出，将 `PASS`/`FAIL` 转为 `✅`/`❌` + 中文描述。
 
-// 运行所有测试
-function runAll() {
-    test_damageReduction_zero_armor()
-    test_dodge_cap()
-    // ...
-    console.log("All tests passed!")
-}
+示例：
+```
+原始:  PASS   : tst_core::CoreTests::test_getWeapon_spear()
+输出:  ✅ getWeapon('spear') 返回长矛
 ```
 
 **验收**：
 ```bash
-# 在 QML 环境外运行（Node.js 或 QJSEngine）
-qjs tests/test_core.js  # 或 node tests/test_core.js
+./run_test.sh
+# 输出：
+# 🧪 Brotato 核心逻辑测试
+# 📦 DataLoader
+#   ✅ getWeapon('spear') 返回长矛
+#   ...
+# 🎉 全部通过！86 个测试
+
+# 直接运行底层
+build/tst_core
+ctest --test-dir build -R tst_core
 ```
 
 ---
@@ -2049,44 +2061,11 @@ qjs tests/test_core.js  # 或 node tests/test_core.js
 
 **新建文件**：`.github/workflows/build.yml`
 
-```yaml
-name: Build
+两个并行 job：
+- `test` — Qt Quick Test 单元测试（需 Qt 6.8 环境）
+- `build` — CMake Release 构建验证
 
-on:
-  push:
-    branches: [main, dev]
-  pull_request:
-    branches: [main]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    container:
-      image: ubuntu:24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install Qt 6
-        run: |
-          apt-get update
-          apt-get install -y qt6-base-dev qt6-declarative-dev qt6-multimedia-dev cmake build-essential
-
-      - name: Configure
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Debug
-
-      - name: Build
-        run: cmake --build build --parallel $(nproc)
-
-      - name: Validate JSON data files
-        run: |
-          for f in data/*.json; do python3 -m json.tool "$f" > /dev/null || exit 1; done
-          echo "All JSON files valid"
-
-      - name: Run JS tests
-        run: qjs tests/test_core.js
-```
-
-**验收**：推送到 GitHub 后 Actions 自动运行，构建成功。
+**验收**：推送到 GitHub 后 Actions 自动运行，`ctest` 通过且构建成功。
 
 ---
 
@@ -2195,6 +2174,12 @@ jobs:
 - `monsters/Monster.qml`（修改——镜像 + 视口裁剪）
 - 所有子类怪物（修改——删除 faceLeft/faceRight source 切换）
 
-### Phase 7（2 步，5+ 次编辑）
-- `tests/test_core.js`（新建）
-- `.github/workflows/build.yml`（新建）
+### Phase 7（2 步，4+ 次编辑）
+- `tests/tst_core.qml`（新建——QtTest.TestCase，72 个用例；另有 3 个补充文件共 14 个用例）
+- `tests/main.cpp`（新建——QUICK_TEST_MAIN 入口）
+- `run_test.sh`（新建——中文输出包装脚本）
+- `.github/workflows/build.yml`（新建——CI 流水线）
+- `CMakeLists.txt`（修改——+QuickTest + tst_core 目标）
+- `tests/test_core.js`（新建后删除——Node.js 方案已废弃）
+- 4 个 JS 文件的 `module.exports` 块（添加后移除——Node.js 方案已废弃）
+- `tests/tst_runner.qml`（新建后删除——自定义框架方案已废弃）
