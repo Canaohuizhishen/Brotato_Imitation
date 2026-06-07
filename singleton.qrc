@@ -4,5 +4,6 @@
         <file>singleton/MonstersData.qml</file>
         <file>singleton/SettingsData.qml</file>
         <file>logic/DataLoader.js</file>
+        <file>logic/SaveManager.js</file>
     </qresource>
 </RCC>
