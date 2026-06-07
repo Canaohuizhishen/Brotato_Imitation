@@ -32,7 +32,7 @@ Phase 0 (Bug修复) ──→ Phase 1 (数据外提) ──→ Phase 2 (Timer整
 
 - Phase 2 和 Phase 3 可并行（不冲突）
 - Phase 4 依赖 Phase 2（需要 GameLoop 框架）
-- Phase 5 依赖 Phase 1（需要数据 JSON 结构）
+- Phase 5 与 Phase 1 无依赖（提取 SaveManager.js 不涉及数据格式变更）
 - Phase 6 可与 Phase 3/4 并行
 
 ---
@@ -1826,147 +1826,57 @@ property string _spatialId: "monster_" + monsterName + "_" + Math.random().toStr
 
 ---
 
-## Phase 5：PlayerData 拆分
+## Phase 5：提取 SaveManager.js
 
-**目标**：将 God Object `PlayerData.qml`（250+ 行，40+ 属性 + 存档逻辑 + 业务计算）按职责拆分为三个模块。
+**目标**：将 `PlayerData.qml` 中 224 行的存档/读档逻辑（JSON 序列化 + 属性恢复 + 数据校验）提取到独立的 `logic/SaveManager.js`，降低 PlayerData 的职责密度。
 
-**性能收益**：中等——减少属性绑定链长度，`curLevel` 变化不再触发整个 500 行单例的绑定重计算。
+**性能收益**：无。纯代码组织优化。
 
-**总预计编辑次数**：20+
+**总预计编辑次数**：3 次文件操作
 
----
+**变更文件**：`logic/SaveManager.js`（新建）+ `singleton/PlayerData.qml`（2 行 import + 2 行委托）+ `singleton.qrc` + `CMakeLists.txt`
 
-### Step 5.1 — 提取 PlayerState.qml
-
-**新建文件**：`singleton/PlayerState.qml`
-
-从 `PlayerData.qml` 中提取：
-
-1. **所有主属性**：`curLevel`, `maxXp`, `curXp`, `maxHp`, `curHp`, `hpRegeneration`, `lifeSteal`, `damage`, `meleeDamage`, `rangedDamage`, `elementalDamage`, `attackSpeed`, `critChance`, `engineering`, `range`, `armor`, `dodge`, `speed`, `luck`, `harvesting`
-
-2. **所有次属性**：`consumptiveTherapy`, `materialTherapy`, `gainExperience`, `pickingRegion`, `propPrices`, `explosiveDamage`, `explosionRange`, `rebound`, `penetrate`, `penetratingDamage`, `damageToBoss`, `burningRatePercentage`, `burningRate`, `repel`, `obtainingDoubleMaterial`, `materialsInTheBox`, `freeRefresh`, `trees`, `enemy`, `enemySpeed`
-
-3. **边界检查逻辑**：
-   - `onCurHpChanged`（保证 `curHp` 在 0 到 `maxHp` 之间）
-   - `onMaxHpChanged`（保证 `curHp` ≤ `maxHp`）
-   - `onDodgeChanged`（上限 60）
-   - `onCurXpChanged`（升级逻辑 + `upgrad()` 信号）
-   - `onCurLevelChanged`（升级时 `maxHp++`, `curHp++`）
-
-4. **计算函数**：
-   - `hpRegenerationPerSecond()`
-   - `damageReduction()`
-
-5. **信号**：`signal upgrad()`
-
-**不提取**（留给 PlayerData 或后续模块）：
-- 武器/道具 ListModel（→ PlayerInventory）
-- 存档/读档（→ SaveManager）
-- 角色/武器/难度选择（留在 PlayerData 协调层）
-
-**验收**：
-- `PlayerState.qml` 作为 `pragma Singleton` 注册
-- 新属性名保持不变（`PlayerState.curLevel` 与原来 `PlayerData.curLevel` 相同）
+**消费者文件**：零改动。PlayerData 的 `saveGame()` / `loadGame()` 接口签名不变。
 
 ---
 
-### Step 5.2 — 提取 PlayerInventory.qml
-
-**新建文件**：`singleton/PlayerInventory.qml`
-
-提取：
-- `weapons: ListModel{}`
-- `props: ListModel{}`
-- `lastStoreGoods: ListModel{}`
-- `addWeapon(weaponName, grade)`
-- `addProp(propName, number)`
-- `addGood(goodName, grade)`
-- `showWeapons()`, `showProps()`, `showLastStoreGoods()`
-- `weaponsToArray()`, `propsToArray()`
-- `signal weaponsListChanged()`
-
----
-
-### Step 5.3 — 提取 SaveManager.js
+### Step 5.1 — 提取 SaveManager.js
 
 **新建文件**：`logic/SaveManager.js`
 
-从 PlayerData.qml 提取 `saveGame()` 和 `loadGame()`。
+从 `PlayerData.qml` 中提取：
 
-```javascript
-.pragma library
+1. `saveGame(data, fileManager, appDataPath)` — 遍历 40+ 属性序列化为 JSON，调用 `FileManager.saveGameData()` 写盘，写入前 JSON round-trip 深拷贝
+2. `loadGame(data, fileManager, appDataPath)` — 从 `FileManager.loadGameData()` 读取 JSON，逐字段用空值合并运算符（`??`）恢复属性，重建 ListModel（weapons / props / lastStoreGoods）
+3. 辅助函数 `weaponsToArray()`、`propsToArray()`、`lastStoreGoodsToArray()`——Model 转纯 JS 数组
 
-function saveGame(playerState, playerInventory, fileManager, appDataPath) {
-    // 原来 PlayerData.saveGame() 的逻辑
-    // playerState 和 playerInventory 作为参数传入，不再直接引用 PlayerData
-    // ...
-}
+**不提取**：
+- PlayerData 的属性声明（curLevel / curHp / weapons 等）
+- 变更处理器（onCurXpChanged / onCurHpChanged 等）
+- 业务函数（init / addWeapon / addProp / hpRegenerationPerSecond 等）
+- 生命周期（Component.onCompleted / onDestruction）
 
-function loadGame(playerState, playerInventory, fileManager, appDataPath) {
-    // 原来 PlayerData.loadGame() 的逻辑
-    // ...
-}
+**PlayerData.qml 中的改动**：
+
+```qml
+// +1 行 import
+import "../logic/SaveManager.js" as SaveManager
+
+// 原来 110 行 saveGame + 115 行 loadGame → 替换为 2 行委托
+function saveGame() { SaveManager.saveGame(root, fileManager, appDataPath) }
+function loadGame() { SaveManager.loadGame(root, fileManager, appDataPath) }
 ```
+
+**验收**：构建通过，存档/读档功能正常。通过 `savegame.json.bak` 备份恢复机制验证。
+
+**禁止**：不改动任何消费者文件、不改模块注册、不改 PlayerData 的属性/处理器/信号声明。
 
 ---
 
-### Step 5.4 — 重构消费者
+### 风险与回滚
 
-**受影响的文件**（至少 30 个）：
-- `page/GameArea.qml`
-- `page/GameWindow.qml`
-- `page/StoreInterface.qml`
-- `page/UpgradeInterface.qml`
-- `page/SettlementInterface.qml`
-- `monsters/Player.qml`
-- `monsters/Monster.qml`
-- `monsters/Monsters.qml`
-- `weapons/Weapon.qml`
-- `weapons/Weapons.qml`
-- `bullets/Bullet.qml`
-- `bullets/Bullets.qml`
-- `drops/Drops.qml`
-- `drops/Material.qml`
-- `drops/Fruit.qml`
-- `drops/Chest.qml`
-- `components/HealthBar.qml`
-- `components/ExperienceBar.qml`
-- `components/MaterialsBar.qml`
-- `components/BagBar.qml`
-- `components/AttributePanel.qml`
-- `components/PropsBar.qml`
-- `components/WeaponsBar.qml`
-- `components/WaveNumberText.qml`
-- `logic/ShopLogicHandler.js`
-- `data/WeaponCustomizationCore.qml`
-- `data/PropCustomizationCore.qml`
-- `data/RoleCustomizationCore.qml`
-- `data/UpgradeOptionCustomizationCore.qml`
-- `singleton/MonstersData.qml`
-
-**迁移策略**：
-
-**第 1 轮**（批量属性替换）：
-- 使用 `search_content "PlayerData\.(curLevel|curXp|maxHp|curHp|hpRegeneration|lifeSteal|damage|meleeDamage|rangedDamage|elementalDamage|attackSpeed|critChance|engineering|range|armor|dodge|speed|luck|harvesting|maxXp)"` 找到所有引用
-- 将这些属性的导入从 `import singleton.PlayerData` 改为 `import singleton.PlayerState`
-
-**第 2 轮**（武器/道具模型替换）：
-- `PlayerData.weapons` → `PlayerInventory.weapons`
-- `PlayerData.props` → `PlayerInventory.props`
-- `PlayerData.weaponsListChanged` → `PlayerInventory.weaponsListChanged`
-- `PlayerData.addWeapon(...)` → `PlayerInventory.addWeapon(...)`
-- 等等
-
-**第 3 轮**（存档调用替换）：
-- `PlayerData.saveGame()` → `SaveManager.saveGame(playerState, playerInventory, fileManager, appDataPath)`
-
-**保留 PlayerData 作为兼容层**，在迁移期间 `PlayerData.curLevel` 等属性设为 `PlayerState.curLevel` 的别名：
-
-```qml
-property alias curLevel: PlayerState.curLevel
-property alias curXp: PlayerState.curXp
-// ... 逐个别名
-```
+- **低风险**：SaveManager 是纯 JS `.pragma library`，不涉及 QML 绑定或组件树，误改不影响运行时其他逻辑。
+- **回滚**：`git checkout -- logic/SaveManager.js singleton/PlayerData.qml singleton.qrc CMakeLists.txt`
 
 这样消费者可以逐步迁移，而不会一次性全部崩溃。
 
@@ -2275,13 +2185,11 @@ jobs:
 - `bullets/Bullet.qml`（修改——添加 _spatialId）
 - `weapons/Weapons.qml`（修改——武器瞄准可用 SpatialGrid）
 
-### Phase 5（4 步，20+ 次编辑）
-- `singleton/PlayerState.qml`（新建）
-- `singleton/PlayerInventory.qml`（新建）
+### Phase 5（1 步，4 次编辑）
 - `logic/SaveManager.js`（新建）
-- `singleton/PlayerData.qml`（重写为兼容层）
-- `main.cpp`（修改——注册新单例）
-- 30 个消费者文件（修改导入路径）
+- `singleton/PlayerData.qml`（修改——+import + 2 行委托，-224 行内联存档）
+- `singleton.qrc`（修改——+SaveManager.js）
+- `CMakeLists.txt`（修改——+SaveManager.js QML_FILES）
 
 ### Phase 6（3 步，8+ 次编辑）
 - `monsters/Monster.qml`（修改——镜像 + 视口裁剪）

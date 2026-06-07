@@ -64,6 +64,7 @@ qt_add_qml_module(appBrotato
     QML_FILES logic/ComponentCache.qml
     QML_FILES logic/ParticlePool.js
     QML_FILES logic/SpatialGrid.js
+    QML_FILES logic/SaveManager.js
     # ── Particles ──
     QML_FILES particles/BloodParticle.qml
     QML_FILES particles/DamageText.qml
