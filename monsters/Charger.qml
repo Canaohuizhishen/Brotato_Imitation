@@ -43,10 +43,14 @@ Monster{
     Image {
         id: redMask
         anchors.fill: parent
-        source: charger.isFaceRight ? "qrc:/images/" + monsterName + "_redMask_faceRight.png" : "qrc:/images/" + monsterName + "_redMask_faceLeft.png"
+        source: "qrc:/images/" + monsterName + "_redMask_faceRight.png"
         visible: false
         opacity: 1.0
         z: 100
+        transform: Scale {
+            origin.x: redMask.width / 2
+            xScale: charger.isFaceRight ? 1 : -1
+        }
 
         SequentialAnimation {
             id: maskAnimator

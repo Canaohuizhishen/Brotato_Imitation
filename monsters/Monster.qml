@@ -35,6 +35,8 @@ Item {
     property bool faceTarget: true
     property bool isFrontHaveOtherMonster: false
     property string _spatialId: ""
+    property bool _isInViewport: x + width > -200 && x < parent.width + 200 &&
+                                  y + height > -200 && y < parent.height + 200
 
     property alias monsterData: monsterData
     property var core: MonstersData.getMonster(monsterName)
@@ -119,14 +121,22 @@ Item {
         source: "/images/"+monster.monsterName+"_faceRight.png"
         anchors.fill: parent
         z: 1
+        transform: Scale {
+            origin.x: monsterIcon.width / 2
+            xScale: monster.isFaceRight ? 1 : -1
+        }
     }
 
     Image {
         id: whiteOverlay
         anchors.fill: monsterIcon
-        source: monster.isFaceRight ? "/images/"+monster.monsterName+"_mask_faceRight.png" : "/images/"+monster.monsterName+"_mask_faceLeft.png"
+        source: "/images/"+monster.monsterName+"_mask_faceRight.png"
         opacity: 0
         z: 100
+        transform: Scale {
+            origin.x: whiteOverlay.width / 2
+            xScale: monster.isFaceRight ? 1 : -1
+        }
     }
 
     // Boss 血条
@@ -182,7 +192,7 @@ Item {
     SequentialAnimation {
         id: squashSequence
         loops: Animation.Infinite
-        running: monster.active
+        running: monster.active && monster._isInViewport
 
         // 阶段一：同时扁平 X 并拉长 Y
         ParallelAnimation {
@@ -374,12 +384,10 @@ Item {
     }
 
     function faceLeft(){
-        monsterIcon.source="/images/"+monster.monsterName+"_faceLeft.png"
         isFaceRight=false
     }
 
     function faceRight(){
-        monsterIcon.source="/images/"+monster.monsterName+"_faceRight.png"
         isFaceRight=true
     }
 
