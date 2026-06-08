@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import singleton.PlayerData
 import singleton.MonstersData
 import "../logic/utils/tool.js" as Tool
 import "../data/cores"
@@ -106,6 +107,10 @@ Item {
             for (var i = 0; i < MonstersData.children.length; i++) {
                 var monsterData = MonstersData.children[i]
                 var n = Math.floor(monsterData.initCount * monsterData.countRation)
+                // enemy 属性：按百分比增加怪物生成数量
+                if (PlayerData.enemy > 0) {
+                    n = Math.floor(n * (1 + PlayerData.enemy / 100))
+                }
                 var increaseFactor = 1 + monsterData.countIcreaseRation
                 if (n === 0) {
                     monsterData.countRation *= increaseFactor
@@ -116,6 +121,10 @@ Item {
                     spawnMonsters(n, monsterData.objectName)
                     monsterData.countRation *= increaseFactor
                 }
+            }
+            // trees 属性：按值生成树木（树在地图边缘随机位置）
+            if (PlayerData.trees > 0) {
+                spawnMonsters(PlayerData.trees, "tree")
             }
         }
     }
@@ -434,6 +443,18 @@ Item {
             material.x = Math.max(0, Math.min(mapW - material.width, material.x))
             material.y = Math.max(0, Math.min(mapH - material.height, material.y))
         }
+        // 双倍材料概率
+        if (PlayerData.obtainingDoubleMaterial > 0 && Math.random() < PlayerData.obtainingDoubleMaterial / 100) {
+            for(var di=0; di<monster.monsterData.materialDrops; di++){
+                var extraMaterial=componentCache.createMaterial(dropsParent, {})
+                if (!extraMaterial) continue
+                extraMaterial.scaleFactor=Qt.binding(function() { return monsters.scaleFactor; })
+                extraMaterial.x=monster.x+monster.width/2-extraMaterial.width/2+(Math.random()-0.5)*monster.width*2
+                extraMaterial.y=monster.y+monster.height-extraMaterial.height+(Math.random()-0.5)*monster.width*2
+                extraMaterial.x = Math.max(0, Math.min(mapW - extraMaterial.width, extraMaterial.x))
+                extraMaterial.y = Math.max(0, Math.min(mapH - extraMaterial.height, extraMaterial.y))
+            }
+        }
     }
 
     //在dropsParent中怪物monster的当前位置附近生成一个果实
@@ -488,6 +509,13 @@ Item {
         bullet.fireRate=400
         bullet.fireRange=range
         bullet.shootAngle=shootAngle
+        // 怪物子弹默认无穿透/反弹/燃烧（保持默认值 0）
+        bullet.reboundCount = 0
+        bullet.penetrateCount = 0
+        bullet.penetrateDamageMultiplier = 0.7
+        bullet.baseDamage = damage
+        bullet.burningRatePercentage = 0
+        bullet.burningRate = 0
     }
 
     //在bulletsParent中的点（centerX,centerY）方圆spawnR内随机生成n个宽width高height伤害为damage颜色为color存在时间为existTime的静止子弹

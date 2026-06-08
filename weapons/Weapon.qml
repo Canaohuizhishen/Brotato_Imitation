@@ -23,7 +23,12 @@ Item {
     property bool inFire: false
     property bool inCoolDown: false
     property bool isDestroy: false //用来标记是否已销毁，因为qml的destroy()是异步方法
+    property double aimSpeedMultiplier: 1.0  // 瞄准旋转时长倍数（>1 = 更慢）
+    property var constructsContainer: null  // 构筑物容器引用（仅构筑物武器使用）
+    property string constructType: ""       // 构筑物类型 "turret"/"mine"（仅构筑物武器使用）
     property var _lastTargetPoint: null  // 用于坐标去重，避免相同位置反复瞄准
+    // 最后一次瞄准计算的目标角度（供 fire() 读取子弹方向，不受旋转动画插值影响）
+    property double _targetAngle: 0
     property double baseWidth: 45*core.scaleRatio
     width: baseWidth*scaleFactor
     height: width*core.aspectRatio
@@ -101,6 +106,13 @@ Item {
             width: weapon.width
             height: weapon.height
             anchors.centerIn: parent
+            property bool _spriteFallbackTried: false
+            onStatusChanged: {
+                if (status === Image.Error && !_spriteFallbackTried) {
+                    _spriteFallbackTried = true
+                    source = "/images/icon_0.png"
+                }
+            }
         }
     }
 
@@ -129,6 +141,7 @@ Item {
             rotateBehavior.start()
             rotate.duration=waitTimer.degree*rotate.durationPerDegree
             weapon.rotation=waitTimer.angle
+            weapon._targetAngle = waitTimer.angle
             weapon.isAiming=false
         }
     }
@@ -141,7 +154,7 @@ Item {
         RotationAnimation {
             id: rotate
             target: weapon
-            readonly property double  durationPerDegree: 0.5
+            readonly property double  durationPerDegree: 0.5 * weapon.aimSpeedMultiplier
             duration: 30000
             easing.type: Easing.Linear
             direction: RotationAnimation.Shortest
@@ -167,14 +180,16 @@ Item {
         isFaceRight=true
     }
 
-    function _snapRotation() {
+    function _snapRotation(force) {
         // 开火中更新旋转角度（无动画、无 isAiming、无朝向翻转）
         // 仅当目标在当前朝向的同一侧时才更新；在背面则跳过，等 inFire 结束后由 aimToTarget 处理朝向翻转
+        // 传入 force=true 则强制对齐（射弹武器开火时使用，需视觉与弹道方向一致）
         if (targetPoint === null) return
         var dx = targetPoint.x - (x + width / 2)
         var dy = targetPoint.y - (y + height / 2)
         // 目标在武器当前朝向的背面 → 开火中不处理，避免角度错乱
-        if ((isFaceRight && dx < 0) || (!isFaceRight && dx >= 0)) return
+        // force=true 时跳过此检查（用于必须对齐的场景，如近战武器刺击方向）
+        if (!force && ((isFaceRight && dx < 0) || (!isFaceRight && dx >= 0))) return
         rotateBehavior.stop()
         var angle = Math.atan2(dy, dx) * 180 / Math.PI
         if (isFaceRight) {
@@ -183,6 +198,7 @@ Item {
             // 朝左时图片是 _faceLeft.png（天生指左），atan2 角度需翻转 180°
             rotation = Tool.reduceAbs(angle, 180)
         }
+        _targetAngle = rotation
         rotateBehavior.start()
     }
 
@@ -199,6 +215,7 @@ Item {
                 rotate.duration=(Math.abs(Tool.reduceAbs(angle,180)-originRotation))*rotate.durationPerDegree
                 //angle-=10//图片偏移量，确保枪口朝向目标点
                 weapon.rotation=Tool.reduceAbs(angle,180)
+                weapon._targetAngle = Tool.reduceAbs(angle,180)
                 weapon.isAiming=false
                 return
             }
@@ -224,6 +241,7 @@ Item {
                 rotate.duration=(Math.abs(angle-originRotation))*rotate.durationPerDegree
                 //angle+=10//图片偏移量，确保枪口朝向目标点
                 weapon.rotation=angle
+                weapon._targetAngle = angle
                 weapon.isAiming=false
                 return
             }

@@ -1,3 +1,20 @@
+// 武器数据 — weapons.json
+//   objectName      武器标识符（英文，用于代码引用）
+//   weaponName      显示名称（中文）
+//   implemented     false = 未实现（选择页置灰、商店不出现）
+//   type            武器类型：原始 / 枪械 / 工具 / 元素
+//   source          对应的 QML 组件文件名
+//   aspectRatio     渲染宽高比
+//   scaleRatio      缩放比
+//   xOffset/yOffset 武器图片位置偏移
+//   handX/handY     手持位置（用于角色手上绑定）
+//   grades[]        4 个等级
+//     grade         等级 1-4
+//     baseDamage    基础伤害
+//     baseCooldown  基础冷却（秒）
+//     baseRange     基础射程/攻击距离
+//     basePrice     基础价格
+//     *Multiplier   对应类型伤害倍率（melee/ranged/elementalDamageMultiplier）
 [
   {
     "objectName": "spear",
@@ -33,6 +50,84 @@
       { "grade": 2, "baseDamage": 4, "rangedDamageMultiplier": 0.6, "baseCooldown": 0.17, "baseRange": 400, "basePrice": 39 },
       { "grade": 3, "baseDamage": 5, "rangedDamageMultiplier": 0.7, "baseCooldown": 0.17, "baseRange": 400, "basePrice": 74 },
       { "grade": 4, "baseDamage": 8, "rangedDamageMultiplier": 0.8, "baseCooldown": 0.17, "baseRange": 400, "basePrice": 149 }
+    ]
+  },
+  {
+    "objectName": "ice_cone",
+    "weaponName": "冰锥",
+    "type": "元素",
+    "source": "IceCone.qml",
+    "aspectRatio": 0.322,
+    "scaleRatio": 1.0,
+    "xOffset": -2,
+    "yOffset": 0,
+    "handX": 9,
+    "handY": 16,
+    "inherentPenetrate": 1,
+    "inherentPenetrateMultiplier": 0.5,
+    "accuracy": [0.85, 0.90, 0.95, 1.0],
+    "grades": [
+      { "grade": 1, "baseDamage": 10, "elementalDamageMultiplier": 1.0, "baseCooldown": 1.03, "baseRange": 400, "baseKnockback": 5, "basePrice": 20 },
+      { "grade": 2, "baseDamage": 20, "elementalDamageMultiplier": 1.0, "baseCooldown": 0.95, "baseRange": 400, "baseKnockback": 5, "basePrice": 39 },
+      { "grade": 3, "baseDamage": 30, "elementalDamageMultiplier": 1.0, "baseCooldown": 0.87, "baseRange": 400, "baseKnockback": 5, "basePrice": 74 },
+      { "grade": 4, "baseDamage": 40, "elementalDamageMultiplier": 1.0, "baseCooldown": 0.70, "baseRange": 400, "baseKnockback": 5, "basePrice": 149 }
+    ]
+  },
+  {
+    "objectName": "wrench",
+    "weaponName": "扳手",
+    "implemented": false,
+    "type": "工具",
+    "source": "Wrench.qml",
+    "aspectRatio": 0.1634,
+    "scaleRatio": 2.5,
+    "xOffset": -22,
+    "yOffset": -5,
+    "handX": 22.5,
+    "handY": 7.5,
+    "grades": [
+      { "grade": 1, "baseDamage": 12, "meleeDamageMultiplier": 1.0, "baseCooldown": 1.70, "baseRange": 175, "basePrice": 20 },
+      { "grade": 2, "baseDamage": 16, "meleeDamageMultiplier": 1.0, "baseCooldown": 1.64, "baseRange": 175, "basePrice": 39 },
+      { "grade": 3, "baseDamage": 20, "meleeDamageMultiplier": 1.0, "baseCooldown": 1.55, "baseRange": 175, "basePrice": 74 },
+      { "grade": 4, "baseDamage": 24, "meleeDamageMultiplier": 1.0, "baseCooldown": 1.49, "baseRange": 175, "basePrice": 149 }
+    ]
+  },
+  {
+    "objectName": "screwdriver",
+    "weaponName": "螺丝刀",
+    "implemented": false,
+    "type": "工具",
+    "source": "Screwdriver.qml",
+    "aspectRatio": 0.1634,
+    "scaleRatio": 2.5,
+    "xOffset": -22,
+    "yOffset": -5,
+    "handX": 22.5,
+    "handY": 7.5,
+    "grades": [
+      { "grade": 1, "baseDamage": 8, "meleeDamageMultiplier": 0.5, "baseCooldown": 1.05, "baseRange": 125, "basePrice": 10 },
+      { "grade": 2, "baseDamage": 12, "meleeDamageMultiplier": 0.5, "baseCooldown": 1.00, "baseRange": 125, "basePrice": 22 },
+      { "grade": 3, "baseDamage": 16, "meleeDamageMultiplier": 0.5, "baseCooldown": 0.97, "baseRange": 125, "basePrice": 45 },
+      { "grade": 4, "baseDamage": 20, "meleeDamageMultiplier": 0.5, "baseCooldown": 0.87, "baseRange": 125, "basePrice": 91 }
+    ]
+  },
+  {
+    "objectName": "flamethrower",
+    "weaponName": "火焰喷射器",
+    "implemented": false,
+    "type": "元素",
+    "source": "SMG.qml",
+    "aspectRatio": 0.683,
+    "scaleRatio": 1.0,
+    "xOffset": -2,
+    "yOffset": 0,
+    "handX": 9,
+    "handY": 16,
+    "grades": [
+      { "grade": 1, "baseDamage": 4, "elementalDamageMultiplier": 1.0, "baseCooldown": 0.25, "baseRange": 300, "basePrice": 25 },
+      { "grade": 2, "baseDamage": 6, "elementalDamageMultiplier": 1.2, "baseCooldown": 0.25, "baseRange": 320, "basePrice": 45 },
+      { "grade": 3, "baseDamage": 9, "elementalDamageMultiplier": 1.5, "baseCooldown": 0.25, "baseRange": 340, "basePrice": 85 },
+      { "grade": 4, "baseDamage": 14, "elementalDamageMultiplier": 2.0, "baseCooldown": 0.25, "baseRange": 360, "basePrice": 169 }
     ]
   }
 ]

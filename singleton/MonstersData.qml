@@ -69,7 +69,7 @@ Item {
         readonly property int materialDrops: 3
         readonly property double consumableDropRate: 1*(1+PlayerData.luck/100)
         readonly property double chestDropRate: 0.05*(1+PlayerData.luck/100)
-        property int initCount: 1
+        property int initCount: 0  // 由 PlayerData.trees 属性控制生成数量
         property int curNumber: 0
         property double countRation: 0.9
         readonly property double countIcreaseRation: 0.05

@@ -81,32 +81,49 @@ Item {
         anchors.horizontalCenterOffset: spacing/2
         anchors.top: weaponCard.bottom
         anchors.topMargin: 25*weaponSelectionInterface.scaleFactor
-        width: cellWidth*(canUsedWeaponNumber+1)+1
+        width: cellWidth*(totalWeaponCount+1)+1
         height:  cellHeight
         property int spacing: 5*weaponSelectionInterface.scaleFactor
         cellWidth: 68*weaponSelectionInterface.scaleFactor
         cellHeight: cellWidth
         interactive: false
-        property int canUsedWeaponNumber: weaponCore.getAllWeapons().length
+        property int canUsedWeaponNumber: {
+            var n = 0
+            for (var i = 0; i < model.count; i++) {
+                if (model.get(i).implemented) n++
+            }
+            return n
+        }
+        // 包含未实现武器的总数，用于网格宽度（确保未实现武器占位可见）
+        property int totalWeaponCount: weaponCore.getAllWeapons().length
         property bool currentItemIsWeapon: currentItem.name!=="question"
         model: ListModel{
             Component.onCompleted: {
                 var weapons = weaponCore.getAllWeapons()
                 for(var i=0;i<weapons.length;i++){
-                    append({ name: weapons[i].objectName});
+                    append({ name: weapons[i].objectName, implemented: weaponCore.isWeaponImplemented(weapons[i].objectName) });
                 }
             }
-            ListElement{ name: "question" }
+            ListElement{ name: "question"; implemented: true }
         }
 
         delegate: Button {
             required property string name
+            required property bool implemented
             required property int index
             width: weaponRow.cellWidth-weaponRow.spacing
             height: width
+            enabled: name === "question" || implemented
+
             background: Rectangle {
-                color: pressed || hovered || weaponRow.currentIndex==index ? "#cfcfcf" : "#222222"
+                color: {
+                    if (!enabled) return "#111111"
+                    if (pressed || hovered || weaponRow.currentIndex===index) return "#cfcfcf"
+                    return "#222222"
+                }
                 radius: 4*weaponSelectionInterface.scaleFactor
+                border.color: !enabled ? "#444444" : "transparent"
+                border.width: !enabled ? 1 : 0
             }
 
             Image {
@@ -114,11 +131,43 @@ Item {
                 height: width
                 source: "qrc:/images/icon_"+name+".png"
                 anchors.centerIn: parent
+                opacity: parent.enabled ? 1.0 : 0.3
+                property bool _fallbackTried: false
+                onStatusChanged: {
+                    if (status === Image.Error && !_fallbackTried) {
+                        _fallbackTried = true
+                        source = "qrc:/images/icon_0.png"
+                    }
+                }
+            }
+
+            // 未实现武器的占位提示文字
+            ScaledText {
+                visible: !parent.enabled && parent.hovered
+                text: I18n.tr("未实现", SettingsData.language)
+                basePixelSize: 10
+                uiScale: weaponSelectionInterface.scaleFactor
+                color: "#ffcc00"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 2
+                style: Text.Outline
+                styleColor: "black"
+                z: 10
             }
 
             onClicked: {
                 if(name==="question"){
-                    weaponRow.currentIndex=Math.floor(Math.random()*weaponRow.canUsedWeaponNumber)+1
+                    // 随机选一个已实现的武器
+                    var implementedIndices = []
+                    for (var i = 1; i < weaponRow.model.count; i++) {
+                        if (weaponRow.model.get(i).implemented)
+                            implementedIndices.push(i)
+                    }
+                    if (implementedIndices.length > 0)
+                        weaponRow.currentIndex = implementedIndices[Math.floor(Math.random() * implementedIndices.length)]
+                    else
+                        weaponRow.currentIndex = 0
                 }else {
                     if(weaponRow.currentIndex === index){
                         weaponSelectionInterface.selectedWeaponName = name

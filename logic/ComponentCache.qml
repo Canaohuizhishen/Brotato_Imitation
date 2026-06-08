@@ -26,11 +26,12 @@ Item {
     property Component roundStaticBulletComponent: null
     property Component meleeBulletComponent: null
     property Component ellipticalMovingBulletComponent: null
+    property Component spriteMovingBulletComponent: null
 
     // ---- 状态 ----
     property bool allReady: false
     property int _loadedCount: 0
-    readonly property int _totalCount: 9
+    readonly property int _totalCount: 10
 
     // 动态组件缓存（懒加载，按 source URL 缓存）
     property var _dynamicCache: ({})
@@ -46,6 +47,7 @@ Item {
         roundStaticBulletComponent = Qt.createComponent("../bullets/RoundStaticBullet.qml", Component.Asynchronous)
         meleeBulletComponent = Qt.createComponent("../bullets/MeleeBullet.qml", Component.Asynchronous)
         ellipticalMovingBulletComponent = Qt.createComponent("../bullets/EllipticalMovingBullet.qml", Component.Asynchronous)
+        spriteMovingBulletComponent = Qt.createComponent("../bullets/SpriteMovingBullet.qml", Component.Asynchronous)
 
         forkComponent.statusChanged.connect(_checkAllReady)
         materialComponent.statusChanged.connect(_checkAllReady)
@@ -56,6 +58,7 @@ Item {
         roundStaticBulletComponent.statusChanged.connect(_checkAllReady)
         meleeBulletComponent.statusChanged.connect(_checkAllReady)
         ellipticalMovingBulletComponent.statusChanged.connect(_checkAllReady)
+        spriteMovingBulletComponent.statusChanged.connect(_checkAllReady)
 
         // Catch any components that already loaded before signal connections
         _checkAllReady()
@@ -85,6 +88,7 @@ Item {
         roundStaticBulletComponent = _checkComponent(roundStaticBulletComponent, "roundStaticBulletComponent")
         meleeBulletComponent = _checkComponent(meleeBulletComponent, "meleeBulletComponent")
         ellipticalMovingBulletComponent = _checkComponent(ellipticalMovingBulletComponent, "ellipticalMovingBulletComponent")
+        spriteMovingBulletComponent = _checkComponent(spriteMovingBulletComponent, "spriteMovingBulletComponent")
         if (_loadedCount >= _totalCount) {
             allReady = true
             console.log("ComponentCache: all " + _loadedCount + " components ready")
@@ -207,6 +211,16 @@ Item {
         }
         console.warn("ComponentCache: ellipticalMovingBulletComponent not ready, fallback to sync")
         var fallback = Qt.createComponent("../bullets/EllipticalMovingBullet.qml")
+        return fallback.status === Component.Ready
+                ? fallback.createObject(parent, properties || {}) : null
+    }
+
+    function createSpriteMovingBullet(parent, properties) {
+        if (spriteMovingBulletComponent && spriteMovingBulletComponent.status === Component.Ready) {
+            return spriteMovingBulletComponent.createObject(parent, properties || {})
+        }
+        console.warn("ComponentCache: spriteMovingBulletComponent not ready, fallback to sync")
+        var fallback = Qt.createComponent("../bullets/SpriteMovingBullet.qml")
         return fallback.status === Component.Ready
                 ? fallback.createObject(parent, properties || {}) : null
     }

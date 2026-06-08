@@ -438,7 +438,8 @@ Item {
     function getMaterial(material){
         PlayerData.materialsNumber+=material.value
         PlayerData.curWaveMaterialsNumber+=material.value
-        PlayerData.curXp+=material.value
+        var expGain = Math.floor(material.value * (1 + PlayerData.gainExperience / 100))
+        PlayerData.curXp+=expGain
         var text=material.value===1 ? "+1" : "X"+material.value
         var size=material.value===1 ? 24*player.scaleFactor : 27*player.scaleFactor
         Tool.createText(ground,text,size,"lime",material.x,material.y)

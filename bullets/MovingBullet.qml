@@ -15,6 +15,44 @@ Bullet {
         shoot.start()
     }
 
+    // 反弹：将子弹重新导向新目标
+    function reboundToTarget(newTarget) {
+        // 1. 停止当前飞行动画
+        shoot.stop()
+
+        // 2. 计算从当前位置到新目标中心的方向和距离
+        var cx = x + width / 2
+        var cy = y + height / 2
+        var tx = newTarget.x + newTarget.width / 2
+        var ty = newTarget.y + newTarget.height / 2
+        var dx = tx - cx
+        var dy = ty - cy
+        var dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < 1) return  // 目标太近，放弃反弹
+
+        // 3. 更新射击角度和旋转
+        shootAngle = Math.atan2(-dy, dx) * (180 / Math.PI)
+        bullet.rotation = -shootAngle
+
+        // 4. 以当前位置为新起点，飞向新目标（至少飞剩余射程的一半或到目标的距离）
+        var remainingRange = Math.max(dist * 1.2, fireRange * 0.3) * scaleFactor
+        var newOriginX = cx - width / 2
+        var newOriginY = cy - height / 2
+        originPoint = Qt.point(newOriginX, newOriginY)
+
+        var toX = newOriginX + Math.cos(shootAngle * Math.PI/180) * remainingRange
+        var toY = newOriginY - Math.sin(shootAngle * Math.PI/180) * remainingRange
+
+        // 5. 更新动画参数
+        xAnimation.to = toX
+        yAnimation.to = toY
+        xAnimation.duration = remainingRange / (fireRate / 1000)
+        yAnimation.duration = remainingRange / (fireRate / 1000)
+
+        // 6. 重新启动
+        shoot.start()
+    }
+
     onPausedChanged: {
         if(paused==true){
             shoot.pause()

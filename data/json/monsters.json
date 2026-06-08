@@ -1,3 +1,19 @@
+// 怪物数据 — monsters.json
+//   objectName      怪物标识符（英文，用于代码引用）
+//   monsterName     显示名称（中文）
+//   source          对应的 QML 组件文件名
+//   attackRange     攻击距离（0 = 近战）
+//   maxCurNumber    场上最大同时存在数量
+//   initHp          基础生命值
+//   hpBonus         每波生命成长值
+//   initVelocity    基础移速
+//   maxVelocity     最大移速
+//   initDamage      基础伤害
+//   damageBonus     每波伤害成长值
+//   materialDrops   掉落材料数
+//   consumableDropRate  可拾取掉落概率
+//   chestDropRate   宝箱掉落概率
+//   isBoss          是否为 Boss
 [
   {
     "objectName": "tree",

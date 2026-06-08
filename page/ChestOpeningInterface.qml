@@ -140,7 +140,8 @@ Item {
                     }
                 }
                 onClicked: {
-                    PlayerData.materialsNumber+=propCard.core.basePrice
+                    var chestExtra = PlayerData.materialsInTheBox > 0 ? PlayerData.materialsInTheBox : 0
+                    PlayerData.materialsNumber+= propCard.core.basePrice + chestExtra
                     chestNotificationBar.reduceChest()
                     processedOne()
                     sound.playClickSound()

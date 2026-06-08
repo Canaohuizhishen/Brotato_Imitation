@@ -58,7 +58,7 @@ QtObject {
     property int materialsNumber: 0          //当前材料数
     property int remainingMaterialsNumber: 0 //存储材料数
     property int curWaveMaterialsNumber: 0   //当前波次获得的材料数，便于中途返回主菜单时回退材料数和经验及等级
-    readonly property int pickupRange: 150   //拾取范围
+    readonly property int pickupRange: 150 + pickingRegion   //拾取范围（基础值 + 次要属性加成）
     property double goodsDiscountRate: 1     //商品价格倍率
     property double expDiscountRate: 1       //升级所需经验值倍率
 

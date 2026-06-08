@@ -103,6 +103,7 @@ qt_add_qml_module(appBrotato
     QML_FILES bullets/MovingBullet.qml
     QML_FILES weapons/Spear.qml
     QML_FILES bullets/MeleeBullet.qml
+    QML_FILES bullets/SpriteMovingBullet.qml
     QML_FILES weapons/RangedWeapon.qml
     QML_FILES weapons/MeleeWeapon.qml
     QML_FILES monsters/Tree.qml
@@ -111,6 +112,12 @@ qt_add_qml_module(appBrotato
     QML_FILES page/DyingBorder.qml
     # ── Drops ──
     QML_FILES drops/Material.qml drops/Fruit.qml drops/Drops.qml drops/Chest.qml drops/BigMaterial.qml
+    # ── Constructs ──
+    QML_FILES constructs/Construct.qml constructs/TurretConstruct.qml constructs/MineConstruct.qml constructs/Constructs.qml
+    QML_FILES weapons/ConstructWeapon.qml
+    QML_FILES weapons/Screwdriver.qml
+    QML_FILES weapons/Wrench.qml
+    QML_FILES weapons/IceCone.qml
     # ── Audio ──
     RESOURCES audio.qrc
     QML_FILES sound/Sound.qml
@@ -130,6 +137,17 @@ set_target_properties(appBrotato PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
+
+# ── 数据同步：修改 data/json/*.json 后自动更新 DataLoader.js ──
+find_package(Python3 QUIET)
+if(Python3_FOUND)
+    add_custom_target(sync_game_data
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/sync_data.py
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "同步 JSON 数据到 DataLoader.js..."
+    )
+    add_dependencies(appBrotato sync_game_data)
+endif()
 
 target_link_libraries(appBrotato
     PRIVATE

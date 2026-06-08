@@ -12,7 +12,7 @@ TestCase {
 
     function test_getAllWeapons() {
         verify(Array.isArray(DataLoader.getAllWeapons()))
-        compare(DataLoader.getAllWeapons().length, 2)
+        compare(DataLoader.getAllWeapons().length, 6)
     }
 
     function test_getWeapon_spear() {
@@ -155,6 +155,44 @@ TestCase {
 
     function test_renderWeapon_null() {
         compare(DataLoader.renderWeaponTalentText({}, {damage:0}), null)
+    }
+
+    function test_renderWeapon_flamethrower() {
+        var w = DataLoader.getWeapon("flamethrower", 1)
+        var r = DataLoader.renderWeaponTalentText(w, {meleeDamage:0, rangedDamage:0, elementalDamage:0, damage:0, attackSpeed:0, range:0, critChance:0})
+        compare(r.dmg, 4)
+        compare(r.isElemental, true)
+        compare(r.isMelee, false)
+    }
+
+    function test_renderWeapon_flamethrower_elemental() {
+        var w = DataLoader.getWeapon("flamethrower", 1)
+        var r = DataLoader.renderWeaponTalentText(w, {meleeDamage:0, rangedDamage:0, elementalDamage:10, damage:0, attackSpeed:0, range:0, critChance:0})
+        // (4 + 10*1.0) * (1 + 0/100) = 14
+        compare(r.dmg, 14)
+    }
+
+    function test_renderWeapon_iceCone() {
+        var w = DataLoader.getWeapon("ice_cone", 1)
+        var r = DataLoader.renderWeaponTalentText(w, {meleeDamage:0, rangedDamage:0, elementalDamage:0, damage:0, attackSpeed:0, range:0, critChance:0})
+        // 10 + 0*1.0 = 10
+        compare(r.dmg, 10)
+        compare(r.isElemental, true)
+        compare(r.isMelee, false)
+    }
+
+    function test_renderWeapon_iceCone_elemental() {
+        var w = DataLoader.getWeapon("ice_cone", 1)
+        var r = DataLoader.renderWeaponTalentText(w, {meleeDamage:0, rangedDamage:0, elementalDamage:5, damage:0, attackSpeed:0, range:0, critChance:0})
+        // (10 + 5*1.0) * 1 = 15
+        compare(r.dmg, 15)
+    }
+
+    function test_renderWeapon_flamethrower_grade4() {
+        var w = DataLoader.getWeapon("flamethrower", 4)
+        compare(DataLoader.renderWeaponTalentText(w, {meleeDamage:0, rangedDamage:0, elementalDamage:5, damage:10, attackSpeed:0, range:0, critChance:0}).dmg,
+            // (14 + 5*2.0) * (1 + 10/100) = (14+10)*1.1 = 26.4 -> floor 26
+            26)
     }
 
     function test_applyEffects_delta() {
@@ -429,6 +467,9 @@ TestCase {
         compare(Shop.refreshPrice(1), 3)
     }
 
+    // freeRefresh 依赖 QML 单例 PlayerData，纯 JS 测试环境不可用
+    // 已在 ShopLogicHandler.js 中通过 typeof 守卫确保无 PlayerData 时走原逻辑
+
     // ---- DataLoader: 边界/健壮性 ----
 
     function test_getWeapon_nullKey() {
@@ -474,6 +515,29 @@ TestCase {
         compare(d.maxHp, 100)
         // null playerData 不应该崩溃
         DataLoader.applyEffects([{attribute:"maxHp",delta:5}], null, 1)
+    }
+
+    function test_applyEffects_enemySpeed() {
+        var d = {enemySpeed: 0, enemy: 0, trees: 0}
+        DataLoader.applyEffects([{attribute:"enemySpeed",delta:8},{attribute:"enemy",delta:5},{attribute:"trees",delta:3}], d, 1)
+        compare(d.enemySpeed, 8)
+        compare(d.enemy, 5)
+        compare(d.trees, 3)
+    }
+
+    function test_applyEffects_burning() {
+        var d = {burningRatePercentage: 0, burningRate: 0}
+        DataLoader.applyEffects([{attribute:"burningRatePercentage",delta:15},{attribute:"burningRate",delta:3}], d, 1)
+        compare(d.burningRatePercentage, 15)
+        compare(d.burningRate, 3)
+    }
+
+    function test_applyEffects_penetrateRebound() {
+        var d = {penetrate: 0, rebound: 0, penetratingDamage: 0}
+        DataLoader.applyEffects([{attribute:"penetrate",delta:1},{attribute:"rebound",delta:2},{attribute:"penetratingDamage",delta:30}], d, 1)
+        compare(d.penetrate, 1)
+        compare(d.rebound, 2)
+        compare(d.penetratingDamage, 30)
     }
 
     // ---- SaveManager: JSON 序列化往返 ----

@@ -35,11 +35,16 @@ Item {
 
         Image {
             id: weaponImage
-            source: "qrc:/images/weapon-" + itemData.objectName + ".png"
-            // source: "qrc:/images/prop-" + itemData.objectName + ".png"
-            // source: "qrc:/images/smg_icon.png"
+            source: "qrc:/images/icon_" + itemData.objectName + ".png"
             width: parent.width
             height: parent.height
+            property bool _itemFallbackTried: false
+            onStatusChanged: {
+                if (status === Image.Error && !_itemFallbackTried) {
+                    _itemFallbackTried = true
+                    source = "qrc:/images/icon_0.png"
+                }
+            }
             anchors.centerIn: parent
         }
 
@@ -116,13 +121,19 @@ Item {
 
                     Image {
                         id: image
-                        source: "qrc:/images/weapon-" + itemData.objectName + ".png"
-                        // source: "qrc:/images/prop-" + itemData.objectName + ".png"
+                        source: "qrc:/images/icon_" + itemData.objectName + ".png"
                         width: root.width
                         height: root.height
                         fillMode: Image.PreserveAspectFit
                         // anchors.centerIn: parent
                         anchors.fill: parent
+                        property bool _popupFallbackTried: false
+                        onStatusChanged: {
+                            if (status === Image.Error && !_popupFallbackTried) {
+                                _popupFallbackTried = true
+                                source = "qrc:/images/icon_0.png"
+                            }
+                        }
                     }
                 }
 

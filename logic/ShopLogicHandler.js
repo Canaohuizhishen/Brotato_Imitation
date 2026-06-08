@@ -261,14 +261,17 @@ function resetRefreshTimes()
 //刷新的价格
 function refreshPrice(waveNum)
 {
+    // 免费刷新次数：每波前 freeRefresh 次刷新免费（PlayerData 在测试环境中不可用，需守卫）
+    if (typeof PlayerData !== 'undefined' && PlayerData && PlayerData.freeRefresh > 0 && refreshTimes + 1 <= PlayerData.freeRefresh) {
+        refreshTimes++
+        return 0
+    }
     let increment = 1
     if(waveNum === 1) {
         refreshTimes++
-        // console.log(refreshTimes)
         return (waveNum + increment) + refreshTimes * increment
     } else {
         increment = Math.floor(waveNum / 2);
-        // console.log(increment)
         refreshTimes++
         return (waveNum + increment) + refreshTimes * increment
     }

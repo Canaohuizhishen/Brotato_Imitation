@@ -1,3 +1,8 @@
+// 角色/天赋数据 — roles.json
+//   objectName      角色标识符（英文）
+//   roleName        显示名称（中文）
+//   talentText      天赋描述（HTML 格式）
+//   effects[]       效果数组（结构同 props.json 的 effects）
 [
   {
     "objectName": "wellRounded",

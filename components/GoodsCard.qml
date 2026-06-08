@@ -30,7 +30,7 @@ Item {
             var w = Controller.getSpecificWeapon()
             basePrice = w ? w.basePrice : itemData.basePrice
         }
-        return Math.ceil(basePrice * Math.pow(1.1, PlayerData.currentWaveNumber) * PlayerData.goodsDiscountRate)
+        return Math.ceil(basePrice * Math.pow(1.1, PlayerData.currentWaveNumber) * PlayerData.goodsDiscountRate * (1 + PlayerData.propPrices / 100))
     }
 
     function getTalentText() {
@@ -78,11 +78,18 @@ Item {
                 Image {
                     id: goodsImage
                     source: itemData.type === "道具" ? "qrc:/images/prop-" + itemData.objectName + ".png"
-                                                   : "qrc:/images/weapon-" + itemData.objectName + ".png"
+                                                   : "qrc:/images/icon_" + itemData.objectName + ".png"
                     width: 63*shopItem.scaleFactor
                     height: 63*shopItem.scaleFactor
                     fillMode: Image.PreserveAspectFit
                     anchors.centerIn: parent
+                    property bool _storeFallbackTried: false
+                    onStatusChanged: {
+                        if (status === Image.Error && !_storeFallbackTried) {
+                            _storeFallbackTried = true
+                            source = "qrc:/images/icon_0.png"
+                        }
+                    }
                 }
             }
 

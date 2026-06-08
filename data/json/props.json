@@ -1,60 +1,1155 @@
+// 道具数据 — props.json
+//   objectName      道具标识符（英文）
+//   propName        显示名称（中文）
+//   grade           等级 1-4（5 = 角色占位）
+//   type            道具 / 角色
+//   basePrice       基础价格
+//   talentText      效果描述（HTML 格式）
+//   notes           开发者备注
+//   effects[]       效果数组
+//     attribute     属性名（如 maxHp, damage, speed 等）
+//     delta         加减值（正 = 增益, 负 = 减益）← 道具 99% 只用这个
+//     deltaFromGrade 每级增量（用于升级选项）
+//     — 以下仅角色/天赋用，普通道具请忽略 —
+//     condition     gt / lt 条件判断
+//     conditionValue 条件阈值
+//     setTo         若满足条件则设为该值
+//     setToProp     若满足条件则设为另一个属性的值
 [
-  { "objectName": "wellRounded", "propName": "全能者", "grade": 5, "type": "角色", "basePrice": 0, "talentText": "<font color='lime'>+5</font><font color='white'> 最大生命值</font><br>\n<font color='lime'>+5</font><font color='white'> %速度</font><br>\n<font color='lime'>+8</font><font color='white'> 收获</font>", "effects": [{ "attribute": "maxHp", "condition": "lt", "conditionValue": 15, "setTo": 15 }, { "attribute": "curHp", "setToProp": "maxHp" }, { "attribute": "speed", "condition": "lt", "conditionValue": 5, "setTo": 5 }, { "attribute": "harvesting", "condition": "lt", "conditionValue": 8, "setTo": 8 }] },
-  { "objectName": "mutant", "propName": "异变体", "grade": 5, "type": "角色", "basePrice": 0, "talentText": "<font color='white'>升级需要</font><font color='lime'>-66%</font><font color='white'>经验值</font><br>\n<font color='red'>+50</font><font color='white'> %道具价格</font>", "effects": [{ "attribute": "expDiscountRate", "condition": "lt", "conditionValue": 0.33, "setTo": 0.33 }, { "attribute": "goodsDiscountRate", "condition": "lt", "conditionValue": 1.5, "setTo": 1.5 }] },
-
-  { "objectName": "bat", "propName": "蝙蝠", "grade": 1, "type": "道具", "basePrice": 20, "talentText": "<font color='lime'>+2</font><font color='white'>生命窃取</font><br>\n<font color='red'>-2</font><font color='white'>收获</font><br>", "effects": [{ "attribute": "lifeSteal", "delta": 2 }, { "attribute": "harvesting", "delta": -2 }] },
-  { "objectName": "hedgehog", "propName": "刺猬", "grade": 1, "type": "道具", "basePrice": 30, "talentText": "<font color='lime'>+2</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+1</font><font color='white'>远程伤害</font><br>\n<font color='red'>-1</font><font color='white'>生命恢复</font><br>", "effects": [{ "attribute": "meleeDamage", "delta": 2 }, { "attribute": "rangedDamage", "delta": 1 }, { "attribute": "hpRegeneration", "delta": -1 }] },
-  { "objectName": "helmet", "propName": "头盔", "grade": 1, "type": "道具", "basePrice": 25, "talentText": "<font color='lime'>+1</font><font color='white'>护甲</font><br>\n<font color='red'>-2</font><font color='white'>速度</font><br>", "effects": [{ "attribute": "armor", "delta": 1 }, { "attribute": "speed", "delta": -2 }] },
-  { "objectName": "rubber_berserker", "propName": "橡皮狂暴战士", "grade": 1, "type": "道具", "basePrice": 25, "talentText": "<font color='lime'>+5</font><font color='white'> 攻击速度</font><br>\n<font color='lime'>+15</font><font color='white'>射程</font><br>\n<font color='red'>-1</font><font color='white'>护甲</font><br>", "effects": [{ "attribute": "lifeSteal", "delta": 2 }, { "attribute": "attackSpeed", "delta": -2 }] },
-  { "objectName": "brain_injury", "propName": "颅脑损伤", "grade": 1, "type": "道具", "basePrice": 25, "talentText": "<font color='lime'>+6</font><font color='white'>伤害</font><br>\n<font color='red'>-8</font><font color='white'>射程</font><br>", "effects": [{ "attribute": "damage", "delta": 6 }, { "attribute": "attackSpeed", "delta": -8 }] },
-  { "objectName": "coffee", "propName": "咖啡", "grade": 1, "type": "道具", "basePrice": 15, "talentText": "<font color='lime'>+10</font><font color='white'>攻速</font><br>\n<font color='red'>-2</font><font color='white'>伤害</font><br>", "effects": [{ "attribute": "attackSpeed", "delta": 10 }, { "attribute": "damage", "delta": -2 }] },
-  { "objectName": "claw_tree", "propName": "爪子树", "grade": 1, "type": "道具", "basePrice": 20, "talentText": "<font color='lime'>+1</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+3</font><font color='white'>暴击率</font><br>\n<font color='red'>-1</font><font color='white'>最大生命值</font><br>", "effects": [{ "attribute": "meleeDamage", "delta": 1 }, { "attribute": "critChance", "delta": 3 }, { "attribute": "maxHp", "delta": -1 }] },
-  { "objectName": "boiling_water", "propName": "沸水", "grade": 1, "type": "道具", "basePrice": 30, "talentText": "<font color='lime'>+2</font><font color='white'>元素伤害</font><br>\n<font color='red'>-1</font><font color='white'>最大生命值</font><br>", "effects": [{ "attribute": "elementalDamage", "delta": 2 }, { "attribute": "maxHp", "delta": -1 }] },
-  { "objectName": "book", "propName": "书", "grade": 1, "type": "道具", "basePrice": 8, "talentText": "<font color='lime'>+1</font><font color='white'>工程</font><br>", "effects": [{ "attribute": "engineering", "delta": 1 }] },
-  { "objectName": "break_through", "propName": "破口", "grade": 1, "type": "道具", "basePrice": 25, "talentText": "<font color='lime'>+5</font><font color='white'>最大生命值</font><br>\n<font color='red'>-1</font><font color='white'>生命恢复</font><br>", "effects": [{ "attribute": "maxHp", "delta": 5 }, { "attribute": "hpRegeneration", "delta": -1 }] },
-  { "objectName": "butterfly", "propName": "蝴蝶", "grade": 1, "type": "道具", "basePrice": 30, "talentText": "<font color='lime'>+2</font><font color='white'>生命偷取</font><br>\n<font color='red'>-1</font><font color='white'>元素伤害</font><br>", "effects": [{ "attribute": "lifeSteal", "delta": 2 }, { "attribute": "elementalDamage", "delta": -1 }] },
-  { "objectName": "defective_steroids", "propName": "有缺陷的类固醇", "grade": 1, "type": "道具", "basePrice": 20, "talentText": "<font color='lime'>+2</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+2</font><font color='white'>最大生命值</font><br>\n<font color='red'>-3</font><font color='white'>攻击速度</font><br>", "effects": [{ "attribute": "meleeDamage", "delta": 2 }, { "attribute": "maxHp", "delta": 2 }, { "attribute": "attackSpeed", "delta": -3 }] },
-  { "objectName": "duct_tape", "propName": "牛皮胶布", "grade": 1, "type": "道具", "basePrice": 25, "talentText": "<font color='lime'>+1</font><font color='white'>护甲</font><br>\n<font color='lime'>+1</font><font color='white'>工程</font><br>\n<font color='red'>-2</font><font color='white'>最大生命</font><br>", "effects": [{ "attribute": "armor", "delta": 1 }, { "attribute": "engineering", "delta": 1 }, { "attribute": "maxHp", "delta": -2 }] },
-  { "objectName": "cake", "propName": "蛋糕", "grade": 1, "type": "道具", "basePrice": 15, "talentText": "<font color='lime'>+3</font><font color='white'>最大生命</font><br>\n<font color='red'>-1</font><font color='white'>伤害</font><br>", "effects": [{ "attribute": "maxHp", "delta": 3 }, { "attribute": "damage", "delta": -1 }] },
-  { "objectName": "glasses", "propName": "眼镜", "grade": 1, "type": "道具", "basePrice": 25, "talentText": "<font color='lime'>+20</font><font color='white'>射程</font><br>", "effects": [{ "attribute": "range", "delta": 20 }] },
-  { "objectName": "goat_skull", "propName": "山羊头骨", "grade": 1, "type": "道具", "basePrice": 25, "talentText": "<font color='lime'>+3</font><font color='white'>近战伤害</font><br>\n<font color='red'>-2</font><font color='white'>暴击率</font><br>", "effects": [{ "attribute": "meleeDamage", "delta": 3 }, { "attribute": "critChance", "delta": -2 }] },
-  { "objectName": "yarmulke", "propName": "小圆帽", "grade": 1, "type": "道具", "basePrice": 20, "talentText": "<font color='lime'>+4</font><font color='white'>速度</font><br>\n<font color='red'>-6</font><font color='white'>射程</font><br>", "effects": [{ "attribute": "speed", "delta": 4 }, { "attribute": "range", "delta": -6 }] },
-  { "objectName": "injection", "propName": "注射", "grade": 1, "type": "道具", "basePrice": 20, "talentText": "<font color='lime'>+7</font><font color='white'>伤害</font><br>\n<font color='red'>-2</font><font color='white'>最大生命</font><br>", "effects": [{ "attribute": "damage", "delta": 7 }, { "attribute": "maxHp", "delta": -2 }] },
-  { "objectName": "insane", "propName": "精神错乱", "grade": 1, "type": "道具", "basePrice": 20, "talentText": "<font color='lime'>+6</font><font color='white'>暴击率</font><br>\n<font color='red'>-3</font><font color='white'>伤害</font><br>", "effects": [{ "attribute": "critChance", "delta": 6 }, { "attribute": "damage", "delta": -3 }] },
-  { "objectName": "lens", "propName": "镜头", "grade": 1, "type": "道具", "basePrice": 20, "talentText": "<font color='lime'>+1</font><font color='white'>远程伤害</font><br>\n<font color='red'>-5</font><font color='white'>射程</font><br>", "effects": [{ "attribute": "rangedDamage", "delta": 1 }, { "attribute": "range", "delta": -5 }] },
-  { "objectName": "lost_duck", "propName": "迷失之鸭", "grade": 1, "type": "道具", "basePrice": 25, "talentText": "<font color='lime'>+10</font><font color='white'>运气</font><br>\n<font color='red'>-1</font><font color='white'>元素伤害</font><br>", "effects": [{ "attribute": "luck", "delta": 10 }, { "attribute": "elementalDamage", "delta": -1 }] },
-  { "objectName": "propeller_hat", "propName": "螺旋桨帽子", "grade": 1, "type": "道具", "basePrice": 28, "talentText": "<font color='lime'>+10</font><font color='white'>运气</font><br>\n<font color='red'>-2</font><font color='white'>伤害</font><br>", "effects": [{ "attribute": "luck", "delta": 10 }, { "attribute": "damage", "delta": -2 }] },
-  { "objectName": "terrifying_onion", "propName": "恐怖洋葱", "grade": 1, "type": "道具", "basePrice": 15, "talentText": "<font color='lime'>+4</font><font color='white'>速度</font><br>\n<font color='red'>-6</font><font color='white'>运气</font><br>", "effects": [{ "attribute": "speed", "delta": 4 }, { "attribute": "luck", "delta": -6 }] },
-  { "objectName": "toxic_sludge", "propName": "有毒的烂泥", "grade": 1, "type": "道具", "basePrice": 20, "talentText": "<font color='lime'>+2</font><font color='white'>元素伤害</font><br>\n<font color='red'>-2</font><font color='white'>闪避</font><br>", "effects": [{ "attribute": "elementalDamage", "delta": 2 }, { "attribute": "dodge", "delta": -2 }] },
-  { "objectName": "coal", "propName": "煤炭", "grade": 1, "type": "道具", "basePrice": 20, "talentText": "<font color='lime'>+1</font><font color='white'>元素伤害</font><br>\n<font color='lime'>+2</font><font color='white'>近战伤害</font><br>\n<font color='red'>-2</font><font color='white'>收获</font><br>", "effects": [{ "attribute": "elementalDamage", "delta": 1 }, { "attribute": "meleeDamage", "delta": 2 }, { "attribute": "harvesting", "delta": -2 }] },
-  { "objectName": "fertilizer", "propName": "肥料", "grade": 1, "type": "道具", "basePrice": 15, "talentText": "<font color='lime'>+8</font><font color='white'>收获</font><br>\n<font color='red'>-2</font><font color='white'>近战伤害</font><br>", "effects": [{ "attribute": "harvesting", "delta": 8 }, { "attribute": "meleeDamage", "delta": -2 }] },
-
-  { "objectName": "acid_liquor", "propName": "酸液", "grade": 2, "type": "道具", "basePrice": 65, "talentText": "<font color='lime'>+8</font><font color='white'>最大生命值</font><br>\n<font color='red'>-4</font><font color='white'>闪避</font><br>", "effects": [{ "attribute": "maxHp", "delta": 8 }, { "attribute": "dodge", "delta": -4 }] },
-  { "objectName": "energy_bracelet", "propName": "能量手镯", "grade": 2, "type": "道具", "basePrice": 55, "talentText": "<font color='lime'>+4</font><font color='white'>暴击率</font><br>\n<font color='lime'>+2</font><font color='white'>元素伤害</font><br>\n<font color='red'>-2</font><font color='white'>远程伤害</font><br>", "effects": [{ "attribute": "critChance", "delta": 4 }, { "attribute": "elementalDamage", "delta": 2 }, { "attribute": "rangedDamage", "delta": -2 }] },
-  { "objectName": "gear", "propName": "齿轮", "grade": 2, "type": "道具", "basePrice": 35, "talentText": "<font color='lime'>+4</font><font color='white'>工程</font><br>\n<font color='red'>-4</font><font color='white'>伤害</font><br>", "effects": [{ "attribute": "engineering", "delta": 8 }, { "attribute": "damage", "delta": -4 }] },
-  { "objectName": "cyclops_beetle", "propName": "独眼虫", "grade": 2, "type": "道具", "basePrice": 45, "talentText": "<font color='lime'>+12</font><font color='white'>伤害</font><br>\n<font color='red'>-12</font><font color='white'>射程</font><br>", "effects": [{ "attribute": "damage", "delta": 12 }, { "attribute": "range", "delta": -12 }] },
-  { "objectName": "fuel_tank", "propName": "燃料箱", "grade": 2, "type": "道具", "basePrice": 45, "talentText": "<font color='lime'>+4</font><font color='white'>元素伤害</font><br>\n<font color='red'>-1</font><font color='white'>近战伤害</font><br>\n<font color='red'>-1</font><font color='white'>远程伤害</font><br>", "effects": [{ "attribute": "elementalDamage", "delta": 4 }, { "attribute": "meleeDamage", "delta": -1 }, { "attribute": "rangedDamage", "delta": -1 }] },
-  { "objectName": "chip", "propName": "筹码", "grade": 2, "type": "道具", "basePrice": 60, "talentText": "<font color='lime'>+8</font><font color='white'>闪避</font><br>\n<font color='red'>-1</font><font color='white'>护甲</font><br>", "effects": [{ "attribute": "dodge", "delta": 8 }, { "attribute": "armor", "delta": -1 }] },
-  { "objectName": "campfire", "propName": "营火", "grade": 2, "type": "道具", "basePrice": 40, "talentText": "<font color='lime'>+2</font><font color='white'>元素伤害</font><br>\n<font color='lime'>+2</font><font color='white'>生命恢复</font><br>\n<font color='red'>-2</font><font color='white'>速度</font><br>", "effects": [{ "attribute": "elementalDamage", "delta": 2 }, { "attribute": "hpRegeneration", "delta": 2 }, { "attribute": "speed", "delta": -2 }] },
-  { "objectName": "black_belt", "propName": "黑带", "grade": 2, "type": "道具", "basePrice": 50, "talentText": "<font color='lime'>+25</font><font color='white'>经验获取</font><br>\n<font color='lime'>+3</font><font color='white'>近战伤害</font><br>\n<font color='red'>-8</font><font color='white'>运气</font><br>", "notes": "TODO: 经验获取属性未实现", "effects": [{ "attribute": "meleeDamage", "delta": 3 }, { "attribute": "luck", "delta": -8 }] },
-  { "objectName": "patch", "propName": "眼罩", "grade": 2, "type": "道具", "basePrice": 45, "talentText": "<font color='lime'>+5</font><font color='white'>暴击率</font><br>\n<font color='lime'>+5</font><font color='white'>闪避</font><br>\n<font color='red'>-15</font><font color='white'>射程</font><br>", "effects": [{ "attribute": "critChance", "delta": 5 }, { "attribute": "dodge", "delta": 5 }, { "attribute": "range", "delta": -15 }] },
-  { "objectName": "flag", "propName": "旗帜", "grade": 2, "type": "道具", "basePrice": 55, "talentText": "<font color='lime'>+20</font><font color='white'>射程</font><br>\n<font color='lime'>+10</font><font color='white'>攻击速度</font><br>\n<font color='red'>-2</font><font color='white'>生命窃取</font><br>", "effects": [{ "attribute": "range", "delta": 20 }, { "attribute": "attackSpeed", "delta": 10 }, { "attribute": "lifeSteal", "delta": -2 }] },
-  { "objectName": "leather_vest", "propName": "皮制背心", "grade": 2, "type": "道具", "basePrice": 45, "talentText": "<font color='lime'>+2</font><font color='white'>护甲</font><br>\n<font color='lime'>+6</font><font color='white'>闪避</font><br>\n<font color='red'>-3</font><font color='white'>最大生命</font><br>", "effects": [{ "attribute": "armor", "delta": 2 }, { "attribute": "dodge", "delta": 6 }, { "attribute": "maxHp", "delta": -3 }] },
-  { "objectName": "small_muscle_man", "propName": "小肌肉男", "grade": 2, "type": "道具", "basePrice": 50, "talentText": "<font color='lime'>+3</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+5</font><font color='white'>最大生命</font><br>\n<font color='red'>-15</font><font color='white'>射程</font><br>", "effects": [{ "attribute": "meleeDamage", "delta": 3 }, { "attribute": "maxHp", "delta": 5 }, { "attribute": "range", "delta": -15 }] },
-  { "objectName": "master", "propName": "精通", "grade": 2, "type": "道具", "basePrice": 55, "talentText": "<font color='lime'>+6</font><font color='white'>近战伤害</font><br>\n<font color='red'>-3</font><font color='white'>远程伤害</font><br>", "effects": [{ "attribute": "meleeDamage", "delta": 6 }, { "attribute": "rangedDamage", "delta": -3 }] },
-  { "objectName": "medal", "propName": "奖牌", "grade": 2, "type": "道具", "basePrice": 55, "talentText": "<font color='lime'>+3</font><font color='white'>伤害</font><br>\n<font color='lime'>+3</font><font color='white'>速度</font><br>\n<font color='lime'>+1</font><font color='white'>护甲</font><br>\n<font color='lime'>+3</font><font color='white'>最大生命</font><br>\n<font color='red'>-4</font><font color='white'>暴击率</font><br>", "effects": [{ "attribute": "damage", "delta": 3 }, { "attribute": "speed", "delta": 3 }, { "attribute": "armor", "delta": 1 }, { "attribute": "maxHp", "delta": 3 }, { "attribute": "critChance", "delta": -4 }] },
-
-  { "objectName": "alien_baby", "propName": "外星人宝宝", "grade": 3, "type": "道具", "basePrice": 80, "talentText": "<font color='lime'>+15</font><font color='white'>最大生命值</font><br>\n<font color='lime'>+8</font><font color='white'>敌人移动速度</font><br>", "notes": "TODO: 敌人移动速度属性未实现", "effects": [{ "attribute": "maxHp", "delta": 15 }] },
-  { "objectName": "alien_magic", "propName": "外星人魔法", "grade": 3, "type": "道具", "basePrice": 85, "talentText": "<font color='lime'>+8</font><font color='white'>最大生命值</font><br>\n<font color='lime'>+3</font><font color='white'>生命恢复</font><br>\n<font color='red'>-8</font><font color='white'>运气</font><br>", "effects": [{ "attribute": "maxHp", "delta": 8 }, { "attribute": "hpRegeneration", "delta": 3 }, { "attribute": "luck", "delta": -8 }] },
-  { "objectName": "clover", "propName": "四叶草", "grade": 3, "type": "道具", "basePrice": 65, "talentText": "<font color='lime'>+20</font><font color='white'>运气</font><br>\n<font color='lime'>+6</font><font color='white'>闪避</font><br>\n<font color='red'>-2</font><font color='white'>生命偷取</font><br>", "effects": [{ "attribute": "luck", "delta": 20 }, { "attribute": "dodge", "delta": 6 }, { "attribute": "lifeSteal", "delta": -2 }] },
-  { "objectName": "alloy", "propName": "合金", "grade": 3, "type": "道具", "basePrice": 80, "talentText": "<font color='lime'>+3</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+3</font><font color='white'>远程伤害</font><br>\n<font color='lime'>+3</font><font color='white'>元素伤害</font><br>\n<font color='lime'>+3</font><font color='white'>工程</font><br>\n<font color='lime'>+5</font><font color='white'>暴击率</font><br>\n<font color='red'>-6</font><font color='white'>闪避</font><br>", "effects": [{ "attribute": "meleeDamage", "delta": 3 }, { "attribute": "rangedDamage", "delta": 3 }, { "attribute": "elementalDamage", "delta": 3 }, { "attribute": "engineering", "delta": 3 }, { "attribute": "critChance", "delta": 5 }, { "attribute": "dodge", "delta": -6 }] },
-  { "objectName": "toxic_tonics", "propName": "有毒补药", "grade": 3, "type": "道具", "basePrice": 80, "talentText": "<font color='lime'>+10</font><font color='white'>攻速</font><br>\n<font color='lime'>+5</font><font color='white'>暴击率</font><br>\n<font color='lime'>+15</font><font color='white'>射程</font><br>\n<font color='red'>-2</font><font color='white'>生命恢复</font><br>", "effects": [{ "attribute": "attackSpeed", "delta": 10 }, { "attribute": "critChance", "delta": 5 }, { "attribute": "range", "delta": 15 }, { "attribute": "hpRegeneration", "delta": -2 }] },
-  { "objectName": "shmoop", "propName": "休穆糖", "grade": 3, "type": "道具", "basePrice": 60, "talentText": "<font color='lime'>+6</font><font color='white'>最大生命</font><br>\n<font color='lime'>+2</font><font color='white'>生命恢复</font><br>\n<font color='red'>-2</font><font color='white'>近战伤害</font><br>\n<font color='red'>-1</font><font color='white'>远程伤害</font><br>", "effects": [{ "attribute": "maxHp", "delta": 6 }, { "attribute": "hpRegeneration", "delta": 2 }, { "attribute": "meleeDamage", "delta": -2 }, { "attribute": "rangedDamage", "delta": -1 }] },
-  { "objectName": "toolbox", "propName": "工具箱", "grade": 3, "type": "道具", "basePrice": 55, "talentText": "<font color='lime'>+6</font><font color='white'>工程</font><br>\n<font color='red'>-8</font><font color='white'>攻击速度</font><br>", "effects": [{ "attribute": "engineering", "delta": 6 }, { "attribute": "attackSpeed", "delta": -8 }] },
-  { "objectName": "guard_helmet", "propName": "守卫头盔", "grade": 3, "type": "道具", "basePrice": 80, "talentText": "<font color='lime'>+3</font><font color='white'>护甲</font><br>\n<font color='lime'>+5</font><font color='white'>最大生命</font><br>\n<font color='red'>-5</font><font color='white'>速度</font><br>", "effects": [{ "attribute": "armor", "delta": 3 }, { "attribute": "maxHp", "delta": 5 }, { "attribute": "speed", "delta": -5 }] },
-  { "objectName": "glass_cannon", "propName": "玻璃大炮", "grade": 3, "type": "道具", "basePrice": 75, "talentText": "<font color='lime'>+25</font><font color='white'>伤害</font><br>\n<font color='red'>-3</font><font color='white'>护甲</font><br>", "notes": "TODO: talentText 显示 +25 伤害但代码仅 +3，-5 护甲", "effects": [{ "attribute": "damage", "delta": 3 }, { "attribute": "armor", "delta": -5 }] },
-
-  { "objectName": "cloak", "propName": "斗篷", "grade": 4, "type": "道具", "basePrice": 110, "talentText": "<font color='lime'>+5</font><font color='white'>生命偷取</font><br>\n<font color='lime'>+20</font><font color='white'>闪避</font><br>\n<font color='red'>-2</font><font color='white'>近战伤害</font><br>\n<font color='red'>-2</font><font color='white'>远程伤害</font><br>\n<font color='red'>-2</font><font color='white'>元素伤害</font><br>", "effects": [{ "attribute": "lifeSteal", "delta": 5 }, { "attribute": "dodge", "delta": 20 }, { "attribute": "meleeDamage", "delta": -2 }, { "attribute": "rangedDamage", "delta": -2 }, { "attribute": "elementalDamage", "delta": -2 }] },
-  { "objectName": "exoskeleton", "propName": "外骨骼", "grade": 4, "type": "道具", "basePrice": 90, "talentText": "<font color='lime'>+5</font><font color='white'>护甲</font><br>\n<font color='lime'>+5</font><font color='white'>暴击率</font><br>\n<font color='lime'>+5</font><font color='white'>工程</font><br>\n<font color='lime'>+5</font><font color='white'>闪避</font><br>\n<font color='red'>-2</font><font color='white'>生命恢复</font><br>\n<font color='red'>-2</font><font color='white'>生命偷取</font><br>", "effects": [{ "attribute": "armor", "delta": 5 }, { "attribute": "critChance", "delta": 5 }, { "attribute": "engineering", "delta": 5 }, { "attribute": "dodge", "delta": 5 }, { "attribute": "hpRegeneration", "delta": -2 }, { "attribute": "lifeSteal", "delta": -2 }] },
-  { "objectName": "heavy_bullets", "propName": "重子弹", "grade": 4, "type": "道具", "basePrice": 100, "talentText": "<font color='lime'>+5</font><font color='white'>远程伤害</font><br>\n<font color='lime'>+10</font><font color='white'>伤害</font><br>\n<font color='lime'>+10</font><font color='white'>射程</font><br>\n<font color='red'>-5</font><font color='white'>攻击速度</font><br>\n<font color='red'>-5</font><font color='white'>暴击率</font><br>", "effects": [{ "attribute": "rangedDamage", "delta": 5 }, { "attribute": "damage", "delta": 10 }, { "attribute": "range", "delta": 10 }, { "attribute": "attackSpeed", "delta": -5 }, { "attribute": "critChance", "delta": -5 }] }
+  {
+    "objectName": "wellRounded",
+    "propName": "全能者",
+    "grade": 5,
+    "type": "角色",
+    "basePrice": 0,
+    "talentText": "<font color='lime'>+5</font><font color='white'> 最大生命值</font><br>\n<font color='lime'>+5</font><font color='white'> %速度</font><br>\n<font color='lime'>+8</font><font color='white'> 收获</font>",
+    "effects": [
+      {
+        "attribute": "maxHp",
+        "condition": "lt",
+        "conditionValue": 15,
+        "setTo": 15
+      },
+      {
+        "attribute": "curHp",
+        "setToProp": "maxHp"
+      },
+      {
+        "attribute": "speed",
+        "condition": "lt",
+        "conditionValue": 5,
+        "setTo": 5
+      },
+      {
+        "attribute": "harvesting",
+        "condition": "lt",
+        "conditionValue": 8,
+        "setTo": 8
+      }
+    ]
+  },
+  {
+    "objectName": "mutant",
+    "propName": "异变体",
+    "grade": 5,
+    "type": "角色",
+    "basePrice": 0,
+    "talentText": "<font color='white'>升级需要</font><font color='lime'>-66%</font><font color='white'>经验值</font><br>\n<font color='red'>+50</font><font color='white'> %道具价格</font>",
+    "effects": [
+      {
+        "attribute": "expDiscountRate",
+        "condition": "lt",
+        "conditionValue": 0.33,
+        "setTo": 0.33
+      },
+      {
+        "attribute": "goodsDiscountRate",
+        "condition": "lt",
+        "conditionValue": 1.5,
+        "setTo": 1.5
+      }
+    ]
+  },
+  {
+    "objectName": "bat",
+    "propName": "蝙蝠",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 20,
+    "talentText": "<font color='lime'>+2</font><font color='white'>生命窃取</font><br>\n<font color='red'>-2</font><font color='white'>收获</font><br>",
+    "effects": [
+      {
+        "attribute": "lifeSteal",
+        "delta": 2
+      },
+      {
+        "attribute": "harvesting",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "hedgehog",
+    "propName": "刺猬",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 30,
+    "talentText": "<font color='lime'>+2</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+1</font><font color='white'>远程伤害</font><br>\n<font color='red'>-1</font><font color='white'>生命恢复</font><br>",
+    "effects": [
+      {
+        "attribute": "meleeDamage",
+        "delta": 2
+      },
+      {
+        "attribute": "rangedDamage",
+        "delta": 1
+      },
+      {
+        "attribute": "hpRegeneration",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "helmet",
+    "propName": "头盔",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 25,
+    "talentText": "<font color='lime'>+1</font><font color='white'>护甲</font><br>\n<font color='red'>-2</font><font color='white'>速度</font><br>",
+    "effects": [
+      {
+        "attribute": "armor",
+        "delta": 1
+      },
+      {
+        "attribute": "speed",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "rubber_berserker",
+    "propName": "橡皮狂暴战士",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 25,
+    "talentText": "<font color='lime'>+5</font><font color='white'> 攻击速度</font><br>\n<font color='lime'>+15</font><font color='white'>射程</font><br>\n<font color='red'>-1</font><font color='white'>护甲</font><br>",
+    "effects": [
+      {
+        "attribute": "attackSpeed",
+        "delta": 5
+      },
+      {
+        "attribute": "range",
+        "delta": 15
+      },
+      {
+        "attribute": "armor",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "brain_injury",
+    "propName": "颅脑损伤",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 25,
+    "talentText": "<font color='lime'>+6</font><font color='white'>伤害</font><br>\n<font color='red'>-8</font><font color='white'>射程</font><br>",
+    "effects": [
+      {
+        "attribute": "damage",
+        "delta": 6
+      },
+      {
+        "attribute": "attackSpeed",
+        "delta": -8
+      }
+    ]
+  },
+  {
+    "objectName": "coffee",
+    "propName": "咖啡",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 15,
+    "talentText": "<font color='lime'>+10</font><font color='white'>攻速</font><br>\n<font color='red'>-2</font><font color='white'>伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "attackSpeed",
+        "delta": 10
+      },
+      {
+        "attribute": "damage",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "claw_tree",
+    "propName": "爪子树",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 20,
+    "talentText": "<font color='lime'>+1</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+3</font><font color='white'>暴击率</font><br>\n<font color='red'>-1</font><font color='white'>最大生命值</font><br>",
+    "effects": [
+      {
+        "attribute": "meleeDamage",
+        "delta": 1
+      },
+      {
+        "attribute": "critChance",
+        "delta": 3
+      },
+      {
+        "attribute": "maxHp",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "boiling_water",
+    "propName": "沸水",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 30,
+    "talentText": "<font color='lime'>+2</font><font color='white'>元素伤害</font><br>\n<font color='red'>-1</font><font color='white'>最大生命值</font><br>",
+    "effects": [
+      {
+        "attribute": "elementalDamage",
+        "delta": 2
+      },
+      {
+        "attribute": "maxHp",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "book",
+    "propName": "书",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 8,
+    "talentText": "<font color='lime'>+1</font><font color='white'>工程</font><br>",
+    "effects": [
+      {
+        "attribute": "engineering",
+        "delta": 1
+      }
+    ]
+  },
+  {
+    "objectName": "break_through",
+    "propName": "破口",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 25,
+    "talentText": "<font color='lime'>+5</font><font color='white'>最大生命值</font><br>\n<font color='red'>-1</font><font color='white'>生命恢复</font><br>",
+    "effects": [
+      {
+        "attribute": "maxHp",
+        "delta": 5
+      },
+      {
+        "attribute": "hpRegeneration",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "butterfly",
+    "propName": "蝴蝶",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 30,
+    "talentText": "<font color='lime'>+2</font><font color='white'>生命偷取</font><br>\n<font color='red'>-1</font><font color='white'>元素伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "lifeSteal",
+        "delta": 2
+      },
+      {
+        "attribute": "elementalDamage",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "defective_steroids",
+    "propName": "有缺陷的类固醇",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 20,
+    "talentText": "<font color='lime'>+2</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+2</font><font color='white'>最大生命值</font><br>\n<font color='red'>-3</font><font color='white'>攻击速度</font><br>",
+    "effects": [
+      {
+        "attribute": "meleeDamage",
+        "delta": 2
+      },
+      {
+        "attribute": "maxHp",
+        "delta": 2
+      },
+      {
+        "attribute": "attackSpeed",
+        "delta": -3
+      }
+    ]
+  },
+  {
+    "objectName": "duct_tape",
+    "propName": "牛皮胶布",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 25,
+    "talentText": "<font color='lime'>+1</font><font color='white'>护甲</font><br>\n<font color='lime'>+1</font><font color='white'>工程</font><br>\n<font color='red'>-2</font><font color='white'>最大生命</font><br>",
+    "effects": [
+      {
+        "attribute": "armor",
+        "delta": 1
+      },
+      {
+        "attribute": "engineering",
+        "delta": 1
+      },
+      {
+        "attribute": "maxHp",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "cake",
+    "propName": "蛋糕",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 15,
+    "talentText": "<font color='lime'>+3</font><font color='white'>最大生命</font><br>\n<font color='red'>-1</font><font color='white'>伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "maxHp",
+        "delta": 3
+      },
+      {
+        "attribute": "damage",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "glasses",
+    "propName": "眼镜",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 25,
+    "talentText": "<font color='lime'>+20</font><font color='white'>射程</font><br>",
+    "effects": [
+      {
+        "attribute": "range",
+        "delta": 20
+      }
+    ]
+  },
+  {
+    "objectName": "goat_skull",
+    "propName": "山羊头骨",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 25,
+    "talentText": "<font color='lime'>+3</font><font color='white'>近战伤害</font><br>\n<font color='red'>-2</font><font color='white'>暴击率</font><br>",
+    "effects": [
+      {
+        "attribute": "meleeDamage",
+        "delta": 3
+      },
+      {
+        "attribute": "critChance",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "yarmulke",
+    "propName": "小圆帽",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 20,
+    "talentText": "<font color='lime'>+4</font><font color='white'>速度</font><br>\n<font color='red'>-6</font><font color='white'>射程</font><br>",
+    "effects": [
+      {
+        "attribute": "speed",
+        "delta": 4
+      },
+      {
+        "attribute": "range",
+        "delta": -6
+      }
+    ]
+  },
+  {
+    "objectName": "injection",
+    "propName": "注射",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 20,
+    "talentText": "<font color='lime'>+7</font><font color='white'>伤害</font><br>\n<font color='red'>-2</font><font color='white'>最大生命</font><br>",
+    "effects": [
+      {
+        "attribute": "damage",
+        "delta": 7
+      },
+      {
+        "attribute": "maxHp",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "insane",
+    "propName": "精神错乱",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 20,
+    "talentText": "<font color='lime'>+6</font><font color='white'>暴击率</font><br>\n<font color='red'>-3</font><font color='white'>伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "critChance",
+        "delta": 6
+      },
+      {
+        "attribute": "damage",
+        "delta": -3
+      }
+    ]
+  },
+  {
+    "objectName": "lens",
+    "propName": "镜头",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 20,
+    "talentText": "<font color='lime'>+1</font><font color='white'>远程伤害</font><br>\n<font color='red'>-5</font><font color='white'>射程</font><br>",
+    "effects": [
+      {
+        "attribute": "rangedDamage",
+        "delta": 1
+      },
+      {
+        "attribute": "range",
+        "delta": -5
+      }
+    ]
+  },
+  {
+    "objectName": "lost_duck",
+    "propName": "迷失之鸭",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 25,
+    "talentText": "<font color='lime'>+10</font><font color='white'>运气</font><br>\n<font color='red'>-1</font><font color='white'>元素伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "luck",
+        "delta": 10
+      },
+      {
+        "attribute": "elementalDamage",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "propeller_hat",
+    "propName": "螺旋桨帽子",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 28,
+    "talentText": "<font color='lime'>+10</font><font color='white'>运气</font><br>\n<font color='red'>-2</font><font color='white'>伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "luck",
+        "delta": 10
+      },
+      {
+        "attribute": "damage",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "terrifying_onion",
+    "propName": "恐怖洋葱",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 15,
+    "talentText": "<font color='lime'>+4</font><font color='white'>速度</font><br>\n<font color='red'>-6</font><font color='white'>运气</font><br>",
+    "effects": [
+      {
+        "attribute": "speed",
+        "delta": 4
+      },
+      {
+        "attribute": "luck",
+        "delta": -6
+      }
+    ]
+  },
+  {
+    "objectName": "toxic_sludge",
+    "propName": "有毒的烂泥",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 20,
+    "talentText": "<font color='lime'>+2</font><font color='white'>元素伤害</font><br>\n<font color='red'>-2</font><font color='white'>闪避</font><br>",
+    "effects": [
+      {
+        "attribute": "elementalDamage",
+        "delta": 2
+      },
+      {
+        "attribute": "dodge",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "coal",
+    "propName": "煤炭",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 20,
+    "talentText": "<font color='lime'>+1</font><font color='white'>元素伤害</font><br>\n<font color='lime'>+2</font><font color='white'>近战伤害</font><br>\n<font color='red'>-2</font><font color='white'>收获</font><br>",
+    "effects": [
+      {
+        "attribute": "elementalDamage",
+        "delta": 1
+      },
+      {
+        "attribute": "meleeDamage",
+        "delta": 2
+      },
+      {
+        "attribute": "harvesting",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "fertilizer",
+    "propName": "肥料",
+    "grade": 1,
+    "type": "道具",
+    "basePrice": 15,
+    "talentText": "<font color='lime'>+8</font><font color='white'>收获</font><br>\n<font color='red'>-2</font><font color='white'>近战伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "harvesting",
+        "delta": 8
+      },
+      {
+        "attribute": "meleeDamage",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "acid_liquor",
+    "propName": "酸液",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 65,
+    "talentText": "<font color='lime'>+8</font><font color='white'>最大生命值</font><br>\n<font color='red'>-4</font><font color='white'>闪避</font><br>",
+    "effects": [
+      {
+        "attribute": "maxHp",
+        "delta": 8
+      },
+      {
+        "attribute": "dodge",
+        "delta": -4
+      }
+    ]
+  },
+  {
+    "objectName": "energy_bracelet",
+    "propName": "能量手镯",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 55,
+    "talentText": "<font color='lime'>+4</font><font color='white'>暴击率</font><br>\n<font color='lime'>+2</font><font color='white'>元素伤害</font><br>\n<font color='red'>-2</font><font color='white'>远程伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "critChance",
+        "delta": 4
+      },
+      {
+        "attribute": "elementalDamage",
+        "delta": 2
+      },
+      {
+        "attribute": "rangedDamage",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "gear",
+    "propName": "齿轮",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 35,
+    "talentText": "<font color='lime'>+4</font><font color='white'>工程</font><br>\n<font color='red'>-4</font><font color='white'>伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "engineering",
+        "delta": 4
+      },
+      {
+        "attribute": "damage",
+        "delta": -4
+      }
+    ]
+  },
+  {
+    "objectName": "cyclops_beetle",
+    "propName": "独眼虫",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 45,
+    "talentText": "<font color='lime'>+12</font><font color='white'>伤害</font><br>\n<font color='red'>-12</font><font color='white'>射程</font><br>",
+    "effects": [
+      {
+        "attribute": "damage",
+        "delta": 12
+      },
+      {
+        "attribute": "range",
+        "delta": -12
+      }
+    ]
+  },
+  {
+    "objectName": "fuel_tank",
+    "propName": "燃料箱",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 45,
+    "talentText": "<font color='lime'>+4</font><font color='white'>元素伤害</font><br>\n<font color='red'>-1</font><font color='white'>近战伤害</font><br>\n<font color='red'>-1</font><font color='white'>远程伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "elementalDamage",
+        "delta": 4
+      },
+      {
+        "attribute": "meleeDamage",
+        "delta": -1
+      },
+      {
+        "attribute": "rangedDamage",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "chip",
+    "propName": "筹码",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 60,
+    "talentText": "<font color='lime'>+8</font><font color='white'>闪避</font><br>\n<font color='red'>-1</font><font color='white'>护甲</font><br>",
+    "effects": [
+      {
+        "attribute": "dodge",
+        "delta": 8
+      },
+      {
+        "attribute": "armor",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "campfire",
+    "propName": "营火",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 40,
+    "talentText": "<font color='lime'>+2</font><font color='white'>元素伤害</font><br>\n<font color='lime'>+2</font><font color='white'>生命恢复</font><br>\n<font color='red'>-2</font><font color='white'>速度</font><br>",
+    "effects": [
+      {
+        "attribute": "elementalDamage",
+        "delta": 2
+      },
+      {
+        "attribute": "hpRegeneration",
+        "delta": 2
+      },
+      {
+        "attribute": "speed",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "black_belt",
+    "propName": "黑带",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 50,
+    "talentText": "<font color='lime'>+25</font><font color='white'>经验获取</font><br>\n<font color='lime'>+3</font><font color='white'>近战伤害</font><br>\n<font color='red'>-8</font><font color='white'>运气</font><br>",
+    "notes": "TODO: 经验获取属性未实现",
+    "effects": [
+      {
+        "attribute": "meleeDamage",
+        "delta": 3
+      },
+      {
+        "attribute": "luck",
+        "delta": -8
+      },
+      {
+        "attribute": "gainExperience",
+        "delta": 25
+      }
+    ]
+  },
+  {
+    "objectName": "patch",
+    "propName": "眼罩",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 45,
+    "talentText": "<font color='lime'>+5</font><font color='white'>暴击率</font><br>\n<font color='lime'>+5</font><font color='white'>闪避</font><br>\n<font color='red'>-15</font><font color='white'>射程</font><br>",
+    "effects": [
+      {
+        "attribute": "critChance",
+        "delta": 5
+      },
+      {
+        "attribute": "dodge",
+        "delta": 5
+      },
+      {
+        "attribute": "range",
+        "delta": -15
+      }
+    ]
+  },
+  {
+    "objectName": "flag",
+    "propName": "旗帜",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 55,
+    "talentText": "<font color='lime'>+20</font><font color='white'>射程</font><br>\n<font color='lime'>+10</font><font color='white'>攻击速度</font><br>\n<font color='red'>-2</font><font color='white'>生命窃取</font><br>",
+    "effects": [
+      {
+        "attribute": "range",
+        "delta": 20
+      },
+      {
+        "attribute": "attackSpeed",
+        "delta": 10
+      },
+      {
+        "attribute": "lifeSteal",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "leather_vest",
+    "propName": "皮制背心",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 45,
+    "talentText": "<font color='lime'>+2</font><font color='white'>护甲</font><br>\n<font color='lime'>+6</font><font color='white'>闪避</font><br>\n<font color='red'>-3</font><font color='white'>最大生命</font><br>",
+    "effects": [
+      {
+        "attribute": "armor",
+        "delta": 2
+      },
+      {
+        "attribute": "dodge",
+        "delta": 6
+      },
+      {
+        "attribute": "maxHp",
+        "delta": -3
+      }
+    ]
+  },
+  {
+    "objectName": "small_muscle_man",
+    "propName": "小肌肉男",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 50,
+    "talentText": "<font color='lime'>+3</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+5</font><font color='white'>最大生命</font><br>\n<font color='red'>-15</font><font color='white'>射程</font><br>",
+    "effects": [
+      {
+        "attribute": "meleeDamage",
+        "delta": 3
+      },
+      {
+        "attribute": "maxHp",
+        "delta": 5
+      },
+      {
+        "attribute": "range",
+        "delta": -15
+      }
+    ]
+  },
+  {
+    "objectName": "master",
+    "propName": "精通",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 55,
+    "talentText": "<font color='lime'>+6</font><font color='white'>近战伤害</font><br>\n<font color='red'>-3</font><font color='white'>远程伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "meleeDamage",
+        "delta": 6
+      },
+      {
+        "attribute": "rangedDamage",
+        "delta": -3
+      }
+    ]
+  },
+  {
+    "objectName": "medal",
+    "propName": "奖牌",
+    "grade": 2,
+    "type": "道具",
+    "basePrice": 55,
+    "talentText": "<font color='lime'>+3</font><font color='white'>伤害</font><br>\n<font color='lime'>+3</font><font color='white'>速度</font><br>\n<font color='lime'>+1</font><font color='white'>护甲</font><br>\n<font color='lime'>+3</font><font color='white'>最大生命</font><br>\n<font color='red'>-4</font><font color='white'>暴击率</font><br>",
+    "effects": [
+      {
+        "attribute": "damage",
+        "delta": 3
+      },
+      {
+        "attribute": "speed",
+        "delta": 3
+      },
+      {
+        "attribute": "armor",
+        "delta": 1
+      },
+      {
+        "attribute": "maxHp",
+        "delta": 3
+      },
+      {
+        "attribute": "critChance",
+        "delta": -4
+      }
+    ]
+  },
+  {
+    "objectName": "alien_baby",
+    "propName": "外星人宝宝",
+    "grade": 3,
+    "type": "道具",
+    "basePrice": 80,
+    "talentText": "<font color='lime'>+15</font><font color='white'>最大生命值</font><br>\n<font color='lime'>+8</font><font color='white'>敌人移动速度</font><br>",
+    "effects": [
+      {
+        "attribute": "maxHp",
+        "delta": 15
+      },
+      {
+        "attribute": "enemySpeed",
+        "delta": 8
+      }
+    ]
+  },
+  {
+    "objectName": "alien_magic",
+    "propName": "外星人魔法",
+    "grade": 3,
+    "type": "道具",
+    "basePrice": 85,
+    "talentText": "<font color='lime'>+8</font><font color='white'>最大生命值</font><br>\n<font color='lime'>+3</font><font color='white'>生命恢复</font><br>\n<font color='red'>-8</font><font color='white'>运气</font><br>",
+    "effects": [
+      {
+        "attribute": "maxHp",
+        "delta": 8
+      },
+      {
+        "attribute": "hpRegeneration",
+        "delta": 3
+      },
+      {
+        "attribute": "luck",
+        "delta": -8
+      }
+    ]
+  },
+  {
+    "objectName": "clover",
+    "propName": "四叶草",
+    "grade": 3,
+    "type": "道具",
+    "basePrice": 65,
+    "talentText": "<font color='lime'>+20</font><font color='white'>运气</font><br>\n<font color='lime'>+6</font><font color='white'>闪避</font><br>\n<font color='red'>-2</font><font color='white'>生命偷取</font><br>",
+    "effects": [
+      {
+        "attribute": "luck",
+        "delta": 20
+      },
+      {
+        "attribute": "dodge",
+        "delta": 6
+      },
+      {
+        "attribute": "lifeSteal",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "alloy",
+    "propName": "合金",
+    "grade": 3,
+    "type": "道具",
+    "basePrice": 80,
+    "talentText": "<font color='lime'>+3</font><font color='white'>近战伤害</font><br>\n<font color='lime'>+3</font><font color='white'>远程伤害</font><br>\n<font color='lime'>+3</font><font color='white'>元素伤害</font><br>\n<font color='lime'>+3</font><font color='white'>工程</font><br>\n<font color='lime'>+5</font><font color='white'>暴击率</font><br>\n<font color='red'>-6</font><font color='white'>闪避</font><br>",
+    "effects": [
+      {
+        "attribute": "meleeDamage",
+        "delta": 3
+      },
+      {
+        "attribute": "rangedDamage",
+        "delta": 3
+      },
+      {
+        "attribute": "elementalDamage",
+        "delta": 3
+      },
+      {
+        "attribute": "engineering",
+        "delta": 3
+      },
+      {
+        "attribute": "critChance",
+        "delta": 5
+      },
+      {
+        "attribute": "dodge",
+        "delta": -6
+      }
+    ]
+  },
+  {
+    "objectName": "toxic_tonics",
+    "propName": "有毒补药",
+    "grade": 3,
+    "type": "道具",
+    "basePrice": 80,
+    "talentText": "<font color='lime'>+10</font><font color='white'>攻速</font><br>\n<font color='lime'>+5</font><font color='white'>暴击率</font><br>\n<font color='lime'>+15</font><font color='white'>射程</font><br>\n<font color='red'>-2</font><font color='white'>生命恢复</font><br>",
+    "effects": [
+      {
+        "attribute": "attackSpeed",
+        "delta": 10
+      },
+      {
+        "attribute": "critChance",
+        "delta": 5
+      },
+      {
+        "attribute": "range",
+        "delta": 15
+      },
+      {
+        "attribute": "hpRegeneration",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "shmoop",
+    "propName": "休穆糖",
+    "grade": 3,
+    "type": "道具",
+    "basePrice": 60,
+    "talentText": "<font color='lime'>+6</font><font color='white'>最大生命</font><br>\n<font color='lime'>+2</font><font color='white'>生命恢复</font><br>\n<font color='red'>-2</font><font color='white'>近战伤害</font><br>\n<font color='red'>-1</font><font color='white'>远程伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "maxHp",
+        "delta": 6
+      },
+      {
+        "attribute": "hpRegeneration",
+        "delta": 2
+      },
+      {
+        "attribute": "meleeDamage",
+        "delta": -2
+      },
+      {
+        "attribute": "rangedDamage",
+        "delta": -1
+      }
+    ]
+  },
+  {
+    "objectName": "toolbox",
+    "propName": "工具箱",
+    "grade": 3,
+    "type": "道具",
+    "basePrice": 55,
+    "talentText": "<font color='lime'>+6</font><font color='white'>工程</font><br>\n<font color='red'>-8</font><font color='white'>攻击速度</font><br>",
+    "effects": [
+      {
+        "attribute": "engineering",
+        "delta": 6
+      },
+      {
+        "attribute": "attackSpeed",
+        "delta": -8
+      }
+    ]
+  },
+  {
+    "objectName": "guard_helmet",
+    "propName": "守卫头盔",
+    "grade": 3,
+    "type": "道具",
+    "basePrice": 80,
+    "talentText": "<font color='lime'>+3</font><font color='white'>护甲</font><br>\n<font color='lime'>+5</font><font color='white'>最大生命</font><br>\n<font color='red'>-5</font><font color='white'>速度</font><br>",
+    "effects": [
+      {
+        "attribute": "armor",
+        "delta": 3
+      },
+      {
+        "attribute": "maxHp",
+        "delta": 5
+      },
+      {
+        "attribute": "speed",
+        "delta": -5
+      }
+    ]
+  },
+  {
+    "objectName": "glass_cannon",
+    "propName": "玻璃大炮",
+    "grade": 3,
+    "type": "道具",
+    "basePrice": 75,
+    "talentText": "<font color='lime'>+25</font><font color='white'>伤害</font><br>\n<font color='red'>-3</font><font color='white'>护甲</font><br>",
+    "notes": "TODO: talentText 显示 +25 伤害但代码仅 +3，-5 护甲",
+    "effects": [
+      {
+        "attribute": "damage",
+        "delta": 3
+      },
+      {
+        "attribute": "armor",
+        "delta": -5
+      }
+    ]
+  },
+  {
+    "objectName": "cloak",
+    "propName": "斗篷",
+    "grade": 4,
+    "type": "道具",
+    "basePrice": 110,
+    "talentText": "<font color='lime'>+5</font><font color='white'>生命偷取</font><br>\n<font color='lime'>+20</font><font color='white'>闪避</font><br>\n<font color='red'>-2</font><font color='white'>近战伤害</font><br>\n<font color='red'>-2</font><font color='white'>远程伤害</font><br>\n<font color='red'>-2</font><font color='white'>元素伤害</font><br>",
+    "effects": [
+      {
+        "attribute": "lifeSteal",
+        "delta": 5
+      },
+      {
+        "attribute": "dodge",
+        "delta": 20
+      },
+      {
+        "attribute": "meleeDamage",
+        "delta": -2
+      },
+      {
+        "attribute": "rangedDamage",
+        "delta": -2
+      },
+      {
+        "attribute": "elementalDamage",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "exoskeleton",
+    "propName": "外骨骼",
+    "grade": 4,
+    "type": "道具",
+    "basePrice": 90,
+    "talentText": "<font color='lime'>+5</font><font color='white'>护甲</font><br>\n<font color='lime'>+5</font><font color='white'>暴击率</font><br>\n<font color='lime'>+5</font><font color='white'>工程</font><br>\n<font color='lime'>+5</font><font color='white'>闪避</font><br>\n<font color='red'>-2</font><font color='white'>生命恢复</font><br>\n<font color='red'>-2</font><font color='white'>生命偷取</font><br>",
+    "effects": [
+      {
+        "attribute": "armor",
+        "delta": 5
+      },
+      {
+        "attribute": "critChance",
+        "delta": 5
+      },
+      {
+        "attribute": "engineering",
+        "delta": 5
+      },
+      {
+        "attribute": "dodge",
+        "delta": 5
+      },
+      {
+        "attribute": "hpRegeneration",
+        "delta": -2
+      },
+      {
+        "attribute": "lifeSteal",
+        "delta": -2
+      }
+    ]
+  },
+  {
+    "objectName": "heavy_bullets",
+    "propName": "重子弹",
+    "grade": 4,
+    "type": "道具",
+    "basePrice": 100,
+    "talentText": "<font color='lime'>+5</font><font color='white'>远程伤害</font><br>\n<font color='lime'>+10</font><font color='white'>伤害</font><br>\n<font color='lime'>+10</font><font color='white'>射程</font><br>\n<font color='red'>-5</font><font color='white'>攻击速度</font><br>\n<font color='red'>-5</font><font color='white'>暴击率</font><br>",
+    "effects": [
+      {
+        "attribute": "rangedDamage",
+        "delta": 5
+      },
+      {
+        "attribute": "damage",
+        "delta": 10
+      },
+      {
+        "attribute": "range",
+        "delta": 10
+      },
+      {
+        "attribute": "attackSpeed",
+        "delta": -5
+      },
+      {
+        "attribute": "critChance",
+        "delta": -5
+      }
+    ]
+  }
 ]
