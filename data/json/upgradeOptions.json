@@ -1,3 +1,12 @@
+// 升级选项数据 — upgradeOptions.json
+//   objectName      选项标识符（英文）
+//   optionName      显示名称（中文）
+//   grade           可用等级（升级时在该等级池中随机）
+//   type            类型（当前均为 "升级"）
+//   talentTextTemplate  描述模板，{{value}} 由 deltaFromGrade × grade 替换
+//   effects[]       效果数组
+//     attribute     属性名
+//     deltaFromGrade 每级增量
 [
   {
     "objectName": "leg",

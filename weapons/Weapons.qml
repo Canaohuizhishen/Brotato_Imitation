@@ -12,6 +12,7 @@ Item{
     property Monsters target
     property var bulletsParent: parent
     property var componentCache: null
+    property var constructsContainer: null
     property double scaleFactor: 1.0
     property bool active: true
     property bool paused: false
@@ -135,8 +136,11 @@ Item{
     function clear(){
         for(var i=0;i<weapons.children.length;i++){
             var child=weapons.children[i]
-            if(child.objectName==="Weapon"){//console.log(8);console.log(weapons.children.length)
-                child.destroy();//console.log(9);console.log(weapons.children.length)//可以发现，销毁后孩子列表的长度没有发生变化，说明destroy()是异步方法
+            if(child.objectName==="Weapon"){
+                // destroy() 是异步的，立即清掉 targetPoint 和 active 让 fireTimer 停转
+                child.targetPoint = null
+                child.active = false
+                child.destroy()
                 child.isDestroy=true
             }
         }
@@ -163,6 +167,10 @@ Item{
             weapon.scaleFactor=Qt.binding(function() { return weapons.scaleFactor; })
             weapon.active=Qt.binding(function() { return weapons.active; })
             weapon.paused=Qt.binding(function() { return weapons.paused; })
+            // 构筑物武器需要 constructsContainer 引用
+            weapon.constructsContainer = weapons.constructsContainer
+            // 从武器数据中读取 constructType
+            if (weaponData.constructType) weapon.constructType = weaponData.constructType
             relocation()
         } else {
             console.log("Error loading component:", weaponData.source);

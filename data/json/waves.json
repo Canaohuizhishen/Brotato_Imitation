@@ -1,22 +1,419 @@
+// 波次数据 — waves.json
+//   wave            波次编号 1-20
+//   spawns          出怪列表，每个含 monster + initCount
+//     monster       怪物 objectName（对应 monsters.json）
+//     initCount     初始数量
 [
-  { "wave": 1, "spawns": [ { "monster": "babyAlien", "initCount": 4 } ] },
-  { "wave": 2, "spawns": [ { "monster": "babyAlien", "initCount": 4 }, { "monster": "chaser", "initCount": 3 } ] },
-  { "wave": 3, "spawns": [ { "monster": "babyAlien", "initCount": 5 }, { "monster": "chaser", "initCount": 3 } ] },
-  { "wave": 4, "spawns": [ { "monster": "babyAlien", "initCount": 6 }, { "monster": "sprayer", "initCount": 2 } ] },
-  { "wave": 5, "spawns": [ { "monster": "babyAlien", "initCount": 4 }, { "monster": "chaser", "initCount": 3 }, { "monster": "sprayer", "initCount": 1 } ] },
-  { "wave": 6, "spawns": [ { "monster": "babyAlien", "initCount": 7 }, { "monster": "chaser", "initCount": 3 }, { "monster": "charger", "initCount": 4 } ] },
-  { "wave": 7, "spawns": [ { "monster": "babyAlien", "initCount": 3 }, { "monster": "charger", "initCount": 6 }, { "monster": "sprayer", "initCount": 3 } ] },
-  { "wave": 8, "spawns": [ { "monster": "babyAlien", "initCount": 4 }, { "monster": "sprayer", "initCount": 2 }, { "monster": "brute", "initCount": 3 } ] },
-  { "wave": 9, "spawns": [ { "monster": "chaser", "initCount": 6 }, { "monster": "charger", "initCount": 2 }, { "monster": "brute", "initCount": 2 } ] },
-  { "wave": 10, "spawns": [ { "monster": "babyAlien", "initCount": 4 }, { "monster": "chaser", "initCount": 4 }, { "monster": "charger", "initCount": 2 }, { "monster": "brute", "initCount": 1 } ] },
-  { "wave": 11, "spawns": [ { "monster": "babyAlien", "initCount": 4 }, { "monster": "charger", "initCount": 4 }, { "monster": "sprayer", "initCount": 2 }, { "monster": "pursuer", "initCount": 1 } ] },
-  { "wave": 12, "spawns": [ { "monster": "babyAlien", "initCount": 5 }, { "monster": "charger", "initCount": 4 }, { "monster": "pursuer", "initCount": 1 }, { "monster": "brute", "initCount": 2 } ] },
-  { "wave": 13, "spawns": [ { "monster": "babyAlien", "initCount": 3 }, { "monster": "charger", "initCount": 3 }, { "monster": "pursuer", "initCount": 1 }, { "monster": "brute", "initCount": 1 }, { "monster": "helmetBrute", "initCount": 2 }, { "monster": "helmetAlien", "initCount": 3 } ] },
-  { "wave": 14, "spawns": [ { "monster": "babyAlien", "initCount": 3 }, { "monster": "brute", "initCount": 1 }, { "monster": "helmetAlien", "initCount": 4 }, { "monster": "summoner", "initCount": 1 } ] },
-  { "wave": 15, "spawns": [ { "monster": "babyAlien", "initCount": 3 }, { "monster": "sprayer", "initCount": 1 }, { "monster": "helmetAlien", "initCount": 4 }, { "monster": "summoner", "initCount": 1 }, { "monster": "finChaser", "initCount": 3 } ] },
-  { "wave": 16, "spawns": [ { "monster": "babyAlien", "initCount": 3 }, { "monster": "brute", "initCount": 1 }, { "monster": "helmetAlien", "initCount": 4 }, { "monster": "finChaser", "initCount": 3 }, { "monster": "helmetBrute", "initCount": 1 } ] },
-  { "wave": 17, "spawns": [ { "monster": "babyAlien", "initCount": 3 }, { "monster": "pursuer", "initCount": 2 }, { "monster": "helmetAlien", "initCount": 4 }, { "monster": "finChaser", "initCount": 3 }, { "monster": "summoner", "initCount": 1 } ] },
-  { "wave": 18, "spawns": [ { "monster": "sprayer", "initCount": 2 }, { "monster": "helmetAlien", "initCount": 5 }, { "monster": "summoner", "initCount": 1 }, { "monster": "helmetCharger", "initCount": 3 } ] },
-  { "wave": 19, "spawns": [ { "monster": "babyAlien", "initCount": 3 }, { "monster": "sprayer", "initCount": 2 }, { "monster": "pursuer", "initCount": 2 }, { "monster": "helmetAlien", "initCount": 4 }, { "monster": "summoner", "initCount": 1 }, { "monster": "helmetBrute", "initCount": 2 }, { "monster": "helmetCharger", "initCount": 3 } ] },
-  { "wave": 20, "spawns": [ { "monster": "babyAlien", "initCount": 3 }, { "monster": "sprayer", "initCount": 2 }, { "monster": "pursuer", "initCount": 2 }, { "monster": "helmetAlien", "initCount": 4 }, { "monster": "finChaser", "initCount": 3 }, { "monster": "summoner", "initCount": 1 }, { "monster": "helmetBrute", "initCount": 2 }, { "monster": "prayer", "initCount": 1 } ] }
+  {
+    "wave": 1,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 4
+      }
+    ]
+  },
+  {
+    "wave": 2,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "chaser",
+        "initCount": 3
+      }
+    ]
+  },
+  {
+    "wave": 3,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 5
+      },
+      {
+        "monster": "chaser",
+        "initCount": 3
+      }
+    ]
+  },
+  {
+    "wave": 4,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 6
+      },
+      {
+        "monster": "sprayer",
+        "initCount": 2
+      }
+    ]
+  },
+  {
+    "wave": 5,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "chaser",
+        "initCount": 3
+      },
+      {
+        "monster": "sprayer",
+        "initCount": 1
+      }
+    ]
+  },
+  {
+    "wave": 6,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 7
+      },
+      {
+        "monster": "chaser",
+        "initCount": 3
+      },
+      {
+        "monster": "charger",
+        "initCount": 4
+      }
+    ]
+  },
+  {
+    "wave": 7,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 3
+      },
+      {
+        "monster": "charger",
+        "initCount": 6
+      },
+      {
+        "monster": "sprayer",
+        "initCount": 3
+      }
+    ]
+  },
+  {
+    "wave": 8,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "sprayer",
+        "initCount": 2
+      },
+      {
+        "monster": "brute",
+        "initCount": 3
+      }
+    ]
+  },
+  {
+    "wave": 9,
+    "spawns": [
+      {
+        "monster": "chaser",
+        "initCount": 6
+      },
+      {
+        "monster": "charger",
+        "initCount": 2
+      },
+      {
+        "monster": "brute",
+        "initCount": 2
+      }
+    ]
+  },
+  {
+    "wave": 10,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "chaser",
+        "initCount": 4
+      },
+      {
+        "monster": "charger",
+        "initCount": 2
+      },
+      {
+        "monster": "brute",
+        "initCount": 1
+      }
+    ]
+  },
+  {
+    "wave": 11,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "charger",
+        "initCount": 4
+      },
+      {
+        "monster": "sprayer",
+        "initCount": 2
+      },
+      {
+        "monster": "pursuer",
+        "initCount": 1
+      }
+    ]
+  },
+  {
+    "wave": 12,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 5
+      },
+      {
+        "monster": "charger",
+        "initCount": 4
+      },
+      {
+        "monster": "pursuer",
+        "initCount": 1
+      },
+      {
+        "monster": "brute",
+        "initCount": 2
+      }
+    ]
+  },
+  {
+    "wave": 13,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 3
+      },
+      {
+        "monster": "charger",
+        "initCount": 3
+      },
+      {
+        "monster": "pursuer",
+        "initCount": 1
+      },
+      {
+        "monster": "brute",
+        "initCount": 1
+      },
+      {
+        "monster": "helmetBrute",
+        "initCount": 2
+      },
+      {
+        "monster": "helmetAlien",
+        "initCount": 3
+      }
+    ]
+  },
+  {
+    "wave": 14,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 3
+      },
+      {
+        "monster": "brute",
+        "initCount": 1
+      },
+      {
+        "monster": "helmetAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "summoner",
+        "initCount": 1
+      }
+    ]
+  },
+  {
+    "wave": 15,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 3
+      },
+      {
+        "monster": "sprayer",
+        "initCount": 1
+      },
+      {
+        "monster": "helmetAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "summoner",
+        "initCount": 1
+      },
+      {
+        "monster": "finChaser",
+        "initCount": 3
+      }
+    ]
+  },
+  {
+    "wave": 16,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 3
+      },
+      {
+        "monster": "brute",
+        "initCount": 1
+      },
+      {
+        "monster": "helmetAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "finChaser",
+        "initCount": 3
+      },
+      {
+        "monster": "helmetBrute",
+        "initCount": 1
+      }
+    ]
+  },
+  {
+    "wave": 17,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 3
+      },
+      {
+        "monster": "pursuer",
+        "initCount": 2
+      },
+      {
+        "monster": "helmetAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "finChaser",
+        "initCount": 3
+      },
+      {
+        "monster": "summoner",
+        "initCount": 1
+      }
+    ]
+  },
+  {
+    "wave": 18,
+    "spawns": [
+      {
+        "monster": "sprayer",
+        "initCount": 2
+      },
+      {
+        "monster": "helmetAlien",
+        "initCount": 5
+      },
+      {
+        "monster": "summoner",
+        "initCount": 1
+      },
+      {
+        "monster": "helmetCharger",
+        "initCount": 3
+      }
+    ]
+  },
+  {
+    "wave": 19,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 3
+      },
+      {
+        "monster": "sprayer",
+        "initCount": 2
+      },
+      {
+        "monster": "pursuer",
+        "initCount": 2
+      },
+      {
+        "monster": "helmetAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "summoner",
+        "initCount": 1
+      },
+      {
+        "monster": "helmetBrute",
+        "initCount": 2
+      },
+      {
+        "monster": "helmetCharger",
+        "initCount": 3
+      }
+    ]
+  },
+  {
+    "wave": 20,
+    "spawns": [
+      {
+        "monster": "babyAlien",
+        "initCount": 3
+      },
+      {
+        "monster": "sprayer",
+        "initCount": 2
+      },
+      {
+        "monster": "pursuer",
+        "initCount": 2
+      },
+      {
+        "monster": "helmetAlien",
+        "initCount": 4
+      },
+      {
+        "monster": "finChaser",
+        "initCount": 3
+      },
+      {
+        "monster": "summoner",
+        "initCount": 1
+      },
+      {
+        "monster": "helmetBrute",
+        "initCount": 2
+      },
+      {
+        "monster": "prayer",
+        "initCount": 1
+      }
+    ]
+  }
 ]

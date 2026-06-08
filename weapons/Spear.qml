@@ -3,6 +3,7 @@ import QtQuick 2.15
 MeleeWeapon {
     id: spear
     weaponName: "spear"
+    aimSpeedMultiplier: 0.2
     property double fireRotation: 0
 
     onPausedChanged: {
@@ -42,8 +43,8 @@ MeleeWeapon {
         ParallelAnimation {
             id: goAnimation
             property double duration: fireAnimation.duration*0.6
-            NumberAnimation { target: spear; property: "x"; to: spear.originPos.x+Math.cos(fireAnimation.angle* (Math.PI/180))*fireAnimation.range; duration: fireAnimation.range*1.2; easing.type: Easing.OutExpo }
-            NumberAnimation { target: spear; property: "y"; to: spear.originPos.y-Math.sin(fireAnimation.angle* (Math.PI/180))*fireAnimation.range; duration: fireAnimation.range*1.2; easing.type: Easing.OutExpo }
+            NumberAnimation { target: spear; property: "x"; to: spear.originPos.x+Math.cos(fireAnimation.angle* (Math.PI/180))*fireAnimation.range; duration: goAnimation.duration; easing.type: Easing.OutExpo }
+            NumberAnimation { target: spear; property: "y"; to: spear.originPos.y-Math.sin(fireAnimation.angle* (Math.PI/180))*fireAnimation.range; duration: goAnimation.duration; easing.type: Easing.OutExpo }
         }
 
         ParallelAnimation {
@@ -63,10 +64,11 @@ MeleeWeapon {
     function fire(){
         attackSound.play()
         inFire=true
-        // 从武器位置到 targetPoint 的几何方向（不受 rotation 动画时序影响，不分朝向）
         var dx = targetPoint.x - (x + width / 2)
         var dy = targetPoint.y - (y + height / 2)
         fireAnimation.angle = Math.atan2(-dy, dx) * 180 / Math.PI
+        // 强制对齐矛身指向与刺出方向，覆盖背面跳过逻辑
+        _snapRotation(true)
         fireAnimation.start()
     }
 }

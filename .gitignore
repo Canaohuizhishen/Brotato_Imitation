@@ -90,6 +90,7 @@ CMakeLists.txt.user*
 *vpp.lck
 
 build/
+build-non-test/
 
 # Reasonix tooling
 .reasonix/

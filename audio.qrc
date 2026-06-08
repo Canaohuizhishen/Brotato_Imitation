@@ -9,6 +9,7 @@
         <file>audio/get_material.wav</file>
         <file>audio/attack_smg.wav</file>
         <file>audio/attack_spear.wav</file>
+        <file>audio/attack_ice_cone.wav</file>
         <file>audio/click.wav</file>
         <file>audio/hover.wav</file>
     </qresource>

@@ -137,6 +137,10 @@ Item {
 
         onStopped: {
             if (SettingsData.materialSound) getSound.play()
+            // 材料治疗：拾取材料时恢复 1 HP
+            if (PlayerData.materialTherapy > 0) {
+                PlayerData.curHp = Math.min(PlayerData.curHp + 1, PlayerData.maxHp)
+            }
             // 残渣掉落动画
             for (var i = 0; i < 6; i++) {
                 var radius = 13*material.scaleFactor;

@@ -45,6 +45,14 @@ Canvas {
     property bool canAutomaticActive: true //到期子弹可以自动退出冷却
     property string _spatialId: ""
 
+    // === 穿透 / 反弹 / 燃烧属性 ===
+    property int reboundCount: 0       // 剩余反弹次数（0=不反弹）
+    property int penetrateCount: 0     // 剩余穿透次数（0=不穿透）
+    property double penetrateDamageMultiplier: 0.7  // 每次穿透后的伤害倍率
+    property double baseDamage: 0      // 穿透前的基础伤害，用于衰减计算
+    property double burningRatePercentage: 0  // 此子弹的燃烧触发概率（%）
+    property double burningRate: 0            // 此子弹的燃烧 DOT 伤害
+
     onPausedChanged: {
         if(paused==true){
             hitCoolDownTimer.pause()

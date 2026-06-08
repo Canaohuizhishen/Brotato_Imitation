@@ -33,6 +33,13 @@ Rectangle {
             height: width
             source: weaponCard.weaponName == "" ? "" : "qrc:/images/icon_"+weaponCard.weaponName+".png"
             anchors.centerIn: parent
+            property bool _fallbackTried: false
+            onStatusChanged: {
+                if (status === Image.Error && !_fallbackTried) {
+                    _fallbackTried = true
+                    source = "qrc:/images/icon_0.png"
+                }
+            }
         }
     }
 

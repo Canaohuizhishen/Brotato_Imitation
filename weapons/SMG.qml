@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import singleton.PlayerData
 
 RangedWeapon {
     id: smg
@@ -131,8 +132,8 @@ RangedWeapon {
         inFire = true
         attackSound.play()
         if(isFaceRight){
-            backAnimation.angle=-rotation
-        }else backAnimation.angle=180-rotation
+            backAnimation.angle=-_targetAngle
+        }else backAnimation.angle=180-_targetAngle
         fireAnimation.start()
         flame.flame()
         var x=smg.parent.x+smg.x+smg.width/2+Math.cos(backAnimation.angle* (Math.PI/180))*smg.width/2
@@ -154,6 +155,13 @@ RangedWeapon {
             bullet.fireRate=2000
             bullet.fireRange=core.range
             bullet.shootAngle=backAnimation.angle
+            // 穿透/反弹/燃烧属性
+            bullet.reboundCount = PlayerData.rebound
+            bullet.penetrateCount = PlayerData.penetrate
+            bullet.penetrateDamageMultiplier = PlayerData.penetratingDamage > 0 ? Math.max(0.1, 1 - PlayerData.penetratingDamage / 100) : 0.7
+            bullet.baseDamage = core.damage
+            bullet.burningRatePercentage = PlayerData.burningRatePercentage
+            bullet.burningRate = PlayerData.burningRate
         } else {
             console.error("Error loading component: EllipticalMovingBullet.qml")
         }

@@ -215,6 +215,20 @@
         <file>images/stone2.png</file>
         <file>images/tree_faceRight.png</file>
         <file>images/icon_0.png</file>
+        <file>images/icon_flamethrower.png</file>
+        <file>images/icon_screwdriver.png</file>
+        <file>images/icon_ice_cone.png</file>
+        <file>images/ice_cone_faceLeft.png</file>
+        <file>images/ice_cone_faceRight.png</file>
+        <file>images/ice_cone_bullet_left.png</file>
+        <file>images/ice_cone_bullet_right.png</file>
+        <file>images/ice_cone-mask-2_faceLeft.png</file>
+        <file>images/ice_cone-mask-2_faceRight.png</file>
+        <file>images/ice_cone-mask-3_faceLeft.png</file>
+        <file>images/ice_cone-mask-3_faceRight.png</file>
+        <file>images/ice_cone-mask-4_faceLeft.png</file>
+        <file>images/ice_cone-mask-4_faceRight.png</file>
+        <file>images/icon_wrench.png</file>
         <file>images/attribute-maxHp.png</file>
         <file>images/charger_faceRight.png</file>
         <file>images/stone1.png</file>

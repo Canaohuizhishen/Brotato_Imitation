@@ -7,6 +7,7 @@ import "../monsters"
 import "../entities"
 import "../weapons"
 import "../drops"
+import "../constructs"
 import "../logic"
 import "../logic/SpatialGrid.js" as SpatialGrid
 
@@ -101,6 +102,9 @@ Item{
         gameLoop.registerPerFrame(function() { bullets.checkBulletCollisions() })
         gameLoop.registerPerFrame(function() { monsters.bullets.checkBulletCollisions() })
         gameLoop.registerPerFrame(function() { weapons.updateGoals() })
+        // 构筑物更新
+        gameLoop.registerPerFrame(function() { constructs.updateAllTargets() })
+        gameLoop.registerPerFrame(function() { constructs.checkMineCollisions() })
         gameLoop.registerPer200ms(function() { drops.checkDropCollisions() })
         gameLoop.registerPer3000ms(function() { monsters.createWaveMonsters() })
         // 将 gameLoop 引用传递给 monsters 用于子类怪物回调注册
@@ -163,6 +167,7 @@ Item{
         owner: player
         target: monsters
         bulletsParent: bullets
+        constructsContainer: constructs
         active: gameArea.isInCombat && gameArea.active
         paused: gameArea.paused
     }
@@ -189,6 +194,16 @@ Item{
         target: player
         active: gameArea.isInCombat && gameArea.active
         scaleFactor: gameArea.scaleFactor
+    }
+
+    Constructs{
+        id: constructs
+        active: gameArea.isInCombat && gameArea.active
+        paused: gameArea.paused
+        componentCache: componentCache
+        bulletsParent: bullets
+        gameArea: gameArea
+        monsterContainer: monsters
     }
 
     // 低血量屏幕变暗警示
@@ -327,6 +342,7 @@ Item{
         monsters.init()
         bullets.init()
         drops.init()
+        constructs.init()
 
         player.active=Qt.binding(function(){return isInCombat && active})
         player.paused=Qt.binding(function(){return paused})
@@ -336,11 +352,14 @@ Item{
         monsters.paused=Qt.binding(function(){return paused})
         bullets.active=Qt.binding(function(){return isInCombat && active})
         drops.active=Qt.binding(function(){return isInCombat && active})
+        constructs.active=Qt.binding(function(){return isInCombat && active})
+        constructs.paused=Qt.binding(function(){return paused})
     }
 
     function clear(){
         monsters.clear()
         bullets.clear()
         drops.clear()
+        constructs.clear()
     }
 }

@@ -42,7 +42,7 @@ Item {
     property var core: MonstersData.getMonster(monsterName)
     property var monsterCore: MonstersData
 
-    property double v: core.initVelocity * (SettingsData.enemySpeedModifier / 100.0)
+    property double v: core.initVelocity * (SettingsData.enemySpeedModifier / 100.0) * (1 + PlayerData.enemySpeed / 100)
     property int interval: 10
     property double stepSize: v*interval/1200*scaleFactor
 
@@ -77,12 +77,14 @@ Item {
             disappearAnimation.pause()
             stunnedTimer.pause()
             hitingTimer.pause()
+            burnTimer.pause()
         }else{
             squashSequence.resume()
             deadAnimation.resume()
             disappearAnimation.resume()
             stunnedTimer.resume()
             hitingTimer.resume()
+            burnTimer.resume()
         }
     }
 
@@ -94,8 +96,38 @@ Item {
         property int materialDrops: monster.core.materialDrops
         property double consumableDropRate: monster.core.consumableDropRate
         property double chestDropRate: monster.core.chestDropRate
+        // 燃烧状态
+        property bool isBurning: false
+        property int burnDamagePerTick: 0
+        property int burnTicksRemaining: 0
         onHpChanged: {
             if(hp<=0)monster.kill()
+        }
+        onIsBurningChanged: {
+            if (isBurning) {
+                burnTimer.start()
+            } else {
+                burnTimer.stop()
+            }
+        }
+    }
+
+    // 燃烧 DOT 计时器
+    TimerCanPause {
+        id: burnTimer
+        interval: 1000
+        running: false
+        repeat: true
+        onTriggered: {
+            if (monsterData.burnTicksRemaining > 0 && !monster.isDead) {
+                monsterData.hp -= monsterData.burnDamagePerTick
+                monsterData.burnTicksRemaining--
+                if (SettingsData.showDamageNumbers)
+                    Tool.createText(monster, "-" + monsterData.burnDamagePerTick, 22*monster.scaleFactor, "orange", monster.x, monster.y - 10*monster.scaleFactor)
+            }
+            if (monsterData.burnTicksRemaining <= 0) {
+                monsterData.isBurning = false
+            }
         }
     }
 
@@ -460,6 +492,17 @@ Item {
         //设置击飞角度
         deadAnimation.angle=bullet.rotation
 
+        //击退效果
+        if (PlayerData.repel > 0) {
+            var repelAngle = bullet.rotation * (Math.PI / 180)
+            var repelDist = PlayerData.repel * scaleFactor
+            var newX = monster.x + Math.cos(repelAngle) * repelDist
+            var newY = monster.y - Math.sin(repelAngle) * repelDist
+            //边界约束
+            if (newX >= 0 && newX <= monster.parent.width - monster.width) monster.x = newX
+            if (newY >= 0 && newY <= monster.parent.height - monster.height) monster.y = newY
+        }
+
         //僵直
         //stunned(100)
 
@@ -483,10 +526,39 @@ Item {
             if(SettingsData.showDamageNumbers) Tool.createText(owner,bullet.damage,27*scaleFactor,"white",bullet.x,bullet.y)
         }
 
+        //对 Boss 额外伤害
+        if (monster.core.isBoss && PlayerData.damageToBoss > 0) {
+            var bossExtraDmg = Math.floor(bullet.damage * PlayerData.damageToBoss / 100)
+            monsterData.hp -= bossExtraDmg
+            if (SettingsData.showDamageNumbers) Tool.createText(owner, "+" + bossExtraDmg, 22*scaleFactor, "purple", bullet.x, bullet.y - 20*scaleFactor)
+        }
+
+        //可能的燃烧触发
+        if (bullet.burningRatePercentage > 0 && bullet.burningRate > 0 && !monsterData.isBurning) {
+            if (Math.random() < bullet.burningRatePercentage / 100) {
+                monsterData.burnDamagePerTick = bullet.burningRate
+                monsterData.burnTicksRemaining = 3  // 燃烧 3 秒
+                monsterData.isBurning = true
+                // 视觉：红色闪烁
+                whiteOverlayAnimator.restart()
+            }
+        }
+
         //可能的爆炸特效
         if (SettingsData.explosionEffect && PlayerData.explosiveDamage > 0) {
             var expRadius = 20 + (PlayerData.explosionRange / 100) * 30
             ParticlePool.spawnExplosion(bullet.x, bullet.y, expRadius * scaleFactor, gameArea, SettingsData.explosionEffect)
+            // 爆炸伤害：对范围内所有其他怪物造成 explosiveDamage 点伤害
+            var ownerChildren = monster.owner.children
+            for (var ei = 0; ei < ownerChildren.length; ei++) {
+                var otherMonster = ownerChildren[ei]
+                if (otherMonster.objectName === "Monster" && otherMonster !== monster && !otherMonster.isDead && !otherMonster.isDestroy) {
+                    var dist = Tool.getDistance(Qt.point(bullet.x, bullet.y), Qt.point(otherMonster.x + otherMonster.width/2, otherMonster.y + otherMonster.height/2))
+                    if (dist < expRadius * scaleFactor) {
+                        otherMonster.monsterData.hp -= PlayerData.explosiveDamage
+                    }
+                }
+            }
         }
 
         //可能的生命窃取

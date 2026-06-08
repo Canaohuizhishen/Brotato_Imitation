@@ -18,15 +18,33 @@ Item {
             if (child.objectName !== "子弹" || child.isDestroy || child.inHitCoolDown) continue
 
             if (target.objectName === "Monsters") {
-                // 用 SpatialGrid 查询子弹附近的怪物，代替 O(n) 遍历
                 var nearby = SpatialGrid.query(child.x, child.y, child.width, child.height)
                 for (var j = 0; j < nearby.length; j++) {
                     var monster = nearby[j]
-                    if (monster && !monster.isDead && !monster.isDestroy && _aabbCollide(child, monster)) {
-                        monster.onHit(child)
-                        if (!child.hitNotDestroy) child.destroy()
+                    if (!monster || monster.isDead || monster.isDestroy || !_aabbCollide(child, monster)) continue
+
+                    monster.onHit(child)
+
+                    // 穿透：不销毁不停止，继续检查其他怪物
+                    if (child.penetrateCount > 0) {
+                        child.penetrateCount--
+                        child.damage = Math.floor(child.damage * child.penetrateDamageMultiplier)
+                        continue
+                    }
+
+                    // 反弹：寻找最近的其他怪物作为新目标
+                    if (child.reboundCount > 0) {
+                        child.reboundCount--
+                        var reboundTarget = _findNearestMonster(child, nearby, monster)
+                        if (reboundTarget && typeof child.reboundToTarget === 'function') {
+                            child.reboundToTarget(reboundTarget)
+                        }
                         break
                     }
+
+                    // 默认行为
+                    if (!child.hitNotDestroy) child.destroy()
+                    break
                 }
             } else if (target.objectName === "Player") {
                 var player = target
@@ -37,6 +55,25 @@ Item {
                 }
             }
         }
+    }
+
+    function _findNearestMonster(bullet, nearby, excludeMonster) {
+        var nearest = null
+        var minDist = Infinity
+        var bx = bullet.x + bullet.width / 2
+        var by = bullet.y + bullet.height / 2
+        for (var k = 0; k < nearby.length; k++) {
+            var m = nearby[k]
+            if (m === excludeMonster || m.isDead || m.isDestroy) continue
+            var dx = (m.x + m.width / 2) - bx
+            var dy = (m.y + m.height / 2) - by
+            var dist = dx * dx + dy * dy
+            if (dist < minDist) {
+                minDist = dist
+                nearest = m
+            }
+        }
+        return nearest
     }
 
     function _aabbCollide(a, b) {
