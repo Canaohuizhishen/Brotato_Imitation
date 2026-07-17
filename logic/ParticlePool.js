@@ -193,3 +193,38 @@ function spawnExplosion(x, y, radius, parent, enabled) {
 
     exp.showExplosion(x, y, radius)
 }
+
+/**
+ * release — 清理所有池中粒子，重置状态
+ *
+ * 在场景卸载时调用（如返回主菜单），防止粒子对象残留。
+ * 调用后池为空，再次调用 init(parent) 会重新创建。
+ */
+function release() {
+    // 血花池
+    for (var i = 0; i < _bloodPool.length; i++) {
+        if (_bloodPool[i]) _bloodPool[i].destroy()
+    }
+    _bloodPool = []
+    _bloodIndex = 0
+    _bloodInitialized = false
+    _bloodComponent = null
+
+    // 残渣池
+    for (var j = 0; j < _debrisPool.length; j++) {
+        if (_debrisPool[j]) _debrisPool[j].destroy()
+    }
+    _debrisPool = []
+    _debrisIndex = 0
+    _debrisInitialized = false
+    _debrisComponent = null
+
+    // 爆炸池
+    for (var k = 0; k < _explosionPool.length; k++) {
+        if (_explosionPool[k]) _explosionPool[k].destroy()
+    }
+    _explosionPool = []
+    _explosionIndex = 0
+    _explosionInitialized = false
+    _explosionComponent = null
+}

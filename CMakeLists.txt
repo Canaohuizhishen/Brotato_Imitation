@@ -78,6 +78,7 @@ qt_add_qml_module(appBrotato
     QML_FILES components/WeaponsBar.qml
     QML_FILES components/WeaponItem.qml
     QML_FILES logic/utils/color.js
+    QML_FILES logic/utils/collision.js
     QML_FILES page/PauseInterface.qml
     QML_FILES components/SetButton.qml
     QML_FILES components/SwitchSettingButton.qml
@@ -172,6 +173,18 @@ if(BUILD_TESTS OR NOT DEFINED BUILD_TESTS)
 
     add_test(NAME tst_core
         COMMAND $<TARGET_FILE:tst_core> -input ${CMAKE_SOURCE_DIR}/tests
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+
+    # ── C++ FileManager 测试 ──
+    qt_add_executable(tst_filemanager
+        tests/tst_filemanager.cpp
+        Filemanager.h
+    )
+    target_link_libraries(tst_filemanager PRIVATE Qt6::Test Qt6::Quick)
+
+    add_test(NAME tst_filemanager
+        COMMAND $<TARGET_FILE:tst_filemanager>
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     )
 endif()

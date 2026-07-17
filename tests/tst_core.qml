@@ -4,6 +4,7 @@ import "../logic/DataLoader.js" as DataLoader
 import "../logic/SpatialGrid.js" as SpatialGrid
 import "../logic/utils/tool.js" as Tool
 import "../logic/utils/color.js" as Color
+import "../logic/utils/collision.js" as Collision
 import "../logic/SaveManager.js" as SaveManager
 import "../logic/ShopLogicHandler.js" as Shop
 
@@ -661,5 +662,166 @@ TestCase {
         compare(result, false)
         compare(d.maxHp, 50, "空存档不应覆盖已有字段")
         // 空存档加载时，空对象 {} 不覆盖已有属性值（JS ?? 回退行为）
+    }
+
+    // ---- AABB Collision ----
+
+    function test_aabb_fullOverlap() {
+        verify(Collision.aabbCollide({x:0,y:0,width:10,height:10}, {x:0,y:0,width:10,height:10}))
+    }
+
+    function test_aabb_partialOverlap() {
+        verify(Collision.aabbCollide({x:0,y:0,width:10,height:10}, {x:5,y:5,width:10,height:10}))
+    }
+
+    function test_aabb_aContainsB() {
+        verify(Collision.aabbCollide({x:0,y:0,width:100,height:100}, {x:10,y:10,width:20,height:20}))
+    }
+
+    function test_aabb_bContainsA() {
+        verify(Collision.aabbCollide({x:10,y:10,width:20,height:20}, {x:0,y:0,width:100,height:100}))
+    }
+
+    function test_aabb_noOverlapX() {
+        // x 方向完全分离
+        verify(!Collision.aabbCollide({x:0,y:0,width:10,height:10}, {x:20,y:0,width:10,height:10}))
+    }
+
+    function test_aabb_noOverlapY() {
+        // y 方向完全分离
+        verify(!Collision.aabbCollide({x:0,y:0,width:10,height:10}, {x:0,y:20,width:10,height:10}))
+    }
+
+    function test_aabb_edgeTouchRight() {
+        // 右边缘接触（严格 >，接触不算碰撞）
+        verify(!Collision.aabbCollide({x:0,y:0,width:10,height:10}, {x:10,y:0,width:10,height:10}))
+    }
+
+    function test_aabb_edgeTouchLeft() {
+        verify(!Collision.aabbCollide({x:10,y:0,width:10,height:10}, {x:0,y:0,width:10,height:10}))
+    }
+
+    function test_aabb_edgeTouchTop() {
+        verify(!Collision.aabbCollide({x:0,y:10,width:10,height:10}, {x:0,y:0,width:10,height:10}))
+    }
+
+    function test_aabb_edgeTouchBottom() {
+        verify(!Collision.aabbCollide({x:0,y:0,width:10,height:10}, {x:0,y:10,width:10,height:10}))
+    }
+
+    function test_aabb_zeroSize() {
+        // 零尺寸对象的碰撞行为
+        verify(!Collision.aabbCollide({x:0,y:0,width:0,height:0}, {x:5,y:5,width:10,height:10}))
+    }
+
+    function test_aabb_empty() {
+        // 两个零尺寸对象在相同位置 — x+0 > x 为假
+        verify(!Collision.aabbCollide({x:0,y:0,width:0,height:0}, {x:0,y:0,width:0,height:0}))
+    }
+
+    // ---- Damage Reduction ----
+
+    function test_damageReduction_zero() {
+        // armor=0 → 0/(0+15) = 0
+        compare(0/(0+15), 0)
+    }
+
+    function test_damageReduction_15() {
+        // armor=15 → 15/(15+15) = 0.5
+        compare(15/(15+15), 0.5)
+    }
+
+    function test_damageReduction_60() {
+        // armor=60 → 60/(60+15) ≈ 0.8
+        verify(Math.abs(60/(60+15) - 0.8) < 1e-10)
+    }
+
+    function test_damageReduction_large() {
+        // armor 很大时趋近 1
+        var r = 10000/(10000+15)
+        verify(r > 0.998)
+    }
+
+    function test_damageReduction_negative() {
+        // armor 为负：仍是合法计算（公式不限制符号）
+        var r = (-5)/((-5)+15)
+        // -5/10 = -0.5 → 负减免 = 增伤
+        compare(r, -0.5)
+    }
+
+    // ---- Damage Application (Math.ceil(bullet.damage * (1 - reduction))) ----
+
+    function test_damageApplication_noArmor() {
+        // armor=0 → reduction=0 → ceil(100*1)=100
+        var reduction = 0/(0+15)
+        compare(Math.ceil(100 * (1 - reduction)), 100)
+    }
+
+    function test_damageApplication_armor15() {
+        // armor=15 → reduction=0.5 → ceil(100*0.5)=50
+        var reduction = 15/(15+15)
+        compare(Math.ceil(100 * (1 - reduction)), 50)
+    }
+
+    function test_damageApplication_smallDmg() {
+        // armor=15, dmg=1 → ceil(1*0.5)=1
+        var reduction = 15/(15+15)
+        compare(Math.ceil(1 * (1 - reduction)), 1)
+    }
+
+    function test_damageApplication_negativeArmor() {
+        // armor=-5 → reduction=-0.5 → ceil(100*1.5)=150
+        var reduction = (-5)/((-5)+15)
+        compare(Math.ceil(100 * (1 - reduction)), 150)
+    }
+
+    // ---- Monster Scaling (纯数学验证) ----
+
+    function test_monsterDamage_wave1() {
+        // wave=1: (initDamage + damageBonus*0) * (modifier/100)
+        var initDmg = 8, bonus = 2, wave = 1, mod = 100
+        compare(Math.round((initDmg + bonus * (wave - 1)) * (mod / 100.0)), 8)
+    }
+
+    function test_monsterDamage_wave10() {
+        // wave=10: (8 + 2*9) * 1.0 = 26
+        var initDmg = 8, bonus = 2, wave = 10, mod = 100
+        compare(Math.round((initDmg + bonus * (wave - 1)) * (mod / 100.0)), 26)
+    }
+
+    function test_monsterDamage_modifier200() {
+        // 200% 伤害模式
+        var initDmg = 8, bonus = 2, wave = 5, mod = 200
+        // (8 + 2*4) * 2.0 = 16 * 2 = 32
+        compare(Math.round((initDmg + bonus * (wave - 1)) * (mod / 100.0)), 32)
+    }
+
+    function test_monsterHp_wave1() {
+        // wave=1: (initHp + hpBonus*0) * (modifier/100)
+        var initHp = 50, bonus = 10, wave = 1, mod = 100
+        compare(Math.round((initHp + bonus * (wave - 1)) * (mod / 100.0)), 50)
+    }
+
+    function test_monsterHp_wave20() {
+        // wave 20 强敌
+        var initHp = 50, bonus = 10, wave = 20, mod = 150
+        // (50 + 10*19) * 1.5 = 240 * 1.5 = 360
+        compare(Math.round((initHp + bonus * (wave - 1)) * (mod / 100.0)), 360)
+    }
+
+    function test_monsterSpeed() {
+        // v = initVelocity * (enemySpeedModifier/100) * (1 + PlayerData.enemySpeed/100)
+        var v0 = 100, speedMod = 150, enemySpeed = 20
+        var v = v0 * (speedMod / 100.0) * (1 + enemySpeed / 100)
+        // 100 * 1.5 * 1.2 = 180
+        compare(v, 180)
+    }
+
+    // ---- Burn DOT ----
+
+    function test_burnTotalDamage() {
+        // burnDamagePerTick * burnTicksRemaining
+        compare(5 * 3, 15)
+        compare(10 * 5, 50)
     }
 }

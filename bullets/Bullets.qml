@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import singleton.PlayerData
 import "../logic/SpatialGrid.js" as SpatialGrid
+import "../logic/utils/collision.js" as Collision
 
 Item {
     id: bullets
@@ -21,7 +22,7 @@ Item {
                 var nearby = SpatialGrid.query(child.x, child.y, child.width, child.height)
                 for (var j = 0; j < nearby.length; j++) {
                     var monster = nearby[j]
-                    if (!monster || monster.isDead || monster.isDestroy || !_aabbCollide(child, monster)) continue
+                    if (!monster || monster.isDead || monster.isDestroy || !Collision.aabbCollide(child, monster)) continue
 
                     monster.onHit(child)
 
@@ -74,13 +75,6 @@ Item {
             }
         }
         return nearest
-    }
-
-    function _aabbCollide(a, b) {
-        return a.x < b.x + b.width &&
-               a.x + a.width > b.x &&
-               a.y < b.y + b.height &&
-               a.y + a.height > b.y
     }
 
     function clear(){
