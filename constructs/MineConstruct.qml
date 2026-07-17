@@ -2,6 +2,7 @@ import QtQuick 2.15
 import singleton.PlayerData
 import singleton.SettingsData
 import "../logic/ParticlePool.js" as ParticlePool
+import "../logic/utils/collision.js" as Collision
 
 Construct {
     id: mine
@@ -41,10 +42,7 @@ Construct {
         if (monster.isDead || monster.isDestroy) return false
 
         // AABB 碰撞检测
-        if (x < monster.x + monster.width &&
-            x + width > monster.x &&
-            y < monster.y + monster.height &&
-            y + height > monster.y) {
+        if (Collision.aabbCollide(this, monster)) {
             triggerExplosion(monster)
             return true
         }
