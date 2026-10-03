@@ -21,6 +21,16 @@ Item {
         onTriggered: drops.mergeMaterials()
     }
 
+    // 磁吸补驱动（非战斗期间）：GameLoop 只在战斗中走帧——若磁吸只靠 GameLoop 驱动，
+    // 波末触发磁吸的果实/宝箱会在商店期间冻在半空，直到下一波开局才飞过来
+    //（“开局吸过来个宝箱/果实”）。此计时器在非战斗期间以 ~60Hz 继续驱动磁吸直至收完。
+    Timer {
+        interval: 16
+        repeat: true
+        running: !drops.active
+        onTriggered: drops.updateFlyingDrops(0.016)
+    }
+
     // 合并一组小材料为一个 BigMaterial
     function _mergeIntoBig(group, tier) {
         // 计算质心
@@ -164,6 +174,35 @@ Item {
                     child.beGetedTo(target)
                 }
             }
+        }
+    }
+
+    // 磁吸更新（每帧，由 GameArea 注册进 GameLoop）：
+    // 已触发的掉落物实时追踪玩家当前位置飞行，追速恒快于玩家（随其速度自适应），
+    // 追上后实时跟随、追到身上才结算。
+    // （2026-10-04 替代原 QML 飞行动画：其 from/to/时长均为实时重算绑定，
+    //   跟随移动中的目标时动画永不结算——停下才成批补收）
+    function updateFlyingDrops(deltaTime) {
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i]
+            if (!child.isGeted || child.isDestroy || !child.magnetTarget) continue
+            var t = child.magnetTarget
+            var tx = t.x + t.width / 2
+            var ty = t.y + t.height / 2
+            var cx = child.x + child.width / 2
+            var cy = child.y + child.height / 2
+            var dx = tx - cx
+            var dy = ty - cy
+            var d = Math.sqrt(dx * dx + dy * dy)
+            if (d < Math.max(child.width, 26 * scaleFactor) * 0.8) {
+                child.completeCollect()
+                continue
+            }
+            var sp = Math.max(1100 * scaleFactor, (t.v || 0) * 1.5)
+            var step = sp * deltaTime
+            if (step > d) step = d
+            child.x += dx / d * step
+            child.y += dy / d * step
         }
     }
 }

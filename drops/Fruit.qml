@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import QtMultimedia
 import singleton.PlayerData
-import "../logic/utils/tool.js" as Tool
 
 Image {
     id: fruit
@@ -10,15 +9,16 @@ Image {
     property int value: 2+PlayerData.consumptiveTherapy
     property bool isGeted: false
     property bool isDestroy: false
+    property var magnetTarget: null   // 磁吸目标（玩家），由 Drops.updateFlyingDrops 每帧驱动
     property double scaleFactor: 1
     width: 35*scaleFactor
     height: width*1.209
     z: y+height
 
+    // 被拾取范围触发：进入磁吸状态，由 Drops.updateFlyingDrops 每帧追踪玩家
     function beGetedTo(target){
         fruit.isGeted=true
-        beGetedAnimation.target=target
-        beGetedAnimation.start()
+        fruit.magnetTarget=target
     }
 
     SoundEffect {
@@ -27,37 +27,14 @@ Image {
         volume: 0.6
     }
 
-    ParallelAnimation{
-        id: beGetedAnimation
-        loops: 1
-        running: false
-        property var target: fruit
-
-        PropertyAnimation {
-            id: xbeGetedAnimation
-            target: fruit
-            property: "x"
-            from: fruit.x
-            to: beGetedAnimation.target.x-fruit.width/2
-            duration: Tool.getDistance(Qt.point(fruit.x,fruit.y),Qt.point(beGetedAnimation.target.x,beGetedAnimation.target.y))*1
-            easing.type: Easing.InBack
-        }
-
-        PropertyAnimation {
-            id: ybeGetedAnimation
-            target: xbeGetedAnimation.target
-            property: "y"
-            from: fruit.y
-            to: beGetedAnimation.target.y-fruit.height/2
-            duration: xbeGetedAnimation.duration
-            easing.type: xbeGetedAnimation.easing.type
-        }
-
-        onStopped: {
-            getSound.play()
-            target.getFruit(fruit)
-            fruit.visible=false
-            fruit.destroy(700)
-        }
+    // 磁吸命中玩家后结算（由 Drops.updateFlyingDrops 追到后调用）
+    function completeCollect(){
+        var t = fruit.magnetTarget
+        fruit.magnetTarget = null
+        if (!t) return
+        getSound.play()
+        t.getFruit(fruit)
+        fruit.visible=false
+        fruit.destroy(700)
     }
 }

@@ -20,6 +20,7 @@ Item {
     property int totalValue: 0                   // 被合并材料 value 之和
     property bool isGeted: false
     property bool isDestroy: false
+    property var magnetTarget: null              // 磁吸目标（玩家），由 Drops.updateFlyingDrops 每帧驱动
     property double scaleFactor: 1
 
     // 等级参数表
@@ -66,10 +67,10 @@ Item {
         toBagAnimation.start()
     }
 
+    // 被拾取范围触发：进入磁吸状态，由 Drops.updateFlyingDrops 每帧追踪玩家
     function beGetedTo(target) {
         bigMaterial.isGeted = true
-        beGetedAnimation.target = target
-        beGetedAnimation.start()
+        bigMaterial.magnetTarget = target
     }
 
     SoundEffect {
@@ -144,52 +145,26 @@ Item {
         }
     }
 
-    // ---- 飞向玩家 ----
-    ParallelAnimation {
-        id: beGetedAnimation
-        loops: 1
-        running: false
-        property var target: Qt.point(0, 0)
-
-        PropertyAnimation {
-            id: xbeGetedAnimation
-            target: bigMaterial
-            property: "x"
-            from: bigMaterial.x
-            to: beGetedAnimation.target.x + beGetedAnimation.target.width / 2 - bigMaterial.width / 2
-            duration: Tool.getDistance(
-                          Qt.point(bigMaterial.x, bigMaterial.y),
-                          Qt.point(beGetedAnimation.target.x, beGetedAnimation.target.y)) * 1
-            easing.type: Easing.InBack
+    // 磁吸命中玩家后结算（由 Drops.updateFlyingDrops 追到后调用）
+    function completeCollect() {
+        var t = bigMaterial.magnetTarget
+        bigMaterial.magnetTarget = null
+        if (!t) return
+        if (SettingsData.materialSound) getSound.play()
+        // 残渣掉落动画（数量随 tier 增加）
+        var particleCount = 6 + (bigMaterial.tier - 1) * 4
+        for (var i = 0; i < particleCount; i++) {
+            var radius = 13 * bigMaterial.scaleFactor
+            var angle = Math.random() * 2 * 3.14159
+            var dx = Math.cos(angle) * (Math.random() * bigMaterial.width * 4 - bigMaterial.width * 2)
+            var dy = Math.sin(angle) * (Math.random() * bigMaterial.width * 4 - bigMaterial.width * 2) + bigMaterial.width * 1.5
+            bigMaterial.makeResidue(
+                        t.x + t.width / 2, t.y,
+                        dx, dy, radius, gameArea)
         }
-
-        PropertyAnimation {
-            id: ybeGetedAnimation
-            target: xbeGetedAnimation.target
-            property: "y"
-            from: bigMaterial.y
-            to: beGetedAnimation.target.y - bigMaterial.height / 2
-            duration: xbeGetedAnimation.duration
-            easing.type: xbeGetedAnimation.easing.type
-        }
-
-        onStopped: {
-            if (SettingsData.materialSound) getSound.play()
-            // 残渣掉落动画（数量随 tier 增加）
-            var particleCount = 6 + (bigMaterial.tier - 1) * 4
-            for (var i = 0; i < particleCount; i++) {
-                var radius = 13 * bigMaterial.scaleFactor
-                var angle = Math.random() * 2 * 3.14159
-                var dx = Math.cos(angle) * (Math.random() * bigMaterial.width * 4 - bigMaterial.width * 2)
-                var dy = Math.sin(angle) * (Math.random() * bigMaterial.width * 4 - bigMaterial.width * 2) + bigMaterial.width * 1.5
-                bigMaterial.makeResidue(
-                            target.x + target.width / 2, target.y,
-                            dx, dy, radius, gameArea)
-            }
-            target.getMaterial(bigMaterial)
-            bigMaterial.visible = false
-            bigMaterial.destroy(700)
-        }
+        t.getMaterial(bigMaterial)
+        bigMaterial.visible = false
+        bigMaterial.destroy(700)
     }
 
     function makeResidue(x, y, dx, dy, width, parent) {

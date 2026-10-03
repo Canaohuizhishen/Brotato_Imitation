@@ -106,6 +106,8 @@ Item{
         gameLoop.registerPerFrame(function() { constructs.updateAllTargets() })
         gameLoop.registerPerFrame(function() { constructs.checkMineCollisions() })
         gameLoop.registerPer200ms(function() { drops.checkDropCollisions() })
+        // 磁吸更新：已触发的掉落物每帧追踪玩家（替代原飞行动画）
+        gameLoop.registerPerFrame(function(dt) { drops.updateFlyingDrops(dt) })
         gameLoop.registerPer3000ms(function() { monsters.createWaveMonsters() })
         // 将 gameLoop 引用传递给 monsters 用于子类怪物回调注册
         monsters.gameLoop = gameLoop

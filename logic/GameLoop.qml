@@ -1,4 +1,4 @@
-import QtQuick 2.15
+import QtQuick
 
 Item {
     id: gameLoop
@@ -20,11 +20,15 @@ Item {
 
     property double _lastTime: 0
 
-    Timer {
+    // 帧驱动触发：跟随渲染帧节奏（而非自由跑的 16ms Timer）。
+    // 自由跑的 Timer 在部分系统上会与 vsync 相位互锁：进入战斗约十秒后
+    // 锁定在 30 FPS（33.3ms/帧）且清场后也不再恢复，帧驱动无此问题。
+    FrameAnimation {
         id: tickTimer
-        interval: 16  // ~62.5 FPS
         running: gameLoop.active && !gameLoop.paused
-        repeat: true
+        onRunningChanged: {
+            if (!running) gameLoop._lastTime = 0
+        }
         onTriggered: {
             var now = Date.now()
             var rawDt = gameLoop._lastTime > 0 ? (now - gameLoop._lastTime) / 1000.0 : 0.016

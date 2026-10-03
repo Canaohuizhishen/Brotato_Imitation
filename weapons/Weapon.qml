@@ -202,6 +202,9 @@ Item {
         rotateBehavior.start()
     }
 
+    // 注意：duration 计算一律保证非负——weapon.rotation 在旋转动画中途的原始值可能
+    // 超过 ±180°，此时 (90-|origin|) 为负会被引擎拒绝并告警（Cannot set a duration of < 0）；
+    // 下方 4 处用 abs 包裹（|origin|≤90 的正常路径数值不变，为恒等变换）。
     function aimToTarget() {
         if(weapon.targetPoint==null)return
         isAiming=true
@@ -220,7 +223,7 @@ Item {
                 return
             }
             if(Tool.getQuadrant(-angle)===2){
-                if(Tool.getQuadrant(-originRotation)===1)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
+                if(Tool.getQuadrant(-originRotation)===1)rotate.duration=Math.abs(90-Math.abs(originRotation))*rotate.durationPerDegree
                 else if(Tool.getQuadrant(-originRotation)===4)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
                 //else console.log("to 2 error")
                 rotation=-90
@@ -229,7 +232,7 @@ Item {
                 waitTimer.start()
             }else if(Tool.getQuadrant(-angle)===3){
                 if(Tool.getQuadrant(-originRotation)===1)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
-                else if(Tool.getQuadrant(-originRotation)===4)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
+                else if(Tool.getQuadrant(-originRotation)===4)rotate.duration=Math.abs(90-Math.abs(originRotation))*rotate.durationPerDegree
                 //else console.log("to 3 error ",Tool.getQuadrant(-originRotation))
                 rotation=90
                 waitTimer.degree=Math.abs(Tool.reduceAbs(angle,90))
@@ -246,7 +249,7 @@ Item {
                 return
             }
             if(Tool.getQuadrant(-angle)===1){
-                if(Tool.getQuadrant(originRotation+90)===2)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
+                if(Tool.getQuadrant(originRotation+90)===2)rotate.duration=Math.abs(90-Math.abs(originRotation))*rotate.durationPerDegree
                 else if(Tool.getQuadrant(-originRotation+180)===3)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
                 //else console.log("to 1 error")
                 rotation=90
@@ -255,7 +258,7 @@ Item {
                 waitTimer.start()
             }else if(Tool.getQuadrant(-angle)===4){
                 if(Tool.getQuadrant(-originRotation+180)===2)rotate.duration=(90+Math.abs(originRotation))*rotate.durationPerDegree
-                else if(Tool.getQuadrant(-originRotation+180)===3)rotate.duration=(90-Math.abs(originRotation))*rotate.durationPerDegree
+                else if(Tool.getQuadrant(-originRotation+180)===3)rotate.duration=Math.abs(90-Math.abs(originRotation))*rotate.durationPerDegree
                 //else console.log("to 4 error",Tool.getQuadrant(-originRotation+180))
                 rotation=-90
                 waitTimer.degree=Math.abs(Tool.reduceAbs(angle,90))

@@ -12,6 +12,7 @@ Item {
     property var materialImageAspectRatioArray: [0.643, 0.905, 0.681, 0.886, 0.93, 0.415, 0.623, 0.906]
     property bool isGeted: false
     property bool isDestroy: false
+    property var magnetTarget: null   // 磁吸目标（玩家），由 Drops.updateFlyingDrops 每帧驱动
     property double scaleFactor: 1
     width: 30*scaleFactor
     height: width
@@ -36,10 +37,13 @@ Item {
         toBagAnimation.start()
     }
 
+    // 被拾取范围触发：进入磁吸状态，由 Drops.updateFlyingDrops 每帧追踪玩家。
+    // 2026-10-04 改为 JS 磁吸：原 QML 飞行动画的 from/to/时长均为实时重算绑定，
+    // 跟随移动中的玩家时动画永不结算（停下才成批补收）；磁吸速度恒快于玩家，
+    // 追上后实时跟随，追到身上才结算。
     function beGetedTo(target){
         material.isGeted=true
-        beGetedAnimation.target=target
-        beGetedAnimation.start()
+        material.magnetTarget=target
     }
 
     SoundEffect {
@@ -109,50 +113,27 @@ Item {
         }
     }
 
-    ParallelAnimation{
-        id: beGetedAnimation
-        loops: 1
-        running: false
-        property var target: Qt.point(0,0)
-
-        PropertyAnimation {
-            id: xbeGetedAnimation
-            target: material
-            property: "x"
-            from: material.x
-            to: beGetedAnimation.target.x+beGetedAnimation.target.width/2-material.width/2
-            duration: Tool.getDistance(Qt.point(material.x,material.y),Qt.point(beGetedAnimation.target.x,beGetedAnimation.target.y))*1
-            easing.type: Easing.InBack
+    // 磁吸命中玩家后结算（由 Drops.updateFlyingDrops 追到后调用）
+    function completeCollect(){
+        var t = material.magnetTarget
+        material.magnetTarget = null
+        if (!t) return
+        if (SettingsData.materialSound) getSound.play()
+        // 材料治疗：拾取材料时恢复 1 HP
+        if (PlayerData.materialTherapy > 0) {
+            PlayerData.curHp = Math.min(PlayerData.curHp + 1, PlayerData.maxHp)
         }
-
-        PropertyAnimation {
-            id: ybeGetedAnimation
-            target: xbeGetedAnimation.target
-            property: "y"
-            from: material.y
-            to: beGetedAnimation.target.y-material.height/2
-            duration: xbeGetedAnimation.duration
-            easing.type: xbeGetedAnimation.easing.type
+        // 残渣掉落动画
+        for (var i = 0; i < 6; i++) {
+            var radius = 13*material.scaleFactor;
+            var angle=Math.random() * 2 * 3.14159
+            var dx = Math.cos(angle)*(Math.random() * material.width*6-material.width*3)
+            var dy = Math.sin(angle)*(Math.random() * material.width*6-material.width*3)+material.width*1.5
+            material.makeResidue(t.x+t.width/2,t.y,dx,dy, radius,gameArea);
         }
-
-        onStopped: {
-            if (SettingsData.materialSound) getSound.play()
-            // 材料治疗：拾取材料时恢复 1 HP
-            if (PlayerData.materialTherapy > 0) {
-                PlayerData.curHp = Math.min(PlayerData.curHp + 1, PlayerData.maxHp)
-            }
-            // 残渣掉落动画
-            for (var i = 0; i < 6; i++) {
-                var radius = 13*material.scaleFactor;
-                var angle=Math.random() * 2 * 3.14159
-                var dx = Math.cos(angle)*(Math.random() * material.width*6-material.width*3)
-                var dy = Math.sin(angle)*(Math.random() * material.width*6-material.width*3)+material.width*1.5
-                material.makeResidue(target.x+target.width/2,target.y,dx,dy, radius,gameArea);
-            }
-            target.getMaterial(material)
-            material.visible=false
-            material.destroy(700)
-        }
+        t.getMaterial(material)
+        material.visible=false
+        material.destroy(700)
     }
 
     function makeResidue(x,y,dx,dy, width, parent){

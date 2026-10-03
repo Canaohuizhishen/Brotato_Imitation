@@ -146,8 +146,9 @@ Item {
             if (m.objectName !== "Monster" || m.isDead || m.isDestroy) continue
             // 用 SpatialGrid 快速找到附近怪物候选，再套用原版方向+距离+同种判定
             var checkDistance = m.width / 2
-            // 查询范围覆盖 checkDistance + 一个网格边距，确保不漏
-            var margin = Math.max(checkDistance + m.width, 200)
+            // 查询范围：只在 checkDistance 半径外留一个宽度的安全边距
+            //（2026-10-04 诊断：原 200px 下限在密集怪群时导致查询面积爆炸，collide 单帧 33ms）
+            var margin = checkDistance + m.width
             var candidates = SpatialGrid.query(m.x - margin, m.y - margin, m.width + margin * 2, m.height + margin * 2)
             var blocked = false
             for (var j = 0; j < candidates.length; j++) {
@@ -176,9 +177,14 @@ Item {
                         }
                     }
                 }
-                if (inFront && Tool.getDistance(Qt.point(m.x, m.y), Qt.point(other.x, other.y)) < checkDistance) {
-                    blocked = true
-                    break
+                if (inFront) {
+                    // 避免 Tool.getDistance 的 Qt.point 分配（密集怪群时每帧数万次）
+                    var ddx = m.x - other.x
+                    var ddy = m.y - other.y
+                    if (ddx * ddx + ddy * ddy < checkDistance * checkDistance) {
+                        blocked = true
+                        break
+                    }
                 }
             }
             m.isFrontHaveOtherMonster = blocked

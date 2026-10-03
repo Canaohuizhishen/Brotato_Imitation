@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import singleton.SettingsData
+import singleton.PlayerData
 import "../logic/utils/i18n.js" as I18n
 
 Rectangle {
@@ -8,7 +9,7 @@ Rectangle {
     property double scaleFactor: 1.0
     visible: roleName != ""
     anchors.left: parent.horizontalCenter
-    anchors.leftMargin: 3
+    anchors.leftMargin: 3*recardCard.scaleFactor
     anchors.top: parent.top
     anchors.topMargin: 110*scaleFactor
     width: 250*scaleFactor
@@ -46,7 +47,9 @@ Rectangle {
     }
 
     ScaledText {
-        text: I18n.tr("尚无记录", SettingsData.language)
+        text: PlayerData.maxDifficultyCompleted < 0
+              ? I18n.tr("尚无记录", SettingsData.language)
+              : PlayerData.maxDifficultyCompleted.toString()
         color: "white"
         basePixelSize: 15
         uiScale: recardCard.scaleFactor
