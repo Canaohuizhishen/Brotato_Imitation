@@ -119,7 +119,6 @@ Item {
                     spacing: 5*storeInterface.scaleFactor
                     ScaledText {
                         id: refreshText
-                        // text: qsTr("刷新") + Controller.refreshPrice(waveNumberText.text)
                         text: I18n.tr("刷新-", SettingsData.language) + refreshButton.currentRefreshPrice
                         basePixelSize: 24
                         uiScale: storeInterface.scaleFactor

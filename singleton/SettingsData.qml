@@ -16,6 +16,7 @@ Item {
     property bool visualEffects: true       // 视觉效果
     property bool showDamageNumbers: true   // 伤害显示
     property bool endOfWaveOptimization: false // 敌袭结束优化
+    property bool showFPS: true             // 显示 FPS 计数器（调试）
 
     // ========== 声音设置 ==========
     property int masterVolume: 70           // 主音效 (0-100)
@@ -55,6 +56,7 @@ Item {
         visualEffects: true,
         showDamageNumbers: true,
         endOfWaveOptimization: false,
+        showFPS: true,
 
         masterVolume: 70,
         sfxVolume: 50,
@@ -157,6 +159,7 @@ Item {
             visualEffects = data.visualEffects ?? defaults.visualEffects
             showDamageNumbers = data.showDamageNumbers ?? defaults.showDamageNumbers
             endOfWaveOptimization = data.endOfWaveOptimization ?? defaults.endOfWaveOptimization
+            showFPS = data.showFPS ?? defaults.showFPS
 
             masterVolume = data.masterVolume ?? defaults.masterVolume
             sfxVolume = data.sfxVolume ?? defaults.sfxVolume
@@ -199,6 +202,7 @@ Item {
         visualEffects = defaults.visualEffects
         showDamageNumbers = defaults.showDamageNumbers
         endOfWaveOptimization = defaults.endOfWaveOptimization
+        showFPS = defaults.showFPS
 
         masterVolume = defaults.masterVolume
         sfxVolume = defaults.sfxVolume

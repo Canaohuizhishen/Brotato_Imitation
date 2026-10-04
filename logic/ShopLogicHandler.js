@@ -32,7 +32,8 @@ function refreshShop() {
 
     var randomItemNum = shopView.columns - lockedItemNum //需要随机生产的商品数量
     var baseItemProbability = 0.6 //道具的基础随机概率
-    var waveFactor = Math.min(waveNumberText.text / 20, 1.0)
+    // 当前波数取数据源 PlayerData（勿引用界面元素：跨组件名字解析会在重构时静默失效）
+    var waveFactor = Math.min(PlayerData.currentWaveNumber / 20, 1.0)
     var waveEffect = baseItemProbability + waveFactor * 0.3 //道具的概率(受波次影响)
     var randomFluctuation = (Math.random() * 0.2) - 0.1 //增加范围在-+0.1的随机率
     var itemProbability = waveEffect + randomFluctuation

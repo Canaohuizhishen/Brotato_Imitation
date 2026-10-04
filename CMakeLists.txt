@@ -43,6 +43,7 @@ qt_add_qml_module(appBrotato
     QML_FILES data/cores/WeaponCustomizationCore.qml data/cores/RoleCustomizationCore.qml
     QML_FILES components/MaterialsBar.qml
     QML_FILES components/BagBar.qml
+    QML_FILES components/HUD.qml
     QML_FILES monsters/BabyAlien.qml
     QML_FILES monsters/Chaser.qml
     QML_FILES weapons/Weapon.qml

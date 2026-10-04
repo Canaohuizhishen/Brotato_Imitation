@@ -7,10 +7,35 @@ import "../logic/utils/color.js" as Color
 import "../logic/utils/collision.js" as Collision
 import "../logic/SaveManager.js" as SaveManager
 import "../logic/ShopLogicHandler.js" as Shop
+import "./TestPlayerData.js" as PlayerData
 
 TestCase {
     name: "CoreTests"
 
+    // ---- 商店刷新（refreshShop）作用域 mock：JS 通过文件作用域解析这些名字 ----
+    // 刻意不提供 waveNumberText —— 回归锁定：refreshShop 不得依赖商店外的界面元素
+    property var shopModel: ({
+        arr: [],
+        count: 0,
+        get: function(i) { return this.arr[i] },
+        clear: function() { this.arr = []; this.count = 0 },
+        append: function(x) { this.arr.push(x); this.count = this.arr.length }
+    })
+    property var shopView: ({ columns: 4 })
+    property var weaponCore: ({
+        getWeaponRandomly: function(n) {
+            var a = []
+            for (var i = 0; i < n; i++) a.push({ grade: 1 })
+            return a
+        }
+    })
+    property var propCore: ({
+        getPropRandomly: function(n) {
+            var a = []
+            for (var i = 0; i < n; i++) a.push({ grade: 1 })
+            return a
+        }
+    })
     function test_getAllWeapons() {
         verify(Array.isArray(DataLoader.getAllWeapons()))
         compare(DataLoader.getAllWeapons().length, 6)
@@ -466,6 +491,16 @@ TestCase {
         Shop.resetRefreshTimes()
         Shop.refreshPrice(1)  // refreshTimes从-1→0(因为reset设为-1), return 2+0=2
         compare(Shop.refreshPrice(1), 3)
+    }
+
+    function test_refreshShop_noUiDependency() {
+        // 回归：refreshShop 必须只依赖文件作用域内的数据源，
+        // 不得引用商店外的界面元素（历史上曾裸引用 GameWindow 的 waveNumberText，HUD 重构后即失效）
+        shopModel.clear()
+        PlayerData.lastStoreGoods.clear()
+        Shop.refreshShop()
+        compare(shopModel.count, shopView.columns)
+        compare(PlayerData.lastStoreGoods.count, shopModel.count)
     }
 
     // freeRefresh 依赖 QML 单例 PlayerData，纯 JS 测试环境不可用

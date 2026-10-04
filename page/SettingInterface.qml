@@ -470,6 +470,12 @@ Item {
                     checked: SettingsData.endOfWaveOptimization
                     onToggled: (checked) => { SettingsData.endOfWaveOptimization = checked; SettingsData.saveSettings() }
                 }
+                SwitchSettingButton {
+                    scaleFactor: settingsInterface.scaleFactor
+                    label: I18n.tr("显示FPS", SettingsData.language)
+                    checked: SettingsData.showFPS
+                    onToggled: (checked) => { SettingsData.showFPS = checked; SettingsData.saveSettings() }
+                }
             }
             Column {
                 width: 420*settingsInterface.scaleFactor

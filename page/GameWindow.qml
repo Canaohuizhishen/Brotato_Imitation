@@ -143,6 +143,7 @@ Item {
     FPSCounter {
         id: fpsCounter
         gameLoop: gameArea.gameLoop
+        visible: SettingsData.showFPS
         anchors.right: parent.right
         anchors.rightMargin: 12
         anchors.top: parent.top
@@ -159,7 +160,7 @@ Item {
         paused: gameWindow.paused
         onIsInCombatChanged: {
             if(!isInCombat){
-                drops.allMaterialsToBag(bagBar.mapToItem(gameArea,bagBar.imageCenterPoint))
+                drops.allMaterialsToBag(hud.bagBar.mapToItem(gameArea, hud.bagBar.imageCenterPoint))
                 drops.allFruitsToPlayer(player)
                 drops.allChestToPlayer(player)
             }
@@ -337,42 +338,10 @@ Item {
         }
     }
 
-    HealthBar {
-        id: healthBar
-        visible: gameArea.visible
+    HUD {
+        id: hud
+        visible: gameArea.visible   // 显隐来源与抽取前一致：战斗相位（gameArea.visible）驱动
         scaleFactor: gameWindow.scaleFactor
-        maxHp: PlayerData.maxHp
-        hp: PlayerData.curHp
-    }
-
-    ExperienceBar {
-        id: experienceBar
-        visible: gameArea.visible
-        scaleFactor: gameWindow.scaleFactor
-        level: PlayerData.curLevel
-        maxXp: PlayerData.maxXp
-        xp: PlayerData.curXp
-    }
-
-    MaterialsBar{
-        id: materialsBar
-        visible: gameArea.visible
-        scaleFactor: gameWindow.scaleFactor
-        number: PlayerData.materialsNumber
-    }
-
-    BagBar{
-        id: bagBar
-        visible: gameArea.visible
-        scaleFactor: gameWindow.scaleFactor
-        number: PlayerData.remainingMaterialsNumber
-    }
-
-    WaveNumberText {
-        id: waveNumberText
-        visible: gameArea.visible
-        scaleFactor: gameWindow.scaleFactor
-        text: PlayerData.currentWaveNumber
     }
 
     function pause(){
