@@ -57,7 +57,7 @@ ApplicationWindow {
 
     // F11 快捷键切换全屏
     Shortcut {
-        sequence: StandardKey.FullScreen  // F11 on most platforms
+        sequences: [ StandardKey.FullScreen ]  // F11 on most platforms；sequences 绑定该标准键全部键位，消除「Only binding to one of multiple key bindings」告警
         onActivated: {
             var newVal = !SettingsData.fullscreen
             SettingsData.fullscreen = newVal

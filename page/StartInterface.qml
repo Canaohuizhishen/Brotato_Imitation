@@ -10,7 +10,6 @@ Item{
     property double scaleFactor: 1.0
     anchors.fill: parent
     anchors.centerIn: parent
-    z: 100
 
     property Button resumeButton: resume
     property Button startButton: start
@@ -20,6 +19,11 @@ Item{
     // --- 动态按钮宽度：测量所有按钮文本，取最长者+内边距 ---
     // x（双边留白）= 原固定按钮宽度(screenWidth/15) - 原中文文本宽度
     readonly property real buttonFontPixelSize: 23 * SettingsData.fontScale * scaleFactor
+
+    // 输入隔离：常开全屏吸收层（防被覆盖时点击穿透；仿 PauseInterface 根部 TapHandler）
+    TapHandler{
+        onTapped: {}
+    }
 
     Image {
         id: startImage

@@ -11,7 +11,6 @@ Item {
     property double scaleFactor: 1.0
     anchors.fill: parent
     anchors.centerIn: parent
-    z: 100
     property Button backButton: back
     property string selectedRoleName
     signal selected()
@@ -26,8 +25,18 @@ Item {
 
     function init(){
         visible=false
+        onEnter()
+    }
+
+    // 进入复位（PageManager.push 经 onEnter 钩子调用；不含 visible 写）
+    function onEnter(){
         selectedRoleName=""
         roleGrid.currentIndex=0
+    }
+
+    // 输入隔离：常开全屏吸收层（防被覆盖时点击穿透；仿 PauseInterface 根部 TapHandler）
+    TapHandler{
+        onTapped: {}
     }
 
     Rectangle {

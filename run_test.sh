@@ -21,16 +21,20 @@ RESET='\033[0m'
 cd "$(dirname "$0")"
 
 # 1. 构建测试（如果未构建或需要更新）
-if [ ! -f build/tst_core ] || [ build/tst_core -ot tests/tst_core.qml ]; then
+#    判定基准取 tests/main.cpp（tst_core 的唯一构建输入）；tests/*.qml 由 -input 运行时发现，不参与构建
+if [ ! -x build/tst_core ] || [ build/tst_core -ot tests/main.cpp ]; then
     echo "🔨 构建测试..."
     cmake -B build -DBUILD_TESTS=ON
-    cmake --build build --target tst_core --parallel
+    # 显式限并行 4（禁止裸 --parallel：Makefile 生成器下 = 无上限 make -j，本机曾因此 OOM）
+    cmake --build build --target tst_core --parallel 4
 fi
 
 # 确保测试二进制存在
 [ -x build/tst_core ] || { echo "❌ build/tst_core 不存在，请先构建"; exit 1; }
 
 # 2. 运行测试，捕获输出
+# GUI 测试兜底走 offscreen（与 CI 对齐；本机规则：GUI 探针强制 offscreen，防弹到真实桌面）
+export QT_QPA_PLATFORM="${QT_QPA_PLATFORM:-offscreen}"
 RAW=$(build/tst_core -input tests/ 2>&1 || true)
 
 # 3. 中文映射表（函数名 → 测试要点描述）
@@ -150,6 +154,25 @@ D[test_monsterHp_wave1]="第 1 波怪物基础血量"
 D[test_monsterHp_wave20]="第 20 波怪物血量随波次增长"
 D[test_monsterSpeed]="怪物速度受倍率和属性叠加影响"
 D[test_burnTotalDamage]="灼烧 DOT 总伤害 = 每跳伤害 × 跳数"
+D[test_renderWeapon_flamethrower]="火焰喷射器基础面板（元素远程，伤害 4）"
+D[test_renderWeapon_flamethrower_elemental]="元素加成×1.0 计入火焰喷射器面板"
+D[test_renderWeapon_flamethrower_grade4]="四级火焰喷射器（倍率 2.0＋增伤 10%，取整）"
+D[test_renderWeapon_iceCone]="冰锥基础面板（元素远程，伤害 10）"
+D[test_renderWeapon_iceCone_elemental]="元素加成×1.0 计入冰锥面板"
+D[test_applyEffects_enemySpeed]="敌方属性增量（速度/数量/树）的叠加"
+D[test_applyEffects_burning]="灼烧速率与百分比属性增量的叠加"
+D[test_applyEffects_penetrateRebound]="穿透/反弹/穿透伤害增量的叠加"
+D[test_push_sets_visible_z_top]="push 置可见、z=500，成为栈顶"
+D[test_push_order_onEnter_before_visible]="onEnter 先于 visible=true 执行（钩子次序）"
+D[test_push_duplicate_ignored]="重复 push 同一页面被忽略"
+D[test_push_unregistered_ignored]="push 未注册页面被忽略"
+D[test_pop_hides_top_and_reveals_lower]="pop 隐藏栈顶并揭开下层页面"
+D[test_push_pop_not_write_lower_visible]="栈操作不写下层页面 visible（核心不变量）"
+D[test_replace]="replace = pop + push，z 序号重算"
+D[test_clear_to_base]="clearToBase 清栈并触发全部 onExit"
+D[test_z_recalc_after_pop]="pop 后全栈 z 按序号重算"
+D[test_no_hooks_page_ok]="无钩子页面 push/pop 正常工作"
+D[test_pop_empty_warns_no_crash]="空栈 pop 仅告警不崩溃"
 
 # 4. 分组分类
 declare -A GROUP
@@ -268,6 +291,25 @@ GROUP[test_monsterHp_wave1]="👾 怪物属性"
 GROUP[test_monsterHp_wave20]="👾 怪物属性"
 GROUP[test_monsterSpeed]="👾 怪物属性"
 GROUP[test_burnTotalDamage]="🔥 灼烧 DOT"
+GROUP[test_renderWeapon_flamethrower]="📦 DataLoader"
+GROUP[test_renderWeapon_flamethrower_elemental]="📦 DataLoader"
+GROUP[test_renderWeapon_flamethrower_grade4]="📦 DataLoader"
+GROUP[test_renderWeapon_iceCone]="📦 DataLoader"
+GROUP[test_renderWeapon_iceCone_elemental]="📦 DataLoader"
+GROUP[test_applyEffects_enemySpeed]="📦 DataLoader"
+GROUP[test_applyEffects_burning]="📦 DataLoader"
+GROUP[test_applyEffects_penetrateRebound]="📦 DataLoader"
+GROUP[test_push_sets_visible_z_top]="🧭 PageManager"
+GROUP[test_push_order_onEnter_before_visible]="🧭 PageManager"
+GROUP[test_push_duplicate_ignored]="🧭 PageManager"
+GROUP[test_push_unregistered_ignored]="🧭 PageManager"
+GROUP[test_pop_hides_top_and_reveals_lower]="🧭 PageManager"
+GROUP[test_push_pop_not_write_lower_visible]="🧭 PageManager"
+GROUP[test_replace]="🧭 PageManager"
+GROUP[test_clear_to_base]="🧭 PageManager"
+GROUP[test_z_recalc_after_pop]="🧭 PageManager"
+GROUP[test_no_hooks_page_ok]="🧭 PageManager"
+GROUP[test_pop_empty_warns_no_crash]="🧭 PageManager"
 
 # 5. 解析并输出
 echo ""

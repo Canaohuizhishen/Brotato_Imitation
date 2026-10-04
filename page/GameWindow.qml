@@ -28,6 +28,25 @@ Item {
         backMainMenu()
     }
 
+    PageManager {
+        id: pageManager
+    }
+
+    Component.onCompleted: {
+        pageManager.register("start", startInterface)
+        pageManager.register("roleSelection", roleSelectionInterface)
+        pageManager.register("weaponSelection", weaponSelectionInterface)
+        pageManager.register("difficultySelection", difficultySelectionInterface)
+        pageManager.register("gameArea", gameArea)
+        pageManager.register("store", storeInterface)
+        pageManager.register("chestOpening", chestOpeningInterface)
+        pageManager.register("upgrade", upgradeInterface)
+        pageManager.register("settlement", settlementInterface)
+        pageManager.register("pause", pauseInterface)
+        pageManager.register("setting", settingInterface)
+        pageManager.push("start")   // 初始栈：[start]（M4：start 入栈收口）
+    }
+
     Sound {
         id: sound
     }
@@ -45,6 +64,7 @@ Item {
         id: settingInterface
         visible: false
         scaleFactor: gameWindow.scaleFactor
+        onCloseRequested: pageManager.pop()
     }
 
     PauseInterface{
@@ -54,8 +74,7 @@ Item {
         continueButton.onClicked: gameWindow.resume()
         restartButton.onClicked: gameWindow.restart()
         settingButton.onClicked:  {
-            pauseInterface.visible=Qt.binding(function(){return !settingInterface.visible})
-            settingInterface.visible=true
+            pageManager.push("setting")
         }
         backMainMenuButton.onClicked: gameWindow.backMainMenu()
     }
@@ -64,15 +83,12 @@ Item {
         id: startInterface
         visible: true
         scaleFactor: gameWindow.scaleFactor
-        z:100
         resumeButton.onClicked: continueGame()
         startButton.onClicked:{
-            startInterface.visible=false
-            roleSelectionInterface.init()
-            roleSelectionInterface.visible=true
+            pageManager.push("roleSelection")
         }
         settingButton.onClicked: {
-            settingInterface.visible=true
+            pageManager.push("setting")
         }
         exitButton.onClicked: Qt.quit()
     }
@@ -82,14 +98,11 @@ Item {
         visible: false
         scaleFactor: gameWindow.scaleFactor
         onSelected:{
-            roleSelectionInterface.visible=false
-            weaponSelectionInterface.init()
+            pageManager.push("weaponSelection")
             weaponSelectionInterface.selectedRoleName=selectedRoleName
-            weaponSelectionInterface.visible=true
         }
         backButton.onClicked: {
-            init()
-            startInterface.visible=true
+            pageManager.pop()
         }
     }
 
@@ -98,14 +111,12 @@ Item {
         visible: false
         scaleFactor: gameWindow.scaleFactor
         onSelected:{
-            weaponSelectionInterface.visible=false
+            pageManager.push("difficultySelection")
             difficultySelectionInterface.selectedRoleName=selectedRoleName
             difficultySelectionInterface.selectedWeaponName=selectedWeaponName
-            difficultySelectionInterface.visible=true
         }
         backButton.onClicked: {
-            init()
-            roleSelectionInterface.visible=true
+            pageManager.pop()
         }
     }
 
@@ -119,7 +130,7 @@ Item {
         scaleFactor: gameWindow.scaleFactor
         onSelected:{
             PlayerData.init()
-            difficultySelectionInterface.visible=false
+            pageManager.clearToBase()
             // for(var i=0;i<1;i++)PlayerData.addWeapon(selectedWeaponName,1)
             for(var i=0;i<1;i++)PlayerData.addWeapon(weaponCore.getWeapon(selectedWeaponName,1).weaponName,1)
             PlayerData.roleName=""
@@ -135,8 +146,8 @@ Item {
             //PlayerData.materialsNumber=10000
         }
         backButton.onClicked: {
-            init()
-            weaponSelectionInterface.visible=true
+            pageManager.pop()
+            init()   // 维持现状：difficulty 仅在返回键重置（无 onEnter 钩子）
         }
     }
 
@@ -179,12 +190,11 @@ Item {
         chestNotificationBar: chestNotificationBar
         onProcessedOne:{
             if(chestNotificationBar.number==0){
-                visible=false
                 if(upgradeNotificationBar.number){
-                    upgradeInterface.visible=true
+                    pageManager.replace("upgrade")
                     waveCountdown.visible=false
                 }else{
-                    storeInterface.visible=true
+                    pageManager.replace("store")
                 }
             }
         }
@@ -202,9 +212,8 @@ Item {
         upgradeNotificationBar: upgradeNotificationBar
         onChoosedOne: {
             if(upgradeNotificationBar.number===0){
-                upgradeInterface.visible=false
+                pageManager.replace("store")
                 waveCountdown.visible=true
-                storeInterface.visible=true
             }
         }
         onVisibleChanged: {
@@ -219,7 +228,7 @@ Item {
         visible: false
         scaleFactor: gameWindow.scaleFactor
         startButton.onClicked:{
-            visible=false
+            pageManager.clearToBase()
             waveCountdown.start()
         }
         onVisibleChanged: {
@@ -262,8 +271,10 @@ Item {
             id: delayDietimer
             interval: 2000; running: false; repeat: false
             onTriggered: {
-                gameArea.visible=false
-                settlementInterface.visible=true
+                // 防守：已经回到主菜单/选择流时，忽略残留的计时器触发（对齐 delayOvertimer）
+                if(gameWindow.inSelectInterface) return
+                gameArea.visible = false   // 基座例外：不进栈，死亡路径直接隐藏
+                pageManager.push("settlement")
             }
         }
     }
@@ -303,14 +314,14 @@ Item {
                 // 防守：如果已经回到主菜单，忽略残留的计时器触发
                 if(gameWindow.inSelectInterface) return
                 if(PlayerData.currentWaveNumber===20){
-                    settlementInterface.visible=true
+                    pageManager.push("settlement")
                 }else if(chestNotificationBar.number){
-                    chestOpeningInterface.visible=true
+                    pageManager.push("chestOpening")
                 }else if(upgradeNotificationBar.number){
-                    upgradeInterface.visible=true
+                    pageManager.push("upgrade")
                     waveCountdown.visible=false
                 }else{
-                    storeInterface.visible=true
+                    pageManager.push("store")
                 }
             }
         }
@@ -322,7 +333,6 @@ Item {
         target: PlayerData
         function onIsInCombatChanged() {
             if (PlayerData.isInCombat) {
-                storeInterface.visible = false
                 delayOvertimer.stop()
             } else if (!gameWindow.inSelectInterface) {
                 delayOvertimer.stop()
@@ -346,16 +356,18 @@ Item {
 
     function pause(){
         gameWindow.paused = true
-        pauseInterface.visible = true
+        pageManager.push("pause")
     }
 
     function resume(){
         gameWindow.paused = false
-        pauseInterface.visible = false
+        pageManager.pop()
     }
 
     function restart(){
         inSelectInterface=true
+        delayDietimer.stop()   // 清掉可能残留的死亡转场计时器（快速重开路径）
+        pageManager.clearToBase()
         settingInterface.init()
         pauseInterface.init()
         gameArea.init()
@@ -369,8 +381,6 @@ Item {
         PlayerData.init()
 
         gameArea.paused=Qt.binding(function(){return paused})
-        upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
-        chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
         var roleName=PlayerData.roleName
         PlayerData.roleName=""
         PlayerData.roleName=roleName
@@ -384,8 +394,7 @@ Item {
     function continueGame(){
         PlayerData.currentWaveNumber--
         storeInterface.isContinue = true
-        startInterface.visible=false
-        storeInterface.visible=true
+        pageManager.replace("store")   // start → store
         paused=false
         inSelectInterface=false
     }
@@ -393,6 +402,7 @@ Item {
     function backMainMenu(){
         // 必须先设 inSelectInterface=true，阻止 onIsInCombatChanged 误触发 delayOvertimer
         inSelectInterface=true
+        delayDietimer.stop()   // 清掉可能残留的死亡转场计时器（死亡 2 秒内快速返回的路径）
         if(PlayerData.currentWaveNumber===1){
             roleSelectionInterface.init()
             weaponSelectionInterface.init()
@@ -404,6 +414,7 @@ Item {
             PlayerData.materialsNumber-=PlayerData.harvesting
             PlayerData.curXp-=PlayerData.harvesting
         }
+        pageManager.clearToBase()   // 清栈收口（须在经济结算之后：暂停盖商店时 store 仍为可见态，不得误罚）
         PlayerData.materialsNumber-=PlayerData.curWaveMaterialsNumber
         PlayerData.curXp-=PlayerData.curWaveMaterialsNumber
         PlayerData.curWaveMaterialsNumber=0
@@ -420,9 +431,7 @@ Item {
         waveCountdown.init()
 
         gameArea.paused=Qt.binding(function(){return paused})
-        upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
-        chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
-        startInterface.visible=true
+        pageManager.push("start")
         // 主动存档，不依赖 destruction 顺序
         if (PlayerData.currentWaveNumber > 1) {
             PlayerData.saveGame()
@@ -431,17 +440,20 @@ Item {
 
     function backMainMenuFromSettlement(){
         init()
-        startInterface.visible=true
+        pageManager.push("start")
     }
 
     function newGame(){
         init()
-        roleSelectionInterface.visible=true
+        pageManager.push("start")
+        pageManager.push("roleSelection")
     }
 
     function init(){
         paused=false
         inSelectInterface=true
+        delayDietimer.stop()   // 清掉可能残留的死亡转场计时器（重置路径统一收口）
+        pageManager.clearToBase()
         settingInterface.init()
         pauseInterface.init()
         startInterface.init()
@@ -459,7 +471,5 @@ Item {
         PlayerData.init()
 
         gameArea.paused=Qt.binding(function(){return paused})
-        upgradeNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
-        chestNotificationBar.visible=Qt.binding(function(){return gameArea.visible})
     }
 }

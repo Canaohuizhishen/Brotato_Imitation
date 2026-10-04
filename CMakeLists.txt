@@ -37,6 +37,7 @@ qt_add_qml_module(appBrotato
     QML_FILES monsters/Monsters.qml monsters/Monster.qml
     # ── Pages ──
     QML_FILES page/Background.qml page/DifficultySelectionInterface.qml page/GameArea.qml page/GameWindow.qml page/RoleSelectionInterface.qml page/StartInterface.qml page/WeaponSelectionInterface.qml
+    QML_FILES page/PageManager.qml
     # ── Entities ──
     QML_FILES entities/Player.qml
     # ── Data Cores ──

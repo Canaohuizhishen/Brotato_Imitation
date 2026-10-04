@@ -11,7 +11,6 @@ import "../logic/utils/i18n.js" as I18n
 
 Item {
     id: storeInterface
-    z: 150
     anchors.fill: parent
     property double scaleFactor: 1.0
     property string cionImage : "qrc:/images/material_icon.png"
@@ -52,6 +51,11 @@ Item {
         } else if(visible) {
             reload()
         }
+    }
+
+    // 输入隔离：常开全屏吸收层（防被覆盖时点击穿透；仿 PauseInterface 根部 TapHandler）
+    TapHandler{
+        onTapped: {}
     }
 
     //主背景

@@ -31,6 +31,11 @@ Rectangle {
         attributePanel.upData()
     }
 
+    // 输入隔离：常开全屏吸收层（防被覆盖时点击穿透；仿 PauseInterface 根部 TapHandler）
+    TapHandler{
+        onTapped: {}
+    }
+
     // 升级文本
     ScaledText {
         id: upgradeTitle

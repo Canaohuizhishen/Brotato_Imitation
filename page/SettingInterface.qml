@@ -7,10 +7,10 @@ import "../logic/utils/i18n.js" as I18n
 Item {
     id: settingsInterface
     property double scaleFactor: 1.0
-    z: 200
     anchors.fill: parent
     focus: true
     property alias backButton: backButton
+    signal closeRequested()   // 关闭请求（由 GameWindow 接线到 pageManager.pop()）
 
     onVisibleChanged: {
         if (visible) {
@@ -80,7 +80,7 @@ Item {
             text: I18n.tr("返回", SettingsData.language)
             width: parent.width
             onActivated:{
-                settingsInterface.visible = false
+                settingsInterface.closeRequested()
             }
         }
     }
