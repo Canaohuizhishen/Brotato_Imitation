@@ -68,6 +68,7 @@ qt_add_qml_module(appBrotato
     QML_FILES logic/GameLoop.qml
     QML_FILES logic/ComponentCache.qml
     QML_FILES logic/ParticlePool.js
+    QML_FILES logic/TextPool.js
     QML_FILES logic/SpatialGrid.js
     QML_FILES logic/SaveManager.js
     # ── Particles ──

@@ -93,7 +93,7 @@ Rectangle {
         function addOptions(){
             var array=core.getOptionRandomly(4)
             for(var i=0;i<array.length;i++){
-                model.append({ "level":array[i].grade,"name": array[i].objectName, "upgradeOptionName":array[i].optionName , "description": core.renderTalentText(array[i].talentTextTemplate, array[i].grade) })
+                model.append({ "level":array[i].grade,"name": array[i].objectName, "upgradeOptionName":array[i].optionName , "description": core.renderTalentText(array[i].talentTextTemplate, array[i].effects) })
             }
         }
     }

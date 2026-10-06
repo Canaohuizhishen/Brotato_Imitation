@@ -9,7 +9,6 @@
 //   effects[]       效果数组
 //     attribute     属性名（如 maxHp, damage, speed 等）
 //     delta         加减值（正 = 增益, 负 = 减益）← 道具 99% 只用这个
-//     deltaFromGrade 每级增量（用于升级选项）
 //     — 以下仅角色/天赋用，普通道具请忽略 —
 //     condition     gt / lt 条件判断
 //     conditionValue 条件阈值

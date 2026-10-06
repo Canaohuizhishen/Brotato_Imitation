@@ -2,6 +2,7 @@ import QtQuick
 import QtTest
 import "../logic/DataLoader.js" as DataLoader
 import "../logic/SpatialGrid.js" as SpatialGrid
+import "../logic/ParticlePool.js" as ParticlePool
 import "../logic/utils/tool.js" as Tool
 import "../logic/utils/color.js" as Color
 import "../logic/utils/collision.js" as Collision
@@ -36,6 +37,10 @@ TestCase {
             return a
         }
     })
+
+    // 死引用构造专用父（ParticlePool 守卫回归用例用；仅销毁一次，勿在其它用例引用）
+    property var doomedParticleParent: Item { objectName: "doomedParticleParent" }
+
     function test_getAllWeapons() {
         verify(Array.isArray(DataLoader.getAllWeapons()))
         compare(DataLoader.getAllWeapons().length, 6)
@@ -234,14 +239,133 @@ TestCase {
         compare(d.curHp, 50)
     }
 
-    function test_applyEffects_deltaFromGrade() {
-        var d = {damage:0}
-        DataLoader.applyEffects([{attribute:"damage",deltaFromGrade:3}],d,3)
-        compare(d.damage, 9)
-    }
-
     function test_renderTalentText() {
         compare(DataLoader.renderTalentText("伤害 +{{value}}",5), "伤害 +5")
+    }
+
+    // ---- 升级选项：分桶展开 / 显示值 = 生效值（回归） ----
+
+    function test_effectValue_concreteDelta() {
+        // 展开后条目带具体 delta；取值 = 首个增量效果
+        compare(DataLoader.effectValue([{attribute:"speed", delta:6}]), 6)
+        // 空数组 / 非数值效果 → 0
+        compare(DataLoader.effectValue([]), 0)
+        compare(DataLoader.effectValue([{attribute:"maxHp", condition:"lt", conditionValue:15, setTo:15}]), 0)
+    }
+
+    function test_upgradeOption_migrationParity() {
+        // 迁移对等：新 deltaByGrade 展开后，每级数值必须等于旧格式基数 × 等级
+        //（基线 = 迁移前旧字段的每级基数；写错一个数即失败）
+        var base = { leg:3, chest:1, skull:2, lung:2, finger:3, back:3, teeth:1, heart:3,
+                     brain:1, reflexes:5, nose:5, hand:5, shoulder:1, foream:2, triceps:5, eyes:15 }
+        var names = Object.keys(base)
+        compare(names.length, 16)
+        for (var n = 0; n < names.length; n++) {
+            var name = names[n]
+            for (var g = 1; g <= 4; g++) {
+                var opt = DataLoader.getUpgradeOption(g, name)
+                verify(opt, name + " 缺失")
+                compare(opt.grade, g)
+                verify(opt.effects.length >= 1)
+                for (var e = 0; e < opt.effects.length; e++) {
+                    compare(opt.effects[e].delta, base[name] * g,
+                            name + " 等级" + g + " delta 应为 " + (base[name] * g))
+                }
+            }
+        }
+    }
+
+    function test_upgradeOption_expandByGrade() {
+        // 逐级展开与字段清理
+        var expects = [3, 6, 9, 12]
+        for (var g = 1; g <= 4; g++) {
+            var opt = DataLoader.getUpgradeOption(g, "leg")
+            compare(opt.effects[0].delta, expects[g - 1])
+            verify(opt.effects[0].deltaByGrade === undefined, "展开后不应残留 deltaByGrade")
+        }
+        // 心脏：双效果均展开且逐级同值
+        var heart = DataLoader.getUpgradeOption(2, "heart")
+        compare(heart.effects.length, 2)
+        compare(heart.effects[0].delta, 6)
+        compare(heart.effects[1].delta, 6)
+    }
+
+    function test_upgradeOption_noCrossGradeDuplicates() {
+        // 跨等级按 objectName 去重：同一选项的不同等级不得出现在同一次四选一中
+        for (var round = 0; round < 30; round++) {
+            var r = DataLoader.getUpgradeOptionRandomly(4, {1:1,2:1,3:1,4:1})
+            compare(r.length, 4)
+            var seen = {}
+            for (var i = 0; i < r.length; i++) {
+                verify(!seen[r[i].objectName], "同一选项跨等级重复出现：" + r[i].objectName)
+                seen[r[i].objectName] = true
+            }
+        }
+    }
+
+    function test_upgradeDisplayValueMatchesApplied() {
+        // [objectName, grade, 期望值]：覆盖基数≠1 的典型与双效果选项
+        var cases = [["eyes", 1, 15], ["leg", 3, 9], ["chest", 4, 4], ["heart", 2, 6]]
+        for (var i = 0; i < cases.length; i++) {
+            var opt = DataLoader.getUpgradeOption(cases[i][1], cases[i][0])
+            verify(opt)
+            // 1) 取值（展开后的实际生效值）
+            var v = DataLoader.effectValue(opt.effects)
+            compare(v, cases[i][2])
+            // 2) 渲染文本包含该数值（回归：曾渲染为等级数字）
+            var text = DataLoader.renderTalentText(opt.talentTextTemplate, v)
+            verify(text.indexOf("+" + cases[i][2]) !== -1,
+                   cases[i][0] + " 渲染文本应含 +" + cases[i][2] + "，实际：" + text)
+            // 3) 与 applyEffects 实际施加值一致
+            var attr = opt.effects[0].attribute
+            var d = {}
+            d[attr] = 0
+            DataLoader.applyEffects(opt.effects, d)
+            compare(d[attr], cases[i][2])
+        }
+    }
+
+    // ---- ParticlePool ----
+
+    function test_particlePool_releaseReinit() {
+        // release 语义：清空并复位标志 → 下次 spawn 惰性重建（backMainMenu 接线依赖）
+        ParticlePool.init(this)
+        compare(ParticlePool._bloodPool.length, 50, "init 应预创建 50 个血花粒子")
+        compare(ParticlePool._debrisPool.length, 30, "init 应预创建 30 个残渣粒子")
+
+        ParticlePool.release()
+        compare(ParticlePool._bloodPool.length, 0, "release 后血花池应清空")
+        compare(ParticlePool._debrisPool.length, 0, "release 后残渣池应清空")
+        compare(ParticlePool._bloodInitialized, false, "初始化标志应复位")
+
+        ParticlePool.spawn(10, 10, 0, 0, 10, this, true)
+        compare(ParticlePool._bloodPool.length, 50, "spawn 应惰性重建血花池")
+
+        ParticlePool.release()   // 收尾：清干净，避免粒子存留影响后续用例
+    }
+
+    function test_particlePool_releaseWithDeadRefs() {
+        // 守卫回归（与 TextPool 对称）：死引用槽位下 release 必须不中断、池完整复位。
+        // （修复前：对死引用调用 .destroy() 抛 TypeError，循环中断）
+        ParticlePool.release()   // 自包含：干净起点
+        ParticlePool.init(doomedParticleParent)
+        compare(ParticlePool._bloodPool.length, 50, "init 应预创建 50 个血花粒子")
+        compare(ParticlePool._debrisPool.length, 30, "init 应预创建 30 个残渣粒子")
+        doomedParticleParent.destroy()
+        wait(300)   // 等 deleteLater 生效
+        verify(typeof ParticlePool._bloodPool[0].restartAnimation === "undefined",
+               "前置：以 doomedParticleParent 为填充父创建的粒子应为死引用")
+
+        ParticlePool.release()   // 目标：死引用下不抛错、不中断
+        compare(ParticlePool._bloodPool.length, 0, "死引用下 release 仍应清空血花池")
+        compare(ParticlePool._debrisPool.length, 0, "死引用下 release 仍应清空残渣池")
+        compare(ParticlePool._bloodInitialized, false, "初始化标志应复位")
+
+        // 复位后仍可正常惰性重建
+        ParticlePool.spawn(10, 10, 0, 0, 10, this, true)
+        compare(ParticlePool._bloodPool.length, 50, "spawn 应惰性重建血花池")
+
+        ParticlePool.release()   // 收尾：清干净，避免粒子存留影响后续用例
     }
 
     // ---- SpatialGrid ----
@@ -261,6 +385,23 @@ TestCase {
         SpatialGrid.init(100)
         SpatialGrid.insert({_spatialId:"e1",width:40,height:40},50,50)
         compare(SpatialGrid.query(500,500,100,100).length, 0)
+    }
+
+    function test_spatial_reinitRebuilds() {
+        // 锁定“每帧 init 重建”用法（GameArea 每帧 init(200 * scaleFactor)）：
+        // 重复 init 应等价于清空重建，且换 cellSize 后查询仍正确
+        SpatialGrid.init(100)
+        SpatialGrid.insert({_spatialId:"e1",width:40,height:40},50,50)
+        compare(SpatialGrid.query(0,0,200,200).length, 1)
+
+        SpatialGrid.init(100)   // 模拟下一帧重建
+        compare(SpatialGrid.query(0,0,200,200).length, 0, "重 init 后应清空旧登记")
+        SpatialGrid.insert({_spatialId:"e1",width:40,height:40},50,50)
+        compare(SpatialGrid.query(0,0,200,200).length, 1, "重建后应可重新插入并查询")
+
+        SpatialGrid.init(200 * 0.5)   // 缩放联动公式代入：cellSize 随 init 更新
+        SpatialGrid.insert({_spatialId:"e2",width:40,height:40},10,10)   // 单格几何，断言确定
+        compare(SpatialGrid.query(0,0,200,200).length, 1, "新 cellSize 下查询应正确")
     }
 
     function test_spatial_remove() {

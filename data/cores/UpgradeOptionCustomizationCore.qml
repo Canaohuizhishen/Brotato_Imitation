@@ -25,10 +25,11 @@ Item {
     }
 
     function applyOptionEffects(optionData){
-        DataLoader.applyEffects(optionData.effects, PlayerData, optionData.grade)
+        DataLoader.applyEffects(optionData.effects, PlayerData)
     }
 
-    function renderTalentText(template, grade){
-        return DataLoader.renderTalentText(template, grade)
+    // 显示值 = 选项实际生效值（效果已按等级展开，取首个增量效果的 delta）
+    function renderTalentText(template, effects){
+        return DataLoader.renderTalentText(template, DataLoader.effectValue(effects))
     }
 }

@@ -6,6 +6,7 @@ import singleton.SettingsData
 import "../components"
 import "../data/cores"
 import "../logic/utils/tool.js" as Tool
+import "../logic/TextPool.js" as TextPool
 import "../logic/ParticlePool.js" as ParticlePool
 import "../logic/SpatialGrid.js" as SpatialGrid
 
@@ -124,7 +125,7 @@ Item {
                 monsterData.hp -= monsterData.burnDamagePerTick
                 monsterData.burnTicksRemaining--
                 if (SettingsData.showDamageNumbers)
-                    Tool.createText(monster, "-" + monsterData.burnDamagePerTick, 22*monster.scaleFactor, "orange", monster.x, monster.y - 10*monster.scaleFactor)
+                    TextPool.createText(monster, "-" + monsterData.burnDamagePerTick, 22*monster.scaleFactor, "orange", monster.x, monster.y - 10*monster.scaleFactor)
             }
             if (monsterData.burnTicksRemaining <= 0) {
                 monsterData.isBurning = false
@@ -521,17 +522,17 @@ Item {
         //可能的暴击
         if(Math.random()<bullet.critical/100){
             monsterData.hp-=bullet.damage*bullet.criticalDamageRate
-            if(SettingsData.showDamageNumbers) Tool.createText(owner,bullet.damage*2,27*scaleFactor,"yellow",bullet.x,bullet.y)
+            if(SettingsData.showDamageNumbers) TextPool.createText(owner,bullet.damage*2,27*scaleFactor,"yellow",bullet.x,bullet.y)
         }else{
             monsterData.hp-=bullet.damage
-            if(SettingsData.showDamageNumbers) Tool.createText(owner,bullet.damage,27*scaleFactor,"white",bullet.x,bullet.y)
+            if(SettingsData.showDamageNumbers) TextPool.createText(owner,bullet.damage,27*scaleFactor,"white",bullet.x,bullet.y)
         }
 
         //对 Boss 额外伤害
         if (monster.core.isBoss && PlayerData.damageToBoss > 0) {
             var bossExtraDmg = Math.floor(bullet.damage * PlayerData.damageToBoss / 100)
             monsterData.hp -= bossExtraDmg
-            if (SettingsData.showDamageNumbers) Tool.createText(owner, "+" + bossExtraDmg, 22*scaleFactor, "purple", bullet.x, bullet.y - 20*scaleFactor)
+            if (SettingsData.showDamageNumbers) TextPool.createText(owner, "+" + bossExtraDmg, 22*scaleFactor, "purple", bullet.x, bullet.y - 20*scaleFactor)
         }
 
         //可能的燃烧触发
@@ -569,7 +570,7 @@ Item {
         //可能的生命窃取
         if(Math.random()<PlayerData.lifeSteal/100){
             PlayerData.curHp++
-            Tool.createText(owner,"+1",24*scaleFactor,"lime",target.x,target.y-24*scaleFactor)
+            TextPool.createText(owner,"+1",24*scaleFactor,"lime",target.x,target.y-24*scaleFactor)
         }
     }
 

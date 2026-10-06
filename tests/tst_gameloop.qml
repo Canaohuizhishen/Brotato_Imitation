@@ -133,4 +133,71 @@ TestCase {
 
         compare(calledCount, 0, "一次注销后不应再有回调触发（无重复/悬空残留）")
     }
+
+    // ---- 分频桶时间语义（确定性驱动 advanceBuckets，不经真实帧时钟） ----
+
+    function test_advanceBuckets_1000ms_3000ms_cadence() {
+        var gl = gameLoopLoader.item
+        gl.reset()
+        var c1000 = 0, c3000 = 0
+        gl.registerPer1000ms(function() { c1000++ })
+        gl.registerPer3000ms(function() { c3000++ })
+        // 模拟 6 秒：0.1s × 60 帧 → 1000ms 桶 6 次、3000ms 桶 2 次
+        for (var i = 0; i < 60; i++) gl.advanceBuckets(0.1)
+        compare(c1000, 6, "1000ms 桶：6s 内应触发 6 次")
+        compare(c3000, 2, "3000ms 桶：6s 内应触发 2 次")
+    }
+
+    function test_advanceBuckets_100ms_200ms_cadence() {
+        var gl = gameLoopLoader.item
+        gl.reset()
+        var c100 = 0, c200 = 0
+        gl.registerPer100ms(function() { c100++ })
+        gl.registerPer200ms(function() { c200++ })
+        // 模拟 2 秒：0.1s × 20 帧 → 100ms 桶 20 次、200ms 桶 10 次
+        for (var i = 0; i < 20; i++) gl.advanceBuckets(0.1)
+        compare(c100, 20, "100ms 桶：2s 内应触发 20 次")
+        compare(c200, 10, "200ms 桶：2s 内应触发 10 次")
+    }
+
+    function test_advanceBuckets_frameRateIndependent() {
+        var gl = gameLoopLoader.item
+        // 同一总时长 1 秒，两种“帧率”（0.1s/帧 vs 0.05s/帧）触发次数必须一致
+        gl.reset()
+        var c500 = 0
+        gl.registerPer500ms(function() { c500++ })
+        for (var i = 0; i < 10; i++) gl.advanceBuckets(0.1)
+        var firesLowFps = c500
+        gl.reset()
+        c500 = 0   // 计数器归零：只比较第二段（0.05s 步长）的增量
+        for (var j = 0; j < 20; j++) gl.advanceBuckets(0.05)
+        compare(c500, firesLowFps, "500ms 桶触发次数应与模拟帧率无关")
+        compare(firesLowFps, 2, "1s 内 500ms 桶应触发 2 次")
+    }
+
+    function test_advanceBuckets_resetClears() {
+        var gl = gameLoopLoader.item
+        gl.reset()
+        var c500 = 0
+        gl.registerPer500ms(function() { c500++ })
+        // 先累积 0.45s（不足 0.5s，不应触发）
+        for (var i = 0; i < 9; i++) gl.advanceBuckets(0.05)
+        compare(c500, 0)
+        // reset 清零余数：再累积 0.1s 仍不应触发（若余数未清则 0.45+0.1 已跨拍）
+        gl.reset()
+        gl.advanceBuckets(0.1)
+        compare(c500, 0, "reset() 应清零分频桶余数")
+    }
+
+    function test_bucketFiresInRealLoop() {
+        var gl = gameLoopLoader.item
+        gl.reset()
+        var c200 = 0
+        gl.registerPer200ms(function() { c200++ })
+        // 真实 FrameAnimation 驱动（offscreen 下仍按渲染帧推进）：
+        // 200ms 桶应在 2s 内至少触发一次（捕捉 advanceBuckets 未接入 onTriggered 的接线错误）
+        gl.active = true
+        tryVerify(function() { return c200 > 0; }, 2000)
+        gl.active = false
+    }
 }

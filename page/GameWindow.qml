@@ -2,7 +2,8 @@ import QtQuick 2.15
 import singleton.PlayerData
 import singleton.SettingsData
 import "../components"
-import "../logic/utils/tool.js" as Tool
+import "../logic/TextPool.js" as TextPool
+import "../logic/ParticlePool.js" as ParticlePool
 import "../data/cores"
 import "../logic/utils/i18n.js" as I18n
 import "../sound"
@@ -263,7 +264,7 @@ Item {
                     gameArea.active=false
                     gameArea.paused=true
                     delayDietimer.start()
-                    Tool.createText(gameWindow,I18n.tr("战败",SettingsData.language),50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
+                    TextPool.createText(gameWindow,I18n.tr("战败",SettingsData.language),50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
                 }
             }
         }
@@ -340,9 +341,9 @@ Item {
                 delayOvertimer.running = true
                 // 显示通过/胜利文本（覆盖倒计时结束和Boss击杀两种路径）
                 if(PlayerData.currentWaveNumber<20){
-                    Tool.createText(gameWindow,I18n.tr("通过!",SettingsData.language),40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
+                    TextPool.createText(gameWindow,I18n.tr("通过!",SettingsData.language),40*scaleFactor,"white",gameWindow.width/2-40*scaleFactor,100*scaleFactor,2000)
                 }else{
-                    Tool.createText(gameWindow,I18n.tr("胜利",SettingsData.language)+"!",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
+                    TextPool.createText(gameWindow,I18n.tr("胜利",SettingsData.language)+"!",50*scaleFactor,"white",gameWindow.width/2-50*scaleFactor,100*scaleFactor,2000)
                 }
             }
         }
@@ -421,6 +422,9 @@ Item {
         PlayerData.remainingMaterialsNumber=0
         PlayerData.isInCombat=false
         gameArea.clear()
+        // 回主菜单清理对象池残留（两池均惰性重建，无需常驻）
+        TextPool.release()
+        ParticlePool.release()
         settingInterface.init()
         pauseInterface.init()
         chestOpeningInterface.init()

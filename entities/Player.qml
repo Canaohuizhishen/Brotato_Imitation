@@ -6,7 +6,7 @@ import Brotato
 import "../components"
 import "../data/cores"
 import "../logic/utils/i18n.js" as I18n
-import "../logic/utils/tool.js" as Tool
+import "../logic/TextPool.js" as TextPool
 
 Item {
     id: player
@@ -442,12 +442,12 @@ Item {
         PlayerData.curXp+=expGain
         var text=material.value===1 ? "+1" : "X"+material.value
         var size=material.value===1 ? 24*player.scaleFactor : 27*player.scaleFactor
-        Tool.createText(ground,text,size,"lime",material.x,material.y)
+        TextPool.createText(ground,text,size,"lime",material.x,material.y)
     }
 
     function getFruit(fruit){
         PlayerData.curHp+=fruit.value
-        Tool.createText(ground,"+"+fruit.value,24*player.scaleFactor,"lime",fruit.x,fruit.y)
+        TextPool.createText(ground,"+"+fruit.value,24*player.scaleFactor,"lime",fruit.x,fruit.y)
     }
 
     function getChest(chest){
@@ -460,11 +460,11 @@ Item {
             //护甲减伤
             var damage=Math.ceil(bullet.damage*(1-PlayerData.damageReduction()))
             PlayerData.curHp-=damage
-            if(SettingsData.showDamageNumbers) Tool.createText(ground,"-"+damage,29*player.scaleFactor,"red",bullet.x,bullet.y)
+            if(SettingsData.showDamageNumbers) TextPool.createText(ground,"-"+damage,29*player.scaleFactor,"red",bullet.x,bullet.y)
             // 屏幕振动
             if(SettingsData.screenShake) screenShakeRequested()
         }else{//闪避成功
-            if(SettingsData.showDamageNumbers) Tool.createText(ground,I18n.tr("闪避",SettingsData.language),20*player.scaleFactor,"white",bullet.x,bullet.y,600,"blue")
+            if(SettingsData.showDamageNumbers) TextPool.createText(ground,I18n.tr("闪避",SettingsData.language),20*player.scaleFactor,"white",bullet.x,bullet.y,600,"blue")
         }
     }
 }

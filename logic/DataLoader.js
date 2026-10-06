@@ -1507,212 +1507,281 @@ var _UPGRADE_OPTIONS_DATA = [
   {
     "objectName": "leg",
     "optionName": "腿",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>%速度</font><br>",
     "effects": [
       {
         "attribute": "speed",
-        "deltaFromGrade": 3
+        "deltaByGrade": [
+          3,
+          6,
+          9,
+          12
+        ]
       }
     ]
   },
   {
     "objectName": "chest",
     "optionName": "胸",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>护甲</font><br>",
     "effects": [
       {
         "attribute": "armor",
-        "deltaFromGrade": 1
+        "deltaByGrade": [
+          1,
+          2,
+          3,
+          4
+        ]
       }
     ]
   },
   {
     "objectName": "skull",
     "optionName": "头骨",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>工程学</font><br>",
     "effects": [
       {
         "attribute": "engineering",
-        "deltaFromGrade": 2
+        "deltaByGrade": [
+          2,
+          4,
+          6,
+          8
+        ]
       }
     ]
   },
   {
     "objectName": "lung",
     "optionName": "肺",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>生命恢复</font><br>",
     "effects": [
       {
         "attribute": "hpRegeneration",
-        "deltaFromGrade": 2
+        "deltaByGrade": [
+          2,
+          4,
+          6,
+          8
+        ]
       }
     ]
   },
   {
     "objectName": "finger",
     "optionName": "手指",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>暴击率</font><br>",
     "effects": [
       {
         "attribute": "critChance",
-        "deltaFromGrade": 3
+        "deltaByGrade": [
+          3,
+          6,
+          9,
+          12
+        ]
       }
     ]
   },
   {
     "objectName": "back",
     "optionName": "背",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>闪避</font><br>",
     "effects": [
       {
         "attribute": "dodge",
-        "deltaFromGrade": 3
+        "deltaByGrade": [
+          3,
+          6,
+          9,
+          12
+        ]
       }
     ]
   },
   {
     "objectName": "teeth",
     "optionName": "牙齿",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>生命窃取</font><br>",
     "effects": [
       {
         "attribute": "lifeSteal",
-        "deltaFromGrade": 1
+        "deltaByGrade": [
+          1,
+          2,
+          3,
+          4
+        ]
       }
     ]
   },
   {
     "objectName": "heart",
     "optionName": "心脏",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>最大生命值</font><br>",
     "effects": [
       {
         "attribute": "maxHp",
-        "deltaFromGrade": 3
+        "deltaByGrade": [
+          3,
+          6,
+          9,
+          12
+        ]
       },
       {
         "attribute": "curHp",
-        "deltaFromGrade": 3
+        "deltaByGrade": [
+          3,
+          6,
+          9,
+          12
+        ]
       }
     ]
   },
   {
     "objectName": "brain",
     "optionName": "脑",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>元素伤害</font><br>",
     "effects": [
       {
         "attribute": "elementalDamage",
-        "deltaFromGrade": 1
+        "deltaByGrade": [
+          1,
+          2,
+          3,
+          4
+        ]
       }
     ]
   },
   {
     "objectName": "reflexes",
     "optionName": "反应能力",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>攻击速度</font><br>",
     "effects": [
       {
         "attribute": "attackSpeed",
-        "deltaFromGrade": 5
+        "deltaByGrade": [
+          5,
+          10,
+          15,
+          20
+        ]
       }
     ]
   },
   {
     "objectName": "nose",
     "optionName": "鼻",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>幸运</font><br>",
     "effects": [
       {
         "attribute": "luck",
-        "deltaFromGrade": 5
+        "deltaByGrade": [
+          5,
+          10,
+          15,
+          20
+        ]
       }
     ]
   },
   {
     "objectName": "hand",
     "optionName": "手",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>收获</font><br>",
     "effects": [
       {
         "attribute": "harvesting",
-        "deltaFromGrade": 5
+        "deltaByGrade": [
+          5,
+          10,
+          15,
+          20
+        ]
       }
     ]
   },
   {
     "objectName": "shoulder",
     "optionName": "肩",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>远程伤害</font><br>",
     "effects": [
       {
         "attribute": "rangedDamage",
-        "deltaFromGrade": 1
+        "deltaByGrade": [
+          1,
+          2,
+          3,
+          4
+        ]
       }
     ]
   },
   {
     "objectName": "foream",
     "optionName": "前臂",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>近战伤害</font><br>",
     "effects": [
       {
         "attribute": "meleeDamage",
-        "deltaFromGrade": 2
+        "deltaByGrade": [
+          2,
+          4,
+          6,
+          8
+        ]
       }
     ]
   },
   {
     "objectName": "triceps",
     "optionName": "三头肌",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>伤害</font><br>",
     "effects": [
       {
         "attribute": "damage",
-        "deltaFromGrade": 5
+        "deltaByGrade": [
+          5,
+          10,
+          15,
+          20
+        ]
       }
     ]
   },
   {
     "objectName": "eyes",
     "optionName": "眼睛",
-    "grade": 1,
     "type": "升级",
     "talentTextTemplate": "<font color='lime'>+{{value}}</font><font color='white'>范围</font><br>",
     "effects": [
       {
         "attribute": "range",
-        "deltaFromGrade": 15
+        "deltaByGrade": [
+          15,
+          30,
+          45,
+          60
+        ]
       }
     ]
   }
@@ -2208,11 +2277,11 @@ function _ensureLoaded() {
             _weaponsByGrade[1].push(w)
         }
     }
+    // 升级选项：源数据一份，按等级展开进四桶（每条自带对应等级的展开后 effects）
     _upgradeOptionsByGrade = { 1: [], 2: [], 3: [], 4: [] }
     for (var k = 0; k < _upgradeOptions.length; k++) {
-        var o = _upgradeOptions[k]
-        if (o.grade >= 1 && o.grade <= 4) {
-            _upgradeOptionsByGrade[o.grade].push(o)
+        for (var ug = 1; ug <= 4; ug++) {
+            _upgradeOptionsByGrade[ug].push(_expandUpgradeOption(_upgradeOptions[k], ug))
         }
     }
 }
@@ -2222,12 +2291,30 @@ function _deepCopy(obj) {
     return JSON.parse(JSON.stringify(obj))
 }
 
+// ---- 内部：升级选项按等级展开 ----
+// 源数据一份（deltaByGrade 描述每级增量），加载时展开为各等级独立条目：
+// deltaByGrade[grade-1] → 具体 delta（applyEffects/effectValue 只认 delta）。
+function _expandUpgradeOption(src, grade) {
+    var o = _deepCopy(src)
+    o.grade = grade
+    for (var i = 0; i < o.effects.length; i++) {
+        var eff = o.effects[i]
+        if (eff.deltaByGrade !== undefined) {
+            eff.delta = eff.deltaByGrade[grade - 1]
+            delete eff.deltaByGrade
+        }
+    }
+    return o
+}
+
 // ---- 内部：加权随机选择 ----
-function _weightedRandomSelect(candidatesByGrade, gradeWeights, count) {
+// dedupKeyFn 可选：给定候选条目返回查重键（跨等级去重，如升级选项按 objectName）；
+// 不传时沿用（等级_桶内索引）查重——武器/道具路径行为不变。
+function _weightedRandomSelect(candidatesByGrade, gradeWeights, count, dedupKeyFn) {
     if (count <= 0) return []
     var totalWeight = gradeWeights[1] + gradeWeights[2] + gradeWeights[3] + gradeWeights[4]
     var result = []
-    var usedIndices = {}
+    var usedKeys = {}
 
     for (var n = 0; n < count; n++) {
         var random = Math.random() * totalWeight
@@ -2263,12 +2350,14 @@ function _weightedRandomSelect(candidatesByGrade, gradeWeights, count) {
 
         var attempts = 0
         var index
+        var key
         do {
             index = Math.floor(Math.random() * pool.length)
             attempts++
-        } while (usedIndices[grade + "_" + index] && attempts < 100)
+            key = dedupKeyFn ? dedupKeyFn(pool[index]) : grade + "_" + index
+        } while (usedKeys[key] && attempts < 100)
 
-        usedIndices[grade + "_" + index] = true
+        usedKeys[key] = true
         var copy = _deepCopy(pool[index])
         copy.grade = grade
         result.push(copy)
@@ -2392,40 +2481,25 @@ function getRole(objectName) {
 // ---- 升级选项 ----
 function getUpgradeOption(grade, objectName) {
     _ensureLoaded()
-    for (var i = 0; i < _upgradeOptions.length; i++) {
-        if (_upgradeOptions[i].objectName === objectName || _upgradeOptions[i].optionName === objectName) {
-            var o = _deepCopy(_upgradeOptions[i])
-            o.grade = grade
-            return o
+    var bucket = _upgradeOptionsByGrade[grade]
+    if (bucket) {
+        for (var i = 0; i < bucket.length; i++) {
+            if (bucket[i].objectName === objectName || bucket[i].optionName === objectName) {
+                return _deepCopy(bucket[i])
+            }
         }
     }
     console.error("DataLoader.getUpgradeOption: '" + objectName + "' not found")
     return null
 }
 
-function _randomGrade(gradeWeights) {
-    var total = gradeWeights[1] + gradeWeights[2] + gradeWeights[3] + gradeWeights[4]
-    var r = Math.random() * total
-    var p = gradeWeights[4]
-    if (r < p) return 4
-    p += gradeWeights[3]
-    if (r < p) return 3
-    p += gradeWeights[2]
-    if (r < p) return 2
-    return 1
-}
-
 function getUpgradeOptionRandomly(count, gradeWeights) {
     _ensureLoaded()
-    var result = _weightedRandomSelect(_upgradeOptionsByGrade, gradeWeights, count)
-    // 重新生成 grade：_upgradeOptionsByGrade 中只有 grade 1 条目，
-    // _weightedRandomSelect 内部 fallback 会改写 grade=1 丢弃原始选中等级。
-    // 升级选项使用 deltaFromGrade * grade 模式，grade 决定效果倍率，
-    // 需独立重新随机以确保高等级选项出现。
-    for (var i = 0; i < result.length; i++) {
-        result[i].grade = _randomGrade(gradeWeights)
-    }
-    return result
+    // 四等级桶直接参与加权选择，结果自带正确等级与展开后的效果（无二次滚级补丁）；
+    // 查重键取 objectName——跨等级去重，避免同选项的不同等级同时出现
+    return _weightedRandomSelect(_upgradeOptionsByGrade, gradeWeights, count, function(item) {
+        return item.objectName
+    })
 }
 
 // ---- 波次 ----
@@ -2453,7 +2527,9 @@ function getAllThemes() {
 }
 
 // ---- 通用 effect 应用 ----
-function applyEffects(effects, playerData, grade) {
+// 升级选项的效果在加载时已按等级展开为具体 delta，此处只处理三种形态：
+// lt 保底 / setToProp / delta
+function applyEffects(effects, playerData) {
     if (!effects || !playerData) return
     for (var i = 0; i < effects.length; i++) {
         var eff = effects[i]
@@ -2465,17 +2541,28 @@ function applyEffects(effects, playerData, grade) {
             playerData[eff.attribute] = playerData[eff.setToProp]
         } else if (eff.delta !== undefined) {
             playerData[eff.attribute] += eff.delta
-        } else if (eff.deltaFromGrade !== undefined) {
-            var g = grade || eff.grade || 1
-            playerData[eff.attribute] += eff.deltaFromGrade * g
         }
     }
 }
 
+// ---- 升级选项显示值：{{value}} = 首个增量效果的实际生效值 ----
+// 条目已在加载时按等级展开（effects 带具体 delta），取首个 delta。
+// 现状每条升级选项的各效果数值一致（“心脏”的 maxHp/curHp 逐级同值），
+// 单个 {{value}} 占位符无歧义；若将来出现“多效果且数值不同”的选项，
+// 需将模板扩展为多占位符（归后续扩展处理）。
+function effectValue(effects) {
+    if (!effects || effects.length === 0) return 0
+    for (var i = 0; i < effects.length; i++) {
+        if (effects[i].delta !== undefined) return effects[i].delta
+    }
+    return 0
+}
+
 // ---- 模板渲染 (升级选项 talentText) ----
-function renderTalentText(template, grade) {
+// 纯占位替换：{{value}} → 传入的显示值（由 effectValue 计算，替换与取值职责分离）
+function renderTalentText(template, value) {
     if (!template) return ""
-    return template.replace(/\{\{value\}\}/g, String(grade))
+    return template.replace(/\{\{value\}\}/g, String(value))
 }
 
 // ---- 武器 talentText 结构化数据（由 WeaponCustomizationCore 配合 I18n.tr 渲染） ----

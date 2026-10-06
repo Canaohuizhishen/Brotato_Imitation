@@ -20,6 +20,17 @@ Item {
 
     property double _lastTime: 0
 
+    // 时间累加分频器（秒）：六个桶的触发周期为设计整值（0.1/0.2/0.5/1/2/3s），
+    // 与渲染帧率解耦（由 advanceBuckets 按 deltaTime 累积推进）
+    property double _elapsed100: 0
+    property double _elapsed200: 0
+    property double _elapsed500: 0
+    property double _elapsed1000: 0
+    property double _elapsed2000: 0
+    property double _elapsed3000: 0
+    // 浮点容差：步进累加可能差 1 ulp，避免整拍被推迟
+    readonly property double _bucketEps: 1e-9
+
     // 帧驱动触发：跟随渲染帧节奏（而非自由跑的 16ms Timer）。
     // 自由跑的 Timer 在部分系统上会与 vsync 相位互锁：进入战斗约十秒后
     // 锁定在 30 FPS（33.3ms/帧）且清场后也不再恢复，帧驱动无此问题。
@@ -27,6 +38,7 @@ Item {
         id: tickTimer
         running: gameLoop.active && !gameLoop.paused
         onRunningChanged: {
+            // 只清时钟基准；分频桶余数刻意不清零（避免「反复暂停拖延出怪」；reset() 才清零）
             if (!running) gameLoop._lastTime = 0
         }
         onTriggered: {
@@ -35,7 +47,7 @@ Item {
             gameLoop.realDeltaTime = rawDt
             gameLoop.deltaTime = Math.min(rawDt, 0.1)  // cap at 100ms to avoid spiral
             gameLoop._lastTime = now
-            gameLoop.frameCount++
+            gameLoop.frameCount++   // 保留：诊断/测试用；分频桶已不依赖帧计数
 
             // -- 每帧回调 --
             var i
@@ -43,46 +55,65 @@ Item {
                 perFrameCallbacks[i].func.call(perFrameCallbacks[i].target, gameLoop.deltaTime)
             }
 
-            // -- 约 100ms (每 ~6 帧) --
-            if (frameCount % 6 === 0) {
-                for (i = 0; i < per100msCallbacks.length; i++) {
-                    per100msCallbacks[i].func.call(per100msCallbacks[i].target)
-                }
-            }
+            // -- 分频桶：时间累加推进（与帧率解耦；周期见 advanceBuckets） --
+            advanceBuckets(gameLoop.deltaTime)
+        }
+    }
 
-            // -- 约 200ms (每 ~12 帧) --
-            if (frameCount % 12 === 0) {
-                for (i = 0; i < per200msCallbacks.length; i++) {
-                    per200msCallbacks[i].func.call(per200msCallbacks[i].target)
-                }
-            }
+    // ---- 分频桶推进 ----
+    // 按时间累加分发六个频率桶：触发周期为设计整值（秒），与渲染帧率解耦。
+    // - 用 cap 后的 deltaTime（与移动逻辑一致）：极端掉帧（单帧 > 100ms）时桶会轻微放缓，
+    //   是防追帧级联的有意取舍；
+    // - deltaTime 已 cap ≤ 0.1s 且各周期 ≥ 0.1s → 单帧至多跨一次，用 if（非 while）；
+    // - 独立函数：帧时钟（onTriggered）调用；测试（tst_gameloop）可直接确定性驱动。
+    function advanceBuckets(dt) {
+        if (!(dt > 0)) return
 
-            // -- 约 500ms (每 ~31 帧) --
-            if (frameCount % 31 === 0) {
-                for (i = 0; i < per500msCallbacks.length; i++) {
-                    per500msCallbacks[i].func.call(per500msCallbacks[i].target)
-                }
+        _elapsed100 += dt
+        if (_elapsed100 >= 0.1 - _bucketEps) {
+            _elapsed100 -= 0.1
+            for (var i = 0; i < per100msCallbacks.length; i++) {
+                per100msCallbacks[i].func.call(per100msCallbacks[i].target)
             }
+        }
 
-            // -- 约 1000ms (每 ~62 帧) --
-            if (frameCount % 62 === 0) {
-                for (i = 0; i < per1000msCallbacks.length; i++) {
-                    per1000msCallbacks[i].func.call(per1000msCallbacks[i].target)
-                }
+        _elapsed200 += dt
+        if (_elapsed200 >= 0.2 - _bucketEps) {
+            _elapsed200 -= 0.2
+            for (var j = 0; j < per200msCallbacks.length; j++) {
+                per200msCallbacks[j].func.call(per200msCallbacks[j].target)
             }
+        }
 
-            // -- 约 2000ms (每 ~125 帧) --
-            if (frameCount % 125 === 0) {
-                for (i = 0; i < per2000msCallbacks.length; i++) {
-                    per2000msCallbacks[i].func.call(per2000msCallbacks[i].target)
-                }
+        _elapsed500 += dt
+        if (_elapsed500 >= 0.5 - _bucketEps) {
+            _elapsed500 -= 0.5
+            for (var k = 0; k < per500msCallbacks.length; k++) {
+                per500msCallbacks[k].func.call(per500msCallbacks[k].target)
             }
+        }
 
-            // -- 约 3000ms (每 ~187 帧) --
-            if (frameCount % 187 === 0) {
-                for (i = 0; i < per3000msCallbacks.length; i++) {
-                    per3000msCallbacks[i].func.call(per3000msCallbacks[i].target)
-                }
+        _elapsed1000 += dt
+        if (_elapsed1000 >= 1.0 - _bucketEps) {
+            _elapsed1000 -= 1.0
+            for (var l = 0; l < per1000msCallbacks.length; l++) {
+                per1000msCallbacks[l].func.call(per1000msCallbacks[l].target)
+            }
+        }
+
+        _elapsed2000 += dt
+        if (_elapsed2000 >= 2.0 - _bucketEps) {
+            _elapsed2000 -= 2.0
+            for (var m = 0; m < per2000msCallbacks.length; m++) {
+                per2000msCallbacks[m].func.call(per2000msCallbacks[m].target)
+            }
+        }
+
+        _elapsed3000 += dt
+        if (_elapsed3000 >= 3.0 - _bucketEps) {
+            _elapsed3000 -= 3.0
+            for (var n = 0; n < per3000msCallbacks.length; n++) {
+                per3000msCallbacks[n].func.call(per3000msCallbacks[n].target)
             }
         }
     }
@@ -132,5 +163,11 @@ Item {
         _lastTime = 0
         frameCount = 0
         deltaTime = 0.016
+        _elapsed100 = 0
+        _elapsed200 = 0
+        _elapsed500 = 0
+        _elapsed1000 = 0
+        _elapsed2000 = 0
+        _elapsed3000 = 0
     }
 }

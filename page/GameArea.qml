@@ -86,16 +86,15 @@ Item{
     }
 
     Component.onCompleted: {
-        // 初始化空间网格（200×200 单元格）
-        SpatialGrid.init(200)
-
         // 注册全局 GameLoop 回调
         // 注意顺序：移动 → 网格重建 → 碰撞检测 → 武器瞄准
         gameLoop.registerPerFrame(function(dt) { player.updateMovement(dt) })
         gameLoop.registerPerFrame(function(dt) { monsters.updateAllMonsterMovements(dt) })
-        // 每帧重建空间网格（所有活着的怪物重新插入）
+        // 每帧重建空间网格（所有活着的怪物重新插入）。
+        // 分格尺寸随窗口缩放联动（200 × scaleFactor）：场地坐标与实体尺寸都随缩放变化，
+        // 格距同步缩放保持“设计格距恒定”，任意窗口尺寸下格子数不退化（约 10×10）
         gameLoop.registerPerFrame(function() {
-            SpatialGrid.clear()
+            SpatialGrid.init(200 * gameArea.scaleFactor)
             monsters.updateSpatialGrid()
         })
         gameLoop.registerPerFrame(function() { monsters.checkMonsterCollisions() })
