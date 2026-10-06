@@ -1,5 +1,4 @@
 import QtQuick 2.15
-import singleton.PlayerData
 import "../logic/SpatialGrid.js" as SpatialGrid
 import "../logic/utils/collision.js" as Collision
 
@@ -43,15 +42,22 @@ Item {
                         break
                     }
 
-                    // 默认行为
-                    if (!child.hitNotDestroy) child.destroy()
+                    // 默认行为（destroy() 为异步删除：先置 isDestroy，删除落地前不再被下一帧扫到）
+                    if (!child.hitNotDestroy) {
+                        child.isDestroy = true
+                        child.destroy()
+                    }
                     break
                 }
             } else if (target.objectName === "Player") {
                 var player = target
                 if (Math.abs(target.x + target.width / 2 - child.x - child.width / 2) < (target.width + child.width) / 2 && Math.abs(target.y + target.height / 2 - child.y - child.height / 2) < (target.height + child.height) / 2) {
                     player.onHit(child)
-                    if (!child.hitNotDestroy) child.destroy()
+                    // destroy() 为异步删除：先置 isDestroy，防删除落地前二次扣血
+                    if (!child.hitNotDestroy) {
+                        child.isDestroy = true
+                        child.destroy()
+                    }
                     else child.inHitCoolDown = true
                 }
             }
