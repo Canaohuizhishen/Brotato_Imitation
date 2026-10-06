@@ -3,6 +3,10 @@ import QtQuick 2.15
 import singleton.PlayerData
 import "../logic/DataLoader.js" as DataLoader
 
+// 怪物数据（静态数值 + 每波运行时状态）的唯一来源。
+// 怪物是有状态数据（curNumber/countRation 等被怪物实例与出怪逻辑直接读写），
+// 刻意不进 data/json 静态数据管线；对照：武器/道具/角色/升级/波次等无状态数据走 DataLoader。
+
 Item {
     id: core
     property double velocityRate: 0.8

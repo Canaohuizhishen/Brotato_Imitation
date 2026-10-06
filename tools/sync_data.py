@@ -14,12 +14,12 @@ DATALOADER = os.path.join(ROOT, "logic", "DataLoader.js")
 JSON_DIR   = os.path.join(ROOT, "data", "json")
 
 # 映射：JSON 文件名 → DataLoader 中的变量名
+# 注：怪物数据不在此列——有状态数据（运行时计数与数据同住），唯一来源见 singleton/MonstersData.qml
 DATA_SETS = [
     ("weapons.json",        "_WEAPONS_DATA"),
     ("props.json",          "_PROPS_DATA"),
     ("roles.json",          "_ROLES_DATA"),
     ("upgradeOptions.json", "_UPGRADE_OPTIONS_DATA"),
-    ("monsters.json",       "_MONSTERS_DATA"),
     ("waves.json",          "_WAVES_DATA"),
 ]
 

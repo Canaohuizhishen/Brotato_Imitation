@@ -1,7 +1,7 @@
 // 波次数据 — waves.json
 //   wave            波次编号 1-20
 //   spawns          出怪列表，每个含 monster + initCount
-//     monster       怪物 objectName（对应 monsters.json）
+//     monster       怪物 objectName（对应 MonstersData.qml）
 //     initCount     初始数量
 [
   {

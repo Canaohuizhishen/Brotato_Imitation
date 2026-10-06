@@ -1719,248 +1719,10 @@ var _UPGRADE_OPTIONS_DATA = [
 ]
 
 // ============================================================
-// 5. 怪物数据
+// 5. 怪物数据 —— 已迁出本管线
+// 怪物数据是有状态数据（curNumber/countRation 被运行时读写），
+// 静态值与运行时状态同住 singleton/MonstersData.qml（唯一来源，勿在此重新添加）。
 // ============================================================
-var _MONSTERS_DATA = [
-  {
-    "objectName": "tree",
-    "monsterName": "树",
-    "source": "Tree.qml",
-    "attackRange": 0,
-    "maxCurNumber": 20,
-    "initHp": 3,
-    "hpBonus": 2,
-    "initVelocity": 0,
-    "maxVelocity": 0,
-    "initDamage": 0,
-    "damageBonus": 0,
-    "materialDrops": 3,
-    "consumableDropRate": 1,
-    "chestDropRate": 0.05,
-    "isBoss": false
-  },
-  {
-    "objectName": "babyAlien",
-    "monsterName": "外星婴儿",
-    "source": "BabyAlien.qml",
-    "attackRange": 0,
-    "maxCurNumber": 50,
-    "initHp": 3,
-    "hpBonus": 2,
-    "initVelocity": 250,
-    "maxVelocity": 300,
-    "initDamage": 1,
-    "damageBonus": 0.6,
-    "materialDrops": 1,
-    "consumableDropRate": 0.01,
-    "chestDropRate": 0.01,
-    "isBoss": false
-  },
-  {
-    "objectName": "chaser",
-    "monsterName": "追逐者",
-    "source": "Chaser.qml",
-    "attackRange": 0,
-    "maxCurNumber": 25,
-    "initHp": 1,
-    "hpBonus": 1,
-    "initVelocity": 380,
-    "maxVelocity": 380,
-    "initDamage": 1,
-    "damageBonus": 0.6,
-    "materialDrops": 1,
-    "consumableDropRate": 0.02,
-    "chestDropRate": 0.03,
-    "isBoss": false
-  },
-  {
-    "objectName": "sprayer",
-    "monsterName": "喷射者",
-    "source": "Sprayer.qml",
-    "attackRange": 400,
-    "maxCurNumber": 15,
-    "initHp": 8,
-    "hpBonus": 1,
-    "initVelocity": 200,
-    "maxVelocity": 200,
-    "initDamage": 1,
-    "damageBonus": 0.6,
-    "materialDrops": 1,
-    "consumableDropRate": 0.03,
-    "chestDropRate": 0.1,
-    "isBoss": false
-  },
-  {
-    "objectName": "charger",
-    "monsterName": "冲锋者",
-    "source": "Charger.qml",
-    "attackRange": 200,
-    "maxCurNumber": 15,
-    "initHp": 4,
-    "hpBonus": 2.5,
-    "initVelocity": 400,
-    "maxVelocity": 400,
-    "initDamage": 1,
-    "damageBonus": 0.85,
-    "materialDrops": 1,
-    "consumableDropRate": 0.01,
-    "chestDropRate": 0.01,
-    "isBoss": false
-  },
-  {
-    "objectName": "brute",
-    "monsterName": "大块头",
-    "source": "Brute.qml",
-    "attackRange": 300,
-    "maxCurNumber": 10,
-    "initHp": 20,
-    "hpBonus": 11,
-    "initVelocity": 300,
-    "maxVelocity": 300,
-    "initDamage": 2,
-    "damageBonus": 0.85,
-    "materialDrops": 3,
-    "consumableDropRate": 0.03,
-    "chestDropRate": 0.03,
-    "isBoss": false
-  },
-  {
-    "objectName": "pursuer",
-    "monsterName": "追击者",
-    "source": "Pursuer.qml",
-    "attackRange": 0,
-    "maxCurNumber": 10,
-    "initHp": 10,
-    "hpBonus": 2.4,
-    "initVelocity": 150,
-    "maxVelocity": 600,
-    "initDamage": 1,
-    "damageBonus": 1.5,
-    "materialDrops": 3,
-    "consumableDropRate": 0.03,
-    "chestDropRate": 0.03,
-    "isBoss": false
-  },
-  {
-    "objectName": "helmetAlien",
-    "monsterName": "戴头盔的外星人",
-    "source": "HelmetAlien.qml",
-    "attackRange": 0,
-    "maxCurNumber": 30,
-    "initHp": 8,
-    "hpBonus": 3,
-    "initVelocity": 225,
-    "maxVelocity": 275,
-    "initDamage": 1,
-    "damageBonus": 1,
-    "materialDrops": 1,
-    "consumableDropRate": 0.01,
-    "chestDropRate": 0.01,
-    "isBoss": false
-  },
-  {
-    "objectName": "finChaser",
-    "monsterName": "鱼鳍追逐者",
-    "source": "FinChaser.qml",
-    "attackRange": 0,
-    "maxCurNumber": 25,
-    "initHp": 12,
-    "hpBonus": 2,
-    "initVelocity": 400,
-    "maxVelocity": 400,
-    "initDamage": 1,
-    "damageBonus": 1,
-    "materialDrops": 1,
-    "consumableDropRate": 0.02,
-    "chestDropRate": 0.03,
-    "isBoss": false
-  },
-  {
-    "objectName": "summoner",
-    "monsterName": "召唤者",
-    "source": "Summoner.qml",
-    "attackRange": 0,
-    "maxCurNumber": 10,
-    "initHp": 10,
-    "hpBonus": 1,
-    "initVelocity": 120,
-    "maxVelocity": 120,
-    "initDamage": 1,
-    "damageBonus": 0.85,
-    "materialDrops": 1,
-    "consumableDropRate": 0.01,
-    "chestDropRate": 0.01,
-    "isBoss": false
-  },
-  {
-    "objectName": "scavenger",
-    "monsterName": "拾荒者",
-    "source": "Scavenger.qml",
-    "attackRange": 10000,
-    "maxCurNumber": 30,
-    "initHp": 20,
-    "hpBonus": 5,
-    "initVelocity": 350,
-    "maxVelocity": 350,
-    "initDamage": 1,
-    "damageBonus": 1,
-    "materialDrops": 1,
-    "consumableDropRate": 0.01,
-    "chestDropRate": 0.01,
-    "isBoss": false
-  },
-  {
-    "objectName": "helmetBrute",
-    "monsterName": "头盔大块头",
-    "source": "HelmetBrute.qml",
-    "attackRange": 300,
-    "maxCurNumber": 10,
-    "initHp": 30,
-    "hpBonus": 22,
-    "initVelocity": 300,
-    "maxVelocity": 300,
-    "initDamage": 1,
-    "damageBonus": 1.15,
-    "materialDrops": 3,
-    "consumableDropRate": 0.03,
-    "chestDropRate": 0.03,
-    "isBoss": false
-  },
-  {
-    "objectName": "helmetCharger",
-    "monsterName": "头盔冲锋者",
-    "source": "HelmetCharger.qml",
-    "attackRange": 200,
-    "maxCurNumber": 15,
-    "initHp": 12,
-    "hpBonus": 5,
-    "initVelocity": 425,
-    "maxVelocity": 425,
-    "initDamage": 1,
-    "damageBonus": 1,
-    "materialDrops": 1,
-    "consumableDropRate": 0.01,
-    "chestDropRate": 0.01,
-    "isBoss": false
-  },
-  {
-    "objectName": "prayer",
-    "monsterName": "祈祷者",
-    "source": "Prayer.qml",
-    "attackRange": 10000,
-    "maxCurNumber": 1,
-    "initHp": 29900,
-    "hpBonus": 0,
-    "initVelocity": 175,
-    "maxVelocity": 175,
-    "initDamage": 30,
-    "damageBonus": 1.5,
-    "materialDrops": 10,
-    "consumableDropRate": 0,
-    "chestDropRate": 0,
-    "isBoss": true
-  }
-]
 
 // ============================================================
 // 6. 地图主题数据
@@ -2404,7 +2166,6 @@ var _weapons = null
 var _props = null
 var _roles = null
 var _upgradeOptions = null
-var _monsters = null
 var _waves = null
 var _themes = null
 
@@ -2420,7 +2181,6 @@ function _ensureLoaded() {
     _props = _PROPS_DATA
     _roles = _ROLES_DATA
     _upgradeOptions = _UPGRADE_OPTIONS_DATA
-    _monsters = _MONSTERS_DATA
     _waves = _WAVES_DATA
     _themes = _THEMES_DATA
 
@@ -2666,18 +2426,6 @@ function getUpgradeOptionRandomly(count, gradeWeights) {
         result[i].grade = _randomGrade(gradeWeights)
     }
     return result
-}
-
-// ---- 怪物 ----
-function getMonster(objectName) {
-    _ensureLoaded()
-    for (var i = 0; i < _monsters.length; i++) {
-        if (_monsters[i].objectName === objectName || _monsters[i].monsterName === objectName) {
-            return _deepCopy(_monsters[i])
-        }
-    }
-    console.error("DataLoader.getMonster: '" + objectName + "' not found")
-    return null
 }
 
 // ---- 波次 ----

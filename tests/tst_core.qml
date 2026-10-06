@@ -105,15 +105,6 @@ TestCase {
         compare(DataLoader.getRole("wellRounded").roleName, "全能者")
     }
 
-    function test_getMonster_charger() {
-        compare(DataLoader.getMonster("charger").initHp, 4)
-        compare(DataLoader.getMonster("charger").monsterName, "冲锋者")
-    }
-
-    function test_getMonster_notFound() {
-        compare(DataLoader.getMonster("nonexistent_xyz"), null)
-    }
-
     function test_getUpgradeOption_lung() {
         compare(DataLoader.getUpgradeOption(1, "lung").optionName, "肺")
     }
@@ -516,16 +507,8 @@ TestCase {
 
     function test_getProp_nullKey() {
         // getProp 有 fallback 机制：null/未定义 key 返回默认对象 {grade:1}
-        // 这与 getMonster(null) 返回 null 不同，是设计意图
         var r = DataLoader.getProp(null)
         verify(typeof r === "object")
-    }
-
-    function test_getMonster_nullKey() {
-        // getMonster 没有 fallback：null key 返回 null
-        // 这与 getProp(null) 返回默认对象不同，是设计意图
-        var r = DataLoader.getMonster(null)
-        compare(r, null)
     }
 
     function test_getRole_nullKey() {

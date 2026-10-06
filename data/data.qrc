@@ -4,7 +4,6 @@
         <file>json/props.json</file>
         <file>json/roles.json</file>
         <file>json/upgradeOptions.json</file>
-        <file>json/monsters.json</file>
         <file>json/waves.json</file>
     </qresource>
 </RCC>
