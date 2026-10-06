@@ -1,7 +1,9 @@
 .pragma library
 
-var _COMPONENT_READY = 2   // Component.Ready (enum value 2) — QML JS 引擎不暴露 Component 枚举
-var _COMPONENT_LOADING = 1 // Component.Loading
+// Component.Status 枚举：Null=0, Ready=1, Loading=2, Error=3
+// （QML JS 引擎不暴露 Component 枚举，故手写数值；tst_createText 的池填充用例钉住语义）
+var _COMPONENT_READY = 1
+var _COMPONENT_LOADING = 2
 
 function getDistance(p1,p2){
     var dx=p1.x-p2.x
@@ -32,6 +34,9 @@ function getMirrorX(x,targetX){
 }
 
 // ---- 文本对象池 ----
+// 注意：池对象若随其父对象被销毁，QML 中残留的 JS 引用仍为 truthy，
+// 但方法读取为 undefined、调用会抛 TypeError（Qt 6 实测）。
+// 复用前用 typeof 探测活性，失效槽位即时重建（自愈）。
 var _textPool = []
 var _textPoolSize = 30
 var _textPoolIndex = 0
@@ -39,7 +44,7 @@ var _textComp = null
 
 function _ensureTextPool(parent) {
     if (_textComp === null) {
-        _textComp = Qt.createComponent("../../particles/DamageText.qml")
+        _textComp = Qt.createComponent("../../particles/FloatingText.qml")
         // 异步加载可能未完成，由 statusChanged 回调填充池子
         if (_textComp.status === _COMPONENT_LOADING) {
             _textComp.statusChanged.connect(function() {
@@ -50,7 +55,7 @@ function _ensureTextPool(parent) {
             return
         }
         if (_textComp.status !== _COMPONENT_READY) {
-            console.error("Tool: failed to load DamageText:", _textComp.errorString())
+            console.error("Tool: failed to load FloatingText:", _textComp.errorString())
             _textComp = null
             return
         }
@@ -71,6 +76,16 @@ function _fillTextPool(parent) {
     }
 }
 
+// 在当前槽位新建一个池对象并占用（供空缺/失效槽位自愈）；组件不可用或创建失败时返回 null
+function _createPoolItem(parent) {
+    if (_textComp === null || _textComp.status !== _COMPONENT_READY) return null
+    var t = _textComp.createObject(parent)
+    if (!t) return null
+    t.visible = false
+    _textPool[_textPoolIndex] = t
+    return t
+}
+
 // 内联创建文本的后备方案（对象池不可用时使用）
 // 字符串转义防止 QML 注入
 function _qmlEscape(str) {
@@ -80,6 +95,15 @@ function _qmlEscape(str) {
 function createText(parent, text, size, color, _x, _y, duration, OutlineColor) {
     _ensureTextPool(parent)
     var t = _textPool[_textPoolIndex]
+    // 池对象可能已随其父对象被销毁：销毁后的引用仍为 truthy，
+    // 但方法调用会抛 TypeError（Qt 6 实测），先探测活性，失效槽位置空
+    if (t && typeof t.showText !== "function") {
+        _textPool[_textPoolIndex] = null
+        t = null
+    }
+    // 槽位空缺（池未填充/组件加载中）或刚失效：尝试即时重建当前槽位（池自愈）
+    if (!t)
+        t = _createPoolItem(parent)
     if (t) {
         _textPoolIndex = (_textPoolIndex + 1) % _textPoolSize
         // 重设父对象为当前调用者：
@@ -121,7 +145,7 @@ function createText(parent, text, size, color, _x, _y, duration, OutlineColor) {
                 }\
             }",
             parent,
-            "inlineDamageText"
+            "inlineFloatingText"
         )
     }
 }

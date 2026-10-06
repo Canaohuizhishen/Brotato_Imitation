@@ -348,7 +348,6 @@ Item {
                 monster.paused=Qt.binding(function(){return monsters.paused})
                 if((monster.x-monster.target.x)>0)monster.faceLeft()
                 else monster.faceRight()
-                registerMonsterCallbacks(monster)
                 // 注册到空间网格
                 SpatialGrid.insert(monster, monster.x, monster.y)
                 // Scavenger 需要生成后立即获得随机方向，不等 per3000ms

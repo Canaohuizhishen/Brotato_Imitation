@@ -7,6 +7,7 @@ import "../components"
 import "../data/cores"
 import "../logic/utils/tool.js" as Tool
 import "../logic/ParticlePool.js" as ParticlePool
+import "../logic/SpatialGrid.js" as SpatialGrid
 
 Item {
     id: monster
@@ -547,16 +548,20 @@ Item {
         //可能的爆炸特效
         if (SettingsData.explosionEffect && PlayerData.explosiveDamage > 0) {
             var expRadius = 20 + (PlayerData.explosionRange / 100) * 30
-            ParticlePool.spawnExplosion(bullet.x, bullet.y, expRadius * scaleFactor, gameArea, SettingsData.explosionEffect)
+            var expR = expRadius * scaleFactor
+            ParticlePool.spawnExplosion(bullet.x, bullet.y, expR, gameArea, SettingsData.explosionEffect)
             // 爆炸伤害：对范围内所有其他怪物造成 explosiveDamage 点伤害
-            var ownerChildren = monster.owner.children
-            for (var ei = 0; ei < ownerChildren.length; ei++) {
-                var otherMonster = ownerChildren[ei]
-                if (otherMonster.objectName === "Monster" && otherMonster !== monster && !otherMonster.isDead && !otherMonster.isDestroy) {
-                    var dist = Tool.getDistance(Qt.point(bullet.x, bullet.y), Qt.point(otherMonster.x + otherMonster.width/2, otherMonster.y + otherMonster.height/2))
-                    if (dist < expRadius * scaleFactor) {
-                        otherMonster.monsterData.hp -= PlayerData.explosiveDamage
-                    }
+            // 用 SpatialGrid 查询半径附近的候选（每帧已重建，语义等同原全量遍历，但只扫覆盖的格子）
+            var expCandidates = SpatialGrid.query(bullet.x - expR, bullet.y - expR, expR * 2, expR * 2)
+            var expSeen = {}   // 跨格大怪会在多个格子出现，按 _spatialId 去重防重复计伤
+            for (var ei = 0; ei < expCandidates.length; ei++) {
+                var otherMonster = expCandidates[ei]
+                if (otherMonster.objectName !== "Monster" || otherMonster === monster || otherMonster.isDead || otherMonster.isDestroy) continue
+                if (expSeen[otherMonster._spatialId]) continue
+                expSeen[otherMonster._spatialId] = true
+                var dist = Tool.getDistance(Qt.point(bullet.x, bullet.y), Qt.point(otherMonster.x + otherMonster.width/2, otherMonster.y + otherMonster.height/2))
+                if (dist < expR) {
+                    otherMonster.monsterData.hp -= PlayerData.explosiveDamage
                 }
             }
         }

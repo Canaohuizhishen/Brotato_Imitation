@@ -31,6 +31,8 @@ Item {
     // ---- 状态 ----
     property bool allReady: false
     property int _loadedCount: 0
+    // 用来记录“我一共要等上面的 10 个组件加载完”
+    //新增/删除上面任一 property Component，这里必须同步改，否则 allReady 判断出错
     readonly property int _totalCount: 10
 
     // 动态组件缓存（懒加载，按 source URL 缓存）

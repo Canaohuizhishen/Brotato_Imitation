@@ -226,38 +226,6 @@ QtObject {
         for(var i=0;i<lastStoreGoods.count;i++)console.log(lastStoreGoods.get(i).goodName,lastStoreGoods.get(i).grade)
     }
 
-    function weaponsToArray(weaponsModel) {
-        const arr = []
-        for (let i = 0; i < weaponsModel.count; ++i) {
-            const item = weaponsModel.get(i)
-            arr.push({weaponName: item.weaponName,grade: item.grade})
-        }
-        return arr
-    }
-
-    function propsToArray(propsModel) {
-        const arr = []
-        for (let i = 0; i < propsModel.count; ++i) {
-            const item = propsModel.get(i)
-            arr.push({propName: item.propName,number: item.number})
-        }
-        return arr
-    }
-
-    function lastStoreGoodsToArray(goodsModel) {
-        const arr = []
-        for (let i = 0; i < goodsModel.count; ++i) {
-            const item = goodsModel.get(i)
-            arr.push({
-                goods: item.goods,
-                isLockedModel: item.isLockedModel,
-                weaponGrade: item.weaponGrade,
-                isPurchased: item.isPurchased
-            })
-        }
-        return arr
-    }
-
     function saveGame() {
         SaveManager.saveGame(root, fileManager, appDataPath)
     }

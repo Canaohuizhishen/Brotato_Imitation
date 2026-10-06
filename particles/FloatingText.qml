@@ -1,10 +1,11 @@
 import QtQuick 2.15
 
 /**
- * DamageText — 伤害数字文本组件（对象池友好版）
+ * FloatingText — 通用浮动文本组件（对象池友好版）
  *
- * 替代 DynamicText 的 auto-destroy 模式，使用 showText() 配置后播放渐隐动画，
- * 动画结束后自动隐藏（visible=false），以便对象池循环复用。
+ * 供 tool.js 文本池循环复用：showText() 配置后播放渐隐动画，动画结束后
+ * 自动隐藏（visible=false），不销毁对象。承载内容不止伤害数字——回血、
+ * 闪避、拾取提示、波次结算大字等都复用本组件。
  *
  * 用法（由 tool.js 的 createText 内部调用）：
  *   text.showText("999", 27, "yellow", 100, 200, 600, "black")

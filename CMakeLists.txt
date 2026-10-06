@@ -65,7 +65,6 @@ qt_add_qml_module(appBrotato
     # ── Game Logic ──
     QML_FILES logic/ShopLogicHandler.js
     QML_FILES logic/DataLoader.js
-    QML_FILES logic/SafeCreate.js
     QML_FILES logic/GameLoop.qml
     QML_FILES logic/ComponentCache.qml
     QML_FILES logic/ParticlePool.js
@@ -73,7 +72,7 @@ qt_add_qml_module(appBrotato
     QML_FILES logic/SaveManager.js
     # ── Particles ──
     QML_FILES particles/BloodParticle.qml
-    QML_FILES particles/DamageText.qml
+    QML_FILES particles/FloatingText.qml
     QML_FILES particles/DebrisParticle.qml
     QML_FILES components/PropsBar.qml
     QML_FILES components/PropItem.qml
@@ -124,7 +123,6 @@ qt_add_qml_module(appBrotato
     # ── Audio ──
     RESOURCES audio.qrc
     QML_FILES sound/Sound.qml
-    QML_FILES components/DynamicText.qml
     QML_FILES components/ScaledText.qml
     QML_FILES components/TranslatableText.qml
     QML_FILES particles/ExplosionParticle.qml

@@ -108,4 +108,29 @@ TestCase {
         compare(gl.frameCount, 0)
         compare(gl.deltaTime, 0.016)
     }
+
+    function test_duplicateRegistrationDeduped() {
+        var gl = gameLoopLoader.item
+        var before = gl.perFrameCallbacks.length
+        var cb = function() {}
+        gl.registerPerFrame(this, cb)
+        gl.registerPerFrame(this, cb)
+        compare(gl.perFrameCallbacks.length, before + 1, "重复注册同一 target+func 应被去重")
+        gl.removePerFrame(this, cb)
+    }
+
+    function test_unregisterRemovesAllCopies() {
+        var gl = gameLoopLoader.item
+        var calledCount = 0
+        var cb = function() { calledCount++ }
+        gl.registerPerFrame(this, cb)
+        gl.registerPerFrame(this, cb)
+        gl.removePerFrame(this, cb)
+
+        gl.active = true
+        wait(80)
+        gl.active = false
+
+        compare(calledCount, 0, "一次注销后不应再有回调触发（无重复/悬空残留）")
+    }
 }

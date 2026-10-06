@@ -5,6 +5,8 @@
 > **总预计**：7 个 Phase，24 个 Step，约 80 次编辑操作。每个 Phase 完成后可独立构建、运行、验证，可随时暂停。
 >
 > **适用对象**：AI agent（flash 执行，pro 审查）。每步标注了精确的文件路径、操作类型、验收标准和禁止事项。
+>
+> **勘误（后续变更）**：本文档为历史规划记录，文中 `particles/DamageText.qml` 已更名为 `particles/FloatingText.qml`，正文旧路径保持原样，现状以代码为准。
 
 ---
 

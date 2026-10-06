@@ -8,7 +8,6 @@
  *   5=한국어  6=Русский  7=Polski  8=Español  9=Português
  *   10=Deutsch  11=Türk  12=Italiano
  *
- * 当前仅实现 中文 / English 的常用翻译，其余语言 fallback 到英文。
  * 用法：
  *   import "../logic/utils/i18n.js" as I18n
  *   I18n.tr("开始游戏")

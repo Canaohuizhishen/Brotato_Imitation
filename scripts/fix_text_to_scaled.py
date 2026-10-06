@@ -5,7 +5,7 @@ import os, re
 for dirpath, dirnames, fnames in os.walk('.'):
     dirnames[:] = [d for d in dirnames if d not in ('build', '.reasonix', '.git', 'node_modules')]
     for f in fnames:
-        if not f.endswith('.qml') or f in ('ScaledText.qml', 'TranslatableText.qml', 'DynamicText.qml', 'DamageText.qml'):
+        if not f.endswith('.qml') or f in ('ScaledText.qml', 'TranslatableText.qml', 'FloatingText.qml'):
             continue
         fp = os.path.join(dirpath, f)
         with open(fp) as fh:
