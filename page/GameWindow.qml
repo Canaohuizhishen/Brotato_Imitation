@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import singleton.PlayerData
 import singleton.SettingsData
+import singleton.MonstersData
 import "../components"
 import "../logic/TextPool.js" as TextPool
 import "../logic/ParticlePool.js" as ParticlePool
@@ -44,6 +45,7 @@ Item {
         pageManager.register("upgrade", upgradeInterface)
         pageManager.register("settlement", settlementInterface)
         pageManager.register("pause", pauseInterface)
+        pageManager.register("retryWave", retryWaveInterface)
         pageManager.register("setting", settingInterface)
         pageManager.push("start")   // 初始栈：[start]（M4：start 入栈收口）
     }
@@ -56,6 +58,8 @@ Item {
         sequence: "Esc"
         enabled: !inSelectInterface && pauseInterface.inMain && !settingInterface.visible ? true : false
         onActivated: {
+            // 死亡重试确认框：Esc = 否（与点「否」同路径；避免误触战场暂停/栈错乱）
+            if (retryWaveInterface.visible) { gameWindow.declineRetry(); return }
             if(gameWindow.paused)gameWindow.resume()
             else gameWindow.pause()
         }
@@ -274,10 +278,23 @@ Item {
             onTriggered: {
                 // 防守：已经回到主菜单/选择流时，忽略残留的计时器触发（对齐 delayOvertimer）
                 if(gameWindow.inSelectInterface) return
+                if (SettingsData.retryFailedWave) {
+                    // 重新挑战失败的敌袭：先弹确认框（透明，盖在冻结的战场画面上），由玩家选择
+                    pageManager.push("retryWave")
+                    return
+                }
                 gameArea.visible = false   // 基座例外：不进栈，死亡路径直接隐藏
                 pageManager.push("settlement")
             }
         }
+    }
+
+    RetryWaveInterface {
+        id: retryWaveInterface
+        visible: false
+        scaleFactor: gameWindow.scaleFactor
+        yesButton.onClicked: gameWindow.retryCurrentWave()
+        noButton.onClicked: gameWindow.declineRetry()
     }
 
     UpgradeNotificationBar{
@@ -392,6 +409,38 @@ Item {
         inSelectInterface=false
     }
 
+    // ── 死亡重试（"重新挑战失败的敌袭"）───────────────────────────
+    // 是：原地重开当前波 —— 语义 = 刚从上一波商店进入本波（满血、倒计时回满、
+    // 出怪节奏从零、本波中途所得严格回退）。isInCombat 保持 true 不动，
+    // 避免触发由 isInCombat 变化驱动的波终收获结算/通过流程。
+    function retryCurrentWave(){
+        if(inSelectInterface) return
+        delayDietimer.stop()
+        pageManager.clearToBase()          // 收起确认框（含极端情况下垫在底下的暂停页）
+        PlayerData.rollbackWaveGains()     // 严格回退本波收益（单一收口，见 PlayerData）
+        chestNotificationBar.init()        // 本波积攒的宝箱/升级清零（波初态均为 0）
+        upgradeNotificationBar.init()
+        gameArea.monsters.clear()          // 立即销毁旧怪：渐隐动画被恢复会"复活开火"，销毁对象=动画同灭
+        gameArea.monsters.bullets.clear()  // Monsters.clear() 不含怪物子弹容器，需补清
+        gameArea.bullets.clear()
+        gameArea.drops.clear()
+        MonstersData.resetForWave()        // 出怪节奏复位（波次号不变，onWaveNumberChanged 不会触发）
+        gameArea.gameLoop.resetSpawnPhase()// 出怪桶相位清零：首刷回到 +3s（否则沿用死亡时刻相位，可能瞬刷）
+        paused = false
+        gameArea.paused = Qt.binding(function(){return paused})   // 重建被死亡字面量赋值打断的绑定
+        gameArea.beginWave()               // 波次开始复位（与 isInCombat 真分支同源）
+        waveCountdown.remainingTime = waveCountdown.totalTime
+        gameArea.player.mouseTarget = null                                    // 清掉残留的鼠标移动目标
+        gameArea.player.keysPressed = ({"W": false, "A": false, "S": false, "D": false})   // 清掉可能残留的按键状态
+    }
+
+    // 否：走正常死亡结算流程（等价于原 delayDietimer 触发路径）
+    function declineRetry(){
+        if(inSelectInterface) return
+        gameArea.visible = false
+        pageManager.replace("settlement")
+    }
+
     function continueGame(){
         PlayerData.currentWaveNumber--
         storeInterface.isContinue = true
@@ -416,10 +465,8 @@ Item {
             PlayerData.curXp-=PlayerData.harvesting
         }
         pageManager.clearToBase()   // 清栈收口（须在经济结算之后：暂停盖商店时 store 仍为可见态，不得误罚）
-        PlayerData.materialsNumber-=PlayerData.curWaveMaterialsNumber
-        PlayerData.curXp-=PlayerData.curWaveMaterialsNumber
-        PlayerData.curWaveMaterialsNumber=0
-        PlayerData.remainingMaterialsNumber=0
+        PlayerData.rollbackWaveGains()   // 回退本波收益（单一收口；经验为精确口径）
+        PlayerData.remainingMaterialsNumber=0   // 维持既有语义：返回主菜单清空余料池
         PlayerData.isInCombat=false
         gameArea.clear()
         // 回主菜单清理对象池残留（两池均惰性重建，无需常驻）

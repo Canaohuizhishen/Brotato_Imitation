@@ -32,6 +32,7 @@ Item {
     property bool showCharacterHealthBar: false  // 角色头顶显示血条
     property bool showBossHealthBar: true   // 头目头顶显示血条
     property bool lockItems: true           // 锁定物品
+    property bool retryFailedWave: false    // 重新挑战失败的敌袭（死亡后可重开当前波）
     property int endlessScoreMode: 0        // 无尽模式得分 (0=最高敌袭次数, 1=最高难度)
 
     // ========== 辅助功能 ==========
@@ -70,6 +71,7 @@ Item {
         showCharacterHealthBar: false,
         showBossHealthBar: true,
         lockItems: true,
+        retryFailedWave: false,
         endlessScoreMode: 0,
 
         enemyHpModifier: 100,
@@ -173,6 +175,7 @@ Item {
             showCharacterHealthBar = data.showCharacterHealthBar ?? defaults.showCharacterHealthBar
             showBossHealthBar = data.showBossHealthBar ?? defaults.showBossHealthBar
             lockItems = data.lockItems ?? defaults.lockItems
+            retryFailedWave = data.retryFailedWave ?? defaults.retryFailedWave
             endlessScoreMode = data.endlessScoreMode ?? defaults.endlessScoreMode
 
             enemyHpModifier = data.enemyHpModifier ?? defaults.enemyHpModifier
@@ -216,6 +219,7 @@ Item {
         showCharacterHealthBar = defaults.showCharacterHealthBar
         showBossHealthBar = defaults.showBossHealthBar
         lockItems = defaults.lockItems
+        retryFailedWave = defaults.retryFailedWave
         endlessScoreMode = defaults.endlessScoreMode
 
         enemyHpModifier = defaults.enemyHpModifier

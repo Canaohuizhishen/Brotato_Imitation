@@ -82,6 +82,7 @@ qt_add_qml_module(appBrotato
     QML_FILES logic/utils/color.js
     QML_FILES logic/utils/collision.js
     QML_FILES page/PauseInterface.qml
+    QML_FILES page/RetryWaveInterface.qml
     QML_FILES components/SetButton.qml
     QML_FILES components/SwitchSettingButton.qml
     QML_FILES components/ProgressBarControlButton.qml
@@ -169,7 +170,10 @@ if(BUILD_TESTS OR NOT DEFINED BUILD_TESTS)
 
     qt_add_executable(tst_core
         tests/main.cpp
+        Filemanager.h
     )
+    # 测试运行时从源树加载真实单例（PlayerData/MonstersData），路径不依赖 cwd
+    target_compile_definitions(tst_core PRIVATE BROTATO_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
     target_link_libraries(tst_core PRIVATE Qt6::QuickTest Qt6::Quick)
 
     add_test(NAME tst_core

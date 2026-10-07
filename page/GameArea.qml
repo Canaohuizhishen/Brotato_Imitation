@@ -119,13 +119,7 @@ Item{
 
     onIsInCombatChanged: {
         if(isInCombat){
-            PlayerData.curHp=PlayerData.maxHp
-            visible=true
-            active=true
-            player.focus=true
-            player.x=gameArea.width/2
-            player.y=gameArea.height/2
-            player.faceRight()
+            beginWave()
         }else {
             active=false
             monsters.disappear()
@@ -136,6 +130,17 @@ Item{
                 drops.clear()
             }
         }
+    }
+
+    // 波次开始复位（供 isInCombat 真分支与"死亡重试"共用，单一收口）
+    function beginWave(){
+        PlayerData.curHp=PlayerData.maxHp
+        visible=true
+        active=true
+        player.focus=true
+        player.x=gameArea.width/2
+        player.y=gameArea.height/2
+        player.faceRight()
     }
 
     onActiveChanged: {

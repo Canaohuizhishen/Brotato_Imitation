@@ -627,6 +627,13 @@ Item {
                     onToggled: (checked) => { SettingsData.lockItems = checked; SettingsData.saveSettings() }
                 }
 
+                SwitchSettingButton {
+                    scaleFactor: settingsInterface.scaleFactor
+                    label: I18n.tr("重新挑战失败的敌袭", SettingsData.language)
+                    checked: SettingsData.retryFailedWave
+                    onToggled: (checked) => { SettingsData.retryFailedWave = checked; SettingsData.saveSettings() }
+                }
+
                 Item{
                     width: parent.width
                     height: 45*settingsInterface.scaleFactor

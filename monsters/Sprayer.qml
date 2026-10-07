@@ -159,6 +159,7 @@ Monster{
     }
 
     function fire() {
+        if (sprayer.isDead) return   // 死亡后动画链被恢复也不开火（重试清场前的最后防线）
         var dx = (sprayer.x + sprayer.width / 2) - (sprayer.target.x+sprayer.target.width/2)
         var dy = (sprayer.y + sprayer.height / 2) - (sprayer.target.y+sprayer.target.height/2)
         var angle = Math.atan2(dy, dx) * 180 / Math.PI;

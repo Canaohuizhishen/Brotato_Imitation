@@ -440,6 +440,7 @@ Item {
         PlayerData.curWaveMaterialsNumber+=material.value
         var expGain = Math.floor(material.value * (1 + PlayerData.gainExperience / 100))
         PlayerData.curXp+=expGain
+        PlayerData.curWaveXpNumber+=expGain
         var text=material.value===1 ? "+1" : "X"+material.value
         var size=material.value===1 ? 24*player.scaleFactor : 27*player.scaleFactor
         TextPool.createText(ground,text,size,"lime",material.x,material.y)

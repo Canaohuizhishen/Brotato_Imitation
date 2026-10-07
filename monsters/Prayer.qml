@@ -132,6 +132,7 @@ Monster{
     }
 
     function fireRandomly() {
+        if (prayer.isDead) return   // 死亡后动画链被恢复也不开火
         var n=spawnR*spawnR/3000
         var bulletX=target.x+target.width/2
         var bulletY=target.y+target.height/2
@@ -144,6 +145,7 @@ Monster{
     }
 
     function fireCircularly() {
+        if (prayer.isDead) return   // 死亡后动画链被恢复也不开火
         var spawnR=250
         var n=spawnR*spawnR/2000
         var bulletX=target.x+target.width/2

@@ -189,6 +189,29 @@ TestCase {
         compare(c500, 0, "reset() 应清零分频桶余数")
     }
 
+    // ---- resetSpawnPhase：整波重开专用（仅清 3000ms 出怪桶相位；其他分频刻意保留） ----
+
+    function test_resetSpawnPhase_clearsOnly3000Bucket() {
+        var gl = gameLoopLoader.item
+        gl.reset()
+        var c1000 = 0, c3000 = 0
+        gl.registerPer1000ms(function() { c1000++ })
+        gl.registerPer3000ms(function() { c3000++ })
+        // 累积到 2.9s：3000ms 桶差一步未触发；1000ms 桶已触发 2 次
+        for (var i = 0; i < 29; i++) gl.advanceBuckets(0.1)
+        compare(c3000, 0, "2.9s 未满 3s 不应触发出怪桶")
+        compare(c1000, 2, "2.9s 内 1000ms 桶应触发 2 次")
+        // 复位出怪桶相位
+        gl.resetSpawnPhase()
+        gl.advanceBuckets(0.1)   // 未复位时 2.9s+0.1s 本应触发——复位后不得瞬刷
+        compare(c3000, 0, "复位后不得瞬刷")
+        compare(c1000, 3, "1000ms 桶相位不受复位影响")
+        // 复位后累计再满 3s → 恰好触发一次
+        for (i = 0; i < 29; i++) gl.advanceBuckets(0.1)
+        compare(c3000, 1, "复位后满 3 秒整拍触发一次")
+        compare(c1000, 5, "1000ms 桶继续正常节拍")
+    }
+
     function test_bucketFiresInRealLoop() {
         var gl = gameLoopLoader.item
         gl.reset()

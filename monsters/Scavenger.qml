@@ -143,6 +143,7 @@ Monster{
     }
 
     function fire() {
+        if (scavenger.isDead) return   // 死亡后动画链被恢复也不开火
         var dx = (scavenger.x + scavenger.width / 2) - scavenger.target.x
         var dy = (scavenger.y + scavenger.height / 2) - scavenger.target.y
         var angle = Math.atan2(dy, dx) * 180 / Math.PI;

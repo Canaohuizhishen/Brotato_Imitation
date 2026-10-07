@@ -52,6 +52,7 @@ var strings = {
     "视觉效果":       ["视觉效果", "視覺效果", "Visual Effects", "Effets visuels", "視覚効果", "시각 효과", "Визуальные эффекты", "Efekty wizualne", "Efectos visuales", "Efeitos visuais", "Visuelle Effekte", "Görsel Efektler", "Effetti visivi"],
     "伤害显示":       ["伤害显示", "傷害顯示", "Show Damage", "Dégâts", "ダメージ表示", "피해 표시", "Показывать урон", "Pokaż obrażenia", "Mostrar daño", "Mostrar dano", "Schaden anzeigen", "Hasar Göster", "Mostra danno"],
     "敌袭结束优化":   ["敌袭结束优化", "敵襲結束優化", "End Wave Optimization", "Optimisation fin de vague", "ウェーブ終了最適化", "웨이브 종료 최적화", "Оптимизация конца волны", "Optymalizacja końca fali", "Optimización fin de oleada", "Otimização fim de onda", "Wellenende-Optimierung", "Dalga Sonu Optimizasyonu", "Ottimizzazione fine ondata"],
+    "重新挑战失败的敌袭": ["重新挑战失败的敌袭", "重新挑戰失敗的敵襲", "Retry Failed Waves", "Réessayer les vagues échouées", "失敗した敵襲に再挑戦", "실패한 웨이브 재도전", "Повтор проваленной волны", "Powtórka przegranej fali", "Reintentar oleadas fallidas", "Repetir ondas falhadas", "Fehlgeschlagene Wellen wiederholen", "Başarısız Dalgayı Tekrar Dene", "Riprova ondate fallite"],
     "显示FPS":       ["显示FPS", "顯示FPS", "Show FPS", "Afficher FPS", "FPS表示", "FPS 표시", "Показывать FPS", "Pokaż FPS", "Mostrar FPS", "Mostrar FPS", "FPS anzeigen", "FPS Göster", "Mostra FPS"],
     "仅限鼠标":       ["仅限鼠标", "僅限滑鼠", "Mouse Only", "Souris seulement", "マウスのみ", "마우스만", "Только мышь", "Tylko mysz", "Solo ratón", "Apenas mouse", "Nur Maus", "Sadece Fare", "Solo mouse"],
     "手动瞄准":       ["手动瞄准", "手動瞄準", "Manual Aim", "Visée manuelle", "手動照準", "수동 조준", "Ручное прицеливание", "Ręczne celowanie", "Apuntería manual", "Mira manual", "Manuelles Zielen", "Manuel Nişan", "Mira manuale"],
@@ -87,6 +88,7 @@ var strings = {
     "是":             ["是", "是", "Yes", "Oui", "はい", "예", "Да", "Tak", "Sí", "Sim", "Ja", "Evet", "Sì"],
     "否":             ["否", "否", "No", "Non", "いいえ", "아니오", "Нет", "Nie", "No", "Não", "Nein", "Hayır", "No"],
     "是否重新开始本轮游戏?": ["是否重新开始本轮游戏?", "是否重新開始本輪遊戲?", "Restart this run?", "Recommencer cette partie?", "このゲームを再開する？", "이번 게임을 다시 시작할까요?", "Перезапустить эту игру?", "Zrestartować tę rozgrywkę?", "¿Reiniciar esta partida?", "Reiniciar esta partida?", "Diesen Durchlauf neustarten?", "Bu oyunu yeniden başlat?", "Riavviare questa partita?"],
+    "重新挑战当前的敌袭吗?": ["重新挑战当前的敌袭吗?", "重新挑戰當前的敵襲嗎?", "Retry the current wave?", "Réessayer la vague actuelle?", "現在のウェーブに再挑戦？", "현재 웨이브에 재도전할까요?", "Повторить текущую волну?", "Powtórzyć bieżącą falę?", "¿Reintentar la oleada actual?", "Repetir a onda atual?", "Aktuelle Welle wiederholen?", "Mevcut dalga tekrar denensin mi?", "Riprovare l'ondata attuale?"],
 
     // === 宝箱 ===
     "发现道具!":      ["发现道具!", "發現道具!", "Item Found!", "Objet trouvé!", "アイテム発見!", "아이템 발견!", "Предмет найден!", "Przedmiot znaleziony!", "¡Objeto encontrado!", "Item encontrado!", "Gegenstand gefunden!", "Eşya Bulundu!", "Oggetto trovato!"],

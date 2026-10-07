@@ -28,6 +28,12 @@ Item {
     property alias prayer: prayer
 
     onWaveNumberChanged: {
+        resetForWave()
+    }
+
+    // 按当前波次重置出怪运行时状态（波次切换自动调用；死亡重试时波次号不变，
+    // onWaveNumberChanged 不会触发，由调用方显式调用）
+    function resetForWave() {
         init()
         var config = DataLoader.getWaveConfig(waveNumber)
         if (!config || !config.spawns) return

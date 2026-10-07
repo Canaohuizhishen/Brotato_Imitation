@@ -187,6 +187,12 @@ D[test_clear_to_base]="clearToBase 清栈并触发全部 onExit"
 D[test_z_recalc_after_pop]="pop 后全栈 z 按序号重算"
 D[test_no_hooks_page_ok]="无钩子页面 push/pop 正常工作"
 D[test_pop_empty_warns_no_crash]="空栈 pop 仅告警不崩溃"
+D[test_resetSpawnPhase_clearsOnly3000Bucket]="出怪桶相位复位：仅清 3000ms 桶（不瞬刷、不扰动其他分频）"
+D[test_resetForWave_resetsRuntimeCounters]="出怪运行时计数按波配置复位且幂等（重试波号不变）"
+D[test_rollbackWaveGains_exactAndPoolSnapshot]="重试收益回退：材料/经验精确回退＋余料池还原波初快照"
+D[test_rollbackWaveGains_bulkWriteFairWalk]="批量跨级公平走账：单次大额经验逐级扣除且回退精确互逆"
+D[test_rollbackWaveGains_levelDemotionInverse]="跨级升级回退互逆：等级/经验/最大生命精确还原"
+D[test_rollbackWaveGains_idempotent]="重试收益回退幂等：重复调用不再改变状态"
 
 # 4. 分组分类
 declare -A GROUP
@@ -338,6 +344,12 @@ GROUP[test_clear_to_base]="🧭 PageManager"
 GROUP[test_z_recalc_after_pop]="🧭 PageManager"
 GROUP[test_no_hooks_page_ok]="🧭 PageManager"
 GROUP[test_pop_empty_warns_no_crash]="🧭 PageManager"
+GROUP[test_resetSpawnPhase_clearsOnly3000Bucket]="🎮 GameLoop"
+GROUP[test_resetForWave_resetsRuntimeCounters]="🔁 死亡重试"
+GROUP[test_rollbackWaveGains_exactAndPoolSnapshot]="🔁 死亡重试"
+GROUP[test_rollbackWaveGains_bulkWriteFairWalk]="🔁 死亡重试"
+GROUP[test_rollbackWaveGains_levelDemotionInverse]="🔁 死亡重试"
+GROUP[test_rollbackWaveGains_idempotent]="🔁 死亡重试"
 
 # 5. 解析并输出
 echo ""

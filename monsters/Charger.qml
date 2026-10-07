@@ -88,12 +88,13 @@ Monster{
     }
 
     function checkChargeRange() {
-        if (isCharging || inChargeCoolDown || paused || !active) return
+        if (isDead || isCharging || inChargeCoolDown || paused || !active) return   // 死亡后不得再起冲锋
         var inAttackRange = Tool.getDistance(Qt.point(x, y), Qt.point(target.x, target.y)) < core.attackRange * scaleFactor
         if (inAttackRange) charge()
     }
 
     function checkChargeCollision() {
+        if (isDead) return   // 死亡后动画链被恢复也不结算伤害（冲锋路径守卫）
         if (!chargeAnimation || !chargeAnimation.running || paused) return
         if (Tool.getDistance(Qt.point(x, y), Qt.point(target.x, target.y)) < target.width / 2) {
             hit()

@@ -57,7 +57,10 @@ QtObject {
 
     property int materialsNumber: 0          //当前材料数
     property int remainingMaterialsNumber: 0 //存储材料数
+    property int _waveStartRemainingMaterials: 0 //本波开始时"余料池"快照（严格回退还原到波初用）
+    property bool _xpAdjusting: false        //onCurXpChanged 防重入守卫（见该处理器注释）
     property int curWaveMaterialsNumber: 0   //当前波次获得的材料数，便于中途返回主菜单时回退材料数和经验及等级
+    property int curWaveXpNumber: 0          //当前波次获得的经验值（精确口径，严格回退用）
     readonly property int pickupRange: 150 + pickingRegion   //拾取范围（基础值 + 次要属性加成）
     property double goodsDiscountRate: 1     //商品价格倍率
     property double expDiscountRate: 1       //升级所需经验值倍率
@@ -103,6 +106,12 @@ QtObject {
     }
 
     onCurXpChanged: {
+        // 防重入：本处理器内对 curXp 的写会同步递归触发自身——递归帧里 curLevel++
+        // 尚未执行，maxXp 会按旧级阈值重复扣除（单次批量跨级时账目错误，且与降级
+        // 回退不对称）。守卫阻断重入后，下方循环按"每级各自的 maxXp"逐级走账
+        // （与负经验的降级回路精确互逆，供死亡重试的收益回退使用）。
+        if (_xpAdjusting) return
+        _xpAdjusting = true
         var maxIter = 100
         while(curXp>=maxXp && maxXp > 0 && --maxIter > 0){
             curXp-=maxXp
@@ -119,6 +128,7 @@ QtObject {
             curXp+=maxXp
             maxHp-=2 //多减1抵消等级变化时的自动加一
         }
+        _xpAdjusting = false
     }
 
     onDodgeChanged: {
@@ -127,6 +137,14 @@ QtObject {
 
     onCurrentWaveNumberChanged: {
         PlayerData.curWaveMaterialsNumber=0
+        PlayerData.curWaveXpNumber=0
+    }
+
+    onIsInCombatChanged: {
+        // 进入战斗（波次开始）时快照"余料池"，供严格回退还原到波初值
+        if(isInCombat){
+            _waveStartRemainingMaterials=remainingMaterialsNumber
+        }
     }
 
     function init(){
@@ -178,7 +196,10 @@ QtObject {
 
         materialsNumber = 0
         remainingMaterialsNumber = 0
+        _waveStartRemainingMaterials=0
+        _xpAdjusting=false
         curWaveMaterialsNumber=0
+        curWaveXpNumber=0
         goodsDiscountRate = 1
         expDiscountRate = 1
 
@@ -224,6 +245,16 @@ QtObject {
     function showLastStoreGoods(){
         console.log("\n----上次退出时的商店的商品项:----")
         for(var i=0;i<lastStoreGoods.count;i++)console.log(lastStoreGoods.get(i).goodName,lastStoreGoods.get(i).grade)
+    }
+
+    // 回退本波中途获得的收益（材料/经验精确口径），并把"余料池"还原到本波开始时的快照。
+    // 单一收口：死亡重试（严格回退）与中途返回主菜单共用，勿在使用点重复回退逻辑。
+    function rollbackWaveGains() {
+        materialsNumber -= curWaveMaterialsNumber
+        curXp -= curWaveXpNumber
+        curWaveMaterialsNumber = 0
+        curWaveXpNumber = 0
+        remainingMaterialsNumber = _waveStartRemainingMaterials
     }
 
     function saveGame() {
