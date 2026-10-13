@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtMultimedia
 import singleton.PlayerData
 import "../data/cores"
+import "../logic/utils/tool.js" as Tool
 
 Image {
     id: chest
@@ -33,6 +34,23 @@ Image {
         chest.magnetTarget=target
     }
 
+    // 波末结算触发（Drops.allChestToPlayer）：QML 飞行动画（7946a27 之前的效果）。
+    // 波末玩家静止，固定端点安全；战斗中玩家会移动，靠近拾取仍走帧驱动磁吸。
+    // from/to/时长在调用时一次性快照——勿写回旧版的实时重算绑定表达式
+    // （跟随移动目标时动画永不结算，即 2026-10-04 替换掉原动画的根因）。
+    function beGetedAnimatedTo(target){
+        chest.isGeted=true
+        beGetedAnimation.target=target
+        var dist=Tool.getDistance(Qt.point(chest.x,chest.y),Qt.point(target.x,target.y))
+        xbeGetedAnimation.from=chest.x
+        ybeGetedAnimation.from=chest.y
+        xbeGetedAnimation.to=target.x-chest.width/2
+        ybeGetedAnimation.to=target.y-chest.height/2
+        xbeGetedAnimation.duration=dist
+        ybeGetedAnimation.duration=dist
+        beGetedAnimation.start()
+    }
+
     SoundEffect {
         id: getSound
         source: "qrc:/audio/get_chest.wav"
@@ -48,5 +66,38 @@ Image {
         t.getChest(chest)
         chest.visible=false
         chest.destroy(700)
+    }
+
+    // 波末飞行动画（还原 7946a27 之前的实现：InBack 弹性收尾，"吸"进玩家）
+    ParallelAnimation {
+        id: beGetedAnimation
+        loops: 1
+        running: false
+        property var target: null
+
+        PropertyAnimation {
+            id: xbeGetedAnimation
+            target: chest
+            property: "x"
+            duration: 0
+            easing.type: Easing.InBack
+        }
+
+        PropertyAnimation {
+            id: ybeGetedAnimation
+            target: chest
+            property: "y"
+            duration: 0
+            easing.type: Easing.InBack
+        }
+
+        onStopped: {
+            var t = beGetedAnimation.target
+            if (!t) return
+            getSound.play()
+            t.getChest(chest)
+            chest.visible=false
+            chest.destroy(700)
+        }
     }
 }

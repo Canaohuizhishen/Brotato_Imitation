@@ -300,8 +300,10 @@ Item{
         propagateComposedEvents: true
         z: 50
 
-        // 手动瞄准时隐藏系统光标，用自定义准心替代
-        cursorShape: (SettingsData.manualAim && !gameArea.paused) ? Qt.BlankCursor : Qt.ArrowCursor
+        // 手动瞄准且战斗中时隐藏系统光标，用自定义准心替代
+        // （必须含 isInCombat/active：光标解析规则下，条件漏判会让 Blank 穿透
+        //   商店/暂停等“不设光标”的叠层页面——非战斗场景系统光标消失的根因）
+        cursorShape: (SettingsData.manualAim && gameArea.isInCombat && gameArea.active && !gameArea.paused) ? Qt.BlankCursor : Qt.ArrowCursor
         Connections {
             target: SettingsData
             function onManualAimChanged() {

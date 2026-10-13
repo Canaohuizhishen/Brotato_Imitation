@@ -144,22 +144,25 @@ Item {
         }
     }
 
+    // 波末结算：果实飞向玩家，走 QML 动画版（玩家静止、固定端点安全；
+    // 还原 7946a27 之前的 InBack 弹性效果）。战斗内靠近拾取仍走 beGetedTo 磁吸。
     function allFruitsToPlayer(player){
         if(PlayerData.currentWaveNumber===0)return
         for(var i=0;i<drops.children.length;i++){
             var child=drops.children[i]
             if(child.objectName==="果实" && child.isGeted===false){
-                child.beGetedTo(player)
+                child.beGetedAnimatedTo(player)
             }
         }
     }
 
+    // 波末结算：宝箱飞向玩家，走 QML 动画版（同 allFruitsToPlayer 的理由）。
     function allChestToPlayer(player){
         if(PlayerData.currentWaveNumber===0)return
         for(var i=0;i<drops.children.length;i++){
             var child=drops.children[i]
             if(child.objectName==="宝箱" && child.isGeted===false){
-                child.beGetedTo(player)
+                child.beGetedAnimatedTo(player)
             }
         }
     }
