@@ -21,9 +21,7 @@ public:
         QFileInfo fileInfo(filePath);
         if (fileInfo.exists()) {
             QFile::remove(backupPath);
-            if (!QFile::copy(filePath, backupPath)) {
-                qWarning() << "备份失败：" << filePath;
-            }
+            if (!QFile::copy(filePath, backupPath)) { qWarning() << "备份失败：" << filePath; }
         }
 
         // 写入新数据

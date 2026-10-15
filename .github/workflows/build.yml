@@ -1,9 +1,10 @@
 # Brotato CI — 代码质量与构建验证
 #
-# 触发条件：push 到 main、任何 pull request
-# 两个并行 job：
-#   test  — Qt Quick Test 单元测试（需 Qt 6.8 QML 运行时）
-#   build — CMake 构建验证
+# 触发条件：push / pull request 到 main 或 dev
+# 三个并行 job：
+#   test  — 单元测试 + 覆盖率报告（Qt Quick Test + FileManager，需 Qt 6.8 QML 运行时）
+#   build — CMake Release 构建验证
+#   lint  — clang-format 格式检查（全部 C++ 源文件）
 
 name: CI
 
@@ -27,24 +28,54 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.8.*'
-          modules: 'qtbase qtdeclarative'
+          # qtbase/qtdeclarative 是默认安装的基础归档，不能作为 modules 传入（曾致 CI 首跑 exit 1）；
+          # qtmultimedia 为项目 QML（Sound.qml 等）所需且默认不安装
+          modules: 'qtmultimedia'
           cache: true
 
       - name: 安装系统依赖
-        run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev
+        run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-dev gcovr
 
-      - name: 配置 CMake（含测试）
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON
+      - name: 配置 CMake（测试 + 覆盖率插桩）
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -DCMAKE_CXX_FLAGS="--coverage" -DCMAKE_EXE_LINKER_FLAGS="--coverage"
 
-      - name: 构建测试
-        run: cmake --build build --target tst_core --parallel 4
+      - name: 构建测试（tst_core + tst_filemanager）
+        run: cmake --build build --target tst_core tst_filemanager --parallel 4
 
-      - name: 运行 Qt Quick Test
+      - name: 运行单元测试（tst_core + tst_filemanager）
         run: |
           export QT_QPA_PLATFORM=offscreen
-          ctest --test-dir build -R tst_core --output-on-failure
+          ctest --test-dir build --output-on-failure --output-junit "$GITHUB_WORKSPACE/build/test-results.xml"
 
-      # (Node.js 独立测试方案已废弃，统一使用 Qt Quick Test)
+      - name: 生成覆盖率报告（gcovr）
+        run: |
+          mkdir -p build/coverage
+          gcovr --root . --object-directory build \
+            --exclude '^build/' \
+            --gcov-ignore-errors=no_working_dir_found \
+            --txt-metric line \
+            --txt build/coverage-summary.txt \
+            --xml build/coverage.xml \
+            --html-details build/coverage/index.html
+          {
+            echo "## 覆盖率摘要（C++ 层）"
+            echo '```'
+            cat build/coverage-summary.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 上传测试与覆盖率报告（artifact）
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-and-coverage-reports
+          path: |
+            build/test-results.xml
+            build/coverage.xml
+            build/coverage-summary.txt
+            build/coverage/
+          if-no-files-found: error
+
+      # (Node.js 独立测试方案已废弃，测试统一走 CMake/ctest)
 
   # ----------------------------------------
   # Job 2: CMake Release 构建验证
@@ -58,7 +89,9 @@ jobs:
         uses: jurplel/install-qt-action@v4
         with:
           version: '6.8.*'
-          modules: 'qtbase qtdeclarative'
+          # qtbase/qtdeclarative 是默认安装的基础归档，不能作为 modules 传入（曾致 CI 首跑 exit 1）；
+          # qtmultimedia 为项目 QML（Sound.qml 等）所需且默认不安装
+          modules: 'qtmultimedia'
           cache: true
 
       - name: 配置 CMake
@@ -66,3 +99,21 @@ jobs:
 
       - name: 编译
         run: cmake --build build --parallel 4
+
+  # ----------------------------------------
+  # Job 3: clang-format 格式检查
+  # ----------------------------------------
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 clang-format 22.1.8（与本地开发环境同版本，防格式漂移）
+        run: pip install --quiet 'clang-format==22.1.8'
+
+      - name: 检查全部 C++ 源文件格式
+        run: |
+          files=$(git ls-files '*.cpp' '*.h' '*.hpp')
+          echo "待检查文件："
+          echo "$files"
+          clang-format --dry-run --Werror $files

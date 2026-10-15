@@ -63,7 +63,7 @@ cmake --build build
 
 基于 Qt Quick Test（qmltestrunner）的核心逻辑回归：**166 项用例全绿**，覆盖数据装载（DataLoader）、空间网格（SpatialGrid）、AABB 碰撞与伤害计算、商店定价、升级选项、游戏主循环（GameLoop）、文本 / 粒子池、页面栈（PageManager）、子弹命中回归、死亡重试收益回退等。
 
-CI（`.github/workflows/build.yml`）在 push / PR 时执行 Qt 6.8 单元测试 + Release 构建验证。
+CI（`.github/workflows/build.yml`）在 push / PR 时执行：Qt 6.8 单元测试（tst_core + tst_filemanager，产出覆盖率报告与测试报告 artifact）+ clang-format 格式检查 + Release 构建验证。
 
 ## 目录结构
 

@@ -13,11 +13,10 @@ private:
     QTemporaryDir m_tempDir;
     FileManager m_fm;
 
-    QString testPath(const QString &name) const {
-        return m_tempDir.filePath(name);
-    }
+    QString testPath(const QString &name) const { return m_tempDir.filePath(name); }
 
-    void writeFile(const QString &path, const QByteArray &content) {
+    void writeFile(const QString &path, const QByteArray &content)
+    {
         QFile f(path);
         if (f.open(QIODevice::WriteOnly)) {
             f.write(content);
@@ -25,10 +24,10 @@ private:
         }
     }
 
-    QByteArray readFile(const QString &path) {
+    QByteArray readFile(const QString &path)
+    {
         QFile f(path);
-        if (!f.open(QIODevice::ReadOnly))
-            return {};
+        if (!f.open(QIODevice::ReadOnly)) return {};
         return f.readAll();
     }
 

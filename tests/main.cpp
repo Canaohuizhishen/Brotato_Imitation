@@ -30,10 +30,13 @@ public slots:
         // 与 app main.cpp 同款单例注册，但走源文件 URL（测试二进制无 qrc）；
         // 路径由 CMake 编译定义注入（BROTATO_SOURCE_DIR），不依赖运行时 cwd
         const QString srcDir = QStringLiteral(BROTATO_SOURCE_DIR);
-        qmlRegisterSingletonType(QUrl::fromLocalFile(srcDir + "/singleton/PlayerData.qml"),
-                                 "singleton.PlayerData", 1, 0, "PlayerData");
+        qmlRegisterSingletonType(
+            QUrl::fromLocalFile(srcDir + "/singleton/PlayerData.qml"), "singleton.PlayerData", 1, 0, "PlayerData");
         qmlRegisterSingletonType(QUrl::fromLocalFile(srcDir + "/singleton/MonstersData.qml"),
-                                 "singleton.MonstersData", 1, 0, "MonstersData");
+                                 "singleton.MonstersData",
+                                 1,
+                                 0,
+                                 "MonstersData");
     }
 };
 

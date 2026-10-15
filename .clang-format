@@ -1,0 +1,34 @@
+# Brotato C++ 代码风格 — 对齐现有代码习惯，CI 以固定版本强制执行
+#   （lint job 与本机皆使用 clang-format 22.1.8，见 .github/workflows/build.yml）
+BasedOnStyle: LLVM
+Language: Cpp
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ContinuationIndentWidth: 4
+ColumnLimit: 120
+AccessModifierOffset: -4
+
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterStruct: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterUnion: false
+  AfterControlStatement: Never
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
+
+AllowShortBlocksOnASingleLine: Always
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+
+AlignAfterOpenBracket: Align
+PointerAlignment: Right
+SortIncludes: Never
+BinPackArguments: false
+BinPackParameters: false
